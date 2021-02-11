@@ -1,0 +1,13 @@
+{
+    "importHelpers": true,
+    "downlevelIteration": true,
+    "extends": "./tsconfig.json",
+    "exclude": [
+        "node_modules",
+        "build",
+        "dist",
+        "test",
+        "**/*.spec.ts",
+        "**/*.test.ts"
+    ]
+}

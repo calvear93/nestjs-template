@@ -1,0 +1,41 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // output optional config:
+    //      "outputCapture": "std"
+    //      "internalConsoleOptions": "openOnSessionStart"
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "sourceMaps": true,
+            "restart": true,
+            "name": "Debug Service (dev)",
+            //"preLaunchTask": "Build Clean",
+            //"postDebugTask": "Terminate All Tasks",
+            "program": "${workspaceFolder}/src/main.ts",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "start:dev"],
+            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+            "skipFiles": ["<node_internals>/**/*.js"],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "sourceMaps": true,
+            "restart": true,
+            "name": "Debug Service (qa)",
+            //"preLaunchTask": "Build Clean",
+            //"postDebugTask": "Terminate All Tasks",
+            "program": "${workspaceFolder}/src/main.ts",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "start:qa"],
+            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+            "skipFiles": ["<node_internals>/**/*.js"],
+            "console": "integratedTerminal"
+        }
+    ]
+}

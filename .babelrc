@@ -1,0 +1,13 @@
+{
+    "plugins": [
+        [
+            "transform-inline-environment-variables",
+            {
+                "exclude": [
+                    "HOSTNAME",
+                    "NODE_VERSION"
+                ]
+            }
+        ]
+    ]
+}

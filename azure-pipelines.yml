@@ -1,0 +1,137 @@
+trigger:
+    batch: false
+    branches:
+        include:
+            - main
+            - release/*
+            - prerelease/*
+            - hotfix/* # PROD bugfix
+
+variables:
+    - template: templates/vars.template.yml
+      parameters:
+          debug: false
+          global:
+              #- group: VARS_GROUP
+              - name: vmImage
+                value: ubuntu-20.04
+          prod:
+              - name: varProd
+                value: production
+          qa:
+              - name: varQA
+                value: qa
+          dev:
+              - name: varDev
+                value: development
+
+pool:
+    vmImage: $(vmImage)
+
+stages:
+    # STAGE: reads package.json info
+    - template: templates/read-project-info.stage.yml
+
+    # STAGE: execute tests and code analysis
+    - stage: QualityAssurance
+      displayName: Quality Assurance ${{ variables.envName }}
+      condition: eq(variables['stagesRunTest'], true)
+      jobs:
+          # JOB: runs app unit and integration tests
+          - job: AppTesting
+            displayName: Run App Tests
+            continueOnError: ${{ variables.stagesIgnoreTestFail }}
+            steps:
+                - task: NodeTool@0
+                  inputs:
+                      versionSpec: 16.x
+                  displayName: Installing NodeJS 16.x
+
+                - task: Npm@1
+                  inputs:
+                      command: install
+                  displayName: Downloading dependencies
+
+                - task: Npm@1
+                  inputs:
+                      command: custom
+                      customCommand: run lint:analyze -- --no-ignore --max-warnings -1
+                  displayName: Running Linter Analysis
+
+                - task: Npm@1
+                  inputs:
+                      command: custom
+                      customCommand: run test:$(envKey)
+                  displayName: Running Unit Tests
+
+          # JOB: executes code analysis
+          - job: CodeAnalysis
+            displayName: Code Analysis
+            continueOnError: ${{ variables.stagesIgnoreTestFail }}
+            steps:
+                - script: |
+                      echo $(envName)
+                  displayName: Debug
+
+    # STAGE: builds the project
+    - stage: Build
+      displayName: Build ${{ variables.envName }}
+      dependsOn: ReadProjectInfo
+      condition: and(succeeded(), eq(variables['stagesRunBuild'], true), eq(variables['stagesRunDeploy'], true))
+      variables:
+          version: $[ stageDependencies.ReadProjectInfo.Variables.outputs['version.value'] ]
+          tag: $(version)-$(envKey).$(Build.BuildId)
+      jobs:
+          # JOB: build & publish container image to ACR
+          - job: BuildPush
+            displayName: Build & Push container image
+            steps:
+                - script: |
+                      echo $(envName)
+                      echo $(tag)
+                  displayName: Debug
+
+          # JOB: push/publish manifest for deploy stage
+          - job: Publish
+            displayName: Publish artifacts
+            dependsOn: BuildPush
+            steps:
+                - task: PublishBuildArtifacts@1
+                  inputs:
+                      pathToPublish: k8s/$(envKey)
+                      artifactName: manifests
+                      publishLocation: Container
+                  displayName: Publishing manifests
+
+    # STAGE: deploys artifacts
+    - stage: Deployment
+      displayName: Deployment ${{ variables.envName }}
+      dependsOn: [ReadProjectInfo, Build, QualityAssurance]
+      condition: |
+          and(
+              in(dependencies.QualityAssurance.result, 'Succeeded', 'SucceededWithIssues', 'Skipped'),
+              in(dependencies.Build.result, 'Succeeded'),
+              eq(variables['stagesRunDeploy'], true)
+          )
+      variables:
+          version: $[ stageDependencies.ReadProjectInfo.Variables.outputs['version.value'] ]
+          tag: $(version)-$(envKey).$(Build.BuildId)
+      jobs:
+          # JOB: deploys artifacts
+          - deployment: Deploy
+            displayName: Deploying artifacts
+            environment: $(envKey)
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            # loads manifests
+                            - download: current
+                              artifact: manifests
+                              patterns: '**/*.yml'
+                              displayName: Downloading manifests
+
+                            - script: |
+                                  echo $(envName)
+                                  echo $(tag)
+                              displayName: Debug

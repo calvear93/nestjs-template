@@ -1,0 +1,167 @@
+#
+#   AZURE PIPELINES VARIABLES TEMPLATE
+#
+#   allows to declare easily variables
+#   per environment depending of branch
+#
+#   [i] Predefined variables are:
+#     - envName: PROD, STAGE, QA, DEV
+#     - envKey: prod, stage, qa, dev
+#     - isPullRequest: if pipeline was triggered by a Pull Request
+#     - stagesRunBuild: whether build stage is enabled
+#     - stagesRunTest: whether test stage is enabled
+#     - stagesRunPublish: whether publishes current artifact
+#     - stagesRunDeploy: whether deploy stage is enabled
+#     - stagesRunDeploy: whether deploy stage is enabled
+#     - stagesIgnoreTestFail: whether ignore tests fail for deploy (eg. for dev environment)
+#
+#     you can access this variables as:
+#       variables['env.name'] (in expressions, conditions)
+#       ${{ env.name }} (for output, pre var assigns)
+#       $(env.name) (for inputs, post var assigns)
+#
+#   [i] branches environments are defined as:
+#     main|master -> prod
+#     release/* -> qa
+#     prerelease/* -> dev
+#     hotfix/* -> qa
+#
+#   [i] how to use:
+#     variables:
+#     - template: vars.yml
+#       parameters:
+#         debug: true
+#         global:
+#           - group: VARS_GLOBAL
+#         prod:
+#           - group: VARS_PROD
+#           - name: webApp
+#             value: wa-prod-project
+#         ...
+#         dev:
+#           - name: webApp
+#             value: wa-dev-project
+#
+
+parameters:
+    - name: debug
+      type: boolean
+      default: false
+    # global variables definition
+    - name: global
+      type: object
+      default: []
+    # environments variables definition
+    - name: prod
+      type: object
+      default: []
+    - name: qa
+      type: object
+      default: []
+    - name: dev
+      type: object
+      default: []
+    - name: pr
+      type: object
+      default: []
+    # stages execution flags
+    # whether 'test' stage should be executed (e.g. Unit Tests, SonarQube analysis)
+    - name: stagesRunTest
+      type: boolean
+      default: false
+    # whether 'build' stage should be executed
+    - name: stagesRunBuild
+      type: boolean
+      default: false
+    # whether artifact should be deployed to environment (e.g. Azure Publishing, Kubernetes Deploy)
+    - name: stagesRunDeploy
+      type: boolean
+      default: false
+    # whether ignores test results for execute other stages
+    - name: stagesIgnoreTestFail
+      type: boolean
+      default: false
+
+variables:
+    - name: System.Debug
+      value: ${{ parameters.debug }}
+    - name: author
+      value: ${{ variables['Build.RequestedFor'] }}
+    - name: isPullRequest
+      value: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
+
+    - ${{ each var in parameters.global }}:
+          - ${{ var }}
+
+    # PRODUCTION
+    - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/master') }}:
+          - name: envName
+            value: PROD
+          - name: envKey
+            value: prod
+          - name: stagesRunTest
+            value: true
+          - name: stagesRunBuild
+            value: true
+          - name: stagesRunDeploy
+            value: true
+          - ${{ each var in parameters.prod }}:
+                - ${{ var }}
+
+    # QA
+    - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release/') }}:
+          - name: envName
+            value: QA
+          - name: envKey
+            value: qa
+          - name: stagesRunTest
+            value: true
+          - name: stagesRunBuild
+            value: true
+          - name: stagesRunDeploy
+            value: true
+          - ${{ each var in parameters.qa }}:
+                - ${{ var }}
+
+    # DEVELOPMENT
+    - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/prerelease/') }}:
+          - name: envName
+            value: DEV
+          - name: envKey
+            value: dev
+          - name: stagesRunTest
+            value: true
+          - name: stagesRunBuild
+            value: true
+          - name: stagesRunDeploy
+            value: true
+          - name: stagesIgnoreTestFail
+            value: true
+          - ${{ each var in parameters.dev }}:
+                - ${{ var }}
+
+    # PRODUCTION bugfix
+    - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix/') }}:
+          - name: envName
+            value: QA
+          - name: envKey
+            value: qa
+          - name: stagesRunTest
+            value: true
+          - name: stagesRunBuild
+            value: true
+          - name: stagesRunDeploy
+            value: true
+          - ${{ each var in parameters.qa }}:
+                - ${{ var }}
+
+    # Pull Request Build Policy
+    - ${{ if eq(variables['isPullRequest'], true) }}:
+          - name: envName
+            value: PR
+          - name: envKey
+            value: qa
+          - name: stagesRunTest
+            value: true
+          - ${{ each var in parameters.pr }}:
+                - ${{ var }}
