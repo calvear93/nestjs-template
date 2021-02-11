@@ -1,0 +1,93 @@
+{
+  "version": "0.0.1",
+  "name": "powerapps-service-security",
+  "title": "PowerApps Service Security",
+  "description": "Security Service for PowerApps project using NestJS",
+  "author": "Alvear Candia, Cristopher Alejandro <caalvearc@achs.cl>",
+  "private": true,
+  "keywords": [
+    "nest",
+    "express",
+    "powerapps"
+  ],
+  "scripts": {
+    "start:debug": "X_ENV=default,debug npm run _start",
+    "start:development": "X_ENV=default,development npm run _start",
+    "start:qa": "X_ENV=default,qa npm run _start",
+    "build:start": "node dist/main",
+    "build:development": "X_ENV=default,development npm run _build",
+    "build:qa": "X_ENV=default,qa npm run _build",
+    "build:production": "X_ENV=default,production npm run _build",
+    "test:development": "X_ENV=default,development npm run _test -- --watch",
+    "test:qa": "X_ENV=default,qa npm run _test",
+    "test:production": "X_ENV=default,production npm run _test",
+    "test:coverage": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "lint:analyze": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "lint:fix": "eslint --fix \"{src,apps,libs,test}/**/*.ts\"*",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "_start": "env-cmd -x -e $X_ENV -r .env.js nest start --debug --watch",
+    "_build": "rimraf dist && nest build && env-cmd -x -e $X_ENV -r .env.js npx babel dist/**/*.js --out-dir dist/",
+    "_test": "env-cmd -x -e $X_ENV -r .env.js jest",
+    "_test:watch": "env-cmd -x -e $X_ENV -r .env.js jest --watch",
+    "_packages:update": "npm update --save/--save-dev",
+    "_packages:force-update": "npx npm-check-updates -u",
+    "_git:case-sensitive": "git config core.ignorecase false"
+  },
+  "dependencies": {
+    "@nestjs/common": "^7.6.12",
+    "@nestjs/core": "^7.6.12",
+    "@nestjs/platform-express": "^7.6.12",
+    "@nestjs/swagger": "^4.7.12",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^6.6.3",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.13",
+    "@babel/core": "^7.12.13",
+    "@nestjs/cli": "^7.5.4",
+    "@nestjs/schematics": "^7.2.7",
+    "@nestjs/testing": "^7.6.12",
+    "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.25",
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "env-cmd": "^10.1.0",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "7.2.0",
+    "eslint-plugin-decorator-position": "^2.2.18",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-radar": "^0.2.1",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
+    "ts-jest": "^26.5.1",
+    "ts-loader": "^8.0.17",
+    "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.1.5"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
