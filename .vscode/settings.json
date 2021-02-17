@@ -5,9 +5,6 @@
 	"[javascript]": {
 		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 	},
-	"[javascriptreact]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	},
 	"[json]": {
 		"editor.defaultFormatter": "vscode.json-language-features"
 	},
@@ -21,10 +18,7 @@
 		"editor.defaultFormatter": "svipas.prettier-plus"
 	},
 	"[typescript]": {
-		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-	},
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 	},
 	"[xml]": {
 		"editor.defaultFormatter": "DotJoshJohnson.xml"
@@ -36,6 +30,7 @@
 	"docthis.includeDateTag": false,
 	"docthis.inferTypesFromNames": true,
 	"editor.renderIndentGuides": true,
+    "editor.linkedEditing": true,
 	"editor.rulers": [100, 120],
 	"editor.wordWrap": "on",
 	"eslint.alwaysShowStatus": true,
@@ -65,6 +60,17 @@
 	"html.format.indentInnerHtml": true,
 	"material-icon-theme.activeIconPack": "react_redux",
 	"material-icon-theme.files.associations": {
+		"*.controller.ts": "nest-controller",
+        "*.decorator.ts": "nest-decorator",
+        "*.filter.ts": "nest-filter",
+        "*.gateway.ts": "nest-gateway",
+        "*.guard.ts": "nest-guard",
+        "*.middleware.ts": "nest-middleware",
+        "*.module.ts": "nest-module",
+        "*.pipe.ts": "nest-pipe",
+        "*.resolver.ts": "nest-resolver",
+        "*.service.ts": "nest-service",
+        "*.provider.ts": "nest-service",
 		"*.cfg.js": "settings",
 		"*.cfg.ts": "settings",
 		"*.config.js": "settings",
@@ -101,8 +107,9 @@
 		"setupTests.js": "jest"
 	},
 	"material-icon-theme.folders.associations": {
-		"adapters": "api",
+		"adapters": "connection",
 		"context": "global",
+		"decorators": "custom",
 		"masks": "middleware",
 		"modules": "middleware",
 		"normalizers": "lib",
@@ -120,5 +127,9 @@
 	"typescript.format.insertSpaceAfterTypeAssertion": true,
 	"typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
 	"typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+	"workbench.editor.wrapTabs": true,
+    "workbench.editor.decorations.badges": true,
+    "workbench.editor.decorations.colors": true,
+    "workbench.editor.tabSizing": "shrink",
 	"workbench.iconTheme": "material-icon-theme"
 }

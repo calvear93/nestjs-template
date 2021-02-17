@@ -7,9 +7,10 @@ export default (app : INestApplication) =>
         .setTitle(process.env.TITLE)
         .setDescription(process.env.DESCRIPTION)
         .setVersion(process.env.VERSION)
+        .addBearerAuth()
         .build();
 
     const document = SwaggerModule.createDocument(app, config);
 
-    SwaggerModule.setup('swagger', app, document);
+    SwaggerModule.setup('', app, document);
 };

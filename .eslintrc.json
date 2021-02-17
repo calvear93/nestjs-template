@@ -51,6 +51,31 @@
                 "before": true
             }
         ],
+        "@typescript-eslint/indent": [
+            "warn",
+            4,
+            {
+                "ArrayExpression": 1,
+                "CallExpression": {
+                    "arguments": 1
+                },
+                "FunctionDeclaration": {
+                    "body": 1,
+                    "parameters": 2
+                },
+                "FunctionExpression": {
+                    "body": 1,
+                    "parameters": 0
+                },
+                "ImportDeclaration": 1,
+                "MemberExpression": 1,
+                "ObjectExpression": 1,
+                "SwitchCase": 1,
+                "VariableDeclarator": "first",
+                "flatTernaryExpressions": true,
+                "outerIIFEBody": 1
+            }
+        ],
         "array-bracket-spacing": ["warn", "always"],
         "array-callback-return": "error",
         "arrow-spacing": "warn",
@@ -84,27 +109,6 @@
             "error",
             {
                 "allowImplicit": true
-            }
-        ],
-        "indent": [
-            "warn",
-            4,
-            {
-                "ArrayExpression": 1,
-                "CallExpression": {
-                    "arguments": 1
-                },
-                "FunctionDeclaration": {
-                    "body": 1,
-                    "parameters": 2
-                },
-                "ImportDeclaration": 1,
-                "MemberExpression": 1,
-                "ObjectExpression": 1,
-                "SwitchCase": 1,
-                "VariableDeclarator": "first",
-                "flatTernaryExpressions": true,
-                "outerIIFEBody": 1
             }
         ],
         "key-spacing": [
@@ -174,7 +178,7 @@
         ],
         "prefer-promise-reject-errors": "warn",
         "promise/always-return": "error",
-        "promise/avoid-new": "warn",
+        "promise/avoid-new": "off",
         "promise/catch-or-return": "error",
         "promise/no-callback-in-promise": "warn",
         "promise/no-native": "off",
@@ -187,6 +191,31 @@
         "promise/valid-params": "warn",
         "quote-props": ["warn", "as-needed"],
         "quotes": ["warn", "single", "avoid-escape"],
+        "radar/cognitive-complexity": ["warn", 16],
+        "radar/max-switch-cases": ["warn", 10],
+        "radar/no-all-duplicated-branches": "error",
+        "radar/no-collapsible-if": "warn",
+        "radar/no-collection-size-mischeck": "error",
+        "radar/no-duplicate-string": "warn",
+        "radar/no-duplicated-branches": "error",
+        "radar/no-element-overwrite": "error",
+        "radar/no-extra-arguments": "warn",
+        "radar/no-identical-conditions": "error",
+        "radar/no-identical-expressions": "warn",
+        "radar/no-identical-functions": "warn",
+        "radar/no-inverted-boolean-check": "warn",
+        "radar/no-one-iteration-loop": "error",
+        "radar/no-redundant-boolean": "error",
+        "radar/no-redundant-jump": "error",
+        "radar/no-same-line-conditional": "error",
+        "radar/no-small-switch": "warn",
+        "radar/no-unused-collection": "warn",
+        "radar/no-use-of-empty-return-value": "error",
+        "radar/no-useless-catch": "warn",
+        "radar/prefer-immediate-return": "warn",
+        "radar/prefer-object-literal": "warn",
+        "radar/prefer-single-boolean-return": "warn",
+        "radar/prefer-while": "error",
         "radix": ["warn", "as-needed"],
         "semi": ["error", "always"],
         "semi-spacing": "warn",
