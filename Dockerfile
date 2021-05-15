@@ -25,9 +25,6 @@ COPY . ${APP_DIR}
 # builds the app
 RUN npm run build:${ENV}
 
-
-
-
 ##
 ## STAGE 2: server setup
 ##

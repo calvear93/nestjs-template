@@ -28,12 +28,7 @@
     "lint:fix": "eslint --fix \"{src,apps,libs,test}/**/*.ts\"*",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "_build": "rimraf dist && nest build && npx babel dist --out-dir dist",
-    "_clean": "rimraf dist",
-    "_packages:update": "npm update --save/--save-dev",
-    "_packages:force-update": "npx npm-check-updates -u",
-    "_git:case-sensitive": "git config core.ignorecase false",
-    "docker:start": "docker run -d -it -p 4001:80/tcp --name docker-image-instance docker-image",
-    "docker:build": "docker build --build-arg ENV=development --tag docker-image ."
+    "_clean": "rimraf dist"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.12",
