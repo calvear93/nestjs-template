@@ -17,7 +17,7 @@
  *
  * @returns {string} string (with filter if exists) if valid, def in otherwise.
  */
-export function defaultOnFalsy(str : string, filter : (str : string) => string, def = '-') : string
+export function defaultOnFalsy(str: string, filter: (str: string)=> string, def = '-'): string
 {
     return str ? (filter ? filter(str) : str) : def;
 }
@@ -29,7 +29,7 @@ export function defaultOnFalsy(str : string, filter : (str : string) => string, 
  *
  * @returns {string} string without underscores.
  */
-export function removeUnderscore(str : string) : string
+export function removeUnderscore(str: string): string
 {
     return str.replace(/_/g, ' ');
 }
@@ -41,7 +41,7 @@ export function removeUnderscore(str : string) : string
  *
  * @returns {string} string normalized.
  */
-export function capitalizeAfterPeriod(str : string) : string
+export function capitalizeAfterPeriod(str: string): string
 {
     if (!str)
         return '';
@@ -56,7 +56,7 @@ export function capitalizeAfterPeriod(str : string) : string
  *
  * @returns {string} string capitalized.
  */
-export function capitalizeEvery(str : string) : string
+export function capitalizeEvery(str: string): string
 {
     if (!str)
         return '';
@@ -74,7 +74,7 @@ export function capitalizeEvery(str : string) : string
  *
  * @returns {string} string without diacritics.
  */
-export function removeDiacritics(str : string) : string
+export function removeDiacritics(str: string): string
 {
     if (!str)
         return '';
@@ -90,13 +90,13 @@ export function removeDiacritics(str : string) : string
  *
  * @returns {string} string emphasized.
  */
-export function empathize(str : string) : string
+export function empathize(str: string): string
 {
     if (!str)
         return '';
 
     return Array.from<string>(str.toUpperCase())
-        .reduce((result : string, char : string, index : number) : string =>
+        .reduce((result: string, char: string, index: number): string =>
         {
             result += char;
 

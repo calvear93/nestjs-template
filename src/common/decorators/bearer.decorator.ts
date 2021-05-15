@@ -8,7 +8,7 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
  *
  * @returns {string} token
  */
-export function getBearerToken(key = 'authorization', ctx : ExecutionContext) : string
+export function getBearerToken(key = 'authorization', ctx: ExecutionContext): string
 {
     const request = ctx.switchToHttp().getRequest();
     const { [key]: bearer } = request.headers;

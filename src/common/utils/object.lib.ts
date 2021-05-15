@@ -15,7 +15,7 @@
  *
  * @returns {boolean} true if object is empty or null/undefined, false in otherwise.
  */
-export function isEmpty(obj : any | undefined) : boolean
+export function isEmpty(obj: any | undefined): boolean
 {
     return !obj || Object.keys(obj).length === 0;
 }
@@ -28,7 +28,7 @@ export function isEmpty(obj : any | undefined) : boolean
  *
  * @returns {object | undefined} object if is not null, undefined or empty, undefined in otherwise.
  */
-export function reduceEmptiness(obj : any | undefined) : any | undefined
+export function reduceEmptiness(obj: any | undefined): any | undefined
 {
     return isEmpty(obj) ? undefined : obj;
 }
@@ -44,7 +44,7 @@ export function reduceEmptiness(obj : any | undefined) : any | undefined
  *
  * @returns {boolean} function result on object ok, def if object us null/undefined.
  */
-export function callSafe(func : (obj : any, args : Array<any>) => any, obj : any, def : any, ...args : Array<any>) : boolean
+export function callSafe(func: (obj: any, args: Array<any>)=> any, obj: any, def: any, ...args: Array<any>): boolean
 {
     return (obj && func(obj, args)) ?? def;
 }
@@ -57,7 +57,7 @@ export function callSafe(func : (obj : any, args : Array<any>) => any, obj : any
  *
  * @returns {object} object with filtered props.
  */
-export function filter(obj : any, func : (value : string, index : number, array : string[]) => unknown) : any
+export function filter(obj: any, func: (value: string, index: number, array: string[])=> unknown): any
 {
     return !obj ? obj : Object.keys(obj)
         .filter(func)
@@ -79,7 +79,7 @@ export function filter(obj : any, func : (value : string, index : number, array 
  *
  * @returns {boolean} true if is valid, false in otherwise.
  */
-export function isData(value : any, allowsEmpty = false) : boolean
+export function isData(value: any, allowsEmpty = false): boolean
 {
     if (value === undefined || value === null)
         return false;

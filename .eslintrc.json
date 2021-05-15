@@ -47,7 +47,7 @@
             "warn",
             {
                 "after": true,
-                "before": true
+                "before": false
             }
         ],
         "@typescript-eslint/indent": [

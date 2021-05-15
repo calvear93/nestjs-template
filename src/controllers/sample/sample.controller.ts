@@ -4,7 +4,7 @@ import { Controller, Get } from '@nestjs/common';
 export class SampleController
 {
     @Get()
-    sample() : any
+    sample(): any
     {
         return 'Hello World';
     }
