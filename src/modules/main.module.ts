@@ -4,10 +4,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from 'common/guards';
 import { AzureJwtService } from 'providers';
 import { AuthController } from 'controllers/auth';
+import { SampleController } from 'controllers/sample';
 
 @Module({
     imports: [ JwtModule.register({ }) ],
-    controllers: [ AuthController ],
+    controllers: [ AuthController, SampleController ],
     providers: [
         AzureJwtService,
         {

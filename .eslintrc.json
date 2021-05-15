@@ -28,7 +28,6 @@
     "extends": [
         "plugin:@typescript-eslint/recommended",
         "plugin:eslint-comments/recommended",
-        "prettier/@typescript-eslint",
         "plugin:radar/recommended"
     ],
     "rules": {

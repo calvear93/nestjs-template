@@ -7,7 +7,7 @@
  * @author Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>
  *
  * Created at     : 2020-05-16 16:37:10
- * Last modified  : 2021-02-13 19:07:28
+ * Last modified  : 2021-05-15 15:58:28
  */
 
 import { addMonths, addYears, getDaysInMonth, differenceInCalendarDays, differenceInCalendarMonths, differenceInCalendarYears, format, formatDuration, isValid } from 'date-fns';
@@ -79,7 +79,7 @@ export function formatDate(date : Date | string | number, formatPattern : string
     if (typeof date !== 'object')
         date = new Date(date);
 
-    return isValid(date) ? format(date, formatPattern ?? FORMAT.DATE_FORMAT) : MESSAGES.DATE_NO_VALID;
+    return isValid(date) ? format(date, formatPattern ?? FORMAT.DATE_FORMAT, LOCALE) : MESSAGES.DATE_NO_VALID;
 }
 
 /**
@@ -96,7 +96,7 @@ export function formatDateTime(date : Date | string | number, format24 = true, f
     if (typeof date !== 'object')
         date = new Date(date);
 
-    return isValid(date) ? format(date, formatPattern ?? `${FORMAT.DATE_FORMAT} ${timeFormatChooser(format24)}`) : MESSAGES.DATE_NO_VALID;
+    return isValid(date) ? format(date, formatPattern ?? `${FORMAT.DATE_FORMAT} ${timeFormatChooser(format24)}`, LOCALE) : MESSAGES.DATE_NO_VALID;
 }
 
 /**
@@ -113,7 +113,7 @@ export function formatTime(date : Date | string | number, format24 = true, forma
     if (typeof date !== 'object')
         date = new Date(date);
 
-    return isValid(date) ? format(date, formatPattern ?? `${timeFormatChooser(format24)}`) : MESSAGES.DATE_NO_VALID;
+    return isValid(date) ? format(date, formatPattern ?? `${timeFormatChooser(format24)}`, LOCALE) : MESSAGES.DATE_NO_VALID;
 }
 
 /**
