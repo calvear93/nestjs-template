@@ -19,7 +19,8 @@ ARG ENV
 WORKDIR ${APP_DIR}
 
 COPY package.json ${APP_DIR}
-RUN yarn install --no-lockfile
+# RUN yarn install --no-lockfile
+RUN npm install --force
 
 COPY . ${APP_DIR}
 # builds the app
@@ -37,14 +38,15 @@ WORKDIR ${APP_DIR}
 
 # sets NGINX
 COPY --from=builder ${APP_DIR}'dist' ${APP_DIR}
-COPY --from=builder ${APP_DIR}'package.json' ${APP_DIR}
+COPY --from=builder ${APP_DIR}'package*.json' ${APP_DIR}
 
 # alpine security updates
 RUN apk --no-cache -U upgrade
 
-# RUN npm install --no-optional --force
-RUN yarn install --production --ignore-optional --no-lockfile
-RUN yarn cache clean
+# RUN yarn install --production --ignore-optional --no-lockfile
+# RUN yarn cache clean
+RUN npm install --production
+RUN npm cache clean --force
 
 # exec command
 ENTRYPOINT ["node"]

@@ -5,11 +5,12 @@
         "jest": true,
         "node": true,
         "worker": true,
+        "es2021": true,
         "jest/globals": true
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 11,
+        "ecmaVersion": 12,
         "project": "tsconfig.json",
         "sourceType": "module",
         "ecmaFeatures": {
@@ -22,12 +23,14 @@
         "decorator-position",
         "import",
         "promise",
+        "jsdoc",
         "jest",
         "radar"
     ],
     "extends": [
         "plugin:@typescript-eslint/recommended",
         "plugin:eslint-comments/recommended",
+        "plugin:jsdoc/recommended",
         "plugin:radar/recommended"
     ],
     "rules": {
@@ -110,6 +113,20 @@
                 "allowImplicit": true
             }
         ],
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error",
+        "jsdoc/check-tag-names": "off",
+        "jsdoc/no-undefined-types": "off",
+        "jsdoc/require-hyphen-before-param-description": "off",
+        "jsdoc/require-jsdoc": "off",
+        "jsdoc/require-param-description": "off",
+        "jsdoc/require-property-description": "off",
+        "jsdoc/require-returns-description": "off",
+        "jsdoc/require-throws": "warn",
+        "jsdoc/tag-lines": "off",
         "key-spacing": [
             "warn",
             {
