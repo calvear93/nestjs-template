@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { MainModule } from 'modules';
+import { MainModule } from 'main.module';
 import { swaggerInit } from 'config';
 
 async function bootstrap()

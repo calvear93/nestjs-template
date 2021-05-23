@@ -7,11 +7,23 @@
  * @author Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>
  *
  * Created at     : 2020-05-16 16:37:10
- * Last modified  : 2021-05-15 15:58:28
+ * Last modified  : 2021-05-23 17:27:34
  */
 
-import { addMonths, addYears, getDaysInMonth, differenceInCalendarDays, differenceInCalendarMonths, differenceInCalendarYears, format, formatDuration, isValid } from 'date-fns';
+import {
+    addMonths,
+    addYears,
+    getDaysInMonth,
+    differenceInCalendarDays,
+    differenceInCalendarMonths,
+    differenceInCalendarYears,
+    format,
+    formatDuration,
+    isValid
+} from 'date-fns';
 import locale from 'date-fns/locale/es';
+
+type inputDate = Date | string | number;
 
 const LOCALE: any = { locale };
 
@@ -48,7 +60,7 @@ function timeFormatChooser(format24 = true): string
  *
  * @returns {string | Date} parsed datetime.
  */
-export function parseDate(date: Date | string | number): Date | string
+export function parseDate(date: inputDate): Date | string
 {
     if (typeof date !== 'object')
         date = new Date(date);
@@ -74,7 +86,7 @@ export function resetTimezoneOffset(date: Date)
  *
  * @returns {string} formatted date.
  */
-export function formatDate(date: Date | string | number, formatPattern: string | undefined): string
+export function formatDate(date: inputDate, formatPattern?: string): string
 {
     if (typeof date !== 'object')
         date = new Date(date);
@@ -91,7 +103,7 @@ export function formatDate(date: Date | string | number, formatPattern: string |
  *
  * @returns {string} formatted datetime.
  */
-export function formatDateTime(date: Date | string | number, format24 = true, formatPattern: string | undefined): string
+export function formatDateTime(date: inputDate, format24 = true, formatPattern?: string): string
 {
     if (typeof date !== 'object')
         date = new Date(date);
@@ -108,7 +120,7 @@ export function formatDateTime(date: Date | string | number, format24 = true, fo
  *
  * @returns {string} formatted time.
  */
-export function formatTime(date: Date | string | number, format24 = true, formatPattern: string | undefined): string
+export function formatTime(date: inputDate, format24 = true, formatPattern?: string): string
 {
     if (typeof date !== 'object')
         date = new Date(date);
@@ -123,7 +135,7 @@ export function formatTime(date: Date | string | number, format24 = true, format
  *
  * @returns {string} natural date.
  */
-export function toNaturalDate(date: Date | string | number): string
+export function toNaturalDate(date: inputDate): string
 {
     if (typeof date !== 'object')
         date = new Date(date);
@@ -139,7 +151,7 @@ export function toNaturalDate(date: Date | string | number): string
  *
  * @returns {string} natural datetime.
  */
-export function toNaturalDateTime(date: Date | string | number, format24 = true): string
+export function toNaturalDateTime(date: inputDate, format24 = true): string
 {
     if (typeof date !== 'object')
         date = new Date(date);
@@ -155,7 +167,7 @@ export function toNaturalDateTime(date: Date | string | number, format24 = true)
  *
  * @returns {string} age from date
  */
-export function toAgeByBirth(date: Date | string | number, showDays = false): string
+export function toAgeByBirth(date: inputDate, showDays = false): string
 {
     if (typeof date !== 'object')
         date = new Date(date);
