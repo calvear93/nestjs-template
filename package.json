@@ -2,10 +2,11 @@
   "version": "0.0.1",
   "name": "nestjs-template",
   "title": "NestJS Template",
-  "description": "Security Service for PowerApps project using NestJS",
+  "description": "NestJS template",
   "author": "Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>",
-  "license": "GPL3",
-  "private": true,
+  "license": "MIT",
+  "private": false,
+  "repository": "https://github.com/calvear93/nestjs-template",
   "keywords": [
     "nest",
     "node"
@@ -49,7 +50,7 @@
     "@nestjs/testing": "^7.6.15",
     "@types/express": "^4.17.11",
     "@types/jest": "^26.0.23",
-    "@types/node": "^15.3.0",
+    "@types/node": "^15.6.0",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
