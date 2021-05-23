@@ -19,7 +19,10 @@
  */
 export function defaultOnFalsy(str: string, filter: (str: string)=> string, def = '-'): string
 {
-    return str ? (filter ? filter(str) : str) : def;
+    if (!str)
+        return def;
+
+    return filter ? filter(str) : str;
 }
 
 /**
@@ -46,7 +49,7 @@ export function capitalizeAfterPeriod(str: string): string
     if (!str)
         return '';
 
-    return str.replace(/([.!?-]+\s*)([a-z])/g, (m, $1, $2) => $1 + $2.toUpperCase());
+    return str.replace(/([.!?-]+\s*)([a-z])/g, (_, $1, $2) => $1 + $2.toUpperCase());
 }
 
 /**

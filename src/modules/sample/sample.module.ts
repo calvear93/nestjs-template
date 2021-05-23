@@ -6,4 +6,11 @@ import { SampleService } from './services';
     controllers: [ SampleController ],
     providers: [ SampleService ]
 })
-export class SampleModule {}
+export class SampleModule
+{
+    onModuleInit()
+    {
+        // eslint-disable-next-line no-console
+        console.log('SampleModule initialized.');
+    }
+}
