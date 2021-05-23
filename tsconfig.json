@@ -1,28 +1,48 @@
 {
     "compilerOptions": {
         "baseUrl": "src",
+        "paths": {
+            "~/*": ["*"]
+            // ,"controllers/*": ["controllers/*"]
+        },
+        "rootDir": "src",
+        "outDir": "dist",
+
         "target": "es5",
         "module": "commonjs",
         "moduleResolution": "node",
-        "outDir": "./dist",
-        "allowSyntheticDefaultImports": true,
+        "allowJs": true,
+        "checkJs": false,
         "declaration": true,
-        "emitDecoratorMetadata": true,
-        "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "forceConsistentCasingInFileNames": true,
-        "incremental": true,
-        "isolatedModules": true,
-        "noImplicitAny": false,
-        "removeComments": true,
+
         "resolveJsonModule": true,
-        "skipLibCheck": true,
+
+        "incremental": true,
+        "declarationMap": true,
         "sourceMap": true,
-        "strict": true
-        // "paths": {
-        //     "controllers/*": ["controllers/*"],
-        // }
+
+        "removeComments": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+
+        "strict": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": false,
+        "noImplicitAny": false,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     },
-    "exclude": ["node_modules", "dist", "**/*.spec.ts"],
-    "include": ["src/**/*", "test/**/*"]
+    "include": ["src/**/*", "test/**/*"],
+    "exclude": ["node_modules", "build", "dist", "**/*.spec.ts"]
 }
