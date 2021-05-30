@@ -17,6 +17,7 @@ declare global {
             DEFAULT_DB_DATABASE: string;
             DEFAULT_DB_SCHEMA: string;
 
+            DEFAULT_DB_ORM_AUTO_MIGRATE: boolean;
             DEFAULT_DB_ORM_SYNCHRONIZE: boolean;
             DEFAULT_DB_ORM_LOGGING: boolean;
         }

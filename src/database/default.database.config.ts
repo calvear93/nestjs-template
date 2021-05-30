@@ -7,16 +7,20 @@ const BASE_PATH = 'src/database';
 const config: ConnectionOptions = {
     type: process.env.DEFAULT_DB_CONNECTION,
     host: process.env.DEFAULT_DB_HOST,
-    port: process.env.DEFAULT_DB_PORT,
+    port: +process.env.DEFAULT_DB_PORT,
     username: process.env.DEFAULT_DB_USERNAME,
     password: process.env.DEFAULT_DB_PASSWORD,
     database: process.env.DEFAULT_DB_DATABASE,
     schema: process.env.TYPEORM_SCHEMA,
+
+    migrationsRun: process.env.DEFAULT_DB_ORM_AUTO_MIGRATE,
     synchronize: process.env.DEFAULT_DB_ORM_SYNCHRONIZE,
     logging: process.env.DEFAULT_DB_ORM_LOGGING,
-    migrations: [ `${BASE_PATH}/migrations` ],
+
+    migrations: [ `${BASE_PATH}/migrations/*.ts` ],
     entities: [ `${BASE_PATH}/**/*.entity{.ts,.js}` ],
     subscribers: [ `${BASE_PATH}/**/*.subscriber{.ts,.js}` ],
+
     cli: {
         migrationsDir: `${BASE_PATH}/migrations`,
         entitiesDir: `${BASE_PATH}/**/*.entity{.ts,.js}`,
