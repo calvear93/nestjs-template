@@ -1,0 +1,217 @@
+#
+#   AZURE PIPELINES VARIABLES TEMPLATE
+#
+#   allows to declare easily variables
+#   per environment depending of branch
+#
+#   [i] Predefined variables are:
+#     - env.name: PROD, STAGE, QA, DEV
+#     - env.key: production, stage, qa, development
+#     - env.isPullRequest: if pipeline was triggered by a Pull Request
+#     - env.stages.build: whether build stage is enabled
+#     - env.stages.test: whether test stage is enabled
+#     - env.stages.publish: whether publishes current artifact
+#     - env.stages.deploy: whether deploy stage is enabled
+#     - env.version.incremental: build number (develop only)
+#
+#     you can access this variables as:
+#       variables['env.name'] (in expressions, conditions)
+#       ${{ env.name }} (for output, pre var assigns)
+#       $(env.name) (for inputs, post var assigns)
+#
+#   [i] branches environments are defined as:
+#     main|master -> production
+#     stage -> stage
+#     release/* -> qa
+#     develop -> development
+#     feature/* -> development
+#     hotfix/* -> development
+#
+#   [i] how to use:
+#     variables:
+#     - template: vars.yml
+#       parameters:
+#         debug: true
+#         global:
+#           - group: VARS_GLOBAL
+#         production:
+#           - group: VARS_PROD
+#           - name: webApp
+#             value: wa-prod-project
+#         ...
+#         development:
+#           - name: webApp
+#             value: wa-dev-project
+#
+
+parameters:
+- name: debug
+  type: boolean
+  default: false
+# global variables definition
+- name: global
+  type: object
+  default: []
+# environments variables definition
+- name: production
+  type: object
+  default: []
+- name: stage
+  type: object
+  default: []
+- name: qa
+  type: object
+  default: []
+- name: development
+  type: object
+  default: []
+- name: pullRequest
+  type: object
+  default: []
+# stages execution flags
+- name: stages
+  type: object
+  default:
+    # whether 'test' stage should be executed (e.g. Unit Tests, SonarQube analysis)
+    - name: env.stages.test
+      value: false
+    # whether 'build' stage should be executed
+    - name: env.stages.build
+      value: false
+    # whether artifact should be published to artifact container (e.g. Container Registry)
+    - name: env.stages.publish
+      value: false
+    # whether artifact should be deployed to environment (e.g. Azure Publishing, Kubernetes Deploy)
+    - name: env.stages.deploy
+      value: false
+
+variables:
+  - name: System.Debug
+    value: ${{ parameters.debug }}
+  - name: env.author
+    value: ${{ variables['Build.RequestedFor'] }}
+  - name: env.isPullRequest
+    value: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
+  # enabled in development only
+  - name: env.version.incremental
+    value: ''
+
+  - ${{ each var in parameters.stages }}:
+    - ${{ var }}
+
+  - ${{ each var in parameters.global }}:
+    - ${{ var }}
+
+  # PRODUCTION
+  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/master') }}:
+    - name: env.name
+      value: PROD
+    - name: env.key
+      value: production
+    - name: env.stages.test
+      value: true
+    - name: env.stages.build
+      value: true
+    - name: env.stages.publish
+      value: true
+    - name: env.stages.deploy
+      value: true
+    - ${{ each var in parameters.production }}:
+      - ${{ var }}
+
+  # STAGE
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stage') }}:
+    - name: env.name
+      value: STAGE
+    - name: env.key
+      value: stage
+    - name: env.stages.test
+      value: true
+    - name: env.stages.build
+      value: true
+    - name: env.stages.publish
+      value: true
+    - name: env.stages.deploy
+      value: true
+    - ${{ each var in parameters.stage }}:
+      - ${{ var }}
+
+  # QA
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release/') }}:
+    - name: env.name
+      value: QA
+    - name: env.key
+      value: qa
+    - name: env.stages.test
+      value: true
+    - name: env.stages.build
+      value: true
+    - name: env.stages.publish
+      value: true
+    - name: env.stages.deploy
+      value: true
+    - ${{ each var in parameters.qa }}:
+      - ${{ var }}
+
+  # DEVELOPMENT
+  - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+    - name: env.name
+      value: DEV
+    - name: env.key
+      value: development
+    - name: env.stages.test
+      value: true
+    - name: env.stages.build
+      value: true
+    - name: env.stages.publish
+      value: true
+    - name: env.stages.deploy
+      value: true
+    - name: env.version.incremental
+      value: .$(Build.BuildNumber)
+    - ${{ each var in parameters.development }}:
+      - ${{ var }}
+
+  # FEATURE
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/') }}:
+    - name: env.name
+      value: DEV
+    - name: env.key
+      value: development
+    - name: env.stages.test
+      value: true
+    - ${{ each var in parameters.development }}:
+      - ${{ var }}
+
+  # PRODUCTION bugfix
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix/') }}:
+    - name: env.name
+      value: QA
+    - name: env.key
+      value: qa
+    - name: env.stages.test
+      value: true
+    - ${{ each var in parameters.qa }}:
+      - ${{ var }}
+
+  # QA bugfix
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/bugfix/') }}:
+    - name: env.name
+      value: QA
+    - name: env.key
+      value: qa
+    - name: env.stages.test
+      value: true
+    - ${{ each var in parameters.qa }}:
+      - ${{ var }}
+
+  # Pull Request Build Policy
+  - ${{ if eq(variables['env.isPullRequest'], true) }}:
+    - name: env.name
+      value: PR
+    - name: env.key
+      value: qa
+    - name: env.stages.test
+      value: true
+    - ${{ each var in parameters.pullRequest }}:
+      - ${{ var }}

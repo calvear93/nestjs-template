@@ -1,0 +1,150 @@
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+      - master
+      - stage
+      - release/*
+      - develop
+      - hotfix/* # PROD bugfix
+      - bugfix/* # QA bugfix
+
+variables:
+- template: templates/vars.template.yml
+  parameters:
+    debug: true
+    global:
+      #- group: VARS_GROUP
+      - name: vmImage
+        value: ubuntu-latest
+    production:
+      - name: deployEnv
+        value: DEPLOY_APP_PROD
+    stage:
+      - name: deployEnv
+        value: DEPLOY_APP_STAGE
+    qa:
+      - name: deployEnv
+        value: DEPLOY_APP_QA
+    development:
+      - name: deployEnv
+        value: DEPLOY_APP_DEV
+
+pool:
+    vmImage: $(vmImage)
+
+stages:
+  # STAGE: reads package.json info
+  - template: templates/read-project-info.stage.yml
+
+  # STAGE: execute tests and code analysis
+  - stage: QualityAssurance
+    displayName: Quality Assurance
+    condition: eq(variables['env.stages.test'], true)
+    jobs:
+    # JOB: executes unit tests
+    - job: UnitTest
+      displayName: Run Unit Tests
+      steps:
+
+      - script: |
+          echo $(env.name)
+        displayName: Debug
+
+    # JOB: executes integration tests
+    - job: IntegrationTest
+      displayName: Run Integration Tests
+      steps:
+
+      - script: |
+          echo $(env.name)
+        displayName: Debug
+
+    # JOB: executes code analysis
+    - job: CodeAnalysis
+      displayName: Code Analysis
+      steps:
+
+      - script: |
+          echo $(env.name)
+        displayName: Debug
+
+  # STAGE: builds the project
+  - stage: Build
+    displayName: Build
+    dependsOn: [ ReadProjectInfo, QualityAssurance ]
+    condition: and(succeeded(), eq(variables['env.stages.build'], true))
+    variables:
+      project: $[ stageDependencies.ReadProjectInfo.Variables.outputs['name.value'] ]
+      version: $[ stageDependencies.ReadProjectInfo.Variables.outputs['version.value'] ]
+    jobs:
+    # JOB: prepares workspace
+    - job: Prepare
+      displayName: Preparing environment
+      steps:
+
+      - script: |
+          echo $(env.name)
+          echo $(project)
+          echo $(version)
+        displayName: Debug
+
+    # JOB: builds the project
+    - job: Build
+      displayName: Building project
+      dependsOn: Prepare
+      steps:
+
+      - script: |
+          echo $(env.name)
+          echo $(project)
+          echo $(version)
+        displayName: Debug
+
+    # JOB: push/publish artifacts
+    - job: Publish
+      displayName: Publish artifacts
+      dependsOn: Build
+      condition: eq(variables['env.stages.publish'], true)
+      steps:
+
+      - script: |
+          echo $(env.name)
+          echo $(project)
+          echo $(version)
+        displayName: Debug
+
+  # STAGE: deploys artifacts
+  - stage: Deployment
+    displayName: Deployment
+    dependsOn: [ ReadProjectInfo, Build ]
+    condition: and(succeeded(), eq(variables['env.stages.deploy'], true))
+    variables:
+      project: $[ stageDependencies.ReadProjectInfo.Variables.outputs['name.value'] ]
+      version: $[ stageDependencies.ReadProjectInfo.Variables.outputs['version.value'] ]
+    jobs:
+    # JOB: deploys artifacts
+    - deployment: Deploy
+      displayName: Deploying artifacts
+      environment: $(deployEnv)
+      strategy:
+        runOnce:
+          preDeploy:
+            steps:
+
+            - script: |
+                echo $(env.name)
+                echo $(project)
+                echo $(version)
+              displayName: Debug
+
+          deploy:
+            steps:
+
+            - script: |
+                echo $(env.name)
+                echo $(project)
+                echo $(version)
+              displayName: Debug

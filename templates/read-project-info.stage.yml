@@ -1,0 +1,51 @@
+#
+#   AZURE PIPELINES PACKAGE.JSON READER TEMPLATE
+#
+#   allows to read project package.json variables
+#
+#   [i] how to use:
+#   stages:
+#   - template: read-project-info.stage.yml
+#     parameters:
+#       - name
+#       - version
+#       - description
+#
+#   - stage: Build
+#     dependsOn: Prepare
+#     variables:
+#       project: $[ stageDependencies.ReadProjectInfo.Variables.outputs['name.value'] ]
+#       version: $[ stageDependencies.ReadProjectInfo.Variables.outputs['version.value'] ]
+#       description: $[ stageDependencies.ReadProjectInfo.Variables.outputs['description.value'] ]
+#     jobs:
+#     - job: Build
+#       steps:
+#
+#       - script: |
+#         echo Project name: $(project)
+#         echo Project version: $(version)
+#         echo Project description: $(description)
+#       displayName: Debug
+#
+
+
+parameters:
+  - name: vars
+    type: object
+    default:
+      - name
+      - version
+
+stages:
+  - stage: ReadProjectInfo
+    displayName: Reading Project Info
+    jobs:
+      - job: Variables
+        displayName: Read package.json
+        steps:
+        - ${{ each member in parameters.vars }}:
+          - bash: |
+              val=$(cat package.json | grep ${{ member }} | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+              echo "##vso[task.setvariable variable=value;isOutput=true;]$val"
+            name: ${{ member }}
+            displayName: Reading ${{ member }}
