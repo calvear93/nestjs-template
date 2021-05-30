@@ -7,10 +7,10 @@ const config: ConnectionOptions = {
     username: 'local',
     password: '123',
     database: 'test',
-    entities: [ '**/*.entity{.ts,.js}' ],
+    entities: [ 'src/**/*.entity{.ts,.js}' ],
     cli: {
-        migrationsDir: 'migrations'
+        migrationsDir: 'src/database/migrations'
     }
 };
 
-export = config;
+export default config;
