@@ -29,18 +29,22 @@
     "lint:fix": "eslint --fix \"{src,apps,libs,test}/**/*.ts\"*",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "_build": "rimraf dist && nest build && npx babel dist --out-dir dist",
-    "_clean": "rimraf dist"
+    "_clean": "rimraf dist",
+    "db": "ts-node --transpile-only ./node_modules/typeorm/cli -f ./ormconfig.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
     "@nestjs/core": "^7.6.15",
     "@nestjs/platform-express": "^7.6.15",
     "@nestjs/swagger": "^4.8.0",
+    "@nestjs/typeorm": "^7.1.5",
     "date-fns": "^2.21.3",
+    "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.0.1",
-    "swagger-ui-express": "^4.1.6"
+    "swagger-ui-express": "^4.1.6",
+    "typeorm": "^0.2.32"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.16",
