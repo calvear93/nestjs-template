@@ -101,7 +101,14 @@
         ],
         "comma-style": ["warn", "last"],
         "curly": ["warn", "multi-or-nest", "consistent"],
-        "decorator-position/decorator-position": "warn",
+        "decorator-position/decorator-position": [
+            "error",
+            {
+                "printWidth": 100,
+                "properties": "above",
+                "methods": "prefer-inline"
+            }
+        ],
         "default-case": "warn",
         "dot-location": ["warn", "property"],
         "dot-notation": "warn",
