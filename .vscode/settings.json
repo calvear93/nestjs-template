@@ -71,6 +71,7 @@
         "*.resolver.ts": "nest-resolver",
         "*.service.ts": "nest-service",
         "*.provider.ts": "nest-service",
+        "*.entity.ts": "raml",
 		"*.cfg.js": "settings",
 		"*.cfg.ts": "settings",
 		"*.config.js": "settings",
@@ -104,16 +105,22 @@
 		"defaults.ts": "makefile",
 		"package.json": "nodejs_alt",
 		"service-worker.js": "http",
-		"setupTests.js": "jest"
+		"setupTests.js": "jest",
+		"tsconfig.build.json": "typescript-def",
+		"tsconfig.json": "typescript-def"
 	},
 	"material-icon-theme.folders.associations": {
 		"adapters": "connection",
 		"context": "global",
 		"decorators": "custom",
+		"entities": "mappings",
 		"masks": "middleware",
+		"migrations": "scripts",
 		"modules": "middleware",
 		"normalizers": "lib",
 		"ui": "core",
+		"schema": "mappings",
+		"services": "api",
 		"validators": "syntax",
 		"vars": "shared",
 		"variables": "shared"
