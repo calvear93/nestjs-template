@@ -11,14 +11,14 @@ const config: ConnectionOptions = {
     username: process.env.DEFAULT_DB_USERNAME,
     password: process.env.DEFAULT_DB_PASSWORD,
     database: process.env.DEFAULT_DB_DATABASE,
-    // schema: process.env.TYPEORM_SCHEMA,
+    schema: process.env.TYPEORM_SCHEMA,
     synchronize: process.env.DEFAULT_DB_ORM_SYNCHRONIZE,
     logging: process.env.DEFAULT_DB_ORM_LOGGING,
+    migrations: [ `${BASE_PATH}/migrations` ],
     entities: [ `${BASE_PATH}/**/*.entity{.ts,.js}` ],
     subscribers: [ `${BASE_PATH}/**/*.subscriber{.ts,.js}` ],
     cli: {
-        // migrationsDir: `${BASE_PATH}/migrations`,
-        migrationsDir: 'src/database/migrations',
+        migrationsDir: `${BASE_PATH}/migrations`,
         entitiesDir: `${BASE_PATH}/**/*.entity{.ts,.js}`,
         subscribersDir: `${BASE_PATH}/**/*.subscriber{.ts,.js}`
     }
