@@ -31,7 +31,7 @@ module.exports = Promise.resolve({
         DEFAULT_DB_USERNAME: "local",
         DEFAULT_DB_PASSWORD: "123",
         DEFAULT_DB_DATABASE: "test",
-        DEFAULT_DB_SCHEMA: "public_test",
+        DEFAULT_DB_SCHEMA: "public",
 
         DEFAULT_DB_ORM_AUTO_MIGRATE: false,
         DEFAULT_DB_ORM_SYNCHRONIZE: false,

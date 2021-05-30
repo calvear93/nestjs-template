@@ -11,7 +11,7 @@ const config: ConnectionOptions = {
     username: process.env.DEFAULT_DB_USERNAME,
     password: process.env.DEFAULT_DB_PASSWORD,
     database: process.env.DEFAULT_DB_DATABASE,
-    schema: process.env.TYPEORM_SCHEMA,
+    schema: process.env.DEFAULT_DB_SCHEMA,
 
     migrationsRun: process.env.DEFAULT_DB_ORM_AUTO_MIGRATE,
     synchronize: process.env.DEFAULT_DB_ORM_SYNCHRONIZE,
