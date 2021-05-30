@@ -22,7 +22,17 @@ module.exports = Promise.resolve({
     },
 
     debug: {
-        ENV: 'debug'
+        ENV: 'debug',
+
+        DEFAULT_DB_CONNECTION: "postgres",
+        DEFAULT_DB_HOST: "localhost",
+        DEFAULT_DB_PORT: 5432,
+        DEFAULT_DB_USERNAME: "local",
+        DEFAULT_DB_PASSWORD: "123",
+        DEFAULT_DB_DATABASE: "test",
+        DEFAULT_DB_SCHEMA: "public_test",
+        DEFAULT_DB_ORM_SYNCHRONIZE: false,
+        DEFAULT_DB_ORM_LOGGING: true
     },
     development: {
         ENV: 'development'

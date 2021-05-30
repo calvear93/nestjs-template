@@ -76,6 +76,8 @@
 		"*.cfg.ts": "settings",
 		"*.config.js": "settings",
 		"*.config.ts": "settings",
+		"*.database.config.js": "database",
+        "*.database.config.ts": "database",
 		"*.env.js": "tune",
 		"*.env.json": "tune",
 		"*.hook.js": "capacitor",
