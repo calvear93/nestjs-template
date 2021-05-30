@@ -5,7 +5,7 @@
  * @author Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>
  *
  * Created at     : 2020-05-16 16:40:56
- * Last modified  : 2021-05-15 16:40:16
+ * Last modified  : 2021-05-30 14:26:26
  */
 
 /**
@@ -40,12 +40,12 @@ export function checkDigit(id: string): string
 }
 
 /**
-  * Removes all dots and the hyphen.
-  *
-  * @param {string | undefined} rut chilean id.
-  *
-  * @returns {string} cleaned id.
-  */
+ * Removes all dots and the hyphen.
+ *
+ * @param {string | undefined} rut chilean id.
+ *
+ * @returns {string} cleaned id.
+ */
 export function clean(rut?: string): string
 {
     if (!rut)
@@ -55,12 +55,12 @@ export function clean(rut?: string): string
 }
 
 /**
-  * Validates chilean Id.
-  *
-  * @param {string | undefined} id RUT (Rol Único Tributario), RUN (Rol Único Nacional).
-  *
-  * @returns {boolean} whether id is valid.
-  */
+ * Validates chilean Id.
+ *
+ * @param {string | undefined} id RUT (Rol Único Tributario), RUN (Rol Único Nacional).
+ *
+ * @returns {boolean} whether id is valid.
+ */
 export function isValid(id?: string): boolean
 {
     id = clean(id);

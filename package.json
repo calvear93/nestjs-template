@@ -25,11 +25,12 @@
     "test:production": "env-cmd -e default,test,production -r .env.js jest",
     "test:coverage": "jest --coverage",
     "test:inspect": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "lint:analyze": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "lint:fix": "eslint --fix \"{src,apps,libs,test}/**/*.ts\"*",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint:analyze": "eslint {src,apps,libs,test}/**/*.ts",
+    "lint:fix": "eslint --fix {src,apps,libs,test}/**/*.ts",
+    "format": "prettier --write src/**/*.ts test/**/*.ts",
     "_build": "rimraf dist && nest build && npx babel dist --out-dir dist",
-    "_clean": "rimraf dist"
+    "_clean": "rimraf dist",
+    "orm": "ts-node --transpile-only node_modules/typeorm/cli -f src/database/config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
