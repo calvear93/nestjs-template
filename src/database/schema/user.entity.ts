@@ -1,17 +1,18 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ITrackable, Trackable } from '../common';
 
 @Entity()
-export class User
+export class SampleEntity implements ITrackable
 {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    firstName: string;
-
-    @Column()
-    lastName: string;
+    name: string;
 
     @Column({ default: true })
     isActive: boolean;
+
+    @Column(() => Trackable)
+    trackInfo: Trackable;
 }

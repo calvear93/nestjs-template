@@ -71,12 +71,12 @@ it environment may be 'debug', 'development', 'qa' or 'production'.
 
 ### TypeORM
 
-| Command                                               | Action                                        |
-| ----------------------------------------------------- | --------------------------------------------- |
-| npm run orm -- migration:create -n [migration_name]   | creates a blank migration file                |
-| npm run orm -- migration:generate -n [migration_name] | generates a new migration from schema changes |
-| npm run orm -- migration:run                          | syncrhonizes migrations with database         |
-| npm run orm -- migration:revert                       | reverts last migration applied to database    |
+| Command                                                     | Action                                        |
+| ----------------------------------------------------------- | --------------------------------------------- |
+| npm run orm:[env] -- migration:create -n [migration_name]   | creates a blank migration file                |
+| npm run orm:[env] -- migration:generate -n [migration_name] | generates a new migration from schema changes |
+| npm run orm:[env] -- migration:run                          | syncrhonizes migrations with database         |
+| npm run orm:[env] -- migration:revert                       | reverts last migration applied to database    |
 
 ### Docker
 
