@@ -13,7 +13,7 @@ const config: ConnectionOptions = {
     database: process.env.DEFAULT_DB_DATABASE,
     schema: process.env.DEFAULT_DB_SCHEMA,
 
-    migrationsRun: process.env.DEFAULT_DB_ORM_AUTO_MIGRATE,
+    migrationsRun: process.env.DEFAULT_DB_ORM_RUN_MIGRATIONS,
     synchronize: process.env.DEFAULT_DB_ORM_SYNCHRONIZE,
     logging: process.env.DEFAULT_DB_ORM_LOGGING,
 
