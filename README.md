@@ -76,17 +76,17 @@ it environment may be 'debug', 'development', 'qa' or 'production'.
 
 ### [TypeORM](https://typeorm.io/#/using-cli)
 
-| Command                                                    | Action                                        |
-| ---------------------------------------------------------- | --------------------------------------------- |
-| npm run orm:[env] -- migration:create -n [migrationName]   | creates a blank migration file                |
-| npm run orm:[env] -- migration:generate -n [migrationName] | generates a new migration from schema changes |
-| npm run orm:[env] -- migration:run                         | synchronizes migrations with database         |
-| npm run orm:[env] -- migration:revert                      | reverts last migration applied to database    |
-| npm run orm:[env] -- migration:show                        | show migrations                               |
-| npm run orm:[env] -- migration:sync                        | applies schema to database without migrations |
-| npm run orm:[env] -- migration:drop                        | drops database schema                         |
-| npm run orm:[env] -- entity:create -n [EntityName]         | create a new entity                           |
-| npm run orm:[env] -- entity:subscriber -n [SubscriberName] | create a new subscriber                       |
+| Command                                                             | Action                                        |
+| ------------------------------------------------------------------- | --------------------------------------------- |
+| npm run orm:[env] -- migration:create -n [migrationName]            | creates a blank migration file                |
+| npm run orm:[env] -- migration:generate -n [migrationName] --pretty | generates a new migration from schema changes |
+| npm run orm:[env] -- migration:run                                  | synchronizes migrations with database         |
+| npm run orm:[env] -- migration:revert                               | reverts last migration applied to database    |
+| npm run orm:[env] -- migration:show                                 | show migrations                               |
+| npm run orm:[env] -- migration:sync                                 | applies schema to database without migrations |
+| npm run orm:[env] -- migration:drop                                 | drops database schema                         |
+| npm run orm:[env] -- entity:create -n [EntityName]                  | create a new entity                           |
+| npm run orm:[env] -- entity:subscriber -n [SubscriberName]          | create a new subscriber                       |
 
 ### Docker
 
