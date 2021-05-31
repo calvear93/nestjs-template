@@ -16,12 +16,17 @@ This is a boilerplate for NodeJS using the framework [NestJS](https://nestjs.com
 │   │   ├── schema/ # default database entities
 │   │   └── default.database.config.ts # default database connection config
 │   ├── modules/ # app modules
-│   │   └── sample/ # sample module
-│   │       ├── controllers/ # module HTTP controllers
-│   │       ├── services/ # services and repositories
-│   │       ├── sample.module.ts
+│   │   ├── sample/ # sample module
+│   │   │   ├── controllers/ # module HTTP controllers
+│   │   │   ├── services/ # services and repositories
+│   │   │   ├── sample.module.ts
+│   │   │   └── index.ts
+│   │   └── sample-orm/ # sample ORM module
+│   │       ├── controllers/
+│   │       ├── services/
+│   │       ├── sample-orm.module.ts
 │   │       └── index.ts
-│   ├── environment.d.ts
+│   ├── environment.d.ts # .env environment type definition
 │   ├── main.module.ts
 │   └── main.js
 ├── .env.js # environment variables
@@ -55,28 +60,33 @@ Project uses **npm scripts** for eases execution, testing and building.
 Many of these script run on a defined environment, specified after ':', and
 it environment may be 'debug', 'development', 'qa' or 'production'.
 
-| Command               | Action                  |
-| --------------------- | ----------------------- |
-| npm run start:[env]   | executes the app        |
-| npm run build:[env]   | build the app           |
-| npm run orm:[env]     | executes ORM commands   |
-| npm run test:[env]    | executes tests          |
-| npm run test:coverage | testing coverage report |
-| npm run test:inspect  | testing debug           |
-| npm run lint:analyze  | code format review      |
-| npm run lint:fix      | code format review/fix  |
-| npm run format        | prettier code format    |
+| Command                    | Action                  |
+| -------------------------- | ----------------------- |
+| npm run start:[env]        | executes the app        |
+| npm run build:[env]        | build the app           |
+| npm run orm:[env] -- [cmd] | executes ORM commands   |
+| npm run test:[env]         | executes tests          |
+| npm run test:coverage      | testing coverage report |
+| npm run test:inspect       | testing debug           |
+| npm run lint:analyze       | code format review      |
+| npm run lint:fix           | code format review/fix  |
+| npm run format             | prettier code format    |
 
 ## Commands ⚙️
 
-### TypeORM
+### [TypeORM](https://typeorm.io/#/using-cli)
 
-| Command                                                     | Action                                        |
-| ----------------------------------------------------------- | --------------------------------------------- |
-| npm run orm:[env] -- migration:create -n [migration_name]   | creates a blank migration file                |
-| npm run orm:[env] -- migration:generate -n [migration_name] | generates a new migration from schema changes |
-| npm run orm:[env] -- migration:run                          | syncrhonizes migrations with database         |
-| npm run orm:[env] -- migration:revert                       | reverts last migration applied to database    |
+| Command                                                    | Action                                        |
+| ---------------------------------------------------------- | --------------------------------------------- |
+| npm run orm:[env] -- migration:create -n [migrationName]   | creates a blank migration file                |
+| npm run orm:[env] -- migration:generate -n [migrationName] | generates a new migration from schema changes |
+| npm run orm:[env] -- migration:run                         | synchronizes migrations with database         |
+| npm run orm:[env] -- migration:revert                      | reverts last migration applied to database    |
+| npm run orm:[env] -- migration:show                        | show migrations                               |
+| npm run orm:[env] -- migration:sync                        | applies schema to database without migrations |
+| npm run orm:[env] -- migration:drop                        | drops database schema                         |
+| npm run orm:[env] -- entity:create -n [EntityName]         | create a new entity                           |
+| npm run orm:[env] -- entity:subscriber -n [SubscriberName] | create a new subscriber                       |
 
 ### Docker
 
