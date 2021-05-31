@@ -1,1 +1,1 @@
-export { default as swaggerInit } from './swagger';
+export * from './swagger.config';

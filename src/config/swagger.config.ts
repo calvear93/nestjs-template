@@ -1,7 +1,12 @@
 import { INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-export default (app: INestApplication) =>
+/**
+ * Swagger base configuration.
+ *
+ * @param {INestApplication} app app bootstrap
+ */
+export const swaggerInit = (app: INestApplication) =>
 {
     const config = new DocumentBuilder()
         .setTitle(process.env.TITLE)

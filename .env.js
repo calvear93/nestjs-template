@@ -9,7 +9,9 @@ module.exports = Promise.resolve({
         PORT: 4001,
         VERSION: app.version,
         TITLE: app.title,
-        DESCRIPTION: app.description
+        DESCRIPTION: app.description,
+
+        GLOBAL_API_PREFIX: 'api'
     },
 
     // used on tests running.

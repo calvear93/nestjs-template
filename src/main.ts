@@ -8,6 +8,7 @@ async function bootstrap(): Promise<void>
 
     swaggerInit(app);
     app.enableCors();
+    app.setGlobalPrefix(process.env.GLOBAL_API_PREFIX);
 
     await app.listen(process.env.PORT);
 }

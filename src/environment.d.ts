@@ -8,6 +8,8 @@ declare global {
             TITLE: string;
             DESCRIPTION: string;
 
+            GLOBAL_API_PREFIX: string;
+
             DEFAULT_DB_CONNECTION: any;
             DEFAULT_DB_HOST: string;
             DEFAULT_DB_PORT: number;
