@@ -19,7 +19,7 @@ describe('SampleService', () =>
         expect(service).toBeDefined();
     });
 
-    it('should return', () =>
+    it('should return Hello World', () =>
     {
         expect(service.sample()).toBe('Hello World');
     });
