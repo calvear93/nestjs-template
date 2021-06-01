@@ -134,4 +134,4 @@ Branches environments are defined as:
 
 ---
 
-⌨ by Alvear Candia, Cristopher Alejandro <caalvearc@achs.cl>
+⌨ by Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>
