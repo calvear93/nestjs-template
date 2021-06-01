@@ -7,7 +7,7 @@ export class SampleController
     constructor(private service: SampleService) {}
 
     @Get()
-    sample(): any
+    sample(): string
     {
         return this.service.sample();
     }

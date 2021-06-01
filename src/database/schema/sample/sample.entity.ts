@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, AfterLoad, AfterInsert, AfterUpdate } from 'typeorm';
-import { ITrackable, Trackable } from '../common';
+import { Column, Entity, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { ITrackable, Trackable } from '../../common';
 
 @Entity()
 export class SampleEntity implements ITrackable
@@ -20,8 +20,8 @@ export class SampleEntity implements ITrackable
     searchName: string;
 
     @AfterLoad()
-    @AfterInsert()
-    @AfterUpdate()
+    @BeforeInsert()
+    @BeforeUpdate()
     normalizeName(): void
     {
         this.searchName = this.name.toLowerCase();
