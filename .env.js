@@ -35,7 +35,7 @@ module.exports = Promise.resolve({
         DEFAULT_DB_DATABASE: "test",
         DEFAULT_DB_SCHEMA: "public",
 
-        DEFAULT_DB_ORM_RUN_MIGRATIONS: false,
+        DEFAULT_DB_ORM_RUN_MIGRATIONS: true,
         DEFAULT_DB_ORM_SYNCHRONIZE: false,
         DEFAULT_DB_ORM_LOGGING: true
     },

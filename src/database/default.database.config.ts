@@ -13,9 +13,9 @@ const config: ConnectionOptions = {
     database: process.env.DEFAULT_DB_DATABASE,
     schema: process.env.DEFAULT_DB_SCHEMA,
 
-    migrationsRun: process.env.DEFAULT_DB_ORM_RUN_MIGRATIONS,
-    synchronize: process.env.DEFAULT_DB_ORM_SYNCHRONIZE,
-    logging: process.env.DEFAULT_DB_ORM_LOGGING,
+    migrationsRun: process.env.DEFAULT_DB_ORM_RUN_MIGRATIONS === 'true',
+    synchronize: process.env.DEFAULT_DB_ORM_SYNCHRONIZE === 'true',
+    logging: process.env.DEFAULT_DB_ORM_LOGGING === 'true',
 
     migrations: [ `${__dirname}/migrations/*.ts` ],
     entities: [ `${__dirname}/**/*.entity{.ts,.js}` ],

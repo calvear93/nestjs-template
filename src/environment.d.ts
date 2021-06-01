@@ -1,5 +1,6 @@
 declare global {
     namespace NodeJS {
+        // ! booleans are not supported and number may converted with + operator
         interface ProcessEnv {
             ENV: string;
             PORT: number;
@@ -19,9 +20,9 @@ declare global {
             DEFAULT_DB_DATABASE: string;
             DEFAULT_DB_SCHEMA: string;
 
-            DEFAULT_DB_ORM_RUN_MIGRATIONS: boolean;
-            DEFAULT_DB_ORM_SYNCHRONIZE: boolean;
-            DEFAULT_DB_ORM_LOGGING: boolean;
+            DEFAULT_DB_ORM_RUN_MIGRATIONS: string;
+            DEFAULT_DB_ORM_SYNCHRONIZE: string;
+            DEFAULT_DB_ORM_LOGGING: string;
         }
     }
 }
