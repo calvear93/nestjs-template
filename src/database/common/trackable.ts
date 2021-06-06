@@ -15,15 +15,30 @@ export class Trackable
      *
      * @type {Date}
      */
-    @CreateDateColumn({ type: 'time with time zone' })
+    @CreateDateColumn()
     createdDate: Date;
 
-    @UpdateDateColumn({ type: 'time with time zone' })
+    /**
+     * Updating date.
+     *
+     * @type {Date}
+     */
+    @UpdateDateColumn()
     updatedDate: Date;
 
-    @DeleteDateColumn({ type: 'time with time zone' })
+    /**
+     * Soft deletion date.
+     *
+     * @type {Date}
+     */
+    @DeleteDateColumn()
     deletedDate: Date;
 
+    /**
+     * Entity version.
+     *
+     * @type {number}
+     */
     @VersionColumn()
     version: number;
 }

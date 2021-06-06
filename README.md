@@ -88,6 +88,8 @@ it environment may be 'debug', 'development', 'qa' or 'production'.
 | npm run orm:[env] -- entity:create -n [EntityName]                  | create a new entity                           |
 | npm run orm:[env] -- entity:subscriber -n [SubscriberName]          | create a new subscriber                       |
 
+[!] You must clear dist folder in order to avoid to execute unwanted migrations when you use start command.
+
 ### Docker
 
 | Command                                                                      | Action       |

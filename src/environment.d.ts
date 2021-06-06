@@ -1,6 +1,6 @@
 declare global {
     namespace NodeJS {
-        // ! booleans are not supported and number may converted with + operator
+        // ! booleans are not supported and number must be casted using + operator
         interface ProcessEnv {
             ENV: string;
             PORT: number;
@@ -10,6 +10,7 @@ declare global {
             DESCRIPTION: string;
 
             GLOBAL_API_PREFIX: string;
+            GLOBAL_TIME_ZONE: string;
 
             DEFAULT_DB_CONNECTION: any;
             DEFAULT_DB_HOST: string;

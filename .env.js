@@ -11,7 +11,8 @@ module.exports = Promise.resolve({
         TITLE: app.title,
         DESCRIPTION: app.description,
 
-        GLOBAL_API_PREFIX: 'api'
+        GLOBAL_API_PREFIX: 'api',
+        GLOBAL_TIME_ZONE: 'America/Santiago'
     },
 
     // used on tests running.
@@ -32,7 +33,7 @@ module.exports = Promise.resolve({
 
         DEFAULT_DB_USERNAME: "local",
         DEFAULT_DB_PASSWORD: "123",
-        DEFAULT_DB_DATABASE: "test",
+        DEFAULT_DB_DATABASE: "sample",
         DEFAULT_DB_SCHEMA: "public",
 
         DEFAULT_DB_ORM_RUN_MIGRATIONS: true,
