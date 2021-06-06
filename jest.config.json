@@ -1,0 +1,24 @@
+{
+    "rootDir": "src",
+    "testEnvironment": "node",
+    "moduleDirectories": [
+        "node_modules",
+        "src",
+        "test"
+    ],
+    "moduleFileExtensions": [
+        "js",
+        "json",
+        "ts"
+    ],
+    "bail": 1,
+    "verbose": true,
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+        "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage",
+    "collectCoverageFrom": [
+        "**/*.(t|j)s"
+    ]
+}
