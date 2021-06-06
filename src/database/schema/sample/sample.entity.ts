@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { ITrackable, Trackable } from '../../common';
+import { SampleType } from './sampleTypes.enum';
 
 /**
  * Sample entity.
@@ -31,6 +32,18 @@ export class SampleEntity implements ITrackable
     name: string;
 
     /**
+     * Sample entity type.
+     *
+     * @type {SampleType}
+     */
+    @Column({
+        type: 'enum',
+        enum: SampleType,
+        default: SampleType.USER
+    })
+    type: SampleType;
+
+    /**
      * Whether entity is active.
      *
      * @type {boolean}
@@ -44,7 +57,7 @@ export class SampleEntity implements ITrackable
      * @type {Trackable}
      */
     @Column(() => Trackable)
-    trackInfo: Trackable;
+    system: Trackable;
 
     /**
      * Normalized entity name.

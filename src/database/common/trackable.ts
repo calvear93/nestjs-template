@@ -50,5 +50,5 @@ export class Trackable
  * @interface ITrackable
  */
 export interface ITrackable {
-    trackInfo: Trackable;
+    system: Trackable;
 }
