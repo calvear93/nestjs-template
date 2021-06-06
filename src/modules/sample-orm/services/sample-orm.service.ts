@@ -26,7 +26,7 @@ export class SampleORMService
      */
     getByName(searchedName: string): Promise<SampleEntity | undefined>
     {
-        return this.sampleRepository.findOne({ where: { searchName: searchedName.toLowerCase() } });
+        return this.sampleRepository.findByName(searchedName);
     }
 
     /**
