@@ -5,25 +5,8 @@
  * @author Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>
  *
  * Created at     : 2020-05-16 16:39:47
- * Last modified  : 2021-02-13 19:06:37
+ * Last modified  : 2021-06-06 16:05:06
  */
-
-/**
- * Returns a default value on falsy string.
- *
- * @param {string} str string.
- * @param {Function} [filter] filter function if string is valid.
- * @param {string} [def] value in case of falsy string.
- *
- * @returns {string} string (with filter if exists) if valid, def in otherwise.
- */
-export function defaultOnFalsy(str: string, filter: (str: string)=> string, def = '-'): string
-{
-    if (!str)
-        return def;
-
-    return filter ? filter(str) : str;
-}
 
 /**
  * Removes the string underscores.

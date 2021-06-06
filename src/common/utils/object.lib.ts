@@ -5,7 +5,7 @@
  * @author Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>
  *
  * Created at     : 2020-05-16 16:42:09
- * Last modified  : 2021-02-13 19:13:05
+ * Last modified  : 2021-06-06 16:06:12
  */
 
 /**
@@ -79,7 +79,7 @@ export function filter(obj: any, func: (value: string, index: number, array: str
  *
  * @returns {boolean} true if is valid, false in otherwise.
  */
-export function isData(value: any, allowsEmpty = false): boolean
+export function isData(value: any, allowsEmpty?: boolean): boolean
 {
     if (value === undefined || value === null)
         return false;
