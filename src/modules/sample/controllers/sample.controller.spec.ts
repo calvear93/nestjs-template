@@ -16,7 +16,7 @@ describe('SampleController', () =>
         controller = module.get<SampleController>(SampleController);
     });
 
-    it('should be defined', () =>
+    test('should be defined', () =>
     {
         expect(controller).toBeDefined();
     });

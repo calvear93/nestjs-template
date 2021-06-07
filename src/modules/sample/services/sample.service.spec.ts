@@ -14,12 +14,12 @@ describe('SampleService', () =>
         service = module.get<SampleService>(SampleService);
     });
 
-    it('should be defined', () =>
+    test('should be defined', () =>
     {
         expect(service).toBeDefined();
     });
 
-    it('should return Hello World', () =>
+    test('should return Hello World', () =>
     {
         expect(service.sample()).toBe('Hello World');
     });

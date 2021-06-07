@@ -27,34 +27,23 @@ describe('SampleController', () =>
         controller = module.get<SampleORMController>(SampleORMController);
     });
 
-    it('should be defined', () =>
+    test('should be defined', () =>
     {
         expect(controller).toBeDefined();
     });
 
-    it('entity should be created', () =>
+    test('entity should be created', () =>
     {
         expect(controller.create(entityName)).toBeDefined();
     });
 
-    it(`entity with name ${entityName} should exists`, async () =>
+    test(`entity with name ${entityName} should exists`, async () =>
     {
         const entity = await controller.getByName(entityName.toUpperCase());
 
         expect(entity?.name).toBe(entityName);
     });
 });
-
-/**
- * Dictionary interface.
- *
- * @interface Dictionary
- * @template T
- */
-interface Dictionary<T>
-{
-    [Key: number]: T;
-}
 
 /**
  * Mock repository.
@@ -77,7 +66,7 @@ export class SampleEntityRepositoryMock
      * @static
      * @type {Dictionary<SampleEntity>}
      */
-    static mockDatabase: Dictionary<SampleEntity> = {};
+    static mockDatabase: Record<number, SampleEntity> = {};
 
     /**
      * Search for an entity by it's name.

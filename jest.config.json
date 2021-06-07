@@ -11,8 +11,6 @@
         "json",
         "ts"
     ],
-    "bail": 1,
-    "verbose": true,
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
         "^.+\\.(t|j)s$": "ts-jest"
@@ -20,5 +18,8 @@
     "coverageDirectory": "../coverage",
     "collectCoverageFrom": [
         "**/*.(t|j)s"
-    ]
+    ],
+    "bail": 1,
+    "verbose": true,
+    "slowTestThreshold": 10
 }
