@@ -13,7 +13,9 @@ This is a boilerplate for NodeJS using the framework [NestJS](https://nestjs.com
 │   ├── common/ # common utils, guards, decorators, etc.
 │   ├── config/ # base app config
 │   ├── database/
-│   │   ├── schema/ # default database entities
+│   │   ├── common/ # base entities
+│   │   ├── migrations/
+│   │   ├── schema/ # database entities
 │   │   └── default.database.config.ts # default database connection config
 │   ├── modules/ # app modules
 │   │   ├── sample/ # sample module
