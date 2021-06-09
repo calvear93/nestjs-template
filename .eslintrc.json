@@ -25,6 +25,7 @@
         "promise",
         "jsdoc",
         "jest",
+        "jest-formatting",
         "radar"
     ],
     "extends": [
@@ -125,6 +126,7 @@
         "jest/no-identical-title": "error",
         "jest/prefer-to-have-length": "warn",
         "jest/valid-expect": "error",
+        "jest-formatting/padding-around-all": "warn",
         "jsdoc/check-tag-names": "off",
         "jsdoc/no-undefined-types": "off",
         "jsdoc/require-hyphen-before-param-description": "off",
