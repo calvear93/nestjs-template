@@ -32,9 +32,8 @@
     "lint:analyze": "eslint {src,test}/**/*.ts",
     "lint:fix": "eslint --fix {src,test}/**/*.ts",
     "format": "prettier --write src/**/*.ts test/**/*.ts",
-    "_build": "rimraf dist && nest build && npx babel dist --out-dir dist",
-    "_orm": "ts-node --transpile-only node_modules/typeorm/cli -f src/database/default.database.config.ts",
-    "_clean": "rimraf dist"
+    "_build": "nest build && npx babel dist --out-dir dist",
+    "_orm": "ts-node --transpile-only node_modules/typeorm/cli -f src/database/default.database.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.17",
