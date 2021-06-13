@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, Post, Query, UseInterceptors } from '@nestjs/common';
 import { SampleEntity } from 'database/schema';
 import { SampleORMService } from '../services';
 
@@ -9,6 +9,7 @@ import { SampleORMService } from '../services';
  * @class SampleORMController
  */
 @Controller('sample/orm')
+@UseInterceptors(ClassSerializerInterceptor)
 export class SampleORMController
 {
     /**
@@ -26,6 +27,7 @@ export class SampleORMController
      * @returns {SampleEntity | undefined} entity
      */
     @Get()
+    @UseInterceptors(ClassSerializerInterceptor)
     getByName(@Query('name') name: string): Promise<SampleEntity | undefined>
     {
         return this.service.getByName(name);

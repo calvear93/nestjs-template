@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 /**
  * Common trackable info for entities.
@@ -8,6 +9,7 @@ import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, VersionCo
  * @export
  * @class Trackable
  */
+@Exclude()
 export class Trackable
 {
     /**
