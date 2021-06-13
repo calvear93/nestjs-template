@@ -62,6 +62,7 @@
 	"material-icon-theme.files.associations": {
 		"*.controller.ts": "nest-controller",
         "*.decorator.ts": "nest-decorator",
+        "*.enum.ts": "purescript",
         "*.filter.ts": "nest-filter",
         "*.gateway.ts": "nest-gateway",
         "*.guard.ts": "nest-guard",
@@ -71,6 +72,7 @@
         "*.resolver.ts": "nest-resolver",
         "*.service.ts": "nest-service",
         "*.provider.ts": "nest-service",
+        "*.dto.ts": "raml",
         "*.entity.ts": "raml",
 		"*.cfg.js": "settings",
 		"*.cfg.ts": "settings",
