@@ -17,5 +17,5 @@ export const swaggerInit = (app: INestApplication) =>
 
     const document = SwaggerModule.createDocument(app, config);
 
-    SwaggerModule.setup('', app, document);
+    SwaggerModule.setup(process.env.GLOBAL_API_PREFIX, app, document);
 };
