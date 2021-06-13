@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, Controller, Get, Post, Query, UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, NotFoundException, Post, Query, UseInterceptors } from '@nestjs/common';
 import { SampleEntity } from 'database/schema';
 import { SampleORMService } from '../services';
 
@@ -24,13 +24,19 @@ export class SampleORMController
      *
      * @param {string} name entity name
      *
+     * @throws {NotFoundException} on entity not found
      * @returns {SampleEntity | undefined} entity
      */
     @Get()
     @UseInterceptors(ClassSerializerInterceptor)
-    getByName(@Query('name') name: string): Promise<SampleEntity | undefined>
+    async getByName(@Query('name') name: string): Promise<SampleEntity | undefined>
     {
-        return this.service.getByName(name);
+        const entity = await this.service.getByName(name);
+
+        if (!entity)
+            throw new NotFoundException();
+
+        return entity;
     }
 
     /**
