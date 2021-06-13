@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { ITrackable, Trackable } from '../../common';
-import { SampleType } from './sampleTypes.enum';
+import { SampleType } from './sample-types.enum';
 
 /**
  * Sample entity.
@@ -45,14 +45,6 @@ export class SampleEntity implements ITrackable
     type: SampleType;
 
     /**
-     * Whether entity is active.
-     *
-     * @type {boolean}
-     */
-    @Column({ default: true })
-    isActive: boolean;
-
-    /**
      * Entity tracking info like creation date.
      *
      * @type {Trackable}
@@ -71,6 +63,16 @@ export class SampleEntity implements ITrackable
     searchName: string;
 
     /**
+     * Partial initializer constructor.
+     *
+     * @param {Partial<SampleEntity>} [init] partial initializer
+     */
+    constructor(init?: Partial<SampleEntity>)
+    {
+        init && Object.assign(this, init);
+    }
+
+    /**
      * Normalizes entity's name.
      */
     @AfterLoad()
@@ -78,6 +80,6 @@ export class SampleEntity implements ITrackable
     @BeforeUpdate()
     normalizeName(): void
     {
-        this.searchName = this.name.toLowerCase();
+        this.searchName = this.name.toLowerCase().normalize('NFD').replace(/[\p{Diacritic}|\u0027]/gu, '');
     }
 }

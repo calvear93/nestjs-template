@@ -38,10 +38,7 @@ export class SampleORMService
      */
     create(name: string): Promise<SampleEntity>
     {
-        const entity = new SampleEntity();
-
-        entity.name = name;
-        entity.isActive = true;
+        const entity = new SampleEntity({ name });
 
         return this.sampleRepository.save(entity);
     }

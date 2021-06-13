@@ -1,4 +1,4 @@
-import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
 /**
  * Common trackable info for entities.
@@ -16,7 +16,7 @@ export class Trackable
      * @type {Date}
      */
     @CreateDateColumn()
-    createdDate: Date;
+    createdDate?: Date;
 
     /**
      * Updating date.
@@ -24,7 +24,7 @@ export class Trackable
      * @type {Date}
      */
     @UpdateDateColumn()
-    updatedDate: Date;
+    updatedDate?: Date;
 
     /**
      * Soft deletion date.
@@ -32,7 +32,7 @@ export class Trackable
      * @type {Date}
      */
     @DeleteDateColumn()
-    deletedDate: Date;
+    deletedDate?: Date;
 
     /**
      * Entity version.
@@ -40,7 +40,15 @@ export class Trackable
      * @type {number}
      */
     @VersionColumn()
-    version: number;
+    version?: number;
+
+    /**
+     * Whether entity is active.
+     *
+     * @type {boolean}
+     */
+    @Column({ default: true })
+    isActive: boolean;
 }
 
 /**

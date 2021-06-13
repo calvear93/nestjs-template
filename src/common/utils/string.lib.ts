@@ -65,7 +65,7 @@ export function removeDiacritics(str: string): string
     if (!str)
         return '';
 
-    return str.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return str.toString().normalize('NFD').replace(/[\p{Diacritic}|\u0142|\u0027]/gu, '');
 }
 
 /**
