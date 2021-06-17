@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { ITrackable, Trackable } from '../../common';
 import { SampleType } from './sample-types.enum';
 
@@ -50,6 +51,7 @@ export class SampleEntity implements ITrackable
      * @type {Trackable}
      */
     @ApiHideProperty()
+    @Exclude()
     @Column(() => Trackable)
     system: Trackable;
 
