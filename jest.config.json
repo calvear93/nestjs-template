@@ -21,5 +21,6 @@
     ],
     "bail": 1,
     "verbose": true,
+    "testTimeout": 30000,
     "slowTestThreshold": 10
 }
