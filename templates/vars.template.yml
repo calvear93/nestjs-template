@@ -45,45 +45,45 @@
 #
 
 parameters:
-- name: debug
-  type: boolean
-  default: false
-# global variables definition
-- name: global
-  type: object
-  default: []
-# environments variables definition
-- name: production
-  type: object
-  default: []
-- name: stage
-  type: object
-  default: []
-- name: qa
-  type: object
-  default: []
-- name: development
-  type: object
-  default: []
-- name: pullRequest
-  type: object
-  default: []
-# stages execution flags
-- name: stages
-  type: object
-  default:
-    # whether 'test' stage should be executed (e.g. Unit Tests, SonarQube analysis)
-    - name: env.stages.test
-      value: false
-    # whether 'build' stage should be executed
-    - name: env.stages.build
-      value: false
-    # whether artifact should be published to artifact container (e.g. Container Registry)
-    - name: env.stages.publish
-      value: false
-    # whether artifact should be deployed to environment (e.g. Azure Publishing, Kubernetes Deploy)
-    - name: env.stages.deploy
-      value: false
+  - name: debug
+    type: boolean
+    default: false
+  # global variables definition
+  - name: global
+    type: object
+    default: []
+  # environments variables definition
+  - name: production
+    type: object
+    default: []
+  - name: stage
+    type: object
+    default: []
+  - name: qa
+    type: object
+    default: []
+  - name: development
+    type: object
+    default: []
+  - name: pullRequest
+    type: object
+    default: []
+  # stages execution flags
+  - name: stages
+    type: object
+    default:
+      # whether 'test' stage should be executed (e.g. Unit Tests, SonarQube analysis)
+      - name: env.stages.test
+        value: false
+      # whether 'build' stage should be executed
+      - name: env.stages.build
+        value: false
+      # whether artifact should be published to artifact container (e.g. Container Registry)
+      - name: env.stages.publish
+        value: false
+      # whether artifact should be deployed to environment (e.g. Azure Publishing, Kubernetes Deploy)
+      - name: env.stages.deploy
+        value: false
 
 variables:
   - name: System.Debug
@@ -94,124 +94,124 @@ variables:
     value: ${{ eq(variables['Build.Reason'], 'PullRequest') }}
   # enabled in development only
   - name: env.version.incremental
-    value: ''
+    value: ""
 
   - ${{ each var in parameters.stages }}:
-    - ${{ var }}
+      - ${{ var }}
 
   - ${{ each var in parameters.global }}:
-    - ${{ var }}
+      - ${{ var }}
 
   # PRODUCTION
-  - ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/master') }}:
-    - name: env.name
-      value: PROD
-    - name: env.key
-      value: production
-    - name: env.stages.test
-      value: true
-    - name: env.stages.build
-      value: true
-    - name: env.stages.publish
-      value: true
-    - name: env.stages.deploy
-      value: true
-    - ${{ each var in parameters.production }}:
-      - ${{ var }}
+  - ? ${{ if in(variables['Build.SourceBranch'], 'refs/heads/main', 'refs/heads/master') }}
+    : - name: env.name
+        value: PROD
+      - name: env.key
+        value: production
+      - name: env.stages.test
+        value: true
+      - name: env.stages.build
+        value: true
+      - name: env.stages.publish
+        value: true
+      - name: env.stages.deploy
+        value: true
+      - ${{ each var in parameters.production }}:
+          - ${{ var }}
 
   # STAGE
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/stage') }}:
-    - name: env.name
-      value: STAGE
-    - name: env.key
-      value: stage
-    - name: env.stages.test
-      value: true
-    - name: env.stages.build
-      value: true
-    - name: env.stages.publish
-      value: true
-    - name: env.stages.deploy
-      value: true
-    - ${{ each var in parameters.stage }}:
-      - ${{ var }}
+      - name: env.name
+        value: STAGE
+      - name: env.key
+        value: stage
+      - name: env.stages.test
+        value: true
+      - name: env.stages.build
+        value: true
+      - name: env.stages.publish
+        value: true
+      - name: env.stages.deploy
+        value: true
+      - ${{ each var in parameters.stage }}:
+          - ${{ var }}
 
   # QA
-  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release/') }}:
-    - name: env.name
-      value: QA
-    - name: env.key
-      value: qa
-    - name: env.stages.test
-      value: true
-    - name: env.stages.build
-      value: true
-    - name: env.stages.publish
-      value: true
-    - name: env.stages.deploy
-      value: true
-    - ${{ each var in parameters.qa }}:
-      - ${{ var }}
+  - ? ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release/') }}
+    : - name: env.name
+        value: QA
+      - name: env.key
+        value: qa
+      - name: env.stages.test
+        value: true
+      - name: env.stages.build
+        value: true
+      - name: env.stages.publish
+        value: true
+      - name: env.stages.deploy
+        value: true
+      - ${{ each var in parameters.qa }}:
+          - ${{ var }}
 
   # DEVELOPMENT
   - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
-    - name: env.name
-      value: DEV
-    - name: env.key
-      value: development
-    - name: env.stages.test
-      value: true
-    - name: env.stages.build
-      value: true
-    - name: env.stages.publish
-      value: true
-    - name: env.stages.deploy
-      value: true
-    - name: env.version.incremental
-      value: .$(Build.BuildNumber)
-    - ${{ each var in parameters.development }}:
-      - ${{ var }}
+      - name: env.name
+        value: DEV
+      - name: env.key
+        value: development
+      - name: env.stages.test
+        value: true
+      - name: env.stages.build
+        value: true
+      - name: env.stages.publish
+        value: true
+      - name: env.stages.deploy
+        value: true
+      - name: env.version.incremental
+        value: .$(Build.BuildNumber)
+      - ${{ each var in parameters.development }}:
+          - ${{ var }}
 
   # FEATURE
-  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/') }}:
-    - name: env.name
-      value: DEV
-    - name: env.key
-      value: development
-    - name: env.stages.test
-      value: true
-    - ${{ each var in parameters.development }}:
-      - ${{ var }}
+  - ? ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/') }}
+    : - name: env.name
+        value: DEV
+      - name: env.key
+        value: development
+      - name: env.stages.test
+        value: true
+      - ${{ each var in parameters.development }}:
+          - ${{ var }}
 
   # PRODUCTION bugfix
   - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/hotfix/') }}:
-    - name: env.name
-      value: QA
-    - name: env.key
-      value: qa
-    - name: env.stages.test
-      value: true
-    - ${{ each var in parameters.qa }}:
-      - ${{ var }}
+      - name: env.name
+        value: QA
+      - name: env.key
+        value: qa
+      - name: env.stages.test
+        value: true
+      - ${{ each var in parameters.qa }}:
+          - ${{ var }}
 
   # QA bugfix
   - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/bugfix/') }}:
-    - name: env.name
-      value: QA
-    - name: env.key
-      value: qa
-    - name: env.stages.test
-      value: true
-    - ${{ each var in parameters.qa }}:
-      - ${{ var }}
+      - name: env.name
+        value: QA
+      - name: env.key
+        value: qa
+      - name: env.stages.test
+        value: true
+      - ${{ each var in parameters.qa }}:
+          - ${{ var }}
 
   # Pull Request Build Policy
   - ${{ if eq(variables['env.isPullRequest'], true) }}:
-    - name: env.name
-      value: PR
-    - name: env.key
-      value: qa
-    - name: env.stages.test
-      value: true
-    - ${{ each var in parameters.pullRequest }}:
-      - ${{ var }}
+      - name: env.name
+        value: PR
+      - name: env.key
+        value: qa
+      - name: env.stages.test
+        value: true
+      - ${{ each var in parameters.pullRequest }}:
+          - ${{ var }}

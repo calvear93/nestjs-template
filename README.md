@@ -43,18 +43,18 @@ This is a boilerplate for NodeJS using the framework [NestJS](https://nestjs.com
 
 Project has 4 environments base for project building.
 
--   **debug**: local environment based on development.
--   **development**: environment with breaking changes and new features.
--   **qa**: environment for testing and quality assurance.
--   **production**: productive environment.
+- **debug**: local environment based on development.
+- **development**: environment with breaking changes and new features.
+- **qa**: environment for testing and quality assurance.
+- **production**: productive environment.
 
 Also, pipeline has automated deployments depending of branch updated.
 
--   **feature/\***: new features/requirements, it doesn't deploys to any environment.
--   **develop**: accumulates new features for current sprint development, it deploys to 'development' environment.
--   **release/\***: has features of last release, it deploys to 'QA' environment.
--   **main**: releases tested and certified from 'QA' environment, it deploys to 'production' environment.
--   **hotfix/\***: specific fixes from main, it deploys to 'development' environment.
+- **feature/\***: new features/requirements, it doesn't deploys to any environment.
+- **develop**: accumulates new features for current sprint development, it deploys to 'development' environment.
+- **release/\***: has features of last release, it deploys to 'QA' environment.
+- **main**: releases tested and certified from 'QA' environment, it deploys to 'production' environment.
+- **hotfix/\***: specific fixes from main, it deploys to 'development' environment.
 
 ## Executing ⚙️
 
@@ -112,8 +112,8 @@ it environment may be 'debug', 'development', 'qa' or 'production'.
 
 Project uses two linters, for code formatting and code styling normalizing.
 
--   **eslint**: TypeScript linter with Airbnb React base config and some other additions.
--   **prettier**: optional Prettier config.
+- **eslint**: TypeScript linter with Airbnb React base config and some other additions.
+- **prettier**: optional Prettier config.
 
 For correct interpretation of linters, is recommended to use [Visual Studio Code](https://code.visualstudio.com/) as IDE and install the plugins in .vscode folder at 'extensions.json', as well as use the config provided in 'settings.json'
 
@@ -123,18 +123,18 @@ Use included Azure Pipeline for CI/CD - edit [azure-pipeline.yml](azure-pipeline
 
 Branches environments are defined as:
 
--   **main**: production
--   **release/\***: qa
--   **develop**: development
--   **hotfix/\***: development
--   **feature/\***: none
+- **main**: production
+- **release/\***: qa
+- **develop**: development
+- **hotfix/\***: development
+- **feature/\***: none
 
 ## Built with 🛠️
 
--   [Express](https://expressjs.com/es/) - NodeJS HTTP framework.
--   [NestJS](https://nestjs.com/) - NodeJS framework.
--   [TypeORM](https://typeorm.io/) - TypeScript ORM.
--   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility.
+- [Express](https://expressjs.com/es/) - NodeJS HTTP framework.
+- [NestJS](https://nestjs.com/) - NodeJS framework.
+- [TypeORM](https://typeorm.io/) - TypeScript ORM.
+- [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility.
 
 ---
 

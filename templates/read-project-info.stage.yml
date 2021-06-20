@@ -28,7 +28,6 @@
 #       displayName: Debug
 #
 
-
 parameters:
   - name: vars
     type: object
@@ -43,9 +42,9 @@ stages:
       - job: Variables
         displayName: Read package.json
         steps:
-        - ${{ each member in parameters.vars }}:
-          - bash: |
-              val=$(cat package.json | grep ${{ member }} | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
-              echo "##vso[task.setvariable variable=value;isOutput=true;]$val"
-            name: ${{ member }}
-            displayName: Reading ${{ member }}
+          - ${{ each member in parameters.vars }}:
+              - bash: |
+                  val=$(cat package.json | grep ${{ member }} | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+                  echo "##vso[task.setvariable variable=value;isOutput=true;]$val"
+                name: ${{ member }}
+                displayName: Reading ${{ member }}

@@ -19,9 +19,7 @@
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run", "start:debug"],
             "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-            "skipFiles": [
-                "<node_internals>/**/*.js"
-            ],
+            "skipFiles": ["<node_internals>/**/*.js"],
             "console": "integratedTerminal"
         }
     ]
