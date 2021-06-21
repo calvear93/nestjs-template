@@ -31,7 +31,6 @@
     "test:inspect": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "lint:analyze": "eslint {src,test}/**/*.ts",
     "lint:fix": "eslint --fix {src,test}/**/*.ts",
-    "format": "prettier --write src/**/*.ts test/**/*.ts",
     "_build": "nest build && npx babel dist --out-dir dist",
     "_orm": "ts-node --transpile-only node_modules/typeorm/cli -f src/database/default.database.config.ts"
   },
@@ -76,7 +75,6 @@
     "eslint-plugin-radar": "^0.2.1",
     "jest": "^27.0.4",
     "nock": "^13.1.0",
-    "prettier": "^2.3.1",
     "ts-jest": "^27.0.3",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
