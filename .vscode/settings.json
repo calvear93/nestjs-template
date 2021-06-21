@@ -24,10 +24,10 @@
         "editor.defaultFormatter": "svipas.prettier-plus"
     },
     "[typescript]": {
-        "editor.defaultFormatter": "svipas.prettier-plus"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[typescriptreact]": {
-        "editor.defaultFormatter": "svipas.prettier-plus"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[yaml]": {
         "editor.defaultFormatter": "redhat.vscode-yaml"
