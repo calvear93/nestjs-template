@@ -9,7 +9,6 @@ import { SampleORMService } from '../services';
  * @class SampleORMController
  */
 @Controller('sample/orm')
-@UseInterceptors(ClassSerializerInterceptor)
 export class SampleORMController
 {
     /**
