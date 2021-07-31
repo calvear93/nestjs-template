@@ -1,4 +1,4 @@
-import { AfterLoad, BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AfterLoad, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity, ITrackable } from '../../common';
 import { SampleType } from './sample-types.enum';
 
@@ -31,6 +31,7 @@ export class SampleEntity
      *
      * @type {string}
      */
+    @Index()
     @Column()
     name: string;
 
