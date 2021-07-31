@@ -1,10 +1,10 @@
 /**
- * Sample entity type.
+ * SampleEntityType entity type.
  *
  * @export
  * @enum {number}
  */
-export enum SampleType {
+export enum SampleEntityType {
     ADMIN = 'admin',
     SUPPORT = 'support',
     USER = 'user'

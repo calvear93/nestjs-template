@@ -1,15 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class SampleMigration1623609362066 implements MigrationInterface
+export class SampleMigration1628355748483 implements MigrationInterface
 {
-    name = 'SampleMigration1623609362066'
+    name = 'SampleMigration1628355748483'
 
     public async up(queryRunner: QueryRunner): Promise<void>
     {
         await queryRunner.query(`
             CREATE TYPE "public"."sample_entity_type_enum" AS ENUM('admin', 'support', 'user')
         `);
-
         await queryRunner.query(`
             CREATE TABLE "public"."sample_entity" (
                 "id" SERIAL NOT NULL,
@@ -19,19 +18,23 @@ export class SampleMigration1623609362066 implements MigrationInterface
                 "systemCreateddate" TIMESTAMP NOT NULL DEFAULT now(),
                 "systemUpdateddate" TIMESTAMP NOT NULL DEFAULT now(),
                 "systemDeleteddate" TIMESTAMP,
-                "systemVersion" integer NOT NULL,
-                "systemIsactive" boolean NOT NULL DEFAULT true,
-                CONSTRAINT "PK_9c38c07f6112068c233987a5cec" PRIMARY KEY ("id")
+                "systemIsdisabled" boolean NOT NULL DEFAULT false,
+                CONSTRAINT "PK_e873152a04c344da778041e482c" PRIMARY KEY ("id")
             )
+        `);
+        await queryRunner.query(`
+            CREATE UNIQUE INDEX "IDX_2843c8c525dfddadcfc6cf70b8" ON "public"."sample_entity" ("name")
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void>
     {
         await queryRunner.query(`
+            DROP INDEX "public"."IDX_2843c8c525dfddadcfc6cf70b8"
+        `);
+        await queryRunner.query(`
             DROP TABLE "public"."sample_entity"
         `);
-
         await queryRunner.query(`
             DROP TYPE "public"."sample_entity_type_enum"
         `);

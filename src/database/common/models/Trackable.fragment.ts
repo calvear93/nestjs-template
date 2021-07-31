@@ -1,9 +1,9 @@
-import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 /**
  * Common trackable info for entities.
  *
- * @see: https://orkhan.gitbook.io/typeorm/docs/entities#column-types-for-postgres
+ * @see: https://orkhan.gitbook.io/typeorm/docs/entities#column-types-for-mssql
  *
  * @export
  * @class Trackable
@@ -16,7 +16,7 @@ export class Trackable
      * @type {Date}
      */
     @CreateDateColumn()
-    createdDate?: Date;
+    createdDate!: Date;
 
     /**
      * Updating date.
@@ -24,31 +24,23 @@ export class Trackable
      * @type {Date}
      */
     @UpdateDateColumn()
-    updatedDate?: Date;
+    updatedDate!: Date;
 
     /**
      * Soft deletion date.
      *
      * @type {Date}
      */
-    @DeleteDateColumn()
+    @DeleteDateColumn({ nullable: true })
     deletedDate?: Date;
 
     /**
-     * Entity version.
-     *
-     * @type {number}
-     */
-    @VersionColumn()
-    version?: number;
-
-    /**
-     * Whether entity is active.
+     * Whether entity is disabled.
      *
      * @type {boolean}
      */
-    @Column({ default: true })
-    isActive: boolean;
+    @Column({ default: false })
+    isDisabled!: boolean;
 }
 
 /**

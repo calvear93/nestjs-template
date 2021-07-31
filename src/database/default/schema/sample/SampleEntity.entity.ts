@@ -1,8 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
-import { ApiHideProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
-import { ITrackable, Trackable } from '../../common';
-import { SampleType } from './sample-types.enum';
+import { AfterLoad, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseTable, ITrackable } from 'database/common';
+import { SampleEntityType } from './SampleEntityType.enum';
 
 /**
  * Sample entity.
@@ -11,10 +9,13 @@ import { SampleType } from './sample-types.enum';
  *
  * @export
  * @class SampleEntity
+ * @extends {BaseEntity<SampleEntity>}
  * @implements {ITrackable}
  */
 @Entity()
-export class SampleEntity implements ITrackable
+export class SampleEntity
+    extends BaseTable<SampleEntity>
+    implements ITrackable
 {
     /**
      * Primary key.
@@ -23,13 +24,14 @@ export class SampleEntity implements ITrackable
      * @type {number}
      */
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     /**
      * Entity name.
      *
      * @type {string}
      */
+    @Index({ unique: true })
     @Column()
     name: string;
 
@@ -40,20 +42,10 @@ export class SampleEntity implements ITrackable
      */
     @Column({
         type: 'enum',
-        enum: SampleType,
-        default: SampleType.USER
+        enum: SampleEntityType,
+        default: SampleEntityType.USER
     })
-    type: SampleType;
-
-    /**
-     * Entity tracking info like creation date.
-     *
-     * @type {Trackable}
-     */
-    @ApiHideProperty()
-    @Exclude()
-    @Column(() => Trackable)
-    system: Trackable;
+    type: SampleEntityType;
 
     /**
      * Normalized entity name.
@@ -63,16 +55,6 @@ export class SampleEntity implements ITrackable
      */
     @Column()
     searchName: string;
-
-    /**
-     * Partial initializer constructor.
-     *
-     * @param {Partial<SampleEntity>} [init] partial initializer
-     */
-    constructor(init?: Partial<SampleEntity>)
-    {
-        init && Object.assign(this, init);
-    }
 
     /**
      * Normalizes entity's name.

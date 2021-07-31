@@ -116,6 +116,8 @@
         "*.selector.js": "redux-action",
         "*.selector.ts": "redux-action",
         "*.service.ts": "nest-service",
+        "*.cron.ts": "nest-controller",
+        "*.job.ts": "nest-service",
         "*.util.js": "lib",
         "*.util.ts": "lib",
         "*.validator.js": "lib",

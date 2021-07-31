@@ -92,7 +92,10 @@ it environment may be 'development', 'qa' or 'production'.
 | npm run orm:<env> -- entity:create -n <EntityName>                  | create a new entity                           |
 | npm run orm:<env> -- entity:subscriber -n <SubscriberName>          | create a new subscriber                       |
 
-[!] You must clear dist folder in order to avoid to execute unwanted migrations when you use start command (e.g. start:debug).
+[!] You must clear dist folder in order to avoid to execute unwanted
+migrations when you use start command (e.g. start:dev).
+Set "deleteOutDir" true in `nest-cli.json`.
+[!] You must use default relative path (using dots) on database entities.
 
 ### Docker
 
@@ -103,12 +106,22 @@ it environment may be 'development', 'qa' or 'production'.
 
 ### Node Tools
 
-| Command                          | Action                    |
-| -------------------------------- | ------------------------- |
-| npm install -g npm@latest        | npm update                |
-| npm update --save/--save-dev     | soft updated for packages |
-| npx npm-check-updates -u         | hard update for packages  |
-| git config core.ignorecase false | git case-sensitive enable |
+| Command                      | Action                    |
+| ---------------------------- | ------------------------- |
+| npm install -g npm@latest    | npm update                |
+| npm update --save/--save-dev | soft updated for packages |
+| npx npm-check-updates -u     | hard update for packages  |
+
+### Git Helpful Commands
+
+| Command                                 | Action                             |
+| --------------------------------------- | ---------------------------------- |
+| git config core.ignorecase false        | case-sensitive enable              |
+| git rebase -i <commit-hash> --autostash | rebase history                     |
+| git push --force                        | force push your rebase             |
+| git checkout <branch>                   | select branch                      |
+| git fetch origin <branch>               | retrieves branch remote changes    |
+| git reset --hard origin/<branch>        | resets your branch to remote state |
 
 ## Linting 🧿
 
@@ -135,7 +148,16 @@ Branches environments are defined as:
 -   [Express](https://expressjs.com/es/) - NodeJS HTTP framework.
 -   [NestJS](https://nestjs.com/) - NodeJS framework.
 -   [TypeORM](https://typeorm.io/) - TypeScript ORM.
+-   [Threads.JS](https://threads.js.org/) - Worker Threads made easy.
 -   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility.
+
+## Useful packages 🗂
+
+-   [linq-to-typescript](https://github.com/arogozine/LinqToTypeScript) - LINQ for TypeScript.
+-   [nanoid](https://github.com/ai/nanoid) - Tiny unique string ID generator.
+-   [uuid](https://github.com/uuidjs/uuid) - UUID generator.
+-   [class-validator](https://github.com/typestack/class-validator) - Decorator based property validation.
+-   [class-transformer](https://github.com/typestack/class-transformer) - TypeScript object parser.
 
 ---
 

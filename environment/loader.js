@@ -22,6 +22,7 @@ module.exports = new Promise((resolve) => {
             TITLE: app.title,
         },
         [envName]: {
+            ENV: envName,
             ...readEnvFile('environment/base/default.env.json'),
             ...readEnvFile(`environment/env/${envName}.env.json`),
             ...readEnvFile(`environment/base/${modeName}.env.json`),

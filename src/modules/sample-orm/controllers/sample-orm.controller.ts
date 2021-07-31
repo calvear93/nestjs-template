@@ -1,6 +1,6 @@
 import { ClassSerializerInterceptor, Controller, Get, NotFoundException, Post, Query, UseInterceptors } from '@nestjs/common';
-import { SampleEntity } from 'database/schema';
-import { SampleORMService } from '../services';
+import { SampleEntity } from 'database/default';
+import { SampleORMService } from '../services/sample-orm.service';
 
 /**
  * Sample TypeORM module.
@@ -8,7 +8,7 @@ import { SampleORMService } from '../services';
  * @export
  * @class SampleORMController
  */
-@Controller('sample/orm')
+@Controller('orm')
 export class SampleORMController
 {
     /**

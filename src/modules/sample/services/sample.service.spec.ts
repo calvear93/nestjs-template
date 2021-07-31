@@ -3,9 +3,10 @@ import { SampleService } from './sample.service';
 
 describe('SampleService', () =>
 {
+    // service instance
     let service: SampleService;
 
-    beforeEach(async () =>
+    beforeAll(async () =>
     {
         const module: TestingModule = await Test.createTestingModule({
             providers: [ SampleService ]
