@@ -1,7 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, AfterLoad, BeforeInsert, BeforeUpdate } from 'typeorm';
-import { ApiHideProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
-import { ITrackable, Trackable } from '../../common';
+import { AfterLoad, BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, ITrackable } from '../../common';
 import { SampleType } from './sample-types.enum';
 
 /**
@@ -11,10 +9,13 @@ import { SampleType } from './sample-types.enum';
  *
  * @export
  * @class SampleEntity
+ * @extends {BaseEntity<SampleEntity>}
  * @implements {ITrackable}
  */
 @Entity()
-export class SampleEntity implements ITrackable
+export class SampleEntity
+    extends BaseEntity<SampleEntity>
+    implements ITrackable
 {
     /**
      * Primary key.
@@ -46,16 +47,6 @@ export class SampleEntity implements ITrackable
     type: SampleType;
 
     /**
-     * Entity tracking info like creation date.
-     *
-     * @type {Trackable}
-     */
-    @ApiHideProperty()
-    @Exclude()
-    @Column(() => Trackable)
-    system: Trackable;
-
-    /**
      * Normalized entity name.
      * Calculated column from name.
      *
@@ -63,16 +54,6 @@ export class SampleEntity implements ITrackable
      */
     @Column()
     searchName: string;
-
-    /**
-     * Partial initializer constructor.
-     *
-     * @param {Partial<SampleEntity>} [init] partial initializer
-     */
-    constructor(init?: Partial<SampleEntity>)
-    {
-        init && Object.assign(this, init);
-    }
 
     /**
      * Normalizes entity's name.

@@ -92,7 +92,10 @@ it environment may be 'development', 'qa' or 'production'.
 | npm run orm:<env> -- entity:create -n <EntityName>                  | create a new entity                           |
 | npm run orm:<env> -- entity:subscriber -n <SubscriberName>          | create a new subscriber                       |
 
-[!] You must clear dist folder in order to avoid to execute unwanted migrations when you use start command (e.g. start:debug).
+[!] You must clear dist folder in order to avoid to execute unwanted
+migrations when you use start command (e.g. start:dev).
+Set "deleteOutDir" true in `nest-cli.json`.
+[!] You must use default relative path (using dots) on database entities.
 
 ### Docker
 
@@ -136,6 +139,13 @@ Branches environments are defined as:
 -   [NestJS](https://nestjs.com/) - NodeJS framework.
 -   [TypeORM](https://typeorm.io/) - TypeScript ORM.
 -   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility.
+
+## Useful packages 🗂
+
+-   [linq-to-typescript](https://github.com/arogozine/LinqToTypeScript) - LINQ for TypeScript.
+-   [nanoid](https://github.com/ai/nanoid) - Tiny unique string ID generator.
+-   [class-validator](https://github.com/typestack/class-validator) - TypeScrip class field validators.
+-   [uuid](https://github.com/uuidjs/uuid) - UUID generator.
 
 ---
 
