@@ -186,6 +186,7 @@
         "no-throw-literal": "error",
         "no-trailing-spaces": "warn",
         "no-unneeded-ternary": "warn",
+        "no-unreachable": "error",
         "object-curly-spacing": ["warn", "always"],
         "object-shorthand": "warn",
         "padded-blocks": ["warn", "never"],
