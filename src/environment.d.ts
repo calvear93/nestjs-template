@@ -1,6 +1,6 @@
 declare global {
     namespace NodeJS {
-        // ! booleans are not supported and number must be casted using + operator
+        // NOTE: only string type is supported
         interface ProcessEnv {
             NODE_ENV: 'development' | 'production';
             ENV: 'dev' | 'qa' | 'prod';
@@ -11,14 +11,14 @@ declare global {
             DESCRIPTION: string;
 
             // SECTION: base config
-            PORT: number;
+            PORT: string;
             API_PREFIX: string;
             TIME_ZONE: string;
 
             // SECTION: default database config
             DEFAULT_DB_CONNECTION: any;
             DEFAULT_DB_HOST: string;
-            DEFAULT_DB_PORT: number;
+            DEFAULT_DB_PORT: string;
 
             DEFAULT_DB_USERNAME: string;
             DEFAULT_DB_PASSWORD: string;
@@ -30,6 +30,9 @@ declare global {
             DEFAULT_DB_ORM_LOGGING?: 'false' | 'true';
         }
     }
+
+    // SECTION: custom global types
+    type UUID = string;
 }
 
 export {};

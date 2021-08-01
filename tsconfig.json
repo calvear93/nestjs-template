@@ -11,7 +11,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "allowJs": true,
-        "checkJs": false,
+        "checkJs": true,
         "declaration": true,
 
         "resolveJsonModule": true,
@@ -23,7 +23,7 @@
         "removeComments": true,
         "isolatedModules": true,
         "esModuleInterop": true,
-        "skipLibCheck": true,
+        "skipLibCheck": false,
 
         "strict": true,
         "strictBindCallApply": true,
@@ -33,7 +33,7 @@
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": false,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noUnusedLocals": false,
