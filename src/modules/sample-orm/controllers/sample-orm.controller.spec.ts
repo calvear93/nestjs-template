@@ -9,7 +9,7 @@ describe('SampleController', () =>
 
     const entityName = 'SampleName';
 
-    beforeEach(async () =>
+    beforeAll(async () =>
     {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [ SampleORMController ],
