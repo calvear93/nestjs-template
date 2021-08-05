@@ -10,7 +10,7 @@ import { ITrackable, Trackable } from './trackable.fragment';
  * @implements {ITrackable}
  * @template T
  */
-export class BaseEntity<T> implements ITrackable
+export abstract class BaseEntity<T> implements ITrackable
 {
     /**
      * Creates an instance of T.

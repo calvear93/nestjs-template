@@ -1,5 +1,5 @@
 import { AfterLoad, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseEntity, ITrackable } from '../../common';
+import { BaseEntity, ITrackable } from 'database/common';
 import { SampleType } from './sample-types.enum';
 
 /**
