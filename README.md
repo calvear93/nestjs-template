@@ -106,12 +106,22 @@ Set "deleteOutDir" true in `nest-cli.json`.
 
 ### Node Tools
 
-| Command                          | Action                    |
-| -------------------------------- | ------------------------- |
-| npm install -g npm@latest        | npm update                |
-| npm update --save/--save-dev     | soft updated for packages |
-| npx npm-check-updates -u         | hard update for packages  |
-| git config core.ignorecase false | git case-sensitive enable |
+| Command                      | Action                    |
+| ---------------------------- | ------------------------- |
+| npm install -g npm@latest    | npm update                |
+| npm update --save/--save-dev | soft updated for packages |
+| npx npm-check-updates -u     | hard update for packages  |
+
+### Git Helpful Commands
+
+| Command                                 | Action                             |
+| --------------------------------------- | ---------------------------------- |
+| git config core.ignorecase false        | case-sensitive enable              |
+| git rebase -i <commit-hash> --autostash | rebase history                     |
+| git push --force                        | force push your rebase             |
+| git checkout <branch>                   | select branch                      |
+| git fetch origin <branch>               | retrieves branch remote changes    |
+| git reset --hard origin/<branch>        | resets your branch to remote state |
 
 ## Linting 🧿
 
