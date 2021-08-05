@@ -3,8 +3,9 @@
         "baseUrl": "src",
         "outDir": "dist",
         "paths": {
-            "~/*": ["*"]
-            // ,"controllers/*": ["controllers/*"]
+            // "~/*": ["*"]
+            // "@*": ["*"]
+            // "@controllers/*": ["controllers/*"]
         },
 
         "target": "es2018",
