@@ -8,7 +8,7 @@
             // "@controllers/*": ["controllers/*"]
         },
 
-        "target": "es2018",
+        "target": "es2021",
         "module": "commonjs",
         "moduleResolution": "node",
         "allowJs": true,
