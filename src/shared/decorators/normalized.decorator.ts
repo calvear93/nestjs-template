@@ -13,14 +13,14 @@ type PartialRecord<K extends keyof any, T> = {
 export function NormalizedFrom<
     ClassType extends Record<PropertyKey, any> & Record<PropKeyFromType, string>,
     PropKeyFromType extends PropertyKey
->(propertyFromName: PropKeyFromType)
+>(propertyFromName: string)
 {
     return <
         ClassTypeExtended extends ClassType & Record<PropKeyType, string>,
         PropKeyType extends PropertyKey
     >(target: ClassTypeExtended, propertyKey: PropKeyType): void =>
     {
-        applyNormalize<ClassTypeExtended>(target, propertyKey, propertyFromName);
+        applyNormalize(target, propertyKey, propertyFromName);
     };
 }
 
@@ -35,14 +35,14 @@ export function NormalizedFrom<
 export function NormalizedFromOptional<
     ClassType extends Record<PropertyKey, any> & PartialRecord<PropKeyFromType, string>,
     PropKeyFromType extends PropertyKey
->(propertyFromName: PropKeyFromType)
+>(propertyFromName: string)
 {
     return <
         ClassTypeExtended extends ClassType & PartialRecord<PropKeyType, string>,
         PropKeyType extends PropertyKey
     >(target: ClassTypeExtended, propertyKey: PropKeyType): void =>
     {
-        applyNormalize<ClassTypeExtended>(target, propertyKey, propertyFromName);
+        applyNormalize(target, propertyKey, propertyFromName);
     };
 }
 
@@ -55,7 +55,11 @@ export function NormalizedFromOptional<
  * @param {PropertyKey} propertyKey target property name
  * @param {PropertyKey} propertyFromName source property name
  */
-function applyNormalize<ClassTypeExtended>(target: ClassTypeExtended, propertyKey: PropertyKey, propertyFromName: PropertyKey): void
+function applyNormalize<ClassTypeExtended extends PartialRecord<PropertyKey, string>>(
+        target: ClassTypeExtended,
+        propertyKey: PropertyKey,
+        propertyFromName: string
+): void
 {
     Object.defineProperty(target, propertyKey, {
         configurable: false,
