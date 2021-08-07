@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SampleORMService } from '../services';
-import { SampleORMController } from './sample-orm.controller';
 import { SampleEntity, SampleEntityRepository } from 'database/default';
+import { SampleORMService } from '../services/sample-orm.service';
+import { SampleORMController } from './sample-orm.controller';
 
 describe('SampleController', () =>
 {

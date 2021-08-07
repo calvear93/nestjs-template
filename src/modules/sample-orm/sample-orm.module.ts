@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { defaultDbConfig, SampleEntityRepository } from 'database/default';
-import { SampleORMController } from './controllers';
-import { SampleORMService } from './services';
+import { SampleORMController } from './controllers/sample-orm.controller';
+import { SampleORMService } from './services/sample-orm.service';
 
 /**
  * Sample TypeORM sub-module.
