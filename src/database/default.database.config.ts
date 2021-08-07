@@ -1,10 +1,10 @@
-import { ConnectionOptions } from 'typeorm';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 // ORM dirs base path
 const BASE_PATH = 'src/database';
 
 // typeORM default config
-const config: ConnectionOptions = {
+const config: PostgresConnectionOptions = {
     type: process.env.DEFAULT_DB_CONNECTION,
     host: process.env.DEFAULT_DB_HOST,
     port: +process.env.DEFAULT_DB_PORT,
@@ -16,6 +16,8 @@ const config: ConnectionOptions = {
     migrationsRun: process.env.DEFAULT_DB_ORM_RUN_MIGRATIONS === 'true',
     synchronize: process.env.DEFAULT_DB_ORM_SYNCHRONIZE === 'true',
     logging: process.env.DEFAULT_DB_ORM_LOGGING === 'true',
+
+    migrationsTableName: '__migrations__',
 
     migrations: [ `${__dirname}/migrations/*{.ts,.js}` ],
     entities: [ `${__dirname}/**/*.entity{.ts,.js}` ],
