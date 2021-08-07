@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SampleEntity, SampleEntityRepository } from 'database/schema';
+import { SampleEntity, SampleEntityRepository } from 'database/default';
 
 /**
  * Sample TypeORM service.

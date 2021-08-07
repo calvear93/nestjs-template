@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { SampleEntity } from './sample.entity';
+import { SampleEntity } from './SampleEntity.entity';
 
 /**
  * Sample repository.

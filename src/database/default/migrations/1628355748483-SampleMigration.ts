@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class SampleMigration1627762320184 implements MigrationInterface
+export class SampleMigration1628355748483 implements MigrationInterface
 {
-    name = 'SampleMigration1627762320184'
+    name = 'SampleMigration1628355748483'
 
     public async up(queryRunner: QueryRunner): Promise<void>
     {
@@ -23,7 +23,7 @@ export class SampleMigration1627762320184 implements MigrationInterface
             )
         `);
         await queryRunner.query(`
-            CREATE INDEX "IDX_2843c8c525dfddadcfc6cf70b8" ON "public"."sample_entity" ("name")
+            CREATE UNIQUE INDEX "IDX_2843c8c525dfddadcfc6cf70b8" ON "public"."sample_entity" ("name")
         `);
     }
 

@@ -1,6 +1,6 @@
 import { AfterLoad, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseEntity, ITrackable } from 'database/common';
-import { SampleType } from './sample-types.enum';
+import { BaseTable, ITrackable } from 'database/common';
+import { SampleEntityType } from './SampleEntityType.enum';
 
 /**
  * Sample entity.
@@ -14,7 +14,7 @@ import { SampleType } from './sample-types.enum';
  */
 @Entity()
 export class SampleEntity
-    extends BaseEntity<SampleEntity>
+    extends BaseTable<SampleEntity>
     implements ITrackable
 {
     /**
@@ -24,14 +24,14 @@ export class SampleEntity
      * @type {number}
      */
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     /**
      * Entity name.
      *
      * @type {string}
      */
-    @Index()
+    @Index({ unique: true })
     @Column()
     name: string;
 
@@ -42,10 +42,10 @@ export class SampleEntity
      */
     @Column({
         type: 'enum',
-        enum: SampleType,
-        default: SampleType.USER
+        enum: SampleEntityType,
+        default: SampleEntityType.USER
     })
-    type: SampleType;
+    type: SampleEntityType;
 
     /**
      * Normalized entity name.
