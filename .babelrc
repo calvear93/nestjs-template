@@ -1,12 +1,16 @@
 {
     "plugins": [
+        ["closure-elimination"],
+        [
+            "minify-dead-code-elimination",
+            {
+                "optimizeRawSize": true
+            }
+        ],
         [
             "transform-inline-environment-variables",
             {
-                "exclude": [
-                    "HOSTNAME",
-                    "NODE_VERSION"
-                ]
+                "exclude": ["HOSTNAME", "NODE_VERSION"]
             }
         ]
     ]
