@@ -32,7 +32,9 @@ declare global {
     }
 
     // SECTION: custom global types
-    type UUID = string;
+    type UUID = `${number|string}-${number|string}-${number|string}-${number|string}-${number|string}`;
+
+    type numberString = `${number}`;
 }
 
 export {};
