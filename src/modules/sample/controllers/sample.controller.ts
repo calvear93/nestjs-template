@@ -23,7 +23,7 @@ export class SampleController
      * @returns {string} sample string
      */
     @Get()
-    sample(): string
+    run(): string
     {
         return this.service.sample();
     }

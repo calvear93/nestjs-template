@@ -5,12 +5,12 @@ export class SnakeNamingStrategy
     extends DefaultNamingStrategy
     implements NamingStrategyInterface
 {
-    tableName(className: string, customName: string): string
+    override tableName(className: string, customName: string): string
     {
         return customName ? customName : snakeCase(className);
     }
 
-    columnName(propertyName: string, customName: string, embeddedPrefixes: string[]): string
+    override columnName(propertyName: string, customName: string, embeddedPrefixes: string[]): string
     {
         return (
             snakeCase(embeddedPrefixes.concat('').join('_'))
@@ -18,17 +18,17 @@ export class SnakeNamingStrategy
         );
     }
 
-    relationName(propertyName: string): string
+    override relationName(propertyName: string): string
     {
         return snakeCase(propertyName);
     }
 
-    joinColumnName(relationName: string, referencedColumnName: string): string
+    override joinColumnName(relationName: string, referencedColumnName: string): string
     {
         return snakeCase(relationName + '_' + referencedColumnName);
     }
 
-    joinTableName(
+    override joinTableName(
         firstTableName: string,
         secondTableName: string,
         firstPropertyName: string,
@@ -44,7 +44,7 @@ export class SnakeNamingStrategy
         );
     }
 
-    joinTableColumnName(
+    override joinTableColumnName(
         tableName: string,
         propertyName: string,
         columnName?: string
@@ -63,7 +63,7 @@ export class SnakeNamingStrategy
         return snakeCase(parentTableName + '_' + parentTableIdPropertyName);
     }
 
-    eagerJoinRelationAlias(alias: string, propertyPath: string): string
+    override eagerJoinRelationAlias(alias: string, propertyPath: string): string
     {
         return alias + '__' + propertyPath.replace('.', '_');
     }

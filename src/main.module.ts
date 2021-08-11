@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { SampleModule, SampleORMModule } from 'modules';
+import { SampleModule, SampleWorkerModule, SampleORMModule } from 'modules';
 
 /**
  * Main module containing every app submodules.
@@ -8,15 +8,23 @@ import { SampleModule, SampleORMModule } from 'modules';
  * @class MainModule
  */
 @Module({
-    imports: [ SampleModule, SampleORMModule ],
+    imports: [
+        SampleModule,
+        SampleWorkerModule,
+        SampleORMModule
+    ],
     providers: [ Logger ]
 })
 export class MainModule
 {
-    constructor(private readonly _logger: Logger) {}
+    constructor(private readonly logger: Logger) {}
 
+    /**
+     * Triggered on module initialization.
+     *
+     */
     onModuleInit()
     {
-        this._logger.debug(`Application started at port: ${process.env.PORT}`, MainModule.name);
+        this.logger.debug(`Application started at port: ${process.env.PORT}`, MainModule.name);
     }
 }
