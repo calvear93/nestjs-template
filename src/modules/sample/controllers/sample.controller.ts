@@ -7,7 +7,7 @@ import { SampleService } from '../services/sample.service';
  * @export
  * @class SampleController
  */
-@Controller('sample')
+@Controller()
 export class SampleController
 {
     /**

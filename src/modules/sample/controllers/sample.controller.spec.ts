@@ -4,6 +4,7 @@ import { SampleController } from './sample.controller';
 
 describe('SampleController', () =>
 {
+    // controller instance
     let controller: SampleController;
 
     beforeAll(async () =>

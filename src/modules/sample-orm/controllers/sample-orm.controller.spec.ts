@@ -3,10 +3,12 @@ import { SampleEntity, SampleEntityRepository } from 'database/default';
 import { SampleORMService } from '../services/sample-orm.service';
 import { SampleORMController } from './sample-orm.controller';
 
-describe('SampleController', () =>
+describe('SampleORMController', () =>
 {
+    // controller instance
     let controller: SampleORMController;
 
+    // name of the entity for create
     const entityName = 'SampleName';
 
     beforeAll(async () =>

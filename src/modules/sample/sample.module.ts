@@ -12,15 +12,4 @@ import { SampleService } from './services/sample.service';
     controllers: [ SampleController ],
     providers: [ SampleService ]
 })
-export class SampleModule
-{
-    /**
-     * Triggered on module initialization.
-     *
-     */
-    onModuleInit()
-    {
-        // eslint-disable-next-line no-console
-        console.log('SampleModule initialized.');
-    }
-}
+export class SampleModule {}

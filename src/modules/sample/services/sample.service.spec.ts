@@ -3,6 +3,7 @@ import { SampleService } from './sample.service';
 
 describe('SampleService', () =>
 {
+    // service instance
     let service: SampleService;
 
     beforeAll(async () =>

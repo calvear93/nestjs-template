@@ -1,14 +1,14 @@
 import { Inject, Module, OnApplicationShutdown } from '@nestjs/common';
 import { FunctionThread, spawn, Thread, Worker } from 'threads';
 import { SampleWorkerController } from './controllers/sample-worker.controller';
-import { Fibonacci } from './services/fibonacci-thread';
+import { Fibonacci } from './workers/fibonacci-thread';
 import { SampleWorkerService } from './services/sample-worker.service';
 
 /**
  * Sample worker module.
  *
  * @export
- * @class SampleModule
+ * @class SampleWorkerModule
  */
 @Module({
     controllers: [ SampleWorkerController ],
@@ -16,7 +16,7 @@ import { SampleWorkerService } from './services/sample-worker.service';
         SampleWorkerService,
         {
             provide: 'FIBONACCI_PROVIDER',
-            useFactory: () => spawn<Fibonacci>(new Worker('./services/fibonacci-thread'))
+            useFactory: () => spawn<Fibonacci>(new Worker('./workers/fibonacci-thread'))
         }
     ]
 })
@@ -27,8 +27,9 @@ export class SampleWorkerModule implements OnApplicationShutdown
         private readonly fibonacciWorker: FunctionThread<[num: number], number>
     ) {}
 
-    async onApplicationShutdown()
+    async onApplicationShutdown(): Promise<void>
     {
+        // disposes provider on application closing
         await Thread.terminate(this.fibonacciWorker);
     }
 }

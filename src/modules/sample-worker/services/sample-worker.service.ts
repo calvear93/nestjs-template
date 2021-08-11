@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { FunctionThread } from 'threads';
-import { fibonacci } from './fibonacci';
+import { fibonacci } from '../utils/fibonacci';
 
 /**
  * Sample worker service.

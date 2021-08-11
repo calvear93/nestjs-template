@@ -7,7 +7,7 @@ import { SampleWorkerService } from '../services/sample-worker.service';
  * @export
  * @class SampleWorkerController
  */
-@Controller('sample/worker')
+@Controller('worker')
 export class SampleWorkerController
 {
     /**
@@ -17,12 +17,34 @@ export class SampleWorkerController
      */
     constructor(private service: SampleWorkerService) {}
 
+    /**
+     * Executes the fibonacci
+     * algorithm in a separate thread.
+     *
+     * Non thread-blocking operation.
+     *
+     * @warn more than 40 iterations may not finish
+     *
+     * @param {number} num iterations
+     * @returns {Promise<number>} fibonacci result
+     */
     @Get('thread')
     thread(@Query('num') num: number): Promise<number>
     {
         return this.service.thread(num);
     }
 
+    /**
+     * Executes the fibonacci
+     * algorithm synchronously.
+     *
+     * Thread-blocking operation.
+     *
+     * @warn more than 40 iterations may not finish
+     *
+     * @param {number} num iterations
+     * @returns {number} fibonacci result
+     */
     @Get('normal')
     normal(@Query('num') num: number): number
     {
