@@ -118,6 +118,7 @@
         "*.service.ts": "nest-service",
         "*.cron.ts": "nest-controller",
         "*.job.ts": "nest-service",
+        "*.worker.ts": "nest-pipe",
         "*.util.js": "lib",
         "*.util.ts": "lib",
         "*.validator.js": "lib",
