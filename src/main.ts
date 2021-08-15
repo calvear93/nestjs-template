@@ -21,7 +21,7 @@ async function bootstrap(): Promise<void>
     if (process.env.ENV !== 'prod')
         swaggerInit(app);
 
-    await app.listen(process.env.PORT);
+    await app.listen(+process.env.PORT);
 }
 
 bootstrap();

@@ -1,6 +1,7 @@
 {
     "plugins": [
         ["closure-elimination"],
+        ["minify-constant-folding"],
         [
             "minify-dead-code-elimination",
             {
