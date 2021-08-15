@@ -4,7 +4,7 @@
     "moduleDirectories": [
         "node_modules",
         "src",
-        "test"
+        "tests"
     ],
     "moduleFileExtensions": [
         "js",

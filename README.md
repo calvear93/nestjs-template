@@ -125,8 +125,6 @@ Set "deleteOutDir" true in `nest-cli.json`.
 
 ## Linting 🧿
 
-Project uses two linters, for code formatting and code styling normalizing.
-
 -   **eslint**: TypeScript linter with Airbnb React base config and some other additions.
 
 For correct interpretation of linters, is recommended to use [Visual Studio Code](https://code.visualstudio.com/) as IDE and install the plugins in .vscode folder at 'extensions.json', as well as use the config provided in 'settings.json'
@@ -158,6 +156,7 @@ Branches environments are defined as:
 -   [uuid](https://github.com/uuidjs/uuid) - UUID generator.
 -   [class-validator](https://github.com/typestack/class-validator) - Decorator based property validation.
 -   [class-transformer](https://github.com/typestack/class-transformer) - TypeScript object parser.
+-   [typescript-string-operations](https://github.com/iwt-svenulrich/typescript-string-operations#readme)
 
 ---
 

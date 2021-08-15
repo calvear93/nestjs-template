@@ -15,8 +15,13 @@ docker-compose.yml
 .vscode
 CHANGELOG.md
 README.md
-azure-pipelines.yml
 
+# pipeline and k8s
+azure-pipelines.yml
+templates
+k8s
+
+.eslintignore
 .eslintcache
 .gitignore
 .prettierrc.json
