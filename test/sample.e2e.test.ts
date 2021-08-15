@@ -7,6 +7,11 @@ describe('Sample e2e', () =>
 {
     let app: INestApplication;
 
+    // fibonacci number for test
+    const iteration = 10;
+    // fibonacci result
+    const expected = '55';
+
     beforeAll(async () =>
     {
         const moduleRef = await Test.createTestingModule({
@@ -21,7 +26,7 @@ describe('Sample e2e', () =>
         await app.init();
     });
 
-    it('/GET basic', () =>
+    it('/GET basic should return Hello World', () =>
     {
         const expected = 'Hello World';
 
@@ -31,35 +36,26 @@ describe('Sample e2e', () =>
             .expect(expected);
     });
 
-    it('/GET fibonacci', () =>
+    it(`/GET fibonacci, ${iteration} should be ${expected}`, () =>
     {
-        const input = 10;
-        const expected = '89';
-
         return request(app.getHttpServer())
-            .get(`/worker/normal?num=${input}`)
+            .get(`/worker/normal?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });
 
-    it('/GET fibonacci thread', () =>
+    it(`/GET fibonacci thread, ${iteration} should be ${expected}`, () =>
     {
-        const input = 10;
-        const expected = '89';
-
         return request(app.getHttpServer())
-            .get(`/worker/thread?num=${input}`)
+            .get(`/worker/thread?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });
 
-    it('/GET fibonacci thread pool', () =>
+    it(`/GET fibonacci thread pool, ${iteration} should be ${expected}`, () =>
     {
-        const input = 10;
-        const expected = '89';
-
         return request(app.getHttpServer())
-            .get(`/worker/threadPool?num=${input}`)
+            .get(`/worker/threadPool?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });

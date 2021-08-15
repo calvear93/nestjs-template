@@ -8,6 +8,11 @@ describe('SampleWorkerService', () =>
 {
     let service: SampleWorkerService;
 
+    // fibonacci number for test
+    const iteration = 10;
+    // fibonacci result
+    const expected = 55;
+
     beforeAll(async () =>
     {
         const module: TestingModule = await Test.createTestingModule({
@@ -32,19 +37,13 @@ describe('SampleWorkerService', () =>
         expect(service).toBeDefined();
     });
 
-    test('normal fibonacci with 10 iterations should return 89', () =>
+    test(`normal ${iteration} fibonacci should return ${expected}`, () =>
     {
-        const input = 10;
-        const expected = 89;
-
-        expect(service.normal(input)).toBe(expected);
+        expect(service.normal(iteration)).toBe(expected);
     });
 
-    test('thread fibonacci with 10 iterations should return 89', async () =>
+    test(`thread ${iteration} fibonacci should return ${expected}`, async () =>
     {
-        const input = 10;
-        const expected = 89;
-
-        expect(await service.thread(input)).toBe(expected);
+        expect(await service.thread(iteration)).toBe(expected);
     });
 });
