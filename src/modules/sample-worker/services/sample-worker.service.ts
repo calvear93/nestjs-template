@@ -1,4 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { FunctionThread } from 'threads';
+import { QueuedTask } from 'threads/dist/master/pool';
 import { fibonacci } from '../utils/fibonacci';
 import {
     FibonacciThread,
@@ -25,17 +27,15 @@ export class SampleWorkerService
         private readonly fibonacciThreadPool: FibonacciThreadPool
     ) {}
 
-    async thread(num: number): Promise<number>
+    thread(num: number): Promise<number>
     {
-        return await this.fibonacciThread(num);
+        return this.fibonacciThread(num);
     }
 
-    async threadPool(num: number): Promise<number>
+    threadPool(num: number): QueuedTask<FunctionThread, number>
     {
-        const task = this.fibonacciThreadPool
-            .queue(fibonacci => fibonacci(num));
-
-        return await task;
+        return this.fibonacciThreadPool
+            .queue(f => f(num));
     }
 
     normal(num: number): number

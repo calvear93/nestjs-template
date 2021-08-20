@@ -1,4 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { FunctionThread } from 'threads';
+import { QueuedTask } from 'threads/dist/master/pool';
 import { SampleWorkerService } from '../services/sample-worker.service';
 
 /**
@@ -47,7 +49,7 @@ export class SampleWorkerController
      * @returns {Promise<number>} fibonacci result
      */
     @Get('threadPool')
-    threadPool(@Query('num') num: number): Promise<number>
+    threadPool(@Query('num') num: number): QueuedTask<FunctionThread, number>
     {
         return this.service.threadPool(num);
     }
