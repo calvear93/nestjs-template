@@ -8,23 +8,23 @@
 
 For load desired environment, add you npm script like **`env-cmd -e <env>,<mode> -r environment/loader.js <your-command>`**.
 
--   **mode**: (build|debug|test) execution mode base variables.
+-   **mode**: (build|debug|test) execution mode global variables.
 -   **env**: (dev|qa|prod) environment variables.
 
 _For example: `env-cmd -e dev,debug -r environment/loader.js npm run start`_
 
 ## 2. Structure
 
-#### 2.1. Modes (environment/base)
+#### 2.1. Modes (environment/global)
 
-Your `environment/base` folder should contains files below:
+Your `environment/global` folder should contains files below:
 
 -   **default.env.json**: default variables for the rest of environments.
 -   **build.env.json**: loaded on build execution.
 -   **test.env.json**: loaded on test execution.
 -   **debug.env.json**: loaded on local debugging execution.
 
-_This folder contains every base environment variables files a.k.a. environment execution modes._
+_This folder contains every global environment variables files a.k.a. environment execution modes._
 
 #### 2.2. Environments (environment/env)
 

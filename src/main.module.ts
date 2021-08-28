@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { SampleModule, SampleWorkerModule, SampleORMModule } from 'modules';
+import { SampleModule, SampleWorkerModule, SampleORMModule, HealthModule } from 'modules';
 
 /**
  * Main module containing every app submodules.
@@ -9,6 +9,7 @@ import { SampleModule, SampleWorkerModule, SampleORMModule } from 'modules';
  */
 @Module({
     imports: [
+        HealthModule,
         SampleModule,
         SampleWorkerModule,
         SampleORMModule
