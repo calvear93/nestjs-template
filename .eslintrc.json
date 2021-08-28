@@ -20,41 +20,22 @@
     },
     "plugins": [
         "@typescript-eslint/eslint-plugin",
+        "sonarjs",
         "decorator-position",
-        "import",
         "promise",
         "jsdoc",
         "jest",
-        "jest-formatting",
-        "radar"
+        "jest-formatting"
     ],
     "extends": [
         "plugin:@typescript-eslint/recommended",
         "plugin:eslint-comments/recommended",
-        "plugin:jsdoc/recommended",
-        "plugin:radar/recommended"
+        "plugin:sonarjs/recommended",
+        "plugin:jsdoc/recommended"
     ],
     "rules": {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/interface-name-prefix": "off",
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unused-vars": [
-            "warn",
-            {
-                "args": "after-used",
-                "caughtErrors": "all",
-                "vars": "local",
-                "varsIgnorePattern": "^_"
-            }
-        ],
-        "@typescript-eslint/type-annotation-spacing": [
-            "warn",
-            {
-                "after": true,
-                "before": false
-            }
-        ],
         "@typescript-eslint/indent": [
             "warn",
             4,
@@ -80,10 +61,28 @@
                 "outerIIFEBody": 1
             }
         ],
+        "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/no-empty-interface": [
             "error",
             {
                 "allowSingleExtends": true
+            }
+        ],
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                "args": "after-used",
+                "caughtErrors": "all",
+                "vars": "local",
+                "varsIgnorePattern": "^_"
+            }
+        ],
+        "@typescript-eslint/type-annotation-spacing": [
+            "warn",
+            {
+                "after": true,
+                "before": false
             }
         ],
         "array-bracket-spacing": ["warn", "always"],
@@ -112,9 +111,9 @@
         "decorator-position/decorator-position": [
             "warn",
             {
+                "methods": "above",
                 "printWidth": 100,
-                "properties": "above",
-                "methods": "above"
+                "properties": "above"
             }
         ],
         "default-case": "warn",
@@ -128,12 +127,12 @@
                 "allowImplicit": true
             }
         ],
+        "jest-formatting/padding-around-all": "warn",
         "jest/no-disabled-tests": "warn",
         "jest/no-focused-tests": "error",
         "jest/no-identical-title": "error",
         "jest/prefer-to-have-length": "warn",
         "jest/valid-expect": "error",
-        "jest-formatting/padding-around-all": "warn",
         "jsdoc/check-tag-names": "off",
         "jsdoc/no-undefined-types": "off",
         "jsdoc/require-hyphen-before-param-description": "off",
@@ -223,35 +222,35 @@
         "promise/valid-params": "warn",
         "quote-props": ["warn", "as-needed"],
         "quotes": ["warn", "single", "avoid-escape"],
-        "radar/cognitive-complexity": ["warn", 16],
-        "radar/max-switch-cases": ["warn", 10],
-        "radar/no-all-duplicated-branches": "error",
-        "radar/no-collapsible-if": "warn",
-        "radar/no-collection-size-mischeck": "error",
-        "radar/no-duplicate-string": "warn",
-        "radar/no-duplicated-branches": "error",
-        "radar/no-element-overwrite": "error",
-        "radar/no-extra-arguments": "warn",
-        "radar/no-identical-conditions": "error",
-        "radar/no-identical-expressions": "warn",
-        "radar/no-identical-functions": "warn",
-        "radar/no-inverted-boolean-check": "warn",
-        "radar/no-one-iteration-loop": "error",
-        "radar/no-redundant-boolean": "error",
-        "radar/no-redundant-jump": "error",
-        "radar/no-same-line-conditional": "error",
-        "radar/no-small-switch": "warn",
-        "radar/no-unused-collection": "warn",
-        "radar/no-use-of-empty-return-value": "error",
-        "radar/no-useless-catch": "warn",
-        "radar/prefer-immediate-return": "warn",
-        "radar/prefer-object-literal": "warn",
-        "radar/prefer-single-boolean-return": "warn",
-        "radar/prefer-while": "error",
         "radix": ["warn", "as-needed"],
         "semi": ["error", "always"],
         "semi-spacing": "warn",
         "semi-style": ["warn", "last"],
+        "sonarjs/cognitive-complexity": ["warn", 16],
+        "sonarjs/max-switch-cases": ["warn", 10],
+        "sonarjs/no-all-duplicated-branches": "error",
+        "sonarjs/no-collapsible-if": "warn",
+        "sonarjs/no-collection-size-mischeck": "error",
+        "sonarjs/no-duplicate-string": "warn",
+        "sonarjs/no-duplicated-branches": "error",
+        "sonarjs/no-element-overwrite": "error",
+        "sonarjs/no-extra-arguments": "warn",
+        "sonarjs/no-identical-conditions": "error",
+        "sonarjs/no-identical-expressions": "warn",
+        "sonarjs/no-identical-functions": "warn",
+        "sonarjs/no-inverted-boolean-check": "warn",
+        "sonarjs/no-one-iteration-loop": "error",
+        "sonarjs/no-redundant-boolean": "error",
+        "sonarjs/no-redundant-jump": "error",
+        "sonarjs/no-same-line-conditional": "error",
+        "sonarjs/no-small-switch": "warn",
+        "sonarjs/no-unused-collection": "warn",
+        "sonarjs/no-use-of-empty-return-value": "error",
+        "sonarjs/no-useless-catch": "warn",
+        "sonarjs/prefer-immediate-return": "warn",
+        "sonarjs/prefer-object-literal": "warn",
+        "sonarjs/prefer-single-boolean-return": "warn",
+        "sonarjs/prefer-while": "error",
         "sort-imports": "off",
         "sort-keys": ["off", "asc"],
         "space-before-blocks": "warn",

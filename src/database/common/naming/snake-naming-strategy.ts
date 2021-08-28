@@ -32,6 +32,7 @@ export class SnakeNamingStrategy
         firstTableName: string,
         secondTableName: string,
         firstPropertyName: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         secondPropertyName: string
     ): string
     {

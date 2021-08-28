@@ -20,6 +20,12 @@ import {
 @Injectable()
 export class SampleWorkerService
 {
+    /**
+     * Creates an instance of SampleWorkerService.
+     *
+     * @param {FibonacciThread} fibonacciThread fibonacci thread handler
+     * @param {FibonacciThreadPool} fibonacciThreadPool fibonacci thread pool handler
+     */
     constructor(
         @Inject(FIBONACCI_THREAD_PROVIDER)
         private readonly fibonacciThread: FibonacciThread,
@@ -27,17 +33,47 @@ export class SampleWorkerService
         private readonly fibonacciThreadPool: FibonacciThreadPool
     ) {}
 
+    /**
+     * Execute recursive
+     * Fibonacci algorithm
+     * in a Thread.
+     *
+     * Non main thread blocking.
+     *
+     * @param {number} num iteration
+     *
+     * @returns {number} Fibonacci number
+     */
     thread(num: number): Promise<number>
     {
         return this.fibonacciThread(num);
     }
 
+    /**
+     * Execute recursive
+     * Fibonacci algorithm
+     * in a Thread Pool.
+     *
+     * Non thread blocking and concurrent.
+     *
+     * @param {number} num iteration
+     *
+     * @returns {number} Fibonacci number
+     */
     threadPool(num: number): QueuedTask<FunctionThread, number>
     {
         return this.fibonacciThreadPool
             .queue(f => f(num));
     }
 
+    /**
+     * Execute recursive
+     * Fibonacci algorithm.
+     *
+     * @param {number} num iteration
+     *
+     * @returns {number} Fibonacci number
+     */
     normal(num: number): number
     {
         return fibonacci(num);
