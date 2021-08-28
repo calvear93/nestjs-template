@@ -23,7 +23,7 @@ export class MainModule
     /**
      * Triggered on module initialization.
      */
-    onModuleInit()
+    onModuleInit(): void
     {
         this.logger.debug(`Application started at port: ${process.env.PORT}`, MainModule.name);
     }
