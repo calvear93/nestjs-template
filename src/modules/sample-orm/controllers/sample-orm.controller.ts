@@ -8,7 +8,10 @@ import { SampleORMService } from '../services/sample-orm.service';
  * @export
  * @class SampleORMController
  */
-@Controller('orm')
+@Controller({
+    path: 'orm',
+    version: '1'
+})
 export class SampleORMController
 {
     /**

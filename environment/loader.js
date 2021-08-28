@@ -30,8 +30,8 @@ module.exports = new Promise((resolve) => {
         [envName]: {
             ENV: envName,
             ...readEnvFile('environment/base/default.env.json'),
-            ...readEnvFile(`environment/env/${envName}.env.json`),
             ...readEnvFile(`environment/base/${modeName}.env.json`),
+            ...readEnvFile(`environment/env/${envName}.env.json`),
             ...readEnvFile(`environment/env/${envName}.local.env.json`, true),
         },
     });

@@ -9,7 +9,10 @@ import { SampleWorkerService } from '../services/sample-worker.service';
  * @export
  * @class SampleWorkerController
  */
-@Controller('worker')
+@Controller({
+    path: 'worker',
+    version: '1'
+})
 export class SampleWorkerController
 {
     /**
