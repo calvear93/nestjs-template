@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
 
 describe(HealthController.name, () =>
@@ -8,6 +9,7 @@ describe(HealthController.name, () =>
     beforeAll(async () =>
     {
         const module: TestingModule = await Test.createTestingModule({
+            imports: [ TerminusModule ],
             controllers: [ HealthController ]
         }).compile();
 
@@ -19,8 +21,8 @@ describe(HealthController.name, () =>
         expect(controller).toBeDefined();
     });
 
-    test('should response ok', () =>
+    test('should response ok', async () =>
     {
-        expect(controller.check()).toEqual({ status: 'ok' });
+        expect(await controller.check()).toMatchObject({ status: 'ok' });
     });
 });
