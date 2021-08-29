@@ -73,7 +73,7 @@ it environment may be 'development', 'qa' or 'production'.
 | npm run test:<env>         | executes tests          |
 | npm run test:coverage      | testing coverage report |
 | npm run test:inspect       | testing debug           |
-| npm run lint:analyze       | code format review      |
+| npm run lint               | code format review      |
 | npm run lint:fix           | code format review/fix  |
 
 ## Commands ⚙️
@@ -125,9 +125,10 @@ Set "deleteOutDir" true in `nest-cli.json`.
 
 ## Linting 🧿
 
--   **eslint**: TypeScript linter with Airbnb React base config and some other additions.
+-   **eslint**: linter with TypeScript parser and some other additions.
 
-For correct interpretation of linters, is recommended to use [Visual Studio Code](https://code.visualstudio.com/) as IDE and install the plugins in .vscode folder at 'extensions.json', as well as use the config provided in 'settings.json'
+For correct interpretation of linters, is recommended to use [Visual Studio Code](https://code.visualstudio.com/)
+as IDE and install the plugins in .vscode folder at 'extensions.json', as well as use the config provided in 'settings.json'
 
 ## Deployment 📦
 
@@ -143,20 +144,21 @@ Branches environments are defined as:
 
 ## Built with 🛠️
 
--   [Express](https://expressjs.com/es/) - NodeJS HTTP framework.
--   [NestJS](https://nestjs.com/) - NodeJS framework.
--   [TypeORM](https://typeorm.io/) - TypeScript ORM.
--   [Threads.JS](https://threads.js.org/) - Worker Threads made easy.
--   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility.
+-   [Express](https://expressjs.com/es/) - NodeJS HTTP framework
+-   [NestJS](https://nestjs.com/) - NodeJS framework
+-   [TypeORM](https://typeorm.io/) - TypeScript ORM
+-   [Threads.JS](https://threads.js.org/) - Worker Threads made easy
+-   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility
 
 ## Useful packages 🗂
 
--   [linq-to-typescript](https://github.com/arogozine/LinqToTypeScript) - LINQ for TypeScript.
--   [nanoid](https://github.com/ai/nanoid) - Tiny unique string ID generator.
--   [uuid](https://github.com/uuidjs/uuid) - UUID generator.
--   [class-validator](https://github.com/typestack/class-validator) - Decorator based property validation.
--   [class-transformer](https://github.com/typestack/class-transformer) - TypeScript object parser.
+-   [linq-to-typescript](https://github.com/arogozine/LinqToTypeScript) - LINQ for TypeScript
+-   [nanoid](https://github.com/ai/nanoid) - Tiny unique string ID generator
+-   [uuid](https://github.com/uuidjs/uuid) - UUID generator
+-   [class-validator](https://github.com/typestack/class-validator) - Decorator based property validation
+-   [class-transformer](https://github.com/typestack/class-transformer) - TypeScript object parser
 -   [typescript-string-operations](https://github.com/iwt-svenulrich/typescript-string-operations#readme)
+-   [Luxon](https://moment.github.io/luxon/) - Datetime complete library
 
 ---
 
