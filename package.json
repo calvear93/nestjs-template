@@ -8,11 +8,13 @@
   "private": false,
   "repository": "https://github.com/calvear93/nestjs-template",
   "keywords": [
-    "nest",
     "node",
+    "nest",
+    "express",
     "typeorm",
     "worker",
     "threads",
+    "eslint",
     "typescript"
   ],
   "scripts": {
@@ -30,7 +32,7 @@
     "test:prod": "env-cmd -e prod,test -r environment/loader.js jest",
     "test:coverage": "jest --coverage",
     "test:inspect": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "lint:analyze": "eslint {src,test}/**/*.ts",
+    "lint": "eslint {src,test}/**/*.ts",
     "lint:fix": "eslint --fix {src,test}/**/*.ts",
     "_build": "nest build && babel dist --out-dir dist",
     "_orm": "ts-node -r tsconfig-paths/register --transpile-only node_modules/typeorm/cli -f src/database/default/database.config.ts"
@@ -74,7 +76,6 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-decorator-position": "^2.2.29",
     "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jest": "^24.4.0",
     "eslint-plugin-jest-formatting": "^3.0.0",
     "eslint-plugin-jsdoc": "^36.0.8",
