@@ -1,5 +1,7 @@
 # dependencies
 /node_modules
+/.pnp
+.pnp.js
 
 # testing
 /coverage
@@ -7,6 +9,7 @@
 # artifacts
 /dist
 /build
+build/Release
 tsconfig.build.tsbuildinfo
 
 # Logs

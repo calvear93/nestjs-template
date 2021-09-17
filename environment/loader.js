@@ -25,17 +25,17 @@ function buildEnv()
 
     return {
         [modeName]: {
-            VERSION: app.version,
-            PROJECT: app.name,
-            TITLE: app.title,
+            REACT_APP_VERSION: app.version,
+            REACT_APP_PROJECT: app.name,
+            REACT_APP_TITLE: app.title
         },
         [envName]: {
-            ENV: envName,
+            REACT_APP_ENV: envName,
             ...readEnvFile('environment/global/default.env.json'),
             ...readEnvFile(`environment/global/${modeName}.env.json`),
             ...readEnvFile(`environment/env/${envName}.env.json`),
-            ...readEnvFile(`environment/env/${envName}.local.env.json`, true),
-        },
+            ...readEnvFile(`environment/env/${envName}.local.env.json`, true)
+        }
     };
 }
 
@@ -48,11 +48,14 @@ function buildEnv()
  * @param {string} filePath
  * @param {boolean} isLocal if config is a local file
  *
+ * @throws {Error} on env file not found
+ *
  * @returns {any} secrets object
  */
 function readEnvFile(filePath, isLocal = false)
 {
-    try {
+    try
+    {
         console.log('\x1b[35m', `Loading ${filePath}`, '\x1b[0m');
 
         // local file exists, so loads it
