@@ -28,8 +28,6 @@
             "sourceMaps": true,
             "restart": true,
             "name": "Debug Service (qa)",
-            //"preLaunchTask": "Build Clean",
-            //"postDebugTask": "Terminate All Tasks",
             "program": "${workspaceFolder}/src/main.ts",
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run", "start:qa"],
