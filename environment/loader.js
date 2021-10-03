@@ -19,7 +19,7 @@ function buildEnv()
 
     console.log(
         '\x1b[32m',
-        `Loading "${envName}" environment as "${modeName}" mode`,
+        `Executing "${modeName}" mode in "${envName}" environment`,
         '\x1b[0m'
     );
 
