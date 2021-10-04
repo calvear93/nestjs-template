@@ -2,7 +2,7 @@ declare global {
     namespace NodeJS {
         // NOTE: only string type is supported
         interface ProcessEnv {
-            NODE_ENV: 'development' | 'production';
+            NODE_ENV: 'development' | 'production' | 'test';
             ENV: 'dev' | 'qa' | 'prod';
 
             // SECTION: project info from package.json

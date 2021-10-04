@@ -25,12 +25,12 @@ function buildEnv()
 
     return {
         [modeName]: {
-            REACT_APP_VERSION: app.version,
-            REACT_APP_PROJECT: app.name,
-            REACT_APP_TITLE: app.title
+            VERSION: app.version,
+            PROJECT: app.name,
+            TITLE: app.title
         },
         [envName]: {
-            REACT_APP_ENV: envName,
+            ENV: envName,
             ...readEnvFile('environment/global/default.env.json'),
             ...readEnvFile(`environment/global/${modeName}.env.json`),
             ...readEnvFile(`environment/env/${envName}.env.json`),
