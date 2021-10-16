@@ -21,7 +21,6 @@
     "plugins": [
         "@typescript-eslint/eslint-plugin",
         "sonarjs",
-        "decorator-position",
         "promise",
         "jsdoc",
         "jest",
@@ -108,14 +107,6 @@
         ],
         "comma-style": ["warn", "last"],
         "curly": ["warn", "multi-or-nest", "consistent"],
-        "decorator-position/decorator-position": [
-            "warn",
-            {
-                "methods": "above",
-                "printWidth": 100,
-                "properties": "above"
-            }
-        ],
         "default-case": "warn",
         "dot-location": ["warn", "property"],
         "dot-notation": "warn",
