@@ -22,11 +22,13 @@ export function checkDigit(id: string): string
 
     for (let i = id.length - 1; i >= 0; i--)
     {
-        sum = sum + Number(id.charAt(i)) * mul;
+        sum += +id[i] * mul;
         mul = (mul + 1) % 8 || 2;
     }
 
-    switch (sum % 11)
+    const result = sum % 11;
+
+    switch (result)
     {
         case 1:
             return 'K';
@@ -35,7 +37,7 @@ export function checkDigit(id: string): string
             return '0';
 
         default:
-            return (11 - (sum % 11)).toString();
+            return `${11 - result}`;
     }
 }
 
@@ -48,10 +50,7 @@ export function checkDigit(id: string): string
  */
 export function clean(rut?: string): string
 {
-    if (!rut)
-        return '';
-
-    return rut.replace(/[.-]/g, '');
+    return rut ? rut.replace(/[.-]/g, '') : '';
 }
 
 /**
@@ -68,10 +67,10 @@ export function isValid(id?: string): boolean
     if (id.length < 7)
         return false;
 
-    let dv = id.charAt(id.length - 1);
+    let dv = id[id.length - 1];
     dv = dv === 'k' ? 'K' : dv;
 
     const dvC = checkDigit(id.substring(0, id.length - 1));
 
-    return dv === dvC.toString();
+    return dv === dvC;
 }
