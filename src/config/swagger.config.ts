@@ -12,7 +12,6 @@ export const swaggerInit = (app: INestApplication) =>
         .setTitle(process.env.TITLE)
         .setDescription(process.env.DESCRIPTION)
         .setVersion(process.env.VERSION)
-        .addServer('v1')
         .build();
 
     const document = SwaggerModule.createDocument(app, config);

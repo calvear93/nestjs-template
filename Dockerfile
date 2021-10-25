@@ -61,4 +61,4 @@ USER node
 ENTRYPOINT ["node"]
 CMD ["main"]
 
-EXPOSE 8080
+EXPOSE 8080/tcp

@@ -12,7 +12,7 @@ import { SampleModule, SampleWorkerModule, SampleORMModule, HealthModule } from 
         HealthModule,
         SampleModule,
         SampleWorkerModule,
-        SampleORMModule
+        //SampleORMModule
     ],
     providers: [ Logger ]
 })

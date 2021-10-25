@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: <app-name>-service
+spec:
+  type: ClusterIP # ClusterIP for internal, LoadBalancer exposes external IP
+  selector:
+    app: <app-name>
+  ports:
+    - protocol: TCP
+      port: 8080  # should ne exposed by app container
+      targetPort: 8080 # for ingress controller
