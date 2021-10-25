@@ -27,7 +27,7 @@ spec:
               memory: 32Mi
             limits:
               cpu: 1000m
-              memory: 220Mi
+              memory: 512Mi
           readinessProbe:
             failureThreshold: 2
             httpGet:
@@ -47,4 +47,4 @@ spec:
             successThreshold: 1
             timeoutSeconds: 1
       imagePullSecrets:
-        - name: acrprodittec
+        - name: <acr-secret>
