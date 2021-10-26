@@ -1,4 +1,4 @@
-<h2 align="center"><b>NestJS Boilerplate</b></h2>
+<h2 align="center"><b>NodeJS ▪ NestJS Boilerplate</b></h2>
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
@@ -16,11 +16,11 @@
   </a>
 </p>
 
-## Description ✏
+## ✒ Description
 
 Nest is a framework for building efficient, scalable <a href="http://nodejs.org" target="_blank">Node.js</a> server-side applications. It uses modern JavaScript, is built with <a href="http://www.typescriptlang.org" target="_blank">TypeScript</a> and under the hood, Nest makes use of <a href="https://expressjs.com/" target="_blank">Express</a>.
 
-## Structure 💡
+## ⛩ Structure
 
 ```bash
 ├── README.md
@@ -69,7 +69,13 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 └── package.json
 ```
 
-## Branches and Environments 📋
+## 📥 How to Start
+
+-   Install [NodeJS](https://nodejs.org/es/) for your machine.
+-   Execute `npm install` command. (`npm i --force` in case of conflicts).
+-   Execute the app with `npm run start:dev`.
+
+## 📋 Branches and Environments
 
 Project has 3 environments (infrastructure) base for project building.
 
@@ -85,7 +91,7 @@ Also, pipeline has automated deployments depending of branch updated.
 -   **main**: releases tested and certified from 'qa' environment, it deploys to 'production' environment.
 -   **hotfix/\***: specific fixes from main, it deploys to 'development' environment.
 
-## Executing 🧪
+## 🧪 Executing
 
 Project uses **npm scripts** for eases execution, testing and building.
 Many of these script run on a defined environment, specified after ':', and
@@ -102,7 +108,7 @@ it environment may be 'dev', 'qa' or 'prod'.
 | npm run lint                 | code format review      |
 | npm run lint:fix             | code format review/fix  |
 
-## Commands ⚙️
+## ⚙️ Commands
 
 ### [TypeORM](https://typeorm.io/#/using-cli)
 
@@ -149,14 +155,7 @@ Set "deleteOutDir" true in `nest-cli.json`.
 | git fetch origin `<branch>`               | retrieves branch remote changes    |
 | git reset --hard origin/`<branch>`        | resets your branch to remote state |
 
-## Linting 🧿
-
--   **eslint**: linter with TypeScript parser and some other additions.
-
-For correct interpretation of linters, is recommended to use [Visual Studio Code](https://code.visualstudio.com/)
-as IDE and install the plugins in .vscode folder at 'extensions.json', as well as use the config provided in 'settings.json'
-
-## Deployment 📦
+## 📦 Deployment
 
 Use included Azure Pipeline for CI/CD - edit [azure-pipeline.yml](azure-pipeline.yml) file for custom projects variables.
 
@@ -168,17 +167,24 @@ Branches environments are defined as:
 -   **hotfix/\***: development
 -   **feature/\***: none
 
-## Troubleshooting 🛠️
+## 🧿 Linting
 
--   **I've some error with migrations, my migration or model doesn't update**:
+-   **eslint**: linter with TypeScript parser and some other additions.
 
-    You can remove your `dist` folder or enable `"deleteOutDir": false` in the file `nest-cli.json` for debug, 'cause hot-reload has some problems sometimes.
+For correct interpretation of linters, is recommended to use [Visual Studio Code](https://code.visualstudio.com/)
+as IDE and install the plugins in .vscode folder at 'extensions.json', as well as use the config provided in 'settings.json'
 
--   **API doesn't works! locally gives me 404 not found**:
+## 🛠️ Troubleshooting
 
-    Sometime (specially on WSL) ports get dirty, so you should change your debug port or restart your computer.
+-   **I've some errors with migrations, my migrations or model doesn't get updated**:
 
-## Built with 🛠️
+    You can remove your `dist` folder or enable `"deleteOutDir": true` in the file `nest-cli.json` for debug, 'cause hot-reload has some problems sometimes.
+
+-   **API doesn't works! locally gives me a 404 not found**:
+
+    Sometimes (specially on WSL) system ports get dirty, so you should change your debug port or restart your computer.
+
+## 🛠️ Built with
 
 -   [Express](https://expressjs.com/es/) - NodeJS HTTP framework
 -   [NestJS](https://nestjs.com/) - NodeJS framework
@@ -186,7 +192,7 @@ Branches environments are defined as:
 -   [Threads.JS](https://threads.js.org/) - Worker Threads made easy
 -   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility
 
-## Useful packages 🗂
+## 🗂 Useful packages
 
 -   [linq-to-typescript](https://github.com/arogozine/LinqToTypeScript) - LINQ for TypeScript
 -   [nanoid](https://github.com/ai/nanoid) - Tiny unique string ID generator
