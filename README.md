@@ -176,6 +176,17 @@ as IDE and install the plugins in .vscode folder at 'extensions.json', as well a
 
 ## 🛠️ Troubleshooting
 
+-   **I want to debug my code with breakpoints**:
+
+    You can debug in Visual Studio Code, using the `launch.json` profile in .vscode, pressing F5 or in Run and Debug sidebar option.
+
+-   **"<cmd>" is not recognized as an internal or external command, operable program or batch file.**:
+
+    In Windows, sometimes appear this message, because some node module isn't installed for your system version.
+    In example, if you execute `npm i` in WSL, and execute `npm run start:dev` in Powershell, you get the error
+    for `env-cmd` is not recognized.
+    So, you should execute `npm i` in Powershell terminal for solve that.
+
 -   **I've some errors with migrations, my migrations or model doesn't get updated**:
 
     You can remove your `dist` folder or enable `"deleteOutDir": true` in the file `nest-cli.json` for debug, 'cause hot-reload has some problems sometimes.
