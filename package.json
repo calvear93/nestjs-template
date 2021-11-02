@@ -6,7 +6,11 @@
   "author": "Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>",
   "license": "MIT",
   "private": false,
-  "repository": "https://github.com/calvear93/nestjs-template",
+  "homepage": "https://github.com/calvear93/nestjs-template",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/calvear93/nestjs-template"
+  },
   "keywords": [
     "node",
     "nest",
@@ -65,8 +69,8 @@
     "@types/node": "^16.11.6",
     "@types/pg": "^8.6.1",
     "@types/supertest": "^2.0.11",
-    "@typescript-eslint/eslint-plugin": "^5.2.0",
-    "@typescript-eslint/parser": "^5.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
     "babel-plugin-minify-constant-folding": "^0.5.0",
     "babel-plugin-minify-dead-code-elimination": "^0.5.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
@@ -89,7 +93,7 @@
     "typescript": "^4.4.4"
   },
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=7.5.6"
+    "node": "~14.0.0 || ^16.13.0",
+    "npm": ">=6.14"
   }
 }
