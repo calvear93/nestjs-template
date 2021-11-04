@@ -69,7 +69,7 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 └── package.json
 ```
 
-## 📥 How to Start
+## 📥 Getting Started
 
 -   Install [NodeJS](https://nodejs.org/es/) for your machine.
 -   Execute `npm install` command. (`npm i --force` in case of conflicts).
