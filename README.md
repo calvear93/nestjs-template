@@ -7,20 +7,18 @@
 <p align="center">
   A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.
 </p>
+
 <p align="center">
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank">
-    <img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" />
-  </a>
-  <a href="https://www.npmjs.com/~nestjscore" target="_blank">
-    <img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" />
+  <a href="https://github.com/calvear93/nestjs-template" target="_blank">
+    <img src="https://img.shields.io/github/license/calvear93/nestjs-template" alt="Package License" />
   </a>
 </p>
 
-## ✒ Description
+## ✒ **Description**
 
 Nest is a framework for building efficient, scalable <a href="http://nodejs.org" target="_blank">Node.js</a> server-side applications. It uses modern JavaScript, is built with <a href="http://www.typescriptlang.org" target="_blank">TypeScript</a> and under the hood, Nest makes use of <a href="https://expressjs.com/" target="_blank">Express</a>.
 
-## ⛩ Structure
+## ⛩ **Structure**
 
 ```bash
 ├── README.md
@@ -69,13 +67,13 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 └── package.json
 ```
 
-## 📥 Getting Started
+## 📥 **Getting Started**
 
 -   Install [NodeJS](https://nodejs.org/es/) for your machine.
 -   Execute `npm install` command. (`npm i --force` in case of conflicts).
 -   Execute the app with `npm run start:dev`.
 
-## 📋 Branches and Environments
+## 📋 **Branches and Environments**
 
 Project has 3 environments (infrastructure) base for project building.
 
@@ -83,15 +81,7 @@ Project has 3 environments (infrastructure) base for project building.
 -   **qa (quality assurance)**: environment for testing and quality assurance.
 -   **prod (production)**: productive environment.
 
-Also, pipeline has automated deployments depending of branch updated.
-
--   **feature/\***: new features/requirements, it doesn't deploys to any environment.
--   **prerelease/\***: accumulates new features for current sprint development, it deploys to 'development' environment.
--   **release/\***: has features of last release, it deploys to 'qa' environment.
--   **main**: releases tested and certified from 'qa' environment, it deploys to 'production' environment.
--   **hotfix/\***: specific fixes from main, it deploys to 'development' environment.
-
-## 🧪 Executing
+## 🧪 **Executing**
 
 Project uses **npm scripts** for eases execution, testing and building.
 Many of these script run on a defined environment, specified after ':', and
@@ -108,9 +98,9 @@ it environment may be 'dev', 'qa' or 'prod'.
 | npm run lint                 | code format review      |
 | npm run lint:fix             | code format review/fix  |
 
-## ⚙️ Commands
+## ⚙️ **Commands**
 
-### [TypeORM](https://typeorm.io/#/using-cli)
+### **1. [TypeORM](https://typeorm.io/#/using-cli)**
 
 | Command                                                                 | Action                                        |
 | ----------------------------------------------------------------------- | --------------------------------------------- |
@@ -129,14 +119,14 @@ migrations when you use start command (e.g. start:dev).
 Set "deleteOutDir" true in `nest-cli.json`.
 [!] You must use default relative path (using dots) on database entities.
 
-### Docker
+### **2. Docker**
 
 | Command                                                                                                 | Action       |
 | ------------------------------------------------------------------------------------------------------- | ------------ |
-| docker build --build-arg ENV=`<env>` --tag `<image_name>` .                                             | docker build |
+| docker build --build-arg ENV=`<env>` --tag `<image_name>` `<build-context>`                             | docker build |
 | docker run -d -it -p `<expose_port>`:`<container_app_port>`/tcp --name `<instance_name>` `<image_name>` | docker exec  |
 
-### Node Tools
+### **3. Node Tools**
 
 | Command                      | Action                    |
 | ---------------------------- | ------------------------- |
@@ -144,7 +134,7 @@ Set "deleteOutDir" true in `nest-cli.json`.
 | npm update --save/--save-dev | soft updated for packages |
 | npx npm-check-updates -u     | hard update for packages  |
 
-### Git Helpful Commands
+### **4. Git Helpful Commands**
 
 | Command                                   | Action                             |
 | ----------------------------------------- | ---------------------------------- |
@@ -152,20 +142,19 @@ Set "deleteOutDir" true in `nest-cli.json`.
 | git rebase -i `<commit-hash>` --autostash | rebase history                     |
 | git push --force                          | force push your rebase             |
 | git checkout `<branch>`                   | select branch                      |
-| git fetch origin `<branch>`               | retrieves branch remote changes    |
-| git reset --hard origin/`<branch>`        | resets your branch to remote state |
+| git fetch `<remote>` `<branch>`           | retrieves branch remote changes    |
+| git reset --hard `<remote>`/`<branch>`    | resets your branch to remote state |
+| git gc --prune=now --aggressive           | repository maintenance command     |
 
-## 📦 Deployment
+### **5. Git Subtree**
 
-Use included Azure Pipeline for CI/CD - edit [azure-pipeline.yml](azure-pipeline.yml) file for custom projects variables.
-
-Branches environments are defined as:
-
--   **main**: production
--   **release/\***: qa
--   **prerelease/\***: development
--   **hotfix/\***: development
--   **feature/\***: none
+| Command                                                                  | Action              |
+| ------------------------------------------------------------------------ | ------------------- |
+| git remote add -f `<remote-name>` `<branch>`                             | adds a remote       |
+| git subtree add --prefix `<path>` `<remote-name>` `<branch>` [--squash]  | attaches a subtree  |
+| git fetch `<remote-name>` `<branch>`                                     | fetches a remote    |
+| git subtree pull --prefix `<path>` `<remote-name>` `<branch>` [--squash] | pulls from subtree  |
+| git subtree push --prefix `<path>` `<remote-name>` `<branch>` [--squash] | push subtree change |
 
 ## 🧿 Linting
 
