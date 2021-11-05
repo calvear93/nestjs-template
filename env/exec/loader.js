@@ -1,5 +1,5 @@
 const fs = require('node:fs');
-const app = require('../package.json');
+const app = require('../../package.json');
 
 /**
  * Loads environment variables.
@@ -23,7 +23,7 @@ function buildEnv()
         '\x1b[0m'
     );
 
-    return {
+    const vars = {
         [modeName]: {
             VERSION: app.version,
             PROJECT: app.name,
@@ -31,12 +31,17 @@ function buildEnv()
         },
         [envName]: {
             ENV: envName,
-            ...readEnvFile('environment/global/default.env.json'),
-            ...readEnvFile(`environment/global/${modeName}.env.json`),
-            ...readEnvFile(`environment/env/${envName}.env.json`),
-            ...readEnvFile(`environment/env/${envName}.local.env.json`, true)
+            ...readEnvFile('env/global/default.env.json'),
+            ...readEnvFile(`env/global/${modeName}.env.json`),
+            ...readEnvFile(`env/${envName}.env.json`),
+            ...readEnvFile(`env/${envName}.local.env.json`, true)
         }
     };
+
+    if(modeName === 'debug')
+        console.log(vars)
+
+    return vars;
 }
 
 /**
