@@ -24,6 +24,7 @@
         "removeComments": true,
         "isolatedModules": true,
         "esModuleInterop": true,
+        "importHelpers": true,
         "skipLibCheck": false,
 
         "strict": true,
