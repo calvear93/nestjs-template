@@ -156,14 +156,14 @@ Set "deleteOutDir" true in `nest-cli.json`.
 | git subtree pull --prefix `<path>` `<remote-name>` `<branch>` [--squash] | pulls from subtree  |
 | git subtree push --prefix `<path>` `<remote-name>` `<branch>` [--squash] | push subtree change |
 
-## 🧿 Linting
+## 🧿 **Linting**
 
 -   **eslint**: linter with TypeScript parser and some other additions.
 
 For correct interpretation of linters, is recommended to use [Visual Studio Code](https://code.visualstudio.com/)
 as IDE and install the plugins in .vscode folder at 'extensions.json', as well as use the config provided in 'settings.json'
 
-## 🛠️ Troubleshooting
+## 🛠️ **Troubleshooting**
 
 -   **I want to debug my code with breakpoints**:
 
@@ -184,7 +184,7 @@ as IDE and install the plugins in .vscode folder at 'extensions.json', as well a
 
     Sometimes (specially on WSL) system ports get dirty, so you should change your debug port or restart your computer.
 
-## 🛠️ Built with
+## 🛠️ **Built with**
 
 -   [Express](https://expressjs.com/es/) - NodeJS HTTP framework
 -   [NestJS](https://nestjs.com/) - NodeJS framework
@@ -192,7 +192,7 @@ as IDE and install the plugins in .vscode folder at 'extensions.json', as well a
 -   [Threads.JS](https://threads.js.org/) - Worker Threads made easy
 -   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility
 
-## 🗂 Useful packages
+## 🗂 **Useful packages**
 
 -   [linq-to-typescript](https://github.com/arogozine/LinqToTypeScript) - LINQ for TypeScript
 -   [nanoid](https://github.com/ai/nanoid) - Tiny unique string ID generator
