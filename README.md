@@ -23,16 +23,16 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 ```bash
 ├── README.md
 ├── CHANGELOG.md
-├── LICENCE.md
+├── LICENSE.md
 ├── .vscode/
-├── environment/
+├── env/ # will contains dev.env.json, qa.env.json, etc.
+│   ├── exec/
+│   │   └── loader.js # environment variables loader for env-cmd
 │   ├── global/ # non secret environment variables
 │   │   ├── build.env.json
 │   │   ├── debug.env.json
 │   │   ├── test.env.json #
 │   │   └── default.env.json # base environment variables
-│   ├── env/ # will contain per-environment variables
-│   └── loader.js # environment variables loader for env-cmd
 ├── src/
 │   ├── shared/ # common utils, guards, decorators, etc.
 │   ├── config/
@@ -57,7 +57,7 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 │   │       ├── providers/
 │   │       ├── utils/
 │   │       └── sample-worker.module.ts
-│   ├── environment.d.ts # .env environment types definition
+│   ├── env.d.ts # .env environment types definition
 │   ├── main.module.ts
 │   └── main.js
 ├── .eslintrc.json
@@ -169,7 +169,7 @@ as IDE and install the plugins in .vscode folder at 'extensions.json', as well a
 
     You can debug in Visual Studio Code, using the `launch.json` profile in .vscode, pressing F5 or in Run and Debug sidebar option.
 
--   **"<cmd>" is not recognized as an internal or external command, operable program or batch file.**:
+-   **`<cmd>` is not recognized as an internal or external command, operable program or batch file.**:
 
     In Windows, sometimes appear this message, because some node module isn't installed for your system version.
     In example, if you execute `npm i` in WSL, and execute `npm run start:dev` in Powershell, you get the error
@@ -184,7 +184,7 @@ as IDE and install the plugins in .vscode folder at 'extensions.json', as well a
 
     Sometimes (specially on WSL) system ports get dirty, so you should change your debug port or restart your computer.
 
-## 🛠️ **Built with**
+## 🧮 **Built with**
 
 -   [Express](https://expressjs.com/es/) - NodeJS HTTP framework
 -   [NestJS](https://nestjs.com/) - NodeJS framework
@@ -192,7 +192,7 @@ as IDE and install the plugins in .vscode folder at 'extensions.json', as well a
 -   [Threads.JS](https://threads.js.org/) - Worker Threads made easy
 -   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility
 
-## 🗂 **Useful packages**
+## 🔦 **Useful packages**
 
 -   [linq-to-typescript](https://github.com/arogozine/LinqToTypeScript) - LINQ for TypeScript
 -   [nanoid](https://github.com/ai/nanoid) - Tiny unique string ID generator
