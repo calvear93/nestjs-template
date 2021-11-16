@@ -32,14 +32,14 @@ function buildEnv()
         [envName]: {
             ENV: envName,
             ...readEnvFile('env/global/default.env.json'),
-            ...readEnvFile(`env/global/${modeName}.env.json`),
             ...readEnvFile(`env/${envName}.env.json`),
+            ...readEnvFile(`env/global/${modeName}.env.json`),
             ...readEnvFile(`env/${envName}.local.env.json`, true)
         }
     };
 
     if(modeName === 'debug')
-        console.log(vars)
+        console.log('\n', vars)
 
     return vars;
 }

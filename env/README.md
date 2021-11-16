@@ -41,9 +41,11 @@ _This folder should contains environment variables files for system environments
 
 ## 4. Priority
 
+Loading variables priority.
+
 ### From lowest to highest.
 
 -   `default.env.json` (default values)
--   `(debug|build|test).env.json`
 -   `(dev|qa|prod).env.json`
+-   `(debug|build|test).env.json`
 -   `(dev|qa|prod).local.env.json` (replaces all previous vars)
