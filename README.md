@@ -156,25 +156,6 @@ Set "deleteOutDir" true in `nest-cli.json`.
 | git subtree pull --prefix `<path>` `<remote-name>` `<branch>` [--squash] | pulls from subtree  |
 | git subtree push --prefix `<path>` `<remote-name>` `<branch>` [--squash] | push subtree change |
 
-If you get the error below when pulling:
-
-```bash
-To https://any.domain.com/repo/_git/project
- ! [rejected]        420a15d0c81da609f217d7a22f5581656dc3e9cf -> module (non-fast-forward)
-error: failed to push some refs to 'https://any.domain.com/repo/_git/project'
-hint: Updates were rejected because a pushed branch tip is behind its remote
-hint: counterpart. Check out this branch and integrate the remote changes
-hint: (e.g. 'git pull ...') before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-```
-
-use commands below:
-
-| Command                                                               | Action                          |
-| --------------------------------------------------------------------- | ------------------------------- |
-| git subtree split --prefix `<path>` --onto=`<remote-name>`/`<branch>` | splits a subtree for force push |
-| git push ui-core `<hash-returned-previous-cmd>`:`<branch>` --force    | force push                      |
-
 ## 🧿 **Linting**
 
 -   **eslint**: linter with TypeScript parser and some other additions.
@@ -201,7 +182,27 @@ as IDE and install the plugins in .vscode folder at 'extensions.json', as well a
 
 -   **API doesn't works! locally gives me a 404 not found**:
 
-    Sometimes (specially on WSL) system ports get dirty, so you should change your debug port or restart your computer.
+    Sometimes (specially on WSL) system ports get dirty, so you should change
+    your debug port or restart your computer.
+
+-   **When pushing to remote subtree, you get the error below**:
+
+```bash
+To https://any.domain.com/repo/_git/project
+! [rejected]        420a15d0c81da609f217d7a22f5581656dc3e9cf -> anyBranch (non-fast-forward)
+error: failed to push some refs to 'https://any.domain.com/repo/_git/project'
+hint: Updates were rejected because a pushed branch tip is behind its remote
+hint: counterpart. Check out this branch and integrate the remote changes
+hint: (e.g. 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
+use commands below:
+
+| Command                                                               | Action                          |
+| --------------------------------------------------------------------- | ------------------------------- |
+| git subtree split --prefix `<path>` --onto=`<remote-name>`/`<branch>` | splits a subtree for force push |
+| git push ui-core `<hash-returned-previous-cmd>`:`<branch>` --force    | force push                      |
 
 ## 🧮 **Built with**
 
