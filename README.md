@@ -1,4 +1,4 @@
-<h2 align="center"><b>NodeJS ▪ NestJS Boilerplate</b></h2>
+<h2 align="center"><b>NestJS Boilerplate</b></h2>
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
@@ -145,6 +145,7 @@ Set "deleteOutDir" true in `nest-cli.json`.
 | git fetch `<remote>` `<branch>`           | retrieves branch remote changes    |
 | git reset --hard `<remote>`/`<branch>`    | resets your branch to remote state |
 | git gc --prune=now --aggressive           | repository maintenance command     |
+| git clean -fd                             | remove untracked empty folders     |
 
 ### **5. Git Subtree**
 

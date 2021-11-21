@@ -210,7 +210,7 @@
         "promise/no-return-in-finally": "warn",
         "promise/no-return-wrap": "error",
         "promise/param-names": "error",
-        "promise/valid-params": "warn",
+        "promise/valid-params": "off",
         "quote-props": ["warn", "as-needed"],
         "quotes": ["warn", "single", "avoid-escape"],
         "radix": ["warn", "as-needed"],
