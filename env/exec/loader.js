@@ -1,6 +1,8 @@
 const fs = require('node:fs');
 const app = require('../../package.json');
 
+const debug = process.argv.indexOf('--verbose') > 0;
+
 /**
  * Loads environment variables.
  *
@@ -38,7 +40,7 @@ function buildEnv()
         }
     };
 
-    if(modeName === 'debug')
+    if(debug)
         console.log('\n', vars)
 
     return vars;
@@ -61,7 +63,8 @@ function readEnvFile(filePath, isLocal = false)
 {
     try
     {
-        console.log('\x1b[35m', `Loading ${filePath}`, '\x1b[0m');
+        if(debug)
+            console.log('\x1b[35m', `Loading ${filePath}`, '\x1b[0m');
 
         // local file exists, so loads it
         if (fs.existsSync(filePath))

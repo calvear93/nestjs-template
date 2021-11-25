@@ -186,6 +186,10 @@ as IDE and install the plugins in .vscode folder at 'extensions.json', as well a
     Sometimes (specially on WSL) system ports get dirty, so you should change
     your debug port or restart your computer.
 
+-   **I can't see my console logs for my unit tests**:
+
+    You can set "verbose": false in jest.config.json for show your console logs.
+
 -   **When pushing to remote subtree, you get the error below**:
 
 ```bash
