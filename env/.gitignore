@@ -1,3 +1,4 @@
 # ignores environment files
 *.env.json
+!global.env.json
 !global/**/*
