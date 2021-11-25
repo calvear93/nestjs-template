@@ -48,6 +48,7 @@ Your `base.env.json` could contains an structure like below:
         ...
     },
 }
+```
 
 _This file contains every global environment variables files a.k.a. execution modes._
 
@@ -75,4 +76,7 @@ Variables loading priority.
 -   `(dev|qa|prod).env.json`
 -   `base.env.json` -> debug|build|test
 -   `(dev|qa|prod).local.env.json` (takes precedence over previous)
+
+```
+
 ```
