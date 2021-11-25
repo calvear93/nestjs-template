@@ -52,7 +52,7 @@ Your `base.env.json` could contains an structure like below:
 
 _This file contains every global environment variables files a.k.a. execution modes._
 
-#### 2.2. Environments (environment/env)
+#### 2.2. Environments
 
 Your `env` folder would contains files below:
 
@@ -76,7 +76,3 @@ Variables loading priority.
 -   `(dev|qa|prod).env.json`
 -   `base.env.json` -> debug|build|test
 -   `(dev|qa|prod).local.env.json` (takes precedence over previous)
-
-```
-
-```
