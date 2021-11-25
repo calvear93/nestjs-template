@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const app = require('../../package.json');
-const global = require('../global.env.json');
+const base = require('../base.env.json');
 
 const debug = process.argv.indexOf('--verbose') > 0;
 
@@ -34,9 +34,10 @@ function buildEnv()
         },
         [envName]: {
             ENV: envName,
-            ...global.default,
+            ...base.default,
+            ...base.env?.[envName],
             ...readEnvFile(`env/.${envName}.env.json`),
-            ...global[modeName],
+            ...base.mode?.[modeName],
             ...readEnvFile(`env/.${envName}.local.env.json`, true)
         }
     };

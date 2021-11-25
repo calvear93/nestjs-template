@@ -15,28 +15,38 @@ _For example: `env-cmd -e dev,debug -r env/exec/loader.js npm run start`_
 
 ## 2. Structure
 
-#### 2.1. Modes (global.env.json)
+#### 2.1. Non secrets (base.env.json)
 
-Your `global.env.json` should contains structure below:
+Your `base.env.json` could contains an structure like below:
 
 ```json
 {
-    // base default variables
+    // (optional) base default variables
     "default": {
         ...
     },
-    // on build
-    "build": {
+    // (optional) execution modes
+    "mode": {
+        // on build
+        "build": {
+            ...
+        },
+        // on local debugging
+        "debug": {
+            ...
+        },
+        // on testing
+        "test": {
+            ...
+        }
+    },
+    // (optional) execution environments
+    "env": {
+        "dev": {
+            ...
+        },
         ...
     },
-    // on local debugging execution
-    "debug": {
-        ...
-    },
-    // on testing execution
-    "test": {
-        ...
-    }
 }
 
 _This file contains every global environment variables files a.k.a. execution modes._
@@ -46,22 +56,23 @@ _This file contains every global environment variables files a.k.a. execution mo
 Your `env` folder would contains files below:
 
 -   **.dev.env.json**: development environment.
--   **.dev.local.env.json**: local development environment. Replaces non local.
+-   **.dev.local.env.json**: local development environment (takes precedence).
 -   **.qa.env.json**: quality assurance environment.
--   **.qa.local.env.json**: local qa environment. Replaces non local.
+-   **.qa.local.env.json**: local qa environment (takes precedence).
 -   **.prod.env.json**: production environment.
--   **.prod.local.env.json**: local production environment. Replaces non local.
+-   **.prod.local.env.json**: local production environment (takes precedence).
 
 _This folder should contains environment variables files for system environments._
 
 ## 4. Priority
 
-Loading variables priority.
+Variables loading priority.
 
 ### From lowest to highest.
 
--   `global.env.json` -> default
+-   `base.env.json` -> default
+-   `base.env.json` -> dev|qa|prod
 -   `(dev|qa|prod).env.json`
--   `global.env.json` -> debug|build|test
--   `(dev|qa|prod).local.env.json` (replaces all previous vars)
+-   `base.env.json` -> debug|build|test
+-   `(dev|qa|prod).local.env.json` (takes precedence over previous)
 ```
