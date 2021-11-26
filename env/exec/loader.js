@@ -67,7 +67,7 @@ function readEnvFile(filePath, isLocal = false)
     try
     {
         if(debug)
-            console.log('\x1b[35m', `Loading ${filePath}`, '\x1b[0m');
+            console.log('\x1b[35m\x1b[2m', `Loading ${filePath}`, '\x1b[0m');
 
         // local file exists, so loads it
         if (fs.existsSync(filePath))
