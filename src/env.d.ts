@@ -7,6 +7,7 @@ declare global {
 
             // SECTION: project info from package.json
             VERSION: string;
+            NAME: string;
             TITLE: string;
             DESCRIPTION: string;
 
