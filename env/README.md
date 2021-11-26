@@ -73,6 +73,6 @@ Variables loading priority.
 
 -   `base.env.json` -> default
 -   `base.env.json` -> dev|qa|prod
--   `(dev|qa|prod).env.json`
+-   `.(dev|qa|prod).env.json`
 -   `base.env.json` -> debug|build|test
--   `(dev|qa|prod).local.env.json` (takes precedence over previous)
+-   `.(dev|qa|prod).local.env.json` (takes precedence over previous)

@@ -27,19 +27,22 @@ function buildEnv()
         '\x1b[0m'
     );
 
+    if(!fs.existsSync('env/secrets'))
+        fs.mkdirSync('env/secrets');
+
     const vars = {
         [modeName]: {
             VERSION: app.version,
-            PROJECT: app.name,
-            TITLE: app.title
+            PROJECT: app.project,
+            APP: app.name
         },
         [envName]: {
             ENV: envName,
             ...base.default,
             ...base.env?.[envName],
-            ...readEnvFile(`env/.${envName}.env.json`),
+            ...readEnvFile(`env/secrets/.${envName}.env.json`),
             ...base.mode?.[modeName],
-            ...readEnvFile(`env/.${envName}.local.env.json`, true)
+            ...readEnvFile(`env/secrets/.${envName}.local.env.json`, true)
         }
     };
 
