@@ -54,7 +54,7 @@ _This file contains every global environment variables files a.k.a. execution mo
 
 #### 2.2. Environments
 
-Your `env` folder would contains files below:
+Your `env/secrets` folder would contains files below:
 
 -   **.dev.env.json**: development environment.
 -   **.dev.local.env.json**: local development environment (takes precedence).
@@ -64,6 +64,39 @@ Your `env` folder would contains files below:
 -   **.prod.local.env.json**: local production environment (takes precedence).
 
 _This folder should contains environment variables files for system environments._
+
+## 3. Nested Keys
+
+You can organize your keys in nested objects like:
+
+```json
+{
+    // .dev.env.json
+    "GROUP1": {
+        "VAR": "anyValue1",
+        ...
+    },
+    "GROUP2": {
+        "VAR": "anyValue2",
+        "SUBGROUP1": {
+            "VAR": "anyValue1",
+            ...
+        },
+        ...
+    },
+    "VAR3": "anyValue3",
+    ...
+}
+```
+
+So, in your application you can use the variables as shown below:
+
+```javascript
+const myVar1 = process.env.GROUP1_VAR;
+const myVar2 = process.env.GROUP2_VAR;
+const myVar2 = process.env.GROUP2_SUBGROUP1_VAR;
+const myVar3 = process.env.VAR3;
+```
 
 ## 4. Priority
 

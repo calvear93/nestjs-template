@@ -71,6 +71,7 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 
 -   Install [NodeJS](https://nodejs.org/es/) for your machine.
 -   Execute `npm install` command. (`npm i --force` in case of conflicts).
+-   Create your `.dev.env.json` file in your [`env/secrets` folder](env/README.md).
 -   Execute the app with `npm run start:dev`.
 
 ## 📋 **Branches and Environments**
