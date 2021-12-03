@@ -1,6 +1,6 @@
-const fs = require('node:fs');
+const fs = require('fs');
 const app = require('../../package.json');
-const base = require('../base.env.json');
+const settings = require('../appsettings.json');
 const { flatten } = require('./utils/flatten.util');
 
 const debug = process.argv.indexOf('--verbose') > 0;
@@ -41,11 +41,11 @@ function buildEnv()
         },
         [envName]: {
             ENV: envName,
-            ...flatten(base.default),
-            ...flatten(base.env?.[envName]),
-            ...flatten(readEnvFile(`env/secrets/.${envName}.env.json`)),
-            ...flatten(base.mode?.[modeName]),
-            ...flatten(readEnvFile(`env/secrets/.${envName}.local.env.json`, true))
+            ...flatten(settings.default),
+            ...flatten(settings.env?.[envName]),
+            ...flatten(readEnvFile(`env/secrets/${envName}.env.json`)),
+            ...flatten(settings.mode?.[modeName]),
+            ...flatten(readEnvFile(`env/secrets/${envName}.local.env.json`, true))
         }
     };
 

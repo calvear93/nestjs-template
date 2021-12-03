@@ -15,9 +15,9 @@ _For example: `env-cmd -e dev,debug -r env/exec/loader.js npm run start`_
 
 ## 2. Structure
 
-#### 2.1. Non secrets (base.env.json)
+#### 2.1. Non secrets (appsettings.json)
 
-Your `base.env.json` could contains an structure like below:
+Your `appsettings.json` could contains an structure like below:
 
 ```json
 {
@@ -56,12 +56,12 @@ _This file contains every global environment variables files a.k.a. execution mo
 
 Your `env/secrets` folder would contains files below:
 
--   **.dev.env.json**: development environment.
--   **.dev.local.env.json**: local development environment (takes precedence).
--   **.qa.env.json**: quality assurance environment.
--   **.qa.local.env.json**: local qa environment (takes precedence).
--   **.prod.env.json**: production environment.
--   **.prod.local.env.json**: local production environment (takes precedence).
+-   **dev.env.json**: development environment.
+-   **dev.local.env.json**: local development environment (takes precedence).
+-   **qa.env.json**: quality assurance environment.
+-   **qa.local.env.json**: local qa environment (takes precedence).
+-   **prod.env.json**: production environment.
+-   **prod.local.env.json**: local production environment (takes precedence).
 
 _This folder should contains environment variables files for system environments._
 
@@ -104,8 +104,8 @@ Variables loading priority.
 
 ### From lowest to highest.
 
--   `base.env.json` -> default
--   `base.env.json` -> dev|qa|prod
--   `.(dev|qa|prod).env.json`
--   `base.env.json` -> debug|build|test
--   `.(dev|qa|prod).local.env.json` (takes precedence over previous)
+-   `appsettings.json` -> default
+-   `appsettings.json` -> dev|qa|prod
+-   `(dev|qa|prod).env.json`
+-   `appsettings.json` -> debug|build|test
+-   `(dev|qa|prod).local.env.json` (takes precedence over previous)
