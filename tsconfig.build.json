@@ -1,6 +1,6 @@
 {
     "importHelpers": true,
-    "downlevelIteration": true,
+    "downlevelIteration": false,
     "extends": "./tsconfig.json",
     "exclude": [
         "node_modules",
