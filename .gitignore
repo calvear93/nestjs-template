@@ -4,7 +4,9 @@
 .pnp.js
 
 # testing
-/coverage
+**/coverage
+**/__coverage__
+junit.xml
 
 # artifacts
 /dist

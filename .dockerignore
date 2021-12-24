@@ -11,15 +11,21 @@ npm-debug.log
 Dockerfile
 docker-compose.yml
 
-# dev environment and documentation
+# config and documentation
 .vscode
 CHANGELOG.md
 README.md
+LICENSE.md
 
-# pipeline and k8s
+# pipeline and cicd
+**/deploy
 azure-pipelines.yml
-templates
-k8s
+
+# artifacts
+**/dist
+**/build
+**/coverage
+**/__coverage__
 
 .eslintignore
 .eslintcache

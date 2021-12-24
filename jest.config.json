@@ -15,9 +15,18 @@
     "transform": {
         "^.+\\.(t|j)s$": "ts-jest"
     },
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "tests/__coverage__",
     "collectCoverageFrom": [
-        "**/*.(t|j)s"
+        "src/**/*.(t|j)s"
+    ],
+    "coveragePathIgnorePatterns": [
+        "index.ts",
+        ".d.ts",
+        "src/config",
+        "src/tests",
+        "migrations",
+        "__tests__",
+        "__mocks__"
     ],
     "bail": 1,
     "verbose": true,
