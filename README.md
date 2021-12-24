@@ -1,4 +1,4 @@
-<h2 align="center"><b>NestJS Boilerplate</b></h2>
+<h2 align="center"><b>NestJS Skeleton</b></h2>
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
@@ -68,6 +68,14 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 ```
 
 ## 📥 **Getting Started**
+
+-   Replace globally these terms:
+
+    -   `<base-path>` api base path, i.e. web (for get /web/\*)
+    -   `<app-name>` app name, i.e. home-web
+    -   `<project-name>` project name, i.e. achs-virtual
+    -   `<project-title>` project title, i.e. ACHS Virtual
+    -   `<project-description>` project description, i.e. API for manage user data
 
 -   Install [NodeJS](https://nodejs.org/es/) for your machine.
 -   Execute `npm install` command. (`npm i --force` in case of conflicts).

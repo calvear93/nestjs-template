@@ -1,17 +1,22 @@
 {
     "version": "0.0.1",
-    "project": "project-name",
-    "name": "app-name",
-    "title": "Project Title",
-    "description": "A project description",
-    "author": "Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>",
+    "project": "<project-name>",
+    "name": "<app-name>",
+    "title": "<app-title>",
+    "description": "<project-description>",
     "license": "MIT",
     "private": false,
-    "homepage": "https://github.com/calvear93/nestjs-template",
     "repository": {
         "type": "git",
         "url": "https://github.com/calvear93/nestjs-template"
     },
+    "author": "Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>",
+    "contributors": [
+        {
+            "name": "Last Name, First Name",
+            "email": "email@domain.com"
+        }
+    ],
     "keywords": [
         "node",
         "nest",
@@ -95,7 +100,7 @@
         "typescript": "^4.5.4"
     },
     "engines": {
-        "node": "~14.0.0 || ^16.13.0",
-        "npm": ">=6.14"
+        "node": "~14.0.0 || ^16.13.1",
+        "npm": ">=7.5.6"
     }
 }
