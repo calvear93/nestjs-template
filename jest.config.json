@@ -1,29 +1,18 @@
 {
     "rootDir": ".",
     "testEnvironment": "node",
-    "moduleDirectories": [
-        "node_modules",
-        "src",
-        "tests"
-    ],
-    "moduleFileExtensions": [
-        "js",
-        "json",
-        "ts"
-    ],
+    "moduleDirectories": ["node_modules", "src", "tests"],
+    "moduleFileExtensions": ["js", "json", "ts"],
     "testRegex": ".*\\.(spec|test)\\.ts$",
     "transform": {
         "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "tests/__coverage__",
-    "collectCoverageFrom": [
-        "src/**/*.(t|j)s"
-    ],
+    "collectCoverageFrom": ["src/**/*.(t|j)s"],
     "coveragePathIgnorePatterns": [
         "index.ts",
         ".d.ts",
         "src/config",
-        "src/tests",
         "migrations",
         "__tests__",
         "__mocks__"
