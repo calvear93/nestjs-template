@@ -25,14 +25,14 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 ├── CHANGELOG.md
 ├── LICENSE.md
 ├── .vscode/
-├── env/ # will contains dev.env.json, qa.env.json, etc.
+├── env/
 │   ├── exec/
+│   │   ├── env.schema.json # env vars schema
+│   │   ├── cmd.js # pull and push commands
 │   │   └── loader.js # environment variables loader for env-cmd
-│   ├── global/ # non secret environment variables
-│   │   ├── build.env.json
-│   │   ├── debug.env.json
-│   │   ├── test.env.json #
-│   │   └── default.env.json # base environment variables
+│   ├── secrets/ # will contains dev.env.json, qa.env.json, etc.
+│   ├── appsettings.json # non secret environment variables
+│   └── keys.json # gitignored! has azure key vault keys
 ├── src/
 │   ├── shared/ # common utils, guards, decorators, etc.
 │   ├── config/
@@ -59,11 +59,11 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 │   │       └── sample-worker.module.ts
 │   ├── env.d.ts # .env environment types definition
 │   ├── main.module.ts
-│   └── main.js
+│   └── main.ts
 ├── .eslintrc.json
 ├── Dockerfile # node alpine docker builder for nestjs
-├── tsconfig.js
-├── tsconfig.build.js
+├── tsconfig.json
+├── tsconfig.build.json
 └── package.json
 ```
 
