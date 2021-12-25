@@ -28,7 +28,6 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 ├── env/
 │   ├── exec/
 │   │   ├── env.schema.json # env vars schema
-│   │   ├── cmd.js # pull and push commands
 │   │   └── loader.js # environment variables loader for env-cmd
 │   ├── secrets/ # will contains dev.env.json, qa.env.json, etc.
 │   ├── appsettings.json # non secret environment variables
