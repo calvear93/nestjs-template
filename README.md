@@ -71,10 +71,10 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 
 -   Replace globally these terms:
 
-    -   `<base-path>` api base path, i.e. web (for get /web/\*)
-    -   `<app-name>` app name, i.e. home-web
-    -   `<project-name>` project name, i.e. achs-virtual
-    -   `<project-title>` project title, i.e. ACHS Virtual
+    -   `<base-path>` api base path, i.e. access (for get /api/access/v*/*)
+    -   `<app-name>` app name, i.e. access-api
+    -   `<project-name>` project name, i.e. my-project
+    -   `<project-title>` project title, i.e. My Project
     -   `<project-description>` project description, i.e. API for manage user data
 
 -   Install [NodeJS](https://nodejs.org/es/) for your machine.
