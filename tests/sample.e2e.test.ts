@@ -3,8 +3,7 @@ import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { SampleModule, SampleWorkerModule } from 'modules';
 
-describe('Sample e2e', () =>
-{
+describe('Sample e2e', () => {
     let app: INestApplication;
 
     // fibonacci number for test
@@ -12,13 +11,9 @@ describe('Sample e2e', () =>
     // fibonacci result
     const expected = '55';
 
-    beforeAll(async () =>
-    {
+    beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
-            imports: [
-                SampleModule,
-                SampleWorkerModule
-            ]
+            imports: [SampleModule, SampleWorkerModule]
         }).compile();
 
         app = moduleRef.createNestApplication();
@@ -26,8 +21,7 @@ describe('Sample e2e', () =>
         await app.init();
     });
 
-    it('/GET basic should return Hello World', () =>
-    {
+    it('/GET basic should return Hello World', () => {
         const expected = 'Hello World';
 
         return request(app.getHttpServer())
@@ -36,32 +30,28 @@ describe('Sample e2e', () =>
             .expect(expected);
     });
 
-    it(`/GET fibonacci, ${iteration} should be ${expected}`, () =>
-    {
+    it(`/GET fibonacci, ${iteration} should be ${expected}`, () => {
         return request(app.getHttpServer())
             .get(`/worker/normal?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });
 
-    it(`/GET fibonacci thread, ${iteration} should be ${expected}`, () =>
-    {
+    it(`/GET fibonacci thread, ${iteration} should be ${expected}`, () => {
         return request(app.getHttpServer())
             .get(`/worker/thread?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });
 
-    it(`/GET fibonacci thread pool, ${iteration} should be ${expected}`, () =>
-    {
+    it(`/GET fibonacci thread pool, ${iteration} should be ${expected}`, () => {
         return request(app.getHttpServer())
             .get(`/worker/threadPool?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });
 
-    afterAll(async () =>
-    {
+    afterAll(async () => {
         await app.close();
     });
 });

@@ -6,15 +6,13 @@ import { SampleWorkerService } from '../services/sample-worker.service';
 /**
  * Sample worker controller.
  *
- * @export
  * @class SampleWorkerController
  */
 @Controller({
     path: 'worker',
     version: '1'
 })
-export class SampleWorkerController
-{
+export class SampleWorkerController {
     /**
      * Creates an instance of SampleWorkerController.
      *
@@ -29,13 +27,11 @@ export class SampleWorkerController
      * Non thread-blocking operation.
      *
      * @warn more than 40 iterations may not finish
-     *
      * @param {number} num iterations
      * @returns {Promise<number>} fibonacci result
      */
     @Get('thread')
-    thread(@Query('num') num: number): Promise<number>
-    {
+    thread(@Query('num') num: number): Promise<number> {
         return this.service.thread(num);
     }
 
@@ -47,13 +43,11 @@ export class SampleWorkerController
      * and concurrent processing.
      *
      * @warn more than 40 iterations may not finish
-     *
      * @param {number} num iterations
      * @returns {Promise<number>} fibonacci result
      */
     @Get('threadPool')
-    threadPool(@Query('num') num: number): QueuedTask<FunctionThread, number>
-    {
+    threadPool(@Query('num') num: number): QueuedTask<FunctionThread, number> {
         return this.service.threadPool(num);
     }
 
@@ -64,13 +58,11 @@ export class SampleWorkerController
      * Thread-blocking operation.
      *
      * @warn more than 40 iterations may not finish
-     *
      * @param {number} num iterations
      * @returns {number} fibonacci result
      */
     @Get('normal')
-    normal(@Query('num') num: number): number
-    {
+    normal(@Query('num') num: number): number {
         return this.service.normal(num);
     }
 }

@@ -5,11 +5,10 @@ import { SampleService } from './services/sample.service';
 /**
  * Sample module.
  *
- * @export
  * @class SampleModule
  */
 @Module({
-    controllers: [ SampleController ],
-    providers: [ SampleService ]
+    controllers: [SampleController],
+    providers: [SampleService]
 })
 export class SampleModule {}

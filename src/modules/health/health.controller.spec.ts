@@ -2,27 +2,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
 
-describe(HealthController.name, () =>
-{
+describe(HealthController.name, () => {
     let controller: HealthController;
 
-    beforeAll(async () =>
-    {
+    beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            imports: [ TerminusModule ],
-            controllers: [ HealthController ]
+            imports: [TerminusModule],
+            controllers: [HealthController]
         }).compile();
 
         controller = module.get<HealthController>(HealthController);
     });
 
-    test('should be defined', () =>
-    {
+    test('should be defined', () => {
         expect(controller).toBeDefined();
     });
 
-    test('should response ok', async () =>
-    {
+    test('should response ok', async () => {
         expect(await controller.check()).toMatchObject({ status: 'ok' });
     });
 });

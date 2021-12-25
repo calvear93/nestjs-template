@@ -21,9 +21,9 @@ const config: PostgresConnectionOptions = {
 
     migrationsTableName: '__migrations__',
 
-    migrations: [ `${__dirname}/migrations/*{.ts,.js}` ],
-    entities: [ `${__dirname}/**/*.entity{.ts,.js}` ],
-    subscribers: [ `${__dirname}/**/*.subscriber{.ts,.js}` ],
+    migrations: [`${__dirname}/migrations/*{.ts,.js}`],
+    entities: [`${__dirname}/**/*.entity{.ts,.js}`],
+    subscribers: [`${__dirname}/**/*.subscriber{.ts,.js}`],
 
     cli: {
         migrationsDir: `${BASE_PATH}/migrations`,

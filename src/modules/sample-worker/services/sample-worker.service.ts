@@ -14,12 +14,10 @@ import {
 /**
  * Sample worker service.
  *
- * @export
  * @class SampleWorkerService
  */
 @Injectable()
-export class SampleWorkerService
-{
+export class SampleWorkerService {
     /**
      * Creates an instance of SampleWorkerService.
      *
@@ -41,11 +39,9 @@ export class SampleWorkerService
      * Non main thread blocking.
      *
      * @param {number} num iteration
-     *
      * @returns {number} Fibonacci number
      */
-    thread(num: number): Promise<number>
-    {
+    thread(num: number): Promise<number> {
         return this.fibonacciThread(num);
     }
 
@@ -57,13 +53,10 @@ export class SampleWorkerService
      * Non thread blocking and concurrent.
      *
      * @param {number} num iteration
-     *
      * @returns {number} Fibonacci number
      */
-    threadPool(num: number): QueuedTask<FunctionThread, number>
-    {
-        return this.fibonacciThreadPool
-            .queue(f => f(num));
+    threadPool(num: number): QueuedTask<FunctionThread, number> {
+        return this.fibonacciThreadPool.queue((f) => f(num));
     }
 
     /**
@@ -71,11 +64,9 @@ export class SampleWorkerService
      * Fibonacci algorithm.
      *
      * @param {number} num iteration
-     *
      * @returns {number} Fibonacci number
      */
-    normal(num: number): number
-    {
+    normal(num: number): number {
         return fibonacci(num);
     }
 }

@@ -4,22 +4,20 @@ import { SampleEntity } from './SampleEntity.entity';
 /**
  * Sample repository.
  *
- * @export
  * @class SampleEntityRepository
- * @extends Repository<SampleEntity>
+ * @augments Repository<SampleEntity>
  */
 @EntityRepository(SampleEntity)
-export class SampleEntityRepository extends Repository<SampleEntity>
-{
+export class SampleEntityRepository extends Repository<SampleEntity> {
     /**
      * Searches by name.
      *
      * @param {string} searchedName searched name
-     *
      * @returns {Promise<SampleEntity | undefined>} searched entity
      */
-    findByName(searchedName: string): Promise<SampleEntity | undefined>
-    {
-        return this.findOne({ where: { searchName: searchedName.toLowerCase() } });
+    findByName(searchedName: string): Promise<SampleEntity | undefined> {
+        return this.findOne({
+            where: { searchName: searchedName.toLowerCase() }
+        });
     }
 }

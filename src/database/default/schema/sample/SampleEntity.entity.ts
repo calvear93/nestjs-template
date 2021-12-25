@@ -1,4 +1,12 @@
-import { AfterLoad, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    AfterLoad,
+    BeforeInsert,
+    BeforeUpdate,
+    Column,
+    Entity,
+    Index,
+    PrimaryGeneratedColumn
+} from 'typeorm';
 import { BaseTable, ITrackable } from 'database/common';
 import { SampleEntityType } from './SampleEntityType.enum';
 
@@ -6,10 +14,8 @@ import { SampleEntityType } from './SampleEntityType.enum';
  * Sample entity.
  *
  * @see: https://orkhan.gitbook.io/typeorm/docs/entities
- *
- * @export
  * @class SampleEntity
- * @extends {BaseEntity<SampleEntity>}
+ * @augments {BaseEntity<SampleEntity>}
  * @implements {ITrackable}
  */
 @Entity()
@@ -62,8 +68,10 @@ export class SampleEntity
     @AfterLoad()
     @BeforeInsert()
     @BeforeUpdate()
-    normalizeName(): void
-    {
-        this.searchName = this.name.toLowerCase().normalize('NFD').replace(/[\p{Diacritic}|\u0027]/gu, '');
+    normalizeName(): void {
+        this.searchName = this.name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\p{Diacritic}|\u0027]/gu, '');
     }
 }

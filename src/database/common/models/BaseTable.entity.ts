@@ -5,20 +5,17 @@ import { ITrackable, Trackable } from './Trackable.fragment';
 /**
  * Entity base class.
  *
- * @export
  * @class BaseTable
  * @implements {ITrackable}
  * @template T
  */
-export abstract class BaseTable<T> implements ITrackable
-{
+export abstract class BaseTable<T> implements ITrackable {
     /**
      * Creates an instance of T.
      *
      * @param {Partial<T>} [init] partial object
      */
-    constructor(init?: Partial<T>)
-    {
+    constructor(init?: Partial<T>) {
         init && Object.assign(this, init);
     }
 

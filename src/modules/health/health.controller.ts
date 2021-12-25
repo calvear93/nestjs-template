@@ -1,18 +1,20 @@
 import { Controller, Get, VERSION_NEUTRAL } from '@nestjs/common';
-import { HealthCheck, HealthCheckResult, HealthCheckService } from '@nestjs/terminus';
+import {
+    HealthCheck,
+    HealthCheckResult,
+    HealthCheckService
+} from '@nestjs/terminus';
 
 /**
  * Health check controller using Terminus.
  *
- * @export
  * @class HealthController
  */
 @Controller({
     path: 'health',
     version: VERSION_NEUTRAL
 })
-export class HealthController
-{
+export class HealthController {
     /**
      * Creates an instance of HealthController.
      *
@@ -27,8 +29,7 @@ export class HealthController
      */
     @Get()
     @HealthCheck()
-    check(): Promise<HealthCheckResult>
-    {
+    check(): Promise<HealthCheckResult> {
         return this.health.check([]);
     }
 }

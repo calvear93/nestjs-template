@@ -7,15 +7,14 @@ import { SampleORMService } from './services/sample-orm.service';
 /**
  * Sample TypeORM sub-module.
  *
- * @export
  * @class SampleORMModule
  */
 @Module({
-    controllers: [ SampleORMController ],
-    providers: [ SampleORMService ],
+    controllers: [SampleORMController],
+    providers: [SampleORMService],
     imports: [
         TypeOrmModule.forRoot(defaultDbConfig),
-        TypeOrmModule.forFeature([ SampleEntityRepository ])
+        TypeOrmModule.forFeature([SampleEntityRepository])
     ]
 })
 export class SampleORMModule {}

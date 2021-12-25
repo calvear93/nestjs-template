@@ -18,20 +18,17 @@ import {
  *
  * @tip providers tokens should be
  * used from constants source.
- *
- * @export
  * @class SampleWorkerModule
  */
 @Module({
-    controllers: [ SampleWorkerController ],
+    controllers: [SampleWorkerController],
     providers: [
         SampleWorkerService,
         FibonacciThreadProvider,
         FibonacciThreadPoolProvider
     ]
 })
-export class SampleWorkerModule implements OnModuleDestroy
-{
+export class SampleWorkerModule implements OnModuleDestroy {
     constructor(
         @Inject(FIBONACCI_THREAD_PROVIDER)
         private readonly fibonacciWorker: FibonacciThread,
@@ -39,8 +36,7 @@ export class SampleWorkerModule implements OnModuleDestroy
         private readonly fibonacciThreadPool: FibonacciThreadPool
     ) {}
 
-    async onModuleDestroy(): Promise<void>
-    {
+    async onModuleDestroy(): Promise<void> {
         // disposes provider on application closing
         await Thread.terminate(this.fibonacciWorker);
 

@@ -1,15 +1,17 @@
-import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    UpdateDateColumn
+} from 'typeorm';
 
 /**
  * Common trackable info for entities.
  *
  * @see: https://orkhan.gitbook.io/typeorm/docs/entities#column-types-for-mssql
- *
- * @export
  * @class Trackable
  */
-export class Trackable
-{
+export class Trackable {
     /**
      * Creation date.
      *
@@ -46,7 +48,6 @@ export class Trackable
 /**
  * Trackable interface.
  *
- * @export
  * @interface ITrackable
  */
 export interface ITrackable {

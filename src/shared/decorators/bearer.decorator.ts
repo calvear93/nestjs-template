@@ -5,11 +5,12 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
  *
  * @param {string} [key] bearer header name - should be lowercase
  * @param {ExecutionContext} ctx controller context
- *
  * @returns {string} token
  */
-export function getBearerToken(key = 'authorization', ctx: ExecutionContext): string
-{
+export function getBearerToken(
+    key = 'authorization',
+    ctx: ExecutionContext
+): string {
     const request = ctx.switchToHttp().getRequest();
     const { [key]: bearer } = request.headers;
 

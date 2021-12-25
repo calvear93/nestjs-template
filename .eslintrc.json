@@ -20,6 +20,7 @@
     },
     "plugins": [
         "@typescript-eslint/eslint-plugin",
+        "prettier",
         "sonarjs",
         "promise",
         "jsdoc",
@@ -28,38 +29,30 @@
     ],
     "extends": [
         "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
         "plugin:eslint-comments/recommended",
         "plugin:sonarjs/recommended",
         "plugin:jsdoc/recommended"
     ],
     "rules": {
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/indent": [
+        "prettier/prettier": [
             "warn",
-            4,
             {
-                "ArrayExpression": 1,
-                "CallExpression": {
-                    "arguments": 1
-                },
-                "FunctionDeclaration": {
-                    "body": 1,
-                    "parameters": 2
-                },
-                "FunctionExpression": {
-                    "body": 1,
-                    "parameters": 1
-                },
-                "ImportDeclaration": 1,
-                "MemberExpression": 1,
-                "ObjectExpression": 1,
-                "SwitchCase": 1,
-                "VariableDeclarator": "first",
-                "flatTernaryExpressions": true,
-                "outerIIFEBody": 1
+                "useTabs": false,
+                "tabWidth": 4,
+                "printWidth": 80,
+                "trailingComma": "none",
+                "singleQuote": true,
+                "semi": true,
+                "bracketSpacing": true,
+                "bracketSameLine": false,
+                "quoteProps": "as-needed",
+                "arrowParens": "always",
+                "endOfLine": "auto"
             }
         ],
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/no-empty-interface": [
             "error",
@@ -77,25 +70,9 @@
                 "varsIgnorePattern": "^_"
             }
         ],
-        "@typescript-eslint/type-annotation-spacing": [
-            "warn",
-            {
-                "after": true,
-                "before": false
-            }
-        ],
-        "array-bracket-spacing": ["warn", "always"],
         "array-callback-return": "error",
-        "arrow-spacing": "warn",
         "block-scoped-var": "warn",
         "block-spacing": "warn",
-        "brace-style": [
-            "warn",
-            "allman",
-            {
-                "allowSingleLine": true
-            }
-        ],
         "class-methods-use-this": "off",
         "comma-dangle": ["warn", "never"],
         "comma-spacing": [
@@ -124,15 +101,6 @@
         "jest/no-identical-title": "error",
         "jest/prefer-to-have-length": "warn",
         "jest/valid-expect": "error",
-        "jsdoc/check-tag-names": "off",
-        "jsdoc/no-undefined-types": "off",
-        "jsdoc/require-hyphen-before-param-description": "off",
-        "jsdoc/require-jsdoc": "off",
-        "jsdoc/require-param-description": "off",
-        "jsdoc/require-property-description": "off",
-        "jsdoc/require-returns-description": "off",
-        "jsdoc/require-throws": "warn",
-        "jsdoc/tag-lines": "off",
         "key-spacing": [
             "warn",
             {
@@ -245,14 +213,7 @@
         "sort-imports": "off",
         "sort-keys": ["off", "asc"],
         "space-before-blocks": "warn",
-        "space-before-function-paren": [
-            "error",
-            {
-                "anonymous": "never",
-                "asyncArrow": "always",
-                "named": "never"
-            }
-        ],
+        "space-in-parens": ["warn", "never"],
         "spaced-comment": [
             "warn",
             "always",
@@ -269,12 +230,12 @@
             }
         ],
         "switch-colon-spacing": "warn",
+        "vars-on-top": "warn",
         "valid-jsdoc": [
             "warn",
             {
                 "requireReturn": false
             }
-        ],
-        "vars-on-top": "warn"
+        ]
     }
 }

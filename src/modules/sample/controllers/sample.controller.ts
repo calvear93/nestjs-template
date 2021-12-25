@@ -4,15 +4,13 @@ import { SampleService } from '../services/sample.service';
 /**
  * Sample controller.
  *
- * @export
  * @class SampleController
  */
 @Controller({
     path: 'basic',
     version: '1'
 })
-export class SampleController
-{
+export class SampleController {
     /**
      * Creates an instance of SampleController.
      *
@@ -26,8 +24,7 @@ export class SampleController
      * @returns {string} sample string
      */
     @Get()
-    run(): string
-    {
+    run(): string {
         return this.service.sample();
     }
 }

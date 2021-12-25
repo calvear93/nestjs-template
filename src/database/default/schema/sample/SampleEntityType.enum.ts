@@ -1,7 +1,6 @@
 /**
  * SampleEntityType entity type.
  *
- * @export
  * @enum {number}
  */
 export enum SampleEntityType {

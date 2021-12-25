@@ -5,26 +5,29 @@ export class SnakeNamingStrategy
     extends DefaultNamingStrategy
     implements NamingStrategyInterface
 {
-    override tableName(className: string, customName: string): string
-    {
+    override tableName(className: string, customName: string): string {
         return customName ? customName : snakeCase(className);
     }
 
-    override columnName(propertyName: string, customName: string, embeddedPrefixes: string[]): string
-    {
+    override columnName(
+        propertyName: string,
+        customName: string,
+        embeddedPrefixes: string[]
+    ): string {
         return (
-            snakeCase(embeddedPrefixes.concat('').join('_'))
-            + (customName ? customName : snakeCase(propertyName))
+            snakeCase(embeddedPrefixes.concat('').join('_')) +
+            (customName ? customName : snakeCase(propertyName))
         );
     }
 
-    override relationName(propertyName: string): string
-    {
+    override relationName(propertyName: string): string {
         return snakeCase(propertyName);
     }
 
-    override joinColumnName(relationName: string, referencedColumnName: string): string
-    {
+    override joinColumnName(
+        relationName: string,
+        referencedColumnName: string
+    ): string {
         return snakeCase(relationName + '_' + referencedColumnName);
     }
 
@@ -34,14 +37,13 @@ export class SnakeNamingStrategy
         firstPropertyName: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         secondPropertyName: string
-    ): string
-    {
+    ): string {
         return snakeCase(
-            firstTableName
-            + '_'
-            + firstPropertyName.replace(/\./gi, '_')
-            + '_'
-            + secondTableName
+            firstTableName +
+                '_' +
+                firstPropertyName.replace(/\./gi, '_') +
+                '_' +
+                secondTableName
         );
     }
 
@@ -49,8 +51,7 @@ export class SnakeNamingStrategy
         tableName: string,
         propertyName: string,
         columnName?: string
-    ): string
-    {
+    ): string {
         return snakeCase(
             tableName + '_' + (columnName ? columnName : propertyName)
         );
@@ -59,13 +60,14 @@ export class SnakeNamingStrategy
     classTableInheritanceParentColumnName(
         parentTableName: any,
         parentTableIdPropertyName: any
-    ): string
-    {
+    ): string {
         return snakeCase(parentTableName + '_' + parentTableIdPropertyName);
     }
 
-    override eagerJoinRelationAlias(alias: string, propertyPath: string): string
-    {
+    override eagerJoinRelationAlias(
+        alias: string,
+        propertyPath: string
+    ): string {
         return alias + '__' + propertyPath.replace('.', '_');
     }
 }

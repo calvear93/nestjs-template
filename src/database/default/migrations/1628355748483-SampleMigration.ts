@@ -1,11 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class SampleMigration1628355748483 implements MigrationInterface
-{
-    name = 'SampleMigration1628355748483'
+export class SampleMigration1628355748483 implements MigrationInterface {
+    name = 'SampleMigration1628355748483';
 
-    public async up(queryRunner: QueryRunner): Promise<void>
-    {
+    public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
             CREATE TYPE "public"."sample_entity_type_enum" AS ENUM('admin', 'support', 'user')
         `);
@@ -27,8 +25,7 @@ export class SampleMigration1628355748483 implements MigrationInterface
         `);
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void>
-    {
+    public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
             DROP INDEX "public"."IDX_2843c8c525dfddadcfc6cf70b8"
         `);

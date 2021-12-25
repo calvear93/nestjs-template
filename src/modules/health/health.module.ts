@@ -6,12 +6,10 @@ import { HealthController } from './health.controller';
  * Health check module.
  *
  * @see https://docs.nestjs.com/recipes/terminus
- *
- * @export
  * @class HealthModule
  */
 @Module({
-    imports: [ TerminusModule ],
-    controllers: [ HealthController ]
+    imports: [TerminusModule],
+    controllers: [HealthController]
 })
 export class HealthModule {}
