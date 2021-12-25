@@ -36,7 +36,7 @@ debug.log
 *.sublime-workspace
 
 # IDE - VSCode
-!.vscode/settings.json
+.vscode
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
