@@ -168,7 +168,10 @@ Set "deleteOutDir" true in `nest-cli.json`.
 
 ## 🧿 **Linting**
 
--   **eslint**: linter with TypeScript parser and some other additions.
+Project use linters, for code formatting and code styling normalizing.
+
+-   **[eslint](https://eslint.org/)**: tool for identifying and reporting on patterns found in ECMAScript/JavaScript code
+-   **[prettier](https://prettier.io/)**: opinionated code formatter
 
 For correct interpretation of linters, is recommended to use [Visual Studio Code](https://code.visualstudio.com/)
 as IDE and install the plugins in .vscode folder at 'extensions.json', as well as use the config provided in 'settings.json'
