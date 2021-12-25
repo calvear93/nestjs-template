@@ -87,6 +87,34 @@ Main feature are:
     -   `<project-title>` project title, i.e. My Project
     -   `<project-description>` project description, i.e. API for manage user data
 
+-   Configure your database config for dev environment.
+
+    -   Configure your `dev.env.json` file in `env/secrets` folder as:
+
+    ```json
+    {
+        "DEFAULT_DB_HOST": "db-host",
+        "DEFAULT_DB_DATABASE": "db_name",
+        "DEFAULT_DB_USERNAME": "db_user",
+        "DEFAULT_DB_PASSWORD": "db_password",
+        "DEFAULT_DB_ORM_RUN_MIGRATIONS": true,
+        "DEFAULT_DB_ORM_LOGGING": true
+    }
+    ```
+
+    -   Configure your `dev.local.env.json` file in `env/secrets` folder as:
+
+    ```json
+    {
+        "DEFAULT_DB_HOST": "local-db-host",
+        "DEFAULT_DB_DATABASE": "db_name_local",
+        "DEFAULT_DB_USERNAME": "db_user_local",
+        "DEFAULT_DB_PASSWORD": "db_password_local",
+        "DEFAULT_DB_ORM_CACHE": false,
+        "DEFAULT_DB_ORM_SYNCHRONIZE": false
+    }
+    ```
+
 -   Install [NodeJS](https://nodejs.org/es/) for your machine.
 -   Execute `npm install` command. (`npm i --force` in case of conflicts).
 -   Create your `.dev.env.json` file in your [`env/secrets` folder](env/README.md).
