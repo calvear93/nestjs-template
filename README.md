@@ -41,8 +41,7 @@ Main feature are:
 │   │   ├── env.schema.json # env vars schema
 │   │   └── loader.js # environment variables loader for env-cmd
 │   ├── secrets/ # will contains dev.env.json, qa.env.json, etc.
-│   ├── appsettings.json # non secret environment variables
-│   └── keys.json # gitignored! has azure key vault keys
+│   └── appsettings.json # non secret environment variables
 ├── src/
 │   ├── shared/ # common utils, guards, decorators, etc.
 │   ├── config/
