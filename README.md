@@ -18,6 +18,17 @@
 
 Nest is a framework for building efficient, scalable <a href="http://nodejs.org" target="_blank">Node.js</a> server-side applications. It uses modern JavaScript, is built with <a href="http://www.typescriptlang.org" target="_blank">TypeScript</a> and under the hood, Nest makes use of <a href="https://expressjs.com/" target="_blank">Express</a>.
 
+### Easy API REST building in NestJS.
+
+Main feature are:
+
+-   `eslint` with `prettier`
+-   `babel` for post-build optimizations
+-   Environment variables handler using `env-cmd`
+-   `swagger` ready
+-   `postgresql` with `typeorm`
+-   `docker` ready
+
 ## ⛩ **Structure**
 
 ```bash
@@ -60,7 +71,7 @@ Nest is a framework for building efficient, scalable <a href="http://nodejs.org"
 │   ├── main.module.ts
 │   └── main.ts
 ├── .eslintrc.json
-├── Dockerfile # node alpine docker builder for nestjs
+├── Dockerfile
 ├── tsconfig.json
 ├── tsconfig.build.json
 └── package.json
