@@ -13,9 +13,9 @@ import { SampleEntityType } from './SampleEntityType.enum';
 /**
  * Sample entity.
  *
- * @see: https://orkhan.gitbook.io/typeorm/docs/entities
+ * @see https://orkhan.gitbook.io/typeorm/docs/entities
  * @class SampleEntity
- * @augments {BaseEntity<SampleEntity>}
+ * @augments BaseTable<SampleEntity>
  * @implements {ITrackable}
  */
 @Entity()
@@ -44,7 +44,7 @@ export class SampleEntity
     /**
      * Sample entity type.
      *
-     * @type {SampleType}
+     * @type {SampleEntityType}
      */
     @Column({
         type: 'enum',

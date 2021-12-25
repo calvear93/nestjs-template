@@ -57,7 +57,7 @@ export class SampleEntityRepositoryMock {
      * Simulates database.
      *
      * @static
-     * @type {Dictionary<SampleEntity>}
+     * @type {Record<number, SampleEntity>}
      */
     static mockDatabase: Record<number, SampleEntity> = {};
 

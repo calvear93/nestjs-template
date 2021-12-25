@@ -8,7 +8,7 @@ const debug = process.argv.indexOf('--verbose') > 0;
 /**
  * Loads environment variables.
  *
- * @tip in some cases, you can
+ * @description in some cases, you can
  * return a promise for async
  * variables load.
  *

@@ -8,7 +8,7 @@ import {
 /**
  * Common trackable info for entities.
  *
- * @see: https://orkhan.gitbook.io/typeorm/docs/entities#column-types-for-mssql
+ * @see https://orkhan.gitbook.io/typeorm/docs/entities#column-types-for-mssql
  * @class Trackable
  */
 export class Trackable {

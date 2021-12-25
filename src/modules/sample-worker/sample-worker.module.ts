@@ -16,7 +16,7 @@ import {
 /**
  * Sample worker module.
  *
- * @tip providers tokens should be
+ * @description providers tokens should be
  * used from constants source.
  * @class SampleWorkerModule
  */

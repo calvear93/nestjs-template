@@ -26,7 +26,7 @@ export class SampleWorkerController {
      *
      * Non thread-blocking operation.
      *
-     * @warn more than 40 iterations may not finish
+     * @description more than 40 iterations may not finish
      * @param {number} num iterations
      * @returns {Promise<number>} fibonacci result
      */
@@ -42,7 +42,7 @@ export class SampleWorkerController {
      * Non thread-blocking operation
      * and concurrent processing.
      *
-     * @warn more than 40 iterations may not finish
+     * @description more than 40 iterations may not finish
      * @param {number} num iterations
      * @returns {Promise<number>} fibonacci result
      */
@@ -57,7 +57,7 @@ export class SampleWorkerController {
      *
      * Thread-blocking operation.
      *
-     * @warn more than 40 iterations may not finish
+     * @description more than 40 iterations may not finish
      * @param {number} num iterations
      * @returns {number} fibonacci result
      */
