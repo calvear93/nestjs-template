@@ -23,7 +23,6 @@
         "prettier",
         "sonarjs",
         "promise",
-        "jsdoc",
         "jest",
         "jest-formatting"
     ],
@@ -31,8 +30,7 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
         "plugin:eslint-comments/recommended",
-        "plugin:sonarjs/recommended",
-        "plugin:jsdoc/recommended"
+        "plugin:sonarjs/recommended"
     ],
     "rules": {
         "prettier/prettier": [
@@ -230,12 +228,6 @@
             }
         ],
         "switch-colon-spacing": "warn",
-        "vars-on-top": "warn",
-        "valid-jsdoc": [
-            "warn",
-            {
-                "requireReturn": false
-            }
-        ]
+        "vars-on-top": "warn"
     }
 }
