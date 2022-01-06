@@ -12,9 +12,11 @@
     "collectCoverageFrom": ["src/**/*.(t|j)s"],
     "coveragePathIgnorePatterns": [
         "index.ts",
+        "main.ts",
         ".d.ts",
         "src/config",
-        "migrations",
+        "src/modules/health",
+        "tests",
         "__tests__",
         "__mocks__"
     ],
