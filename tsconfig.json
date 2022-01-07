@@ -4,6 +4,7 @@
         "outDir": "dist",
         "paths": {
             "*": ["src/*"],
+            "@libs/*": ["libs/*"]
             // "~/*": ["src/*"]
             // "@*": ["src/*"]
             // "@controllers/*": ["src/controllers/*"]

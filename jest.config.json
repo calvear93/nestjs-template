@@ -1,5 +1,8 @@
 {
     "rootDir": ".",
+    "moduleNameMapper": {
+        "@libs/(.*)": "<rootDir>/libs/$1"
+    },
     "roots": ["src", "libs", "tests"],
     "testEnvironment": "node",
     "moduleDirectories": ["node_modules", "src", "libs", "tests"],
