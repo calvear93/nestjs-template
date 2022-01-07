@@ -11,7 +11,7 @@
     "transform": {
         "^.+\\.(t|j)s$": "ts-jest"
     },
-    "coverageDirectory": "tests/__coverage__",
+    "coverageDirectory": "__reports__/coverage",
     "collectCoverageFrom": ["src/**/*.(t|j)s"],
     "coveragePathIgnorePatterns": [
         "index.ts",
@@ -19,7 +19,9 @@
         ".d.ts",
         "src/config",
         "src/modules/health",
+        "migrations",
         "tests",
+        "__reports__",
         "__tests__",
         "__mocks__"
     ],

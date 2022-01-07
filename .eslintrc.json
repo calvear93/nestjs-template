@@ -105,12 +105,6 @@
                 "beforeColon": false
             }
         ],
-        "keyword-spacing": [
-            "warn",
-            {
-                "before": true
-            }
-        ],
         "lines-around-comment": [
             "warn",
             {
