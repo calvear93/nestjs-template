@@ -1,11 +1,11 @@
 {
     "rootDir": ".",
     "moduleNameMapper": {
-        "@libs/(.*)": "<rootDir>/libs/$1"
+        "@libs/(.*)": "<rootDir>/src/libs/$1"
     },
     "roots": ["src", "libs", "tests"],
     "testEnvironment": "node",
-    "moduleDirectories": ["node_modules", "src", "libs", "tests"],
+    "moduleDirectories": ["node_modules", "src", "tests"],
     "moduleFileExtensions": ["js", "json", "ts"],
     "testRegex": ".*\\.(spec|test)\\.ts$",
     "transform": {

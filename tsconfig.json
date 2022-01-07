@@ -3,7 +3,7 @@
         "baseUrl": "src",
         "outDir": "dist",
         "paths": {
-            "@libs/*": ["../libs/*"]
+            "@libs/*": ["libs/*"]
             // "~/*": ["src/*"]
             // "@*": ["src/*"]
             // "@controllers/*": ["src/controllers/*"]
