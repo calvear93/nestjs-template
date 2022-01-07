@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
-        "baseUrl": "src",
+        "baseUrl": ".",
         "outDir": "dist",
         "paths": {
-            // "~/*": ["*"]
-            // "@*": ["*"]
-            // "@controllers/*": ["controllers/*"]
+            "*": ["src/*"],
+            // "~/*": ["src/*"]
+            // "@*": ["src/*"]
+            // "@controllers/*": ["src/controllers/*"]
         },
 
         "target": "es2021",
