@@ -254,10 +254,10 @@ hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 
 use commands below:
 
-| Command                                                               | Action                          |
-| --------------------------------------------------------------------- | ------------------------------- |
-| git subtree split --prefix `<path>` --onto=`<remote-name>`/`<branch>` | splits a subtree for force push |
-| git push ui-core `<hash-returned-previous-cmd>`:`<branch>` --force    | force push                      |
+| Command                                                                            | Action                          |
+| ---------------------------------------------------------------------------------- | ------------------------------- |
+| git subtree split --prefix `<path>` --onto=`<subtree-remote-name>`/`<branch>`      | splits a subtree for force push |
+| git push `<subtree-remote-name>` `<hash-returned-previous-cmd>`:`<branch>` --force | force push                      |
 
 ## 🧮 **Built with**
 
