@@ -1,10 +1,9 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
+        "baseUrl": "src",
         "outDir": "dist",
         "paths": {
-            "*": ["src/*"],
-            "@libs/*": ["libs/*"]
+            "@libs/*": ["../libs/*"]
             // "~/*": ["src/*"]
             // "@*": ["src/*"]
             // "@controllers/*": ["src/controllers/*"]
