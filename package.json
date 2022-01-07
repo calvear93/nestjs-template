@@ -45,8 +45,8 @@
         "test:coverage:prod": "npm run test:prod -- --collectCoverage",
         "test:coverage": "jest --coverage .",
         "test:inspect": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "lint": "eslint {src,tests}/**/*.ts",
-        "lint:fix": "eslint --fix {src,tests}/**/*.ts",
+        "lint": "eslint {src,libs,tests}/**/*.ts",
+        "lint:fix": "eslint --fix {src,libs,tests}/**/*.ts",
         "_build": "nest build && babel dist --out-dir dist",
         "_orm": "ts-node -r tsconfig-paths/register --transpile-only node_modules/typeorm/cli -f src/database/default/database.config.ts"
     },
