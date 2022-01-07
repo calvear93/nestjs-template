@@ -3,7 +3,7 @@
     "moduleNameMapper": {
         "@libs/(.*)": "<rootDir>/src/libs/$1"
     },
-    "roots": ["src", "libs", "tests"],
+    "roots": ["src", "tests"],
     "testEnvironment": "node",
     "moduleDirectories": ["node_modules", "src", "tests"],
     "moduleFileExtensions": ["js", "json", "ts"],
