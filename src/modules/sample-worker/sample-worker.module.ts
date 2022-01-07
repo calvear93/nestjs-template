@@ -31,16 +31,16 @@ import {
 export class SampleWorkerModule implements OnModuleDestroy {
     constructor(
         @Inject(FIBONACCI_THREAD_PROVIDER)
-        private readonly fibonacciWorker: FibonacciThread,
+        private readonly _fibonacciWorker: FibonacciThread,
         @Inject(FIBONACCI_THREAD_POOL_PROVIDER)
-        private readonly fibonacciThreadPool: FibonacciThreadPool
+        private readonly _fibonacciThreadPool: FibonacciThreadPool
     ) {}
 
     async onModuleDestroy(): Promise<void> {
         // disposes provider on application closing
-        await Thread.terminate(this.fibonacciWorker);
+        await Thread.terminate(this._fibonacciWorker);
 
         // disposes thread pool
-        await this.fibonacciThreadPool.terminate();
+        await this._fibonacciThreadPool.terminate();
     }
 }

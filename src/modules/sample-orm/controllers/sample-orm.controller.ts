@@ -25,7 +25,7 @@ export class SampleORMController {
      *
      * @param {SampleORMService} service sample orm service
      */
-    constructor(private service: SampleORMService) {}
+    constructor(private _service: SampleORMService) {}
 
     /**
      * Retrieves a sample entity by name.
@@ -39,7 +39,7 @@ export class SampleORMController {
     async getByName(
         @Query('name') name: string
     ): Promise<SampleEntity | undefined> {
-        const entity = await this.service.getByName(name);
+        const entity = await this._service.getByName(name);
 
         if (!entity) throw new NotFoundException();
 
@@ -54,6 +54,6 @@ export class SampleORMController {
      */
     @Post()
     create(@Query('name') name: string): Promise<SampleEntity> {
-        return this.service.create(name);
+        return this._service.create(name);
     }
 }

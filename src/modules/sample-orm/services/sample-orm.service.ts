@@ -13,7 +13,7 @@ export class SampleORMService {
      *
      * @param {SampleEntityRepository} sampleRepository sample entity repository
      */
-    constructor(private sampleRepository: SampleEntityRepository) {}
+    constructor(private _repository: SampleEntityRepository) {}
 
     /**
      * Retrieves an entity from database by name.
@@ -22,7 +22,7 @@ export class SampleORMService {
      * @returns {Promise<SampleEntity | undefined>} searched entity
      */
     getByName(searchedName: string): Promise<SampleEntity | undefined> {
-        return this.sampleRepository.findByName(searchedName);
+        return this._repository.findByName(searchedName);
     }
 
     /**
@@ -34,6 +34,6 @@ export class SampleORMService {
     create(name: string): Promise<SampleEntity> {
         const entity = new SampleEntity({ name });
 
-        return this.sampleRepository.save(entity);
+        return this._repository.save(entity);
     }
 }

@@ -18,7 +18,7 @@ export class SampleWorkerController {
      *
      * @param {SampleWorkerService} service sample worker service
      */
-    constructor(private service: SampleWorkerService) {}
+    constructor(private _service: SampleWorkerService) {}
 
     /**
      * Executes the fibonacci
@@ -32,7 +32,7 @@ export class SampleWorkerController {
      */
     @Get('thread')
     thread(@Query('num') num: number): Promise<number> {
-        return this.service.thread(num);
+        return this._service.thread(num);
     }
 
     /**
@@ -48,7 +48,7 @@ export class SampleWorkerController {
      */
     @Get('threadPool')
     threadPool(@Query('num') num: number): QueuedTask<FunctionThread, number> {
-        return this.service.threadPool(num);
+        return this._service.threadPool(num);
     }
 
     /**
@@ -63,6 +63,6 @@ export class SampleWorkerController {
      */
     @Get('normal')
     normal(@Query('num') num: number): number {
-        return this.service.normal(num);
+        return this._service.normal(num);
     }
 }

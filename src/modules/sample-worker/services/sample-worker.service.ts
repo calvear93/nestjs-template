@@ -26,9 +26,9 @@ export class SampleWorkerService {
      */
     constructor(
         @Inject(FIBONACCI_THREAD_PROVIDER)
-        private readonly fibonacciThread: FibonacciThread,
+        private readonly _fibonacciThread: FibonacciThread,
         @Inject(FIBONACCI_THREAD_POOL_PROVIDER)
-        private readonly fibonacciThreadPool: FibonacciThreadPool
+        private readonly _fibonacciThreadPool: FibonacciThreadPool
     ) {}
 
     /**
@@ -42,7 +42,7 @@ export class SampleWorkerService {
      * @returns {number} Fibonacci number
      */
     thread(num: number): Promise<number> {
-        return this.fibonacciThread(num);
+        return this._fibonacciThread(num);
     }
 
     /**
@@ -56,7 +56,7 @@ export class SampleWorkerService {
      * @returns {number} Fibonacci number
      */
     threadPool(num: number): QueuedTask<FunctionThread, number> {
-        return this.fibonacciThreadPool.queue((f) => f(num));
+        return this._fibonacciThreadPool.queue((f) => f(num));
     }
 
     /**

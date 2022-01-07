@@ -20,7 +20,7 @@ export class HealthController {
      *
      * @param {HealthCheckService} health terminus health transformer
      */
-    constructor(private readonly health: HealthCheckService) {}
+    constructor(private readonly _health: HealthCheckService) {}
 
     /**
      * Returns health check status set.
@@ -30,6 +30,6 @@ export class HealthController {
     @Get()
     @HealthCheck()
     check(): Promise<HealthCheckResult> {
-        return this.health.check([]);
+        return this._health.check([]);
     }
 }

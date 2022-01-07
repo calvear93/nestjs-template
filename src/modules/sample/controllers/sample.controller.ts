@@ -16,7 +16,7 @@ export class SampleController {
      *
      * @param {SampleService} service sample service
      */
-    constructor(private service: SampleService) {}
+    constructor(private _service: SampleService) {}
 
     /**
      * Return sample result.
@@ -25,6 +25,6 @@ export class SampleController {
      */
     @Get()
     run(): string {
-        return this.service.sample();
+        return this._service.sample();
     }
 }

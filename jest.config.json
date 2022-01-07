@@ -1,7 +1,11 @@
 {
     "rootDir": ".",
     "moduleNameMapper": {
-        "@libs/(.*)": "<rootDir>/src/libs/$1"
+        "@libs/(.*)": "<rootDir>/src/libs/$1",
+        "@common/(.*)": [
+            "<rootDir>/src/libs/utils/$1",
+            "<rootDir>/src/libs/decorators/$1"
+        ]
     },
     "roots": ["src", "tests"],
     "testEnvironment": "node",

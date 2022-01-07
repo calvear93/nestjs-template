@@ -15,12 +15,12 @@ import {
     imports: [HealthModule, SampleModule, SampleWorkerModule, SampleORMModule]
 })
 export class MainModule {
-    private readonly logger: Logger = new Logger(MainModule.name);
+    private readonly _logger: Logger = new Logger(MainModule.name);
 
     /**
      * Triggered on module initialization.
      */
     onModuleInit(): void {
-        this.logger.debug(`Application started at port: ${process.env.PORT}`);
+        this._logger.debug(`Application started at port: ${process.env.PORT}`);
     }
 }

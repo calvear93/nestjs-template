@@ -7,17 +7,17 @@ const BASE_PATH = 'src/database/default';
 const config: PostgresConnectionOptions = {
     applicationName: process.env.TITLE,
 
-    type: process.env.DEFAULT_DB_CONNECTION,
-    host: process.env.DEFAULT_DB_HOST,
-    port: +process.env.DEFAULT_DB_PORT,
-    username: process.env.DEFAULT_DB_USERNAME,
-    password: process.env.DEFAULT_DB_PASSWORD,
-    database: process.env.DEFAULT_DB_DATABASE,
-    schema: process.env.DEFAULT_DB_SCHEMA,
+    type: process.env.SQL_DEFAULT_DB_CONNECTION,
+    host: process.env.SQL_DEFAULT_DB_HOST,
+    port: +process.env.SQL_DEFAULT_DB_PORT,
+    username: process.env.SQL_DEFAULT_DB_USERNAME,
+    password: process.env.SQL_DEFAULT_DB_PASSWORD,
+    database: process.env.SQL_DEFAULT_DB_DATABASE,
+    schema: process.env.SQL_DEFAULT_DB_SCHEMA,
 
-    migrationsRun: process.env.DEFAULT_DB_ORM_RUN_MIGRATIONS === 'true',
-    synchronize: process.env.DEFAULT_DB_ORM_SYNCHRONIZE === 'true',
-    logging: process.env.DEFAULT_DB_ORM_LOGGING === 'true',
+    migrationsRun: process.env.SQL_DEFAULT_DB_ORM_RUN_MIGRATIONS === 'true',
+    synchronize: process.env.SQL_DEFAULT_DB_ORM_SYNCHRONIZE === 'true',
+    logging: process.env.SQL_DEFAULT_DB_ORM_LOGGING === 'true',
 
     migrationsTableName: '__migrations__',
 

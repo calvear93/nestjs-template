@@ -17,18 +17,18 @@ declare global {
             TIME_ZONE: string;
 
             // SECTION: default database config
-            DEFAULT_DB_CONNECTION: any;
-            DEFAULT_DB_HOST: string;
-            DEFAULT_DB_PORT: string;
+            SQL_DEFAULT_DB_CONNECTION: any;
+            SQL_DEFAULT_DB_HOST: string;
+            SQL_DEFAULT_DB_PORT: string;
 
-            DEFAULT_DB_USERNAME: string;
-            DEFAULT_DB_PASSWORD: string;
-            DEFAULT_DB_DATABASE: string;
-            DEFAULT_DB_SCHEMA: string;
+            SQL_DEFAULT_DB_USERNAME: string;
+            SQL_DEFAULT_DB_PASSWORD: string;
+            SQL_DEFAULT_DB_DATABASE: string;
+            SQL_DEFAULT_DB_SCHEMA: string;
 
-            DEFAULT_DB_ORM_RUN_MIGRATIONS?: 'false' | 'true';
-            DEFAULT_DB_ORM_SYNCHRONIZE?: 'false' | 'true';
-            DEFAULT_DB_ORM_LOGGING?: 'false' | 'true';
+            SQL_DEFAULT_DB_ORM_RUN_MIGRATIONS?: 'false' | 'true';
+            SQL_DEFAULT_DB_ORM_SYNCHRONIZE?: 'false' | 'true';
+            SQL_DEFAULT_DB_ORM_LOGGING?: 'false' | 'true';
         }
     }
 
