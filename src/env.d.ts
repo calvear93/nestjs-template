@@ -4,6 +4,7 @@ declare global {
         interface ProcessEnv {
             NODE_ENV: 'development' | 'production' | 'test';
             ENV: 'dev' | 'qa' | 'prod';
+            DEBUG?: string;
 
             // SECTION: project info from package.json
             VERSION: string;
