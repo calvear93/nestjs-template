@@ -18,7 +18,7 @@ export class SampleWorkerController {
      *
      * @param {SampleWorkerService} service sample worker service
      */
-    constructor(private _service: SampleWorkerService) {}
+    constructor(private readonly _service: SampleWorkerService) {}
 
     /**
      * Executes the fibonacci

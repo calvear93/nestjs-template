@@ -13,7 +13,7 @@ export class SampleORMService {
      *
      * @param {SampleEntityRepository} sampleRepository sample entity repository
      */
-    constructor(private _repository: SampleEntityRepository) {}
+    constructor(private readonly _repository: SampleEntityRepository) {}
 
     /**
      * Retrieves an entity from database by name.

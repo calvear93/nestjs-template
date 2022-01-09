@@ -16,7 +16,7 @@ export class SampleController {
      *
      * @param {SampleService} service sample service
      */
-    constructor(private _service: SampleService) {}
+    constructor(private readonly _service: SampleService) {}
 
     /**
      * Return sample result.

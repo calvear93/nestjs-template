@@ -25,7 +25,7 @@ export class SampleORMController {
      *
      * @param {SampleORMService} service sample orm service
      */
-    constructor(private _service: SampleORMService) {}
+    constructor(private readonly _service: SampleORMService) {}
 
     /**
      * Retrieves a sample entity by name.
