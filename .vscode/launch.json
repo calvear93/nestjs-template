@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Service (dev)",
+            "name": "Debug Service",
             "type": "node",
             "request": "launch",
             "sourceMaps": true,
@@ -11,7 +11,7 @@
             "runtimeExecutable": "npm",
             "runtimeArgs": [
                 "run",
-                "start:dev"
+                "start:${input:environmentName}"
             ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
@@ -22,37 +22,17 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Debug Service (qa)",
+            "name": "Debug Test",
             "type": "node",
             "request": "launch",
-            "sourceMaps": true,
-            "restart": true,
-            "program": "${workspaceFolder}/src/main.ts",
-            "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "run",
-                "start:qa"
-            ],
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ],
-            "skipFiles": [
-                "<node_internals>/**/*.js"
-            ],
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "Debug Test (dev)",
-            "type": "node",
-            "request": "launch",
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceFolder}",
             "sourceMaps": true,
             "restart": true,
             "disableOptimisticBPs": true,
             "runtimeExecutable": "npm",
             "runtimeArgs": [
                 "run",
-                "test:dev",
+                "test:${input:environmentName}",
                 "${fileBasenameNoExtension}",
                 "--runInBand",
                 "-no-cache",
@@ -66,30 +46,18 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         },
+    ],
+    "inputs": [
         {
-            "name": "Debug Test (qa)",
-            "type": "node",
-            "request": "launch",
-            "cwd": "${workspaceRoot}",
-            "sourceMaps": true,
-            "restart": true,
-            "disableOptimisticBPs": true,
-            "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "run",
-                "test:qa",
-                "${fileBasenameNoExtension}",
-                "--runInBand",
-                "-no-cache",
-                "--config",
-                "jest.config.json"
-            ],
-            "skipFiles": [
-                "<node_internals>/**/*.js"
-            ],
-            "protocol": "inspector",
-            "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
+            "id": "environmentName",
+            "type": "pickString",
+            "description": "Select execution environment",
+            "default": "dev",
+            "options": [
+                "dev",
+                "qa",
+                "prod"
+            ]
         }
     ]
 }
