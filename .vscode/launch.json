@@ -13,13 +13,18 @@
             "sourceMaps": true,
             "restart": true,
             "name": "Debug Service (dev)",
-            //"preLaunchTask": "Build Clean",
-            //"postDebugTask": "Terminate All Tasks",
             "program": "${workspaceFolder}/src/main.ts",
             "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "start:dev"],
-            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-            "skipFiles": ["<node_internals>/**/*.js"],
+            "runtimeArgs": [
+                "run",
+                "start:dev"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ],
             "console": "integratedTerminal"
         },
         {
@@ -30,10 +35,105 @@
             "name": "Debug Service (qa)",
             "program": "${workspaceFolder}/src/main.ts",
             "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "start:qa"],
-            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-            "skipFiles": ["<node_internals>/**/*.js"],
+            "runtimeArgs": [
+                "run",
+                "start:qa"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ],
             "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "sourceMaps": true,
+            "restart": true,
+            "disableOptimisticBPs": true,
+            "name": "Debug Test (dev)",
+            "program": "${workspaceFolder}/node_modules/.bin/env-cmd",
+            "args": [
+                "-e",
+                "dev,test",
+                "-r",
+                "${workspaceFolder}/env/exec/loader.js",
+                "--verbose",
+                "node",
+                "node_modules/.bin/jest",
+                "${fileBasenameNoExtension}",
+                "--no-cache",
+                "--watchAll=false",
+                "--config",
+                "jest.config.json"
+            ],
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ],
+            "windows": {
+                "program": "${workspaceFolder}/node_modules/env-cmd/bin/env-cmd",
+                "args": [
+                    "-e",
+                    "dev,test",
+                    "-r",
+                    "${workspaceFolder}/env/exec/loader.js",
+                    "--verbose",
+                    "node",
+                    "node_modules/jest/bin/jest",
+                    "${fileBasenameNoExtension}",
+                    "--no-cache",
+                    "--watchAll=false",
+                    "--config",
+                    "jest.config.json"
+                ],
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "sourceMaps": true,
+            "restart": true,
+            "disableOptimisticBPs": true,
+            "name": "Debug Test (qa)",
+            "program": "${workspaceFolder}/node_modules/.bin/env-cmd",
+            "args": [
+                "-e",
+                "qa,test",
+                "-r",
+                "${workspaceFolder}/env/exec/loader.js",
+                "--verbose",
+                "node",
+                "node_modules/.bin/jest",
+                "${fileBasenameNoExtension}",
+                "--no-cache",
+                "--watchAll=false",
+                "--config",
+                "jest.config.json"
+            ],
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ],
+            "windows": {
+                "program": "${workspaceFolder}/node_modules/env-cmd/bin/env-cmd",
+                "args": [
+                    "-e",
+                    "qa,test",
+                    "-r",
+                    "${workspaceFolder}/env/exec/loader.js",
+                    "--verbose",
+                    "node",
+                    "node_modules/jest/bin/jest",
+                    "${fileBasenameNoExtension}",
+                    "--no-cache",
+                    "--watchAll=false",
+                    "--config",
+                    "jest.config.json"
+                ],
+            }
         }
     ]
 }
