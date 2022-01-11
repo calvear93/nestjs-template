@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Service",
+            "name": "Run",
             "type": "node",
             "request": "launch",
             "sourceMaps": true,
@@ -22,7 +22,7 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Debug Test",
+            "name": "Test",
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceFolder}",
