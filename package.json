@@ -28,8 +28,8 @@
         "typescript"
     ],
     "scripts": {
-        "start:dev": "env-cmd -e dev,debug -r env/exec/loader.js --verbose nest start --debug --watch --preserveWatchOutput",
-        "start:qa": "env-cmd -e qa,debug -r env/exec/loader.js nest start --debug --watch",
+        "start:dev": "env-cmd -e dev,debug -r env/exec/loader.js --verbose nest start --watch --preserveWatchOutput",
+        "start:qa": "env-cmd -e qa,debug -r env/exec/loader.js nest start --watch",
         "build:dev": "env-cmd -e dev,build -r env/exec/loader.js --verbose npm run _build",
         "build:qa": "env-cmd -e qa,build -r env/exec/loader.js npm run _build",
         "build:prod": "env-cmd -e prod,build -r env/exec/loader.js npm run _build",
