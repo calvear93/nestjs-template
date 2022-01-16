@@ -68,13 +68,13 @@ class ApiKeyGuard implements CanActivate {
  * @param {string} apiKey the key
  * @param {string} guardName auth name for swagger
  *
- * @returns {Function} decorator
+ * @returns {ClassDecorator} class decorator
  */
 export function ApiKeyAuth(
     headerName: string,
     apiKey: string,
     guardName: string
-) {
+): ClassDecorator {
     return SECURITY_ENABLED
         ? applyDecorators(
               UseGuards(new ApiKeyGuard(headerName, apiKey)),

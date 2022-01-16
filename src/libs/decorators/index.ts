@@ -1,2 +1,3 @@
-export { Bearer } from './bearer.decorator';
-export { ApiKeyAuth } from './api-key.guard';
+export * from './api-key.guard';
+export * from './attach.decorator';
+export * from './bearer.decorator';
