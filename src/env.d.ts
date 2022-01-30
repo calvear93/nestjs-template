@@ -6,6 +6,9 @@ declare global {
             ENV: 'dev' | 'qa' | 'prod';
             DEBUG?: string;
 
+            // SECTION: runtime environment
+            HOSTNAME: string;
+
             // SECTION: project info from package.json
             VERSION: string;
             NAME: string;
@@ -33,10 +36,19 @@ declare global {
         }
     }
 
-    // SECTION: custom global types
-    type UUID = `${string}-${string}-${string}-${string}-${string}`;
+    // SECTION: global custom types
 
-    type numberString = `${number}`;
+    type decimal = number;
+
+    type seconds = number;
+
+    type millis = number;
+
+    // Unix timestamp, number of seconds that have elapsed since January 1, 1970
+    type epoch = seconds;
+
+    // https://en.wikipedia.org/wiki/ISO_8601#Durations
+    type DurationISO8601 = string;
 }
 
 export {};

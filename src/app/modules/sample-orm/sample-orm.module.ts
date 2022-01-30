@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { defaultDbConfig, SampleEntityRepository } from 'database/default';
+import { defaultDbConfig, SampleEntityRepository } from 'app/database/default';
 import { SampleORMController } from './controllers/sample-orm.controller';
 import { SampleORMService } from './services/sample-orm.service';
 

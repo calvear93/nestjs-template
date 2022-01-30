@@ -4,7 +4,7 @@ import {
     SampleModule,
     SampleORMModule,
     SampleWorkerModule
-} from 'modules';
+} from 'app/modules';
 
 /**
  * Main module containing every app submodules.

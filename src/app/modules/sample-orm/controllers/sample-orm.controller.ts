@@ -7,7 +7,7 @@ import {
     Query,
     UseInterceptors
 } from '@nestjs/common';
-import { SampleEntity } from 'database/default';
+import { SampleEntity } from 'app/database/default';
 import { SampleORMService } from '../services/sample-orm.service';
 
 /**

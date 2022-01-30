@@ -7,7 +7,7 @@ import {
     Index,
     PrimaryGeneratedColumn
 } from 'typeorm';
-import { BaseTable, ITrackable } from 'database/common';
+import { BaseTable, ITrackable } from 'app/database/common';
 import { SampleEntityType } from './SampleEntityType.enum';
 
 /**

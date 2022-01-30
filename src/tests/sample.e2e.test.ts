@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { SampleModule, SampleWorkerModule } from 'modules';
+import { SampleModule, SampleWorkerModule } from 'app/modules';
 
 describe('Sample e2e', () => {
     let app: INestApplication;

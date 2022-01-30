@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SampleEntity, SampleEntityRepository } from 'database/default';
+import { SampleEntity, SampleEntityRepository } from 'app/database/default';
 import { SampleORMService } from '../services/sample-orm.service';
 import { SampleORMController } from './sample-orm.controller';
 

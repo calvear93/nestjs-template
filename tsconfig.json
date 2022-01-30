@@ -4,33 +4,31 @@
         "outDir": "dist",
         "paths": {
             "@libs/*": ["libs/*"],
-            "@common/*": [
-                "libs/utils/*",
-                "libs/decorators/*"
-            ],
-            // "~/*": ["src/*"]
-            // "@*": ["src/*"]
-            // "@controllers/*": ["src/controllers/*"]
+            "@common/*": ["libs/utils/*", "libs/decorators/*"]
         },
 
         "target": "es2021",
         "module": "commonjs",
         "moduleResolution": "node",
-        "allowJs": true,
-        "checkJs": true,
-        "declaration": true,
-
         "resolveJsonModule": true,
 
-        "incremental": true,
-        "declarationMap": true,
-        "sourceMap": true,
+        "allowJs": true,
+        "checkJs": true,
 
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+
+        "incremental": true,
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
         "removeComments": true,
+
         "isolatedModules": true,
         "esModuleInterop": true,
         "importHelpers": true,
         "skipLibCheck": false,
+        "downlevelIteration": false,
 
         "strict": true,
         "strictBindCallApply": true,
@@ -47,11 +45,8 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "useUnknownInCatchVariables": true,
-        "exactOptionalPropertyTypes": false,
-
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "exactOptionalPropertyTypes": false
     },
-    "include": ["src/**/*", "tests/**/*", "**/*.spec.ts", "**/*.test.ts"],
+    "include": ["src/**/*", "**/*.spec.ts", "**/*.test.ts"],
     "exclude": ["node_modules", "build", "dist", "env"]
 }

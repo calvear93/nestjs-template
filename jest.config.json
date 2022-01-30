@@ -7,9 +7,9 @@
             "<rootDir>/src/libs/decorators/$1"
         ]
     },
-    "roots": ["src", "tests"],
+    "roots": ["src"],
     "testEnvironment": "node",
-    "moduleDirectories": ["node_modules", "src", "tests"],
+    "moduleDirectories": ["node_modules", "src"],
     "moduleFileExtensions": ["js", "json", "ts"],
     "testRegex": ".*\\.(spec|test)\\.ts$",
     "transform": {
@@ -32,5 +32,7 @@
     "bail": 1,
     "verbose": true,
     "testTimeout": 30000,
-    "slowTestThreshold": 10
+    "slowTestThreshold": 10,
+    "resetModules": true,
+    "clearMocks": true
 }
