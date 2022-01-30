@@ -1,9 +1,4 @@
 {
-    "sourceMap": false,
-    "declaration": false,
-    "declarationMap": false,
-    "importHelpers": true,
-    "downlevelIteration": false,
     "extends": "./tsconfig.json",
     "exclude": [
         "node_modules",
