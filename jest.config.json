@@ -33,6 +33,5 @@
     "verbose": true,
     "testTimeout": 30000,
     "slowTestThreshold": 10,
-    "resetModules": true,
     "clearMocks": true
 }
