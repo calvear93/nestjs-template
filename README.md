@@ -35,7 +35,6 @@ Main feature are:
 ├── README.md
 ├── CHANGELOG.md
 ├── LICENSE.md
-├── .vscode/
 ├── env/
 │   ├── exec/
 │   │   ├── env.schema.json # env vars schema
@@ -43,33 +42,36 @@ Main feature are:
 │   ├── secrets/ # will contains dev.env.json, qa.env.json, etc.
 │   └── appsettings.json # non secret environment variables
 ├── src/
-│   ├── shared/ # common utils, guards, decorators, etc.
-│   ├── config/
-│   ├── database/
-│   │   ├── common/
-│   │   ├── migrations/
-│   │   ├── schema/ # database entities
-│   │   └── default.database.config.ts # default database connection config
-│   ├── modules/ # app modules
-│   │   ├── health/ # health/liveness module
-│   │   ├── sample/
-│   │   │   ├── controllers/
-│   │   │   ├── services/
-│   │   │   └── sample.module.ts
-│   │   ├── sample-orm/
-│   │   │   ├── controllers/
-│   │   │   ├── services/
-│   │   │   └── sample-orm.module.ts
-│   │   └── sample-worker/
-│   │       ├── controllers/
-│   │       ├── services/
-│   │       ├── providers/
-│   │       ├── utils/
-│   │       └── sample-worker.module.ts
-│   ├── env.d.ts # .env environment types definition
-│   ├── main.module.ts
-│   └── main.ts
-├── .eslintrc.json
+│   ├── main.ts # app setup
+│   ├── env.d.ts # environment variables declaration
+│   ├── app/
+│   │   ├── main.module.ts
+│   │   ├── config/
+│   │   ├── database/
+│   │   │   ├── common/
+│   │   │   ├── migrations/
+│   │   │   ├── schema/ # database entities
+│   │   │   └── default.database.config.ts # default database connection config
+│   │   └── modules/ # app modules
+│   │       ├── health/ # health/liveness module
+│   │       ├── sample/
+│   │       │   ├── controllers/
+│   │       │   ├── services/
+│   │       │   └── sample.module.ts
+│   │       ├── sample-orm/
+│   │       │   ├── controllers/
+│   │       │   ├── services/
+│   │       │   └── sample-orm.module.ts
+│   │       └── sample-worker/
+│   │           ├── controllers/
+│   │           ├── services/
+│   │           ├── providers/
+│   │           ├── utils/
+│   │           └── sample-worker.module.ts
+│   ├── libs/
+│   │  ├── decorators/
+│   │  └── utils/
+│   └── tests/ # e2e tests
 ├── Dockerfile
 ├── tsconfig.json
 ├── tsconfig.build.json
