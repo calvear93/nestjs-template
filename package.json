@@ -53,6 +53,7 @@
         "@nestjs/swagger": "^5.2.0",
         "@nestjs/terminus": "^8.0.4",
         "@nestjs/typeorm": "^8.0.3",
+        "axios": "^0.25.0",
         "luxon": "^2.3.0",
         "pg": "^8.7.3",
         "reflect-metadata": "^0.1.13",
