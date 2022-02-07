@@ -4,6 +4,8 @@
         "outDir": "dist",
         "paths": {
             "@libs/*": ["libs/*"],
+            "@http": ["libs/http"],
+            "@crypto": ["libs/crypto"],
             "@common/*": ["libs/utils/*", "libs/decorators/*"]
         },
 

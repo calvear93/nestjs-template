@@ -2,6 +2,8 @@
     "rootDir": ".",
     "moduleNameMapper": {
         "@libs/(.*)": "<rootDir>/src/libs/$1",
+        "@http": "<rootDir>/src/libs/http",
+        "@crypto": "<rootDir>/src/libs/crypto",
         "@common/(.*)": [
             "<rootDir>/src/libs/utils/$1",
             "<rootDir>/src/libs/decorators/$1"
