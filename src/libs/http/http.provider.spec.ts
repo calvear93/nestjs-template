@@ -190,11 +190,11 @@ describe('HttpProvider', () => {
 
     test('request fails for timeout', async () => {
         // mocking phase
-        nock(baseURL).get('/').delay(600).reply(200);
+        nock(baseURL).get('/').delay(200).reply(200);
 
         // request phase
         await expect(
-            provider.get<string>('/', { timeout: 200 })
+            provider.get<string>('/', { timeout: 60 })
         ).rejects.toThrow();
     });
 
@@ -212,5 +212,10 @@ describe('HttpProvider', () => {
         controller.abort();
 
         await expect(promise).resolves.toMatchObject({ message: 'canceled' });
+    });
+
+    afterAll(async () => {
+        await module.close();
+        nock.cleanAll();
     });
 });

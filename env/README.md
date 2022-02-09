@@ -6,7 +6,7 @@
 
 #### 1.2. NPM Scripts
 
-For load desired environment, add you npm script like **`env-cmd -e <env>,<mode> -r env/exec/loader.js [--verbose] <your-command>`**.
+For load desired environment, add you npm script like **`env-cmd -e <env>,<mode>[,<mode2>] -r env/exec/loader.js [--verbose] <your-command>`**.
 
 -   **mode**: (build|debug|test) execution mode global variables.
 -   **env**: (dev|qa|prod) environment variables.
