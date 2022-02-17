@@ -58,7 +58,4 @@ RUN chown -R node:node ${APP_DIR}
 USER node
 
 # exec command
-ENTRYPOINT ["node"]
-CMD ["main"]
-
-EXPOSE 8080/tcp
+ENTRYPOINT ["node", "main"]
