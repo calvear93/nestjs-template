@@ -49,6 +49,5 @@
         "useUnknownInCatchVariables": true,
         "exactOptionalPropertyTypes": false
     },
-    "include": ["src/**/*", "**/*.spec.ts", "**/*.test.ts"],
-    "exclude": ["node_modules", "build", "dist", "env"]
+    "include": ["src/**/*"]
 }
