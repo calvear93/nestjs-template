@@ -5,19 +5,21 @@ const BASE_PATH = 'src/database/default';
 
 // typeORM default config
 const config: PostgresConnectionOptions = {
-    applicationName: process.env.TITLE,
+    applicationName: process.env.NAME,
+    name: process.env.DATABASE_DEFAULT_NAME,
 
-    type: process.env.SQL_DEFAULT_DB_CONNECTION,
-    host: process.env.SQL_DEFAULT_DB_HOST,
-    port: +process.env.SQL_DEFAULT_DB_PORT,
-    username: process.env.SQL_DEFAULT_DB_USERNAME,
-    password: process.env.SQL_DEFAULT_DB_PASSWORD,
-    database: process.env.SQL_DEFAULT_DB_DATABASE,
-    schema: process.env.SQL_DEFAULT_DB_SCHEMA,
+    type: process.env.DATABASE_DEFAULT_CONNECTION,
+    host: process.env.DATABASE_DEFAULT_HOST,
+    port: +process.env.DATABASE_DEFAULT_PORT,
+    username: process.env.DATABASE_DEFAULT_USERNAME,
+    password: process.env.DATABASE_DEFAULT_PASSWORD,
+    database: process.env.DATABASE_DEFAULT_DATABASE,
+    schema: process.env.DATABASE_DEFAULT_SCHEMA,
 
-    migrationsRun: process.env.SQL_DEFAULT_DB_ORM_RUN_MIGRATIONS === 'true',
-    synchronize: process.env.SQL_DEFAULT_DB_ORM_SYNCHRONIZE === 'true',
-    logging: process.env.SQL_DEFAULT_DB_ORM_LOGGING === 'true',
+    migrationsRun: process.env.DATABASE_DEFAULT_ORM_RUN_MIGRATIONS === 'true',
+    synchronize: process.env.DATABASE_DEFAULT_ORM_SYNCHRONIZE === 'true',
+    logging: process.env.DATABASE_DEFAULT_ORM_LOGGING === 'true',
+    cache: process.env.DATABASE_DEFAULT_ORM_CACHE === 'true',
 
     migrationsTableName: '__migrations__',
 

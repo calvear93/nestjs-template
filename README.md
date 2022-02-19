@@ -94,32 +94,43 @@ Main feature are:
 
     ```json
     {
-        "DEFAULT_DB_HOST": "db-host",
-        "DEFAULT_DB_DATABASE": "db_name",
-        "DEFAULT_DB_USERNAME": "db_user",
-        "DEFAULT_DB_PASSWORD": "db_password",
-        "DEFAULT_DB_ORM_RUN_MIGRATIONS": true,
-        "DEFAULT_DB_ORM_LOGGING": true
+        "DATABASE": {
+            "DEFAULT": {
+                "HOST": "db-host",
+                "DATABASE": "db_name",
+                "USERNAME": "db_user",
+                "PASSWORD": "db_password",
+                "ORM_LOGGING": true,
+                "ORM_RUN_MIGRATIONS": true
+            }
+        }
     }
     ```
 
     -   Configure your `dev.local.env.json` file in `env/secrets` folder as:
 
     ```json
-    {
-        "DEFAULT_DB_HOST": "local-db-host",
-        "DEFAULT_DB_DATABASE": "db_name_local",
-        "DEFAULT_DB_USERNAME": "db_user_local",
-        "DEFAULT_DB_PASSWORD": "db_password_local",
-        "DEFAULT_DB_ORM_CACHE": false,
-        "DEFAULT_DB_ORM_SYNCHRONIZE": false
+     {
+        "DATABASE": {
+            "DEFAULT": {
+                "SCHEMA": "my-local-schema",
+                "HOST": "local-db-host",
+                "DATABASE": "db_name_local",
+                "USERNAME": "db_user_local",
+                "PASSWORD": "db_password_local",
+                "ORM_LOGGING": true,
+                "ORM_RUN_MIGRATIONS": true,
+                "ORM_CACHE": false,
+                "ORM_SYNCHRONIZE": false
+            }
+        }
     }
     ```
 
 -   Install [NodeJS](https://nodejs.org/es/) for your machine.
 -   Execute `npm install` command. (`npm i --force` in case of conflicts).
 -   Create your `.dev.env.json` file in your [`env/secrets` folder](env/README.md).
--   Execute the app with `npm run start:dev`.
+-   Execute the app with `npm run start:dev` or `npm run test:dev`.
 
 ## 📋 **Branches and Environments**
 
