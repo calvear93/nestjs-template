@@ -65,7 +65,7 @@
                 "args": "after-used",
                 "caughtErrors": "all",
                 "vars": "local",
-                "varsIgnorePattern": "^_"
+                "varsIgnorePattern": "^_.*"
             }
         ],
         "array-callback-return": "error",
