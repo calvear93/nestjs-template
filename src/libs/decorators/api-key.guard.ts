@@ -80,5 +80,5 @@ export function ApiKeyAuth(
               UseGuards(new ApiKeyGuard(headerName, apiKey)),
               ApiSecurity(guardName)
           )
-        : () => null;
+        : () => undefined;
 }

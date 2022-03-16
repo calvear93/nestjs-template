@@ -18,7 +18,7 @@ export function capitalizeAfterPeriod(str: string): string {
     if (!str) return '';
 
     return str.replace(
-        /([.!?-]+\s*)([a-z])/g,
+        /([!.?-]+\s*)([a-z])/g,
         (_, $1, $2) => $1 + $2.toUpperCase()
     );
 }
@@ -34,7 +34,7 @@ export function capitalizeEvery(str: string): string {
 
     return capitalizeAfterPeriod(
         str.replace(/\w\S*/g, (txt) => {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
         })
     );
 }
@@ -64,7 +64,7 @@ export function removeDiacritics(str: string): string {
 export function empathize(str: string): string {
     if (!str) return '';
 
-    return Array.from<string>(str.toUpperCase()).reduce(
+    return [...str.toUpperCase()].reduce(
         (result: string, char: string, index: number): string => {
             result += char;
 

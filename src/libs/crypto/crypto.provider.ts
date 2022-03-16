@@ -13,6 +13,65 @@ export type CipherAlgorithm =
     | 'aes-192-cbc'
     | 'aes-256-cbc';
 
+// openssl list -digest-algorithms
+export type HashAlgorithm =
+    | 'RSA-MD4'
+    | 'RSA-MD5'
+    | 'RSA-RIPEMD160'
+    | 'RSA-SHA1'
+    | 'RSA-SHA1-2'
+    | 'RSA-SHA224'
+    | 'RSA-SHA256'
+    | 'RSA-SHA3-224'
+    | 'RSA-SHA3-256'
+    | 'RSA-SHA3-384'
+    | 'RSA-SHA3-512'
+    | 'RSA-SHA384'
+    | 'RSA-SHA512'
+    | 'RSA-SHA512/224'
+    | 'RSA-SHA512/256'
+    | 'RSA-SM3'
+    | 'BLAKE2B512'
+    | 'BLAKE2S256'
+    | 'ID-RSASSA-PKCS1-V1_5-WITH-SHA3-224'
+    | 'ID-RSASSA-PKCS1-V1_5-WITH-SHA3-256'
+    | 'ID-RSASSA-PKCS1-V1_5-WITH-SHA3-384'
+    | 'ID-RSASSA-PKCS1-V1_5-WITH-SHA3-512'
+    | 'MD4'
+    | 'MD4WithRSAEncryption'
+    | 'MD5'
+    | 'MD5-SHA1'
+    | 'MD5WithRSAEncryption'
+    | 'RIPEMD'
+    | 'RIPEMD160'
+    | 'RIPEMD160WithRSA'
+    | 'RMD160'
+    | 'SHA1'
+    | 'SHA1WithRSAEncryption'
+    | 'SHA224'
+    | 'SHA224WithRSAEncryption'
+    | 'SHA256'
+    | 'SHA256WithRSAEncryption'
+    | 'SHA3-224'
+    | 'SHA3-256'
+    | 'SHA3-384'
+    | 'SHA3-512'
+    | 'SHA384'
+    | 'SHA384WithRSAEncryption'
+    | 'SHA512'
+    | 'SHA512-224'
+    | 'SHA512-224WithRSAEncryption'
+    | 'SHA512-256'
+    | 'SHA512-256WithRSAEncryption'
+    | 'SHA512WithRSAEncryption'
+    | 'SHAKE128'
+    | 'SHAKE256'
+    | 'SM3'
+    | 'SM3WithRSAEncryption'
+    | 'SSL3-MD5'
+    | 'SSL3-SHA1'
+    | 'Whirlpool';
+
 /**
  * Handles hashing, encryption and decryption using node crypto.
  *
@@ -56,11 +115,12 @@ export class CryptoProvider {
      * Hashes a string.
      *
      * @param {string} str string for hash
+     * @param {HashAlgorithm} algorithm hash algorithm
      *
      * @returns {string} hashed string
      */
-    hash(str: string): string {
-        const hash = crypto.createHash('md5');
+    hash(str: string, algorithm: HashAlgorithm = 'SHA256'): string {
+        const hash = crypto.createHash(algorithm);
 
         return hash.update(str).digest('hex');
     }
@@ -79,7 +139,7 @@ export class CryptoProvider {
             this._vector
         );
 
-        return cipher.update(str, 'utf-8', 'hex') + cipher.final('hex');
+        return cipher.update(str, 'utf8', 'hex') + cipher.final('hex');
     }
 
     /**
@@ -96,7 +156,7 @@ export class CryptoProvider {
             this._vector
         );
 
-        return decipher.update(str, 'hex', 'utf-8') + decipher.final('utf8');
+        return decipher.update(str, 'hex', 'utf8') + decipher.final('utf8');
     }
 
     /**

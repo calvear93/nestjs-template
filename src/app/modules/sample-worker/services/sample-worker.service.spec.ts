@@ -4,6 +4,8 @@ import { SampleWorkerService } from './sample-worker.service';
 import { FIBONACCI_THREAD_PROVIDER } from '../providers/fibonacci-thread.provider';
 import { FIBONACCI_THREAD_POOL_PROVIDER } from '../providers/fibonacci-thread-pool.provider';
 
+const fibonacciAsync = (num: number) => Promise.resolve(fibonacci(num));
+
 describe('SampleWorkerService', () => {
     let service: SampleWorkerService;
 
@@ -18,13 +20,11 @@ describe('SampleWorkerService', () => {
                 SampleWorkerService,
                 {
                     provide: FIBONACCI_THREAD_PROVIDER,
-                    useFactory: () => (num: number) =>
-                        Promise.resolve(fibonacci(num))
+                    useFactory: () => fibonacciAsync
                 },
                 {
                     provide: FIBONACCI_THREAD_POOL_PROVIDER,
-                    useFactory: () => (num: number) =>
-                        Promise.resolve(fibonacci(num))
+                    useFactory: () => fibonacciAsync
                 }
             ]
         }).compile();

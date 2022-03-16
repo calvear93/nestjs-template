@@ -51,7 +51,7 @@ export function isValid(id?: string): boolean {
     let dv = id[id.length - 1];
     dv = dv === 'k' ? 'K' : dv;
 
-    const dvC = checkDigit(id.substring(0, id.length - 1));
+    const dvC = checkDigit(id.slice(0, Math.max(0, id.length - 1)));
 
     return dv === dvC;
 }
