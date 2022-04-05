@@ -19,9 +19,9 @@ export class SampleORMService {
      * Retrieves an entity from database by name.
      *
      * @param {string} searchedName entity name
-     * @returns {Promise<SampleEntity | undefined>} searched entity
+     * @returns {Promise<SampleEntity | null>} searched entity
      */
-    getByName(searchedName: string): Promise<SampleEntity | undefined> {
+    getByName(searchedName: string): Promise<SampleEntity | null> {
         return this._repository.findByName(searchedName);
     }
 

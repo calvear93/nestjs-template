@@ -27,11 +27,11 @@ const config: PostgresConnectionOptions = {
     entities: [`${__dirname}/**/*.entity{.ts,.js}`],
     subscribers: [`${__dirname}/**/*.subscriber{.ts,.js}`],
 
-    cli: {
-        migrationsDir: `${BASE_PATH}/migrations`,
-        entitiesDir: `${BASE_PATH}/**/*.entity{.ts,.js}`,
-        subscribersDir: `${BASE_PATH}/**/*.subscriber{.ts,.js}`
-    }
+    // cli: {
+    //     migrationsDir: `${BASE_PATH}/migrations`,
+    //     entitiesDir: `${BASE_PATH}/**/*.entity{.ts,.js}`,
+    //     subscribersDir: `${BASE_PATH}/**/*.subscriber{.ts,.js}`
+    // }
 };
 
 export default config;
