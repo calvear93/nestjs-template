@@ -1,17 +1,19 @@
+#### Environment variables loader.
+
 ## 1. Requirements
 
 #### 1.1. Dependencies
 
--   Install **env-cmd** library with `npm i -D env-cmd`.
+-   Install **env** library with `npm i -D @calvear/env`.
 
 #### 1.2. NPM Scripts
 
-For load desired environment, add you npm script like **`env-cmd -e <env>,<mode>[,<mode2>] -r env/exec/loader.js [--verbose] <your-command>`**.
+For load desired environment, add you npm script like **`env -e <env> -m <mode>[ <mode2>] : <your-command>`**.
 
--   **mode**: (build|debug|test) execution mode global variables.
+-   **mode**: (build|debug|test) execution mode base variables (can be many).
 -   **env**: (dev|qa|prod) environment variables.
 
-_For example: `env-cmd -e dev,debug -r env/exec/loader.js npm run start`_
+_In example: `env -e dev -m debug : npm start`_
 
 ## 2. Structure
 
@@ -22,11 +24,11 @@ Your `appsettings.json` could contains an structure like below:
 ```json
 {
     // (optional) base default variables
-    "default": {
+    "|DEFAULT|": {
         ...
     },
     // (optional) execution modes
-    "mode": {
+    "|MODE|": {
         // on build
         "build": {
             ...
@@ -38,11 +40,13 @@ Your `appsettings.json` could contains an structure like below:
         // on testing
         "test": {
             ...
-        }
+        },
+        // any custom mode
+        ...
     },
     // (optional) execution environments
-    "env": {
-        "dev": {
+    "|ENV|": {
+        "<env-name>": {
             ...
         },
         ...
@@ -50,7 +54,7 @@ Your `appsettings.json` could contains an structure like below:
 }
 ```
 
-_This file contains every global environment variables files a.k.a. execution modes._
+_This folder contains every base environment variables files a.k.a. environment execution modes._
 
 #### 2.2. Environments
 
@@ -65,9 +69,26 @@ Your `env/secrets` folder would contains files below:
 
 _This folder should contains environment variables files for system environments._
 
-## 3. Nested Keys
+## 3. Schema
 
-You can organize your keys in nested objects like:
+`env.schema.json` is the file that contains current structure for
+your environment secrets files (dev|qa|prod).
+
+Schema uses JSON schema v4 standard, so you can add custom validations.
+Updating the schema model will merge changes by default.
+
+For each property in the file, loader will retrieve the value from Azure Key
+Vault.
+
+When you push a new variable from any of your environment secrets
+file, `env.schema.json` will be updated automatically.
+
+If you want to ignore to load some variable without delete it, you can remove
+the variable from `env.schema.json`.
+
+## 5. Nested Keys
+
+You can organize your keys in nested objects.
 
 ```json
 {
@@ -89,23 +110,22 @@ You can organize your keys in nested objects like:
 }
 ```
 
+Default nesting delimiter is `__`:
 So, in your application you can use the variables as shown below:
 
 ```javascript
-const myVar1 = process.env.GROUP1_VAR;
-const myVar2 = process.env.GROUP2_VAR;
-const myVar2 = process.env.GROUP2_SUBGROUP1_VAR;
+const myVar1 = process.env.GROUP1__VAR;
+const myVar2 = process.env.GROUP2__VAR;
+const myVar2 = process.env.GROUP2__SUBGROUP1_VAR;
 const myVar3 = process.env.VAR3;
 ```
 
-## 4. Priority
-
-Variables loading priority.
+## 6. Priority
 
 ### From lowest to highest.
 
 -   `appsettings.json` -> default
 -   `appsettings.json` -> dev|qa|prod
--   `(dev|qa|prod).env.json`
 -   `appsettings.json` -> debug|build|test
+-   `(dev|qa|prod).env.json`
 -   `(dev|qa|prod).local.env.json` (takes precedence over previous)

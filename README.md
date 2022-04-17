@@ -24,21 +24,14 @@ Main feature are:
 
 -   `eslint` with `prettier`
 -   `babel` for post-build optimizations
--   Environment variables handler using `env-cmd`
 -   `swagger` ready
--   `postgresql` with `typeorm`
 -   `docker` ready
 
 ## ⛩ **Structure**
 
 ```bash
 ├── README.md
-├── CHANGELOG.md
-├── LICENSE.md
 ├── env/
-│   ├── exec/
-│   │   ├── env.schema.json # env vars schema
-│   │   └── loader.js # environment variables loader for env-cmd
 │   ├── secrets/ # will contains dev.env.json, qa.env.json, etc.
 │   └── appsettings.json # non secret environment variables
 ├── src/
@@ -47,21 +40,12 @@ Main feature are:
 │   ├── app/
 │   │   ├── main.module.ts
 │   │   ├── config/
-│   │   ├── database/
-│   │   │   ├── common/
-│   │   │   ├── migrations/
-│   │   │   ├── schema/ # database entities
-│   │   │   └── default.database.config.ts # default database connection config
 │   │   └── modules/ # app modules
 │   │       ├── health/ # health/liveness module
 │   │       ├── sample/
 │   │       │   ├── controllers/
 │   │       │   ├── services/
 │   │       │   └── sample.module.ts
-│   │       ├── sample-orm/
-│   │       │   ├── controllers/
-│   │       │   ├── services/
-│   │       │   └── sample-orm.module.ts
 │   │       └── sample-worker/
 │   │           ├── controllers/
 │   │           ├── services/
@@ -88,49 +72,10 @@ Main feature are:
     -   `<project-title>` project title, i.e. My Project
     -   `<project-description>` project description, i.e. API for manage user data
 
--   Configure your database config for dev environment.
-
-    -   Configure your `dev.env.json` file in `env/secrets` folder as:
-
-    ```json
-    {
-        "DATABASE": {
-            "DEFAULT": {
-                "HOST": "db-host",
-                "DATABASE": "db_name",
-                "USERNAME": "db_user",
-                "PASSWORD": "db_password",
-                "ORM_LOGGING": true,
-                "ORM_RUN_MIGRATIONS": true
-            }
-        }
-    }
-    ```
-
-    -   Configure your `dev.local.env.json` file in `env/secrets` folder as:
-
-    ```json
-     {
-        "DATABASE": {
-            "DEFAULT": {
-                "SCHEMA": "my-local-schema",
-                "HOST": "local-db-host",
-                "DATABASE": "db_name_local",
-                "USERNAME": "db_user_local",
-                "PASSWORD": "db_password_local",
-                "ORM_LOGGING": true,
-                "ORM_RUN_MIGRATIONS": true,
-                "ORM_CACHE": false,
-                "ORM_SYNCHRONIZE": false
-            }
-        }
-    }
-    ```
-
--   Install [NodeJS](https://nodejs.org/es/) for your machine.
--   Execute `npm install` command. (`npm i --force` in case of conflicts).
--   Create your `.dev.env.json` file in your [`env/secrets` folder](env/README.md).
--   Execute the app with `npm run start:dev` or `npm run test:dev`.
+*   Install [NodeJS](https://nodejs.org/es/) for your machine.
+*   Execute `npm install` command. (`npm i --force` in case of conflicts).
+*   Create your `.dev.env.json` file in your [`env/secrets` folder](env/README.md).
+*   Execute the app with `npm run start:dev` or `npm run test:dev`.
 
 ## 📋 **Branches and Environments**
 
@@ -146,46 +91,26 @@ Project uses **npm scripts** for eases execution, testing and building.
 Many of these script run on a defined environment, specified after ':', and
 it environment may be 'dev', 'qa' or 'prod'.
 
-| Command                      | Action                       |
-| ---------------------------- | ---------------------------- |
-| npm run start:`<env>`        | executes the app             |
-| npm run build:`<env>`        | build the app                |
-| npm run orm:`<env>` -- <cmd> | executes ORM commands        |
-| npm run test:`<env>`         | executes tests               |
-| npm run test:coverage        | executes tests with coverage |
-| npm run test:inspect         | testing debug                |
-| npm run lint                 | code format review           |
-| npm run lint:fix             | code format review/fix       |
+| Command               | Action                       |
+| --------------------- | ---------------------------- |
+| npm run start:`<env>` | executes the app             |
+| npm run build:`<env>` | build the app                |
+| npm run test:`<env>`  | executes tests               |
+| npm run test:coverage | executes tests with coverage |
+| npm run test:inspect  | testing debug                |
+| npm run lint          | code format review           |
+| npm run lint:fix      | code format review/fix       |
 
 ## ⚙️ **Commands**
 
-### **1. [TypeORM](https://typeorm.io/#/using-cli)**
-
-| Command                                                                 | Action                                        |
-| ----------------------------------------------------------------------- | --------------------------------------------- |
-| npm run orm:`<env>` -- migration:create -n `<migrationName>`            | creates a blank migration file                |
-| npm run orm:`<env>` -- migration:generate -n `<migrationName>` --pretty | generates a new migration from schema changes |
-| npm run orm:`<env>` -- migration:run                                    | synchronizes migrations with database         |
-| npm run orm:`<env>` -- migration:revert                                 | reverts last migration applied to database    |
-| npm run orm:`<env>` -- migration:show                                   | show migrations                               |
-| npm run orm:`<env>` -- migration:sync                                   | applies schema to database without migrations |
-| npm run orm:`<env>` -- migration:drop                                   | drops database schema                         |
-| npm run orm:`<env>` -- entity:create -n `<EntityName>`                  | create a new entity                           |
-| npm run orm:`<env>` -- entity:subscriber -n `<SubscriberName>`          | create a new subscriber                       |
-
-[!] You must clear dist folder in order to avoid to execute unwanted
-migrations when you use start command (e.g. start:dev).
-Set "deleteOutDir" true in `nest-cli.json`.
-[!] You must use default relative path (using dots) on database entities.
-
-### **2. Docker**
+### **1. Docker**
 
 | Command                                                                                                 | Action       |
 | ------------------------------------------------------------------------------------------------------- | ------------ |
 | docker build --build-arg ENV=`<env>` --tag `<image_name>` `<build-context>`                             | docker build |
 | docker run -d -it -p `<expose_port>`:`<container_app_port>`/tcp --name `<instance_name>` `<image_name>` | docker exec  |
 
-### **3. Node Tools**
+### **2. Node Tools**
 
 | Command                      | Action                    |
 | ---------------------------- | ------------------------- |
@@ -193,7 +118,7 @@ Set "deleteOutDir" true in `nest-cli.json`.
 | npm update --save/--save-dev | soft updated for packages |
 | npx npm-check-updates -u     | hard update for packages  |
 
-### **4. Git Helpful Commands**
+### **3. Git Helpful Commands**
 
 | Command                                   | Action                             |
 | ----------------------------------------- | ---------------------------------- |
@@ -206,7 +131,7 @@ Set "deleteOutDir" true in `nest-cli.json`.
 | git gc --prune=now --aggressive           | repository maintenance command     |
 | git clean -fd                             | remove untracked empty folders     |
 
-### **5. Git Subtree**
+### **4. Git Subtree**
 
 | Command                                                                  | Action              |
 | ------------------------------------------------------------------------ | ------------------- |
@@ -275,7 +200,6 @@ use commands below:
 
 -   [Express](https://expressjs.com/es/) - NodeJS HTTP framework
 -   [NestJS](https://nestjs.com/) - NodeJS framework
--   [TypeORM](https://typeorm.io/) - TypeScript ORM
 -   [Threads.JS](https://threads.js.org/) - Worker Threads made easy
 -   [env-cmd](https://github.com/toddbluhm/env-cmd) - NodeJS app's environment utility
 

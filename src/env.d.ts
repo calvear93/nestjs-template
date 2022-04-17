@@ -19,22 +19,6 @@ declare global {
             PORT: string;
             API_PREFIX: string;
             TIME_ZONE: string;
-
-            // SECTION: default database config
-            DATABASE_DEFAULT_NAME: string;
-            DATABASE_DEFAULT_CONNECTION: any;
-            DATABASE_DEFAULT_HOST: string;
-            DATABASE_DEFAULT_PORT: string;
-
-            DATABASE_DEFAULT_USERNAME: string;
-            DATABASE_DEFAULT_PASSWORD: string;
-            DATABASE_DEFAULT_DATABASE: string;
-            DATABASE_DEFAULT_SCHEMA: string;
-
-            DATABASE_DEFAULT_ORM_RUN_MIGRATIONS?: 'false' | 'true';
-            DATABASE_DEFAULT_ORM_SYNCHRONIZE?: 'false' | 'true';
-            DATABASE_DEFAULT_ORM_LOGGING?: 'false' | 'true';
-            DATABASE_DEFAULT_ORM_CACHE?: 'false' | 'true';
         }
     }
 
