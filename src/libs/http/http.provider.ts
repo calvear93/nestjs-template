@@ -253,4 +253,15 @@ export class HttpProvider {
             useFactory: () => new HttpProvider(config, interceptors)
         };
     }
+
+    /**
+     * Validates if Error is AxiosError.
+     *
+     * @static
+     * @param {any} error
+     * @returns {is AxiosError} whether input is an AxiosError
+     */
+    static isAxiosError(error: any): error is AxiosError {
+        return 'isAxiosError' in error;
+    }
 }

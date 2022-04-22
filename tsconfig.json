@@ -5,6 +5,7 @@
         "paths": {
             "@libs/*": ["libs/*"],
             "@http": ["libs/http"],
+            "@time": ["libs/time"],
             "@crypto": ["libs/crypto"],
             "@common/*": ["libs/utils/*", "libs/decorators/*"]
         },

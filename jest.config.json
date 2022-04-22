@@ -3,6 +3,7 @@
     "moduleNameMapper": {
         "@libs/(.*)": "<rootDir>/src/libs/$1",
         "@http": "<rootDir>/src/libs/http",
+        "@time": "<rootDir>/src/libs/time",
         "@crypto": "<rootDir>/src/libs/crypto",
         "@common/(.*)": [
             "<rootDir>/src/libs/utils/$1",
