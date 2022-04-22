@@ -7,7 +7,7 @@ describe('SampleController', () => {
     let controller: SampleController;
 
     beforeAll(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        const module = await Test.createTestingModule({
             controllers: [SampleController],
             providers: [SampleService]
         }).compile();

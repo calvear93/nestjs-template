@@ -6,7 +6,7 @@ describe('SampleService', () => {
     let service: SampleService;
 
     beforeAll(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        const module = await Test.createTestingModule({
             providers: [SampleService]
         }).compile();
 

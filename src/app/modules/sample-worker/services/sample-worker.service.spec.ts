@@ -15,7 +15,7 @@ describe('SampleWorkerService', () => {
     const expected = 55;
 
     beforeAll(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        const module = await Test.createTestingModule({
             providers: [
                 SampleWorkerService,
                 {

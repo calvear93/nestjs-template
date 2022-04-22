@@ -51,6 +51,13 @@ Your `appsettings.json` could contains an structure like below:
         },
         ...
     },
+    // (optional) local execution environments
+    "|LOCAL|": {
+        "<env-name>": {
+            ...
+        },
+        ...
+    },
 }
 ```
 
@@ -127,5 +134,6 @@ const myVar3 = process.env.VAR3;
 -   `appsettings.json` -> default
 -   `appsettings.json` -> dev|qa|prod
 -   `appsettings.json` -> debug|build|test
+-   `appsettings.json` -> (local) debug|build|test
 -   `(dev|qa|prod).env.json`
 -   `(dev|qa|prod).local.env.json` (takes precedence over previous)

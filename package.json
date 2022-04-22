@@ -27,8 +27,8 @@
         "typescript"
     ],
     "scripts": {
-        "start:dev": "env -e dev -m debug --log debug : nest start --watch --preserveWatchOutput",
-        "start:qa": "env -e qa -m debug : nest start --watch",
+        "start:dev": "env -e dev -m debug --log debug --local : nest start --watch --preserveWatchOutput",
+        "start:qa": "env -e qa -m debug --local : nest start --watch",
         "build:dev": "env -e dev -m build : npm run _build",
         "build:qa": "env -e qa -m build : npm run _build",
         "build:prod": "env -e prod -m build : npm run _build",
@@ -57,7 +57,7 @@
         "threads": "^1.7.0"
     },
     "devDependencies": {
-        "@calvear/env": "^1.2.2",
+        "@calvear/env": "^1.2.3",
         "@babel/cli": "^7.17.6",
         "@babel/core": "^7.17.9",
         "@nestjs/cli": "^8.2.5",
@@ -73,7 +73,7 @@
         "babel-plugin-minify-constant-folding": "^0.5.0",
         "babel-plugin-minify-dead-code-elimination": "^0.5.1",
         "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-        "eslint": "^8.13.0",
+        "eslint": "^8.14.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-eslint-comments": "^3.2.0",
         "eslint-plugin-jest": "^26.1.4",

@@ -33,6 +33,8 @@ declare global {
     // Unix timestamp, number of seconds that have elapsed since January 1, 1970
     type epoch = seconds;
 
+    type AnyError = unknown;
+
     // https://en.wikipedia.org/wiki/ISO_8601#Durations
     type DurationISO8601 = string;
 }

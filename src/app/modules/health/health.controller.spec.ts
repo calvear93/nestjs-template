@@ -6,7 +6,7 @@ describe(HealthController.name, () => {
     let controller: HealthController;
 
     beforeAll(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        const module = await Test.createTestingModule({
             imports: [TerminusModule],
             controllers: [HealthController]
         }).compile();
