@@ -21,7 +21,7 @@ describe('Sample e2e', () => {
         await app.init();
     });
 
-    it('/GET basic should return Hello World', () => {
+    it('GET basic should return Hello World', () => {
         const expected = 'Hello World';
 
         return request(app.getHttpServer())
@@ -30,21 +30,21 @@ describe('Sample e2e', () => {
             .expect(expected);
     });
 
-    it(`/GET fibonacci, ${iteration} should be ${expected}`, () => {
+    it(`GET fibonacci, ${iteration} should be ${expected}`, () => {
         return request(app.getHttpServer())
             .get(`/worker/normal?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });
 
-    it(`/GET fibonacci thread, ${iteration} should be ${expected}`, () => {
+    it(`GET fibonacci thread, ${iteration} should be ${expected}`, () => {
         return request(app.getHttpServer())
             .get(`/worker/thread?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });
 
-    it(`/GET fibonacci thread pool, ${iteration} should be ${expected}`, () => {
+    it(`GET fibonacci thread pool, ${iteration} should be ${expected}`, () => {
         return request(app.getHttpServer())
             .get(`/worker/threadPool?num=${iteration}`)
             .expect(200)
