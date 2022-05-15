@@ -1,3 +1,9 @@
-# ignores environment files
-secrets/**
-*.env.json
+# ignores everything
+*
+!*/
+
+# whitelist
+!README.md
+!appsettings.json
+!/settings/settings.json
+!/settings/schema.json
