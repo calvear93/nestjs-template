@@ -98,6 +98,7 @@ it environment may be 'dev', 'qa' or 'prod'.
 | npm run test:`<env>`  | executes tests               |
 | npm run test:coverage | executes tests with coverage |
 | npm run test:inspect  | testing debug                |
+| npm run env:schema    | updates env JSON schema      |
 | npm run lint          | code format review           |
 | npm run lint:fix      | code format review/fix       |
 
