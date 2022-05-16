@@ -60,7 +60,7 @@
     "devDependencies": {
         "@calvear/env": "^2.0.1",
         "@babel/cli": "^7.17.10",
-        "@babel/core": "^7.17.10",
+        "@babel/core": "^7.17.12",
         "@nestjs/cli": "^8.2.5",
         "@nestjs/schematics": "^8.0.11",
         "@nestjs/testing": "^8.4.5",
@@ -69,8 +69,8 @@
         "@types/luxon": "^2.3.2",
         "@types/node": "^17.0.33",
         "@types/supertest": "^2.0.12",
-        "@typescript-eslint/eslint-plugin": "^5.23.0",
-        "@typescript-eslint/parser": "^5.23.0",
+        "@typescript-eslint/eslint-plugin": "^5.24.0",
+        "@typescript-eslint/parser": "^5.24.0",
         "babel-plugin-minify-constant-folding": "^0.5.0",
         "babel-plugin-minify-dead-code-elimination": "^0.5.2",
         "babel-plugin-transform-inline-environment-variables": "^0.4.4",
@@ -94,7 +94,7 @@
         "typescript": "^4.6.4"
     },
     "engines": {
-        "node": "~14.0.0 || ^16.13.1",
+        "node": "~14.0.0 || ^16.15.0",
         "npm": ">=7.5.6"
     }
 }
