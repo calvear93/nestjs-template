@@ -32,11 +32,8 @@ Main feature are:
 ```bash
 ├── README.md
 ├── env/
-│   ├── secrets/ # will contains dev.env.json, qa.env.json, etc.
 │   └── appsettings.json # non secret environment variables
 ├── src/
-│   ├── main.ts # app setup
-│   ├── env.d.ts # environment variables declaration
 │   ├── app/
 │   │   ├── main.module.ts
 │   │   ├── config/
@@ -52,10 +49,12 @@ Main feature are:
 │   │           ├── providers/
 │   │           ├── utils/
 │   │           └── sample-worker.module.ts
+│   ├── tests/ # e2e tests
 │   ├── libs/
 │   │  ├── decorators/
 │   │  └── utils/
-│   └── tests/ # e2e tests
+│   ├── main.ts # app setup
+│   └── env.d.ts # environment variables declaration
 ├── Dockerfile
 ├── tsconfig.json
 ├── tsconfig.build.json
@@ -72,10 +71,18 @@ Main feature are:
     -   `<project-title>` project title, i.e. My Project
     -   `<project-description>` project description, i.e. API for manage user data
 
-*   Install [NodeJS](https://nodejs.org/es/) for your machine.
-*   Execute `npm install` command. (`npm i --force` in case of conflicts).
-*   Create your `.dev.env.json` file in your [`env/secrets` folder](env/README.md).
-*   Execute the app with `npm run start:dev` or `npm run test:dev`.
+-   Set up your `dev.local.env.json` with:
+
+```json
+{
+    "API_PREFIX": "api/local"
+}
+```
+
+-   Install [NodeJS](https://nodejs.org/es/) for your machine.
+-   Execute `npm install` command. (`npm i --force` in case of conflicts).
+-   Create your `.dev.env.json` file in your [`env/secrets` folder](env/README.md).
+-   Execute the app with `npm run start:dev` or `npm run test:dev`.
 
 ## 📋 **Branches and Environments**
 
