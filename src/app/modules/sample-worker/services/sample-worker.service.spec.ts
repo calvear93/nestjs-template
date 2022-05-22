@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { fibonacci } from '../utils/fibonacci';
 import { SampleWorkerService } from './sample-worker.service';
 import { FIBONACCI_THREAD_PROVIDER } from '../providers/fibonacci-thread.provider';

@@ -214,6 +214,10 @@ describe('HttpProvider', () => {
         await expect(promise).resolves.toMatchObject({ message: 'canceled' });
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     afterAll(async () => {
         await module.close();
         nock.cleanAll();

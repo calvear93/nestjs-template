@@ -30,7 +30,7 @@
         "isolatedModules": true,
         "esModuleInterop": true,
         "importHelpers": true,
-        "skipLibCheck": false,
+        "skipLibCheck": true,
         "downlevelIteration": false,
 
         "strict": true,

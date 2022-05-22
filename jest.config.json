@@ -1,5 +1,17 @@
 {
     "rootDir": ".",
+    "roots": ["src"],
+    "testEnvironment": "node",
+    "moduleDirectories": ["node_modules", "src"],
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "testRegex": ".*\\.(spec|test)\\.ts$",
+    "transform": {
+        "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "bail": 1,
+    "verbose": true,
+    "testTimeout": 30000,
+    "slowTestThreshold": 10,
     "moduleNameMapper": {
         "@libs/(.*)": "<rootDir>/src/libs/$1",
         "@http": "<rootDir>/src/libs/http",
@@ -9,14 +21,6 @@
             "<rootDir>/src/libs/utils/$1",
             "<rootDir>/src/libs/decorators/$1"
         ]
-    },
-    "roots": ["src"],
-    "testEnvironment": "node",
-    "moduleDirectories": ["node_modules", "src"],
-    "moduleFileExtensions": ["js", "json", "ts"],
-    "testRegex": ".*\\.(spec|test)\\.ts$",
-    "transform": {
-        "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "__reports__/coverage",
     "collectCoverageFrom": ["src/**/*.(t|j)s"],
@@ -33,10 +37,5 @@
         "__fixtures__",
         "__migrations__",
         "__reports__"
-    ],
-    "bail": 1,
-    "verbose": true,
-    "testTimeout": 30000,
-    "slowTestThreshold": 10,
-    "clearMocks": true
+    ]
 }

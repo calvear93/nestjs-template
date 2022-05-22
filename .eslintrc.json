@@ -5,7 +5,7 @@
         "jest": true,
         "node": true,
         "worker": true,
-        "es2021": true,
+        "es2022": true,
         "jest/globals": true
     },
     "parser": "@typescript-eslint/parser",
@@ -19,6 +19,7 @@
         }
     },
     "plugins": [
+        "@typescript-eslint",
         "@typescript-eslint/eslint-plugin",
         "prettier",
         "sonarjs",
@@ -28,6 +29,7 @@
         "jest-formatting"
     ],
     "extends": [
+        "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
         "plugin:eslint-comments/recommended",
@@ -72,6 +74,17 @@
                 "caughtErrors": "all",
                 "vars": "local",
                 "varsIgnorePattern": "^_.*"
+            }
+        ],
+        "@typescript-eslint/no-use-before-define": [
+            "warn",
+            {
+                "classes": true,
+                "functions": true,
+                "variables": true,
+                "enums": true,
+                "typedefs": true,
+                "ignoreTypeReferences": true
             }
         ],
         "array-callback-return": "error",
@@ -184,6 +197,10 @@
         "semi": ["error", "always"],
         "semi-spacing": "warn",
         "semi-style": ["warn", "last"],
+        "eslint-comments/disable-enable-pair": [
+            "error",
+            { "allowWholeFile": true }
+        ],
         "sonarjs/cognitive-complexity": ["warn", 16],
         "sonarjs/max-switch-cases": ["warn", 10],
         "sonarjs/no-all-duplicated-branches": "error",
