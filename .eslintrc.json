@@ -59,6 +59,11 @@
                 "allowSingleExtends": true
             }
         ],
+        "@typescript-eslint/lines-between-class-members": [
+            "warn",
+            "always",
+            { "exceptAfterOverload": true }
+        ],
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-unused-vars": [
             "warn",
@@ -117,7 +122,7 @@
                 "beforeLineComment": false
             }
         ],
-        "lines-between-class-members": ["warn", "always"],
+        "lines-between-class-members": "off",
         "no-console": "warn",
         "no-duplicate-case": "error",
         "no-empty": "error",
