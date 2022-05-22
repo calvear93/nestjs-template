@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { SampleModule, SampleWorkerModule } from 'app/modules';
 
-describe('Sample e2e', () => {
+describe('Sample', () => {
     let app: INestApplication;
 
     // fibonacci number for test
