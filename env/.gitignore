@@ -1,6 +1,7 @@
 # ignores everything
 *
 !*/
+!.gitignore
 
 # whitelist
 !README.md
