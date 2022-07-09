@@ -1,4 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FunctionThread } from 'threads';
 import { QueuedTask } from 'threads/dist/master/pool';
 import { SampleWorkerService } from '../services/sample-worker.service';
@@ -12,6 +13,7 @@ import { SampleWorkerService } from '../services/sample-worker.service';
     path: 'worker',
     version: '1'
 })
+@ApiTags('Sample Worker')
 export class SampleWorkerController {
     /**
      * Creates an instance of SampleWorkerController.

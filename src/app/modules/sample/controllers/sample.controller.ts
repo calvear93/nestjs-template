@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { SampleService } from '../services/sample.service';
 
 /**
@@ -10,6 +11,7 @@ import { SampleService } from '../services/sample.service';
     path: 'basic',
     version: '1'
 })
+@ApiTags('Sample')
 export class SampleController {
     /**
      * Creates an instance of SampleController.

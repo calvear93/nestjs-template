@@ -1,9 +1,6 @@
 import { Controller, Get, VERSION_NEUTRAL } from '@nestjs/common';
-import {
-    HealthCheck,
-    HealthCheckResult,
-    HealthCheckService
-} from '@nestjs/terminus';
+import { ApiTags } from '@nestjs/swagger';
+import { HealthCheckResult } from './models/health-check-result';
 
 /**
  * Health check controller using Terminus.
@@ -14,22 +11,15 @@ import {
     path: 'health',
     version: VERSION_NEUTRAL
 })
+@ApiTags('Health Check')
 export class HealthController {
-    /**
-     * Creates an instance of HealthController.
-     *
-     * @param {HealthCheckService} health terminus health transformer
-     */
-    constructor(private readonly _health: HealthCheckService) {}
-
     /**
      * Returns health check status set.
      *
      * @returns {HealthCheckResult} health status
      */
     @Get()
-    @HealthCheck()
     check(): Promise<HealthCheckResult> {
-        return this._health.check([]);
+        return Promise.resolve({ status: 'ok' });
     }
 }
