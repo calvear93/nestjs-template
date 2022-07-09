@@ -21,6 +21,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
 
+        "composite": false,
         "incremental": true,
         "sourceMap": true,
         "declaration": true,
@@ -37,5 +38,5 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*", "jest.config.ts"]
 }
