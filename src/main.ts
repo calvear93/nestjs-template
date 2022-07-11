@@ -19,7 +19,7 @@ async function bootstrap(): Promise<void> {
         })
     );
 
-    if (process.env.ENV !== 'prod') swaggerInit(app);
+    if (process.env.SWAGGER_UI === 'true') swaggerInit(app);
 
     await app.listen(+process.env.PORT);
 }

@@ -19,6 +19,7 @@ declare global {
             PORT: string;
             API_PREFIX: string;
             TIME_ZONE: string;
+            SWAGGER_UI: 'false' | 'true';
         }
     }
 
