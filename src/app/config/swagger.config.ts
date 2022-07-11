@@ -19,8 +19,6 @@ export const swaggerInit = (app: INestApplication) => {
 
     const document = SwaggerModule.createDocument(app, config);
 
-    console.log(document);
-
     SwaggerModule.setup(process.env.API_PREFIX, app, document, {
         customSiteTitle: process.env.TITLE,
         swaggerOptions: {
