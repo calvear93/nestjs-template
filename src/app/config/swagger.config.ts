@@ -1,5 +1,9 @@
 import { INestApplication } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import {
+    SwaggerModule,
+    DocumentBuilder,
+    SwaggerDocumentOptions
+} from '@nestjs/swagger';
 
 /**
  * Swagger base configuration.
@@ -15,14 +19,14 @@ export const swaggerInit = (app: INestApplication) => {
 
     const document = SwaggerModule.createDocument(app, config);
 
+    console.log(document);
+
     SwaggerModule.setup(process.env.API_PREFIX, app, document, {
-        customCssUrl:
-            'https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.1/themes/3.x/theme-flattop.css',
         customSiteTitle: process.env.TITLE,
         swaggerOptions: {
             tryItOutEnabled: true,
             persistAuthorization: true,
             displayRequestDuration: true
-        }
+        } as SwaggerDocumentOptions
     });
 };

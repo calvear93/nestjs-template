@@ -1,19 +1,14 @@
 import request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { SampleModule, SampleWorkerModule } from 'app/modules';
+import { SampleModule } from 'app/modules';
 
 describe('Sample', () => {
     let app: INestApplication;
 
-    // fibonacci number for test
-    const iteration = 10;
-    // fibonacci result
-    const expected = '55';
-
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
-            imports: [SampleModule, SampleWorkerModule]
+            imports: [SampleModule]
         }).compile();
 
         app = moduleRef.createNestApplication();
@@ -26,27 +21,6 @@ describe('Sample', () => {
 
         return request(app.getHttpServer())
             .get('/basic')
-            .expect(200)
-            .expect(expected);
-    });
-
-    it(`GET fibonacci, ${iteration} should be ${expected}`, () => {
-        return request(app.getHttpServer())
-            .get(`/worker/normal?num=${iteration}`)
-            .expect(200)
-            .expect(expected);
-    });
-
-    it(`GET fibonacci thread, ${iteration} should be ${expected}`, () => {
-        return request(app.getHttpServer())
-            .get(`/worker/thread?num=${iteration}`)
-            .expect(200)
-            .expect(expected);
-    });
-
-    it(`GET fibonacci thread pool, ${iteration} should be ${expected}`, () => {
-        return request(app.getHttpServer())
-            .get(`/worker/threadPool?num=${iteration}`)
             .expect(200)
             .expect(expected);
     });

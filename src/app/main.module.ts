@@ -1,5 +1,5 @@
 import { Logger, Module } from '@nestjs/common';
-import { HealthModule, SampleModule, SampleWorkerModule } from 'app/modules';
+import { HealthModule, SampleModule } from 'app/modules';
 
 /**
  * Main module containing every app submodules.
@@ -7,7 +7,7 @@ import { HealthModule, SampleModule, SampleWorkerModule } from 'app/modules';
  * @class MainModule
  */
 @Module({
-    imports: [HealthModule, SampleModule, SampleWorkerModule]
+    imports: [HealthModule, SampleModule]
 })
 export class MainModule {
     private readonly _logger: Logger = new Logger(MainModule.name);

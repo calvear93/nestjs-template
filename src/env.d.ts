@@ -3,7 +3,7 @@ declare global {
         // NOTE: only string type is supported
         interface ProcessEnv {
             NODE_ENV: 'development' | 'production' | 'test';
-            ENV: 'dev' | 'qa' | 'prod';
+            ENV: 'dev' | 'release';
             DEBUG?: string;
 
             // SECTION: runtime environment

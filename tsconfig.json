@@ -10,9 +10,9 @@
             "@common/*": ["libs/utils/*", "libs/decorators/*"]
         },
 
-        "target": "es2021",
+        "target": "es2022",
         "module": "commonjs",
-        "moduleResolution": "node",
+        "moduleResolution": "node16",
         "resolveJsonModule": true,
 
         "allowJs": true,
