@@ -18,7 +18,7 @@ export function capitalizeAfterPeriod(str: string): string {
     if (!str) return '';
 
     return str.replace(
-        /([!.?-]+\s*)([a-z])/g,
+        /([!.?-]\s*)([a-z])/g,
         (_, $1, $2) => $1 + $2.toUpperCase()
     );
 }
@@ -51,7 +51,7 @@ export function removeDiacritics(str: string): string {
     return str
         .toString()
         .normalize('NFD')
-        .replace(/[\p{Diacritic}|\u0142|\u0027]/gu, '');
+        .replace(/[\p{Diacritic}|\u0142\u0027]/gu, '');
 }
 
 /**

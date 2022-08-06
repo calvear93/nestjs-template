@@ -23,6 +23,8 @@
         "@typescript-eslint/eslint-plugin",
         "prettier",
         "sonarjs",
+        "regexp",
+        "redos",
         "unicorn",
         "promise",
         "jest",
@@ -33,7 +35,8 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
         "plugin:eslint-comments/recommended",
-        "plugin:sonarjs/recommended"
+        "plugin:sonarjs/recommended",
+        "plugin:regexp/recommended"
     ],
     "rules": {
         "prettier/prettier": [
@@ -226,6 +229,7 @@
         "sonarjs/prefer-object-literal": "warn",
         "sonarjs/prefer-single-boolean-return": "warn",
         "sonarjs/prefer-while": "error",
+        "redos/no-vulnerable": "error",
         "sort-imports": "off",
         "sort-keys": ["off", "asc"],
         "space-before-blocks": "warn",
