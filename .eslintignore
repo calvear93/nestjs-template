@@ -4,3 +4,4 @@ dist/**/*
 env/**/*
 deploy/**/*
 *.js
+*.json

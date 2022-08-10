@@ -115,11 +115,11 @@ export class HttpProvider {
      * @param {AxiosRequestConfig} config
      *
      * @throws {AxiosError} on http status code out of 2.x.x range
-     * @returns {Promise<AxiosResponse<R>> | never}
+     * @returns {Promise<AxiosResponse<R>> | never | undefined}
      */
     request<R, D = unknown>(
         config: AxiosRequestConfig
-    ): Promise<AxiosResponse<R, D>> | never {
+    ): Promise<AxiosResponse<R, D>> | never | undefined {
         return this._client.request<R, AxiosResponse<R>, D>(config);
     }
 

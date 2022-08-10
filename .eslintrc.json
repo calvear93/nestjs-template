@@ -5,14 +5,14 @@
         "jest": true,
         "node": true,
         "worker": true,
-        "es2022": true,
-        "jest/globals": true
+        "es2022": true
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 13,
-        "project": "tsconfig.json",
         "sourceType": "module",
+        "emitDecoratorMetadata": true,
+        "project": "tsconfig.json",
         "ecmaFeatures": {
             "modules": true,
             "legacyDecorators": true
@@ -20,7 +20,6 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "@typescript-eslint/eslint-plugin",
         "prettier",
         "sonarjs",
         "regexp",

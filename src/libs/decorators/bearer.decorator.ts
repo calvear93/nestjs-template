@@ -7,7 +7,10 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
  * @param {ExecutionContext} ctx controller context
  * @returns {string} token
  */
-function getBearerToken(key = 'authorization', ctx: ExecutionContext): string {
+function getBearerToken(
+    key = 'authorization',
+    ctx: ExecutionContext
+): string | undefined {
     const request = ctx.switchToHttp().getRequest();
     const { [key]: bearer } = request.headers;
 
