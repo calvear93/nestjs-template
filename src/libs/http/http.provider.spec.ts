@@ -227,7 +227,7 @@ describe('HttpProvider', () => {
     test('AxiosError is matched by isAxiosError method', async () => {
         // request phase
         try {
-            await provider.get('/');
+            await provider.get('/not-found');
         } catch (error: AnyError) {
             expect(HttpProvider.isAxiosError(error)).toBeTruthy();
         }
