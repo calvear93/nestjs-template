@@ -1,4 +1,4 @@
-import { Injectable, Provider } from '@nestjs/common';
+import { FactoryProvider, Injectable } from '@nestjs/common';
 import axios, {
     AxiosError,
     AxiosInstance,
@@ -247,7 +247,7 @@ export class HttpProvider {
     static register(
         config?: AxiosRequestConfig & { useToken?: string },
         interceptors?: AxiosInterceptorConfig
-    ): Provider<HttpProvider> {
+    ): FactoryProvider<HttpProvider> {
         return {
             provide: config?.useToken ?? HttpProvider,
             useFactory: () => new HttpProvider(config, interceptors)
