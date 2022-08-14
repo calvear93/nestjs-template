@@ -29,7 +29,7 @@ describe('HttpProvider', () => {
         }
     };
 
-    // initialization
+    // hooks
     beforeAll(async () => {
         module = await Test.createTestingModule({
             providers: [
@@ -44,6 +44,16 @@ describe('HttpProvider', () => {
         provider = module.get<HttpProvider>(HttpProvider);
     });
 
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    afterAll(async () => {
+        await module.close();
+        nock.cleanAll();
+    });
+
+    // tests
     test('common http provider should be defined', () => {
         expect(provider).toBeDefined();
     });
@@ -180,11 +190,11 @@ describe('HttpProvider', () => {
 
     test('request does not fails for timeout if response completes before', async () => {
         // mocking phase
-        nock(baseURL).get('/').delay(100).reply(200);
+        nock(baseURL).get('/').delay(20).reply(200);
 
         // request phase
         await expect(
-            provider.get<string>('/', { timeout: 200 })
+            provider.get<string>('/', { timeout: 40 })
         ).resolves.toBeDefined();
     });
 
@@ -194,7 +204,7 @@ describe('HttpProvider', () => {
 
         // request phase
         await expect(
-            provider.get<string>('/', { timeout: 60 })
+            provider.get<string>('/', { timeout: 20 })
         ).rejects.toThrow();
     });
 
@@ -214,12 +224,12 @@ describe('HttpProvider', () => {
         await expect(promise).resolves.toMatchObject({ message: 'canceled' });
     });
 
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    afterAll(async () => {
-        await module.close();
-        nock.cleanAll();
+    test('AxiosError is matched by isAxiosError method', async () => {
+        // request phase
+        try {
+            await provider.get('/');
+        } catch (error: AnyError) {
+            expect(HttpProvider.isAxiosError(error)).toBeTruthy();
+        }
     });
 });
