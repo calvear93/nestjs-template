@@ -3,7 +3,7 @@
 ###
 
 # global variables
-ARG NODE=node:16.16.0-alpine
+ARG NODE=node:16.17.0-alpine
 ARG APP_DIR='/app/'
 
 
@@ -50,7 +50,7 @@ COPY --from=builder ${APP_DIR}'package*.json' ${APP_DIR}
 RUN apk --no-cache -U upgrade
 
 ENV NODE_ENV production
-RUN npm ci --production
+RUN npm ci --omit=dev
 RUN npm cache clean --force
 
 # non root user mode
