@@ -238,18 +238,18 @@ export class HttpProvider {
      * Provider initializer for module.
      *
      * @static
-     * @param {AxiosRequestConfig} [config] axios config and useToken
+     * @param {AxiosRequestConfig} [config] axios config and token
      *  for handle multiple injected instances
      * @param {AxiosInterceptorConfig} [interceptors] request and response interceptors
      *
      * @returns {Provider} provider
      */
     static register(
-        config?: AxiosRequestConfig & { useToken?: string },
+        config?: AxiosRequestConfig & { token?: string },
         interceptors?: AxiosInterceptorConfig
     ): FactoryProvider<HttpProvider> {
         return {
-            provide: config?.useToken ?? HttpProvider,
+            provide: config?.token ?? HttpProvider,
             useFactory: () => new HttpProvider(config, interceptors)
         };
     }

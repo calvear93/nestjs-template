@@ -16,14 +16,12 @@ describe('HttpProvider', () => {
         request: {
             onFulfilled: jest.fn().mockImplementation((response) => response),
             onRejected: jest.fn().mockImplementation((error) => {
-                if (error.message === 'canceled') return error;
                 throw error;
             })
         },
         response: {
             onFulfilled: jest.fn().mockImplementation((response) => response),
             onRejected: jest.fn().mockImplementation((error) => {
-                if (error.message === 'canceled') return error;
                 throw error;
             })
         }
@@ -35,7 +33,7 @@ describe('HttpProvider', () => {
             providers: [
                 HttpProvider.register({ baseURL }, axiosInterceptors),
                 HttpProvider.register({
-                    useToken: altToken,
+                    token: altToken,
                     baseURL: baseURLAlt
                 })
             ]
@@ -215,13 +213,18 @@ describe('HttpProvider', () => {
         // request phase
         const controller = new AbortController();
 
-        const promise = provider.get('/', {
+        const promise = provider.request({
+            url: '/',
+            method: 'get',
             signal: controller.signal
         });
 
         controller.abort();
 
-        await expect(promise).resolves.toMatchObject({ message: 'canceled' });
+        await expect(promise).rejects.toMatchObject({
+            code: 'ERR_CANCELED',
+            message: 'canceled'
+        });
     });
 
     test('AxiosError is matched by isAxiosError method', async () => {
