@@ -8,7 +8,6 @@ export default {
     moduleDirectories: ['node_modules', 'src'],
     moduleFileExtensions: ['js', 'json', 'ts'],
     testRegex: '.*\\.(spec|test)\\.ts$',
-    bail: 1,
     verbose: true,
     testTimeout: 30_000,
     slowTestThreshold: 10,
