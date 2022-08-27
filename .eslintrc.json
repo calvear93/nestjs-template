@@ -4,15 +4,13 @@
         "es6": true,
         "jest": true,
         "node": true,
-        "worker": true,
-        "es2022": true
+        "worker": true
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 13,
+        "ecmaVersion": 2022,
         "sourceType": "module",
         "emitDecoratorMetadata": true,
-        "project": "tsconfig.json",
         "ecmaFeatures": {
             "modules": true,
             "legacyDecorators": true
