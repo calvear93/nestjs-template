@@ -3,7 +3,7 @@
 ###
 
 # global variables
-ARG NODE=node:16.17.0-alpine
+ARG NODE=node:18.8.0-alpine
 ARG APP_DIR='/app/'
 
 
@@ -49,7 +49,9 @@ COPY --from=builder ${APP_DIR}'package*.json' ${APP_DIR}
 # alpine security updates
 RUN apk --no-cache -U upgrade
 
-ENV NODE_ENV production
+ENV TZ America/Santiago
+ENV LANG es-CL.UTF-8
+
 RUN npm ci --omit=dev
 RUN npm cache clean --force
 

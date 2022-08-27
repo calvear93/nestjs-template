@@ -18,8 +18,11 @@ declare global {
             // SECTION: base config
             PORT: string;
             API_PREFIX: string;
-            TIME_ZONE: string;
             SWAGGER_UI: 'false' | 'true';
+
+            // SECTION: localization
+            TZ: string;
+            LANG: string;
         }
     }
 

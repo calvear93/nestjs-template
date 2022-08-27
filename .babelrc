@@ -10,7 +10,7 @@
         [
             "transform-inline-environment-variables",
             {
-                "exclude": ["HOSTNAME", "NODE_VERSION"]
+                "exclude": ["HOSTNAME", "NODE_VERSION", "TZ", "LANG"]
             }
         ]
     ]
