@@ -11,6 +11,7 @@ declare global {
 
             // SECTION: project info from package.json
             VERSION: string;
+            PROJECT: string;
             NAME: string;
             TITLE: string;
             DESCRIPTION: string;
@@ -33,6 +34,12 @@ declare global {
     type seconds = number;
 
     type millis = number;
+
+    type password = string;
+
+    type bytes = number;
+
+    type uuid = string;
 
     // Unix timestamp, number of seconds that have elapsed since January 1, 1970
     type epoch = seconds;

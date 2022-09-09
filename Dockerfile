@@ -3,7 +3,7 @@
 ###
 
 # global variables
-ARG NODE=node:18.8.0-alpine
+ARG NODE=node:18.9.0-alpine
 ARG APP_DIR='/app/'
 
 
