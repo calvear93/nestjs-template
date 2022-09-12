@@ -2,28 +2,28 @@ declare global {
     namespace NodeJS {
         // NOTE: only string type is supported
         interface ProcessEnv {
-            NODE_ENV: 'development' | 'production' | 'test';
-            ENV: 'dev' | 'release';
-            DEBUG?: string;
+            readonly NODE_ENV: 'development' | 'production' | 'test';
+            readonly ENV: 'dev' | 'release';
+            readonly DEBUG?: string;
 
             // SECTION: runtime environment
-            HOSTNAME: string;
+            readonly HOSTNAME: string;
 
             // SECTION: project info from package.json
-            VERSION: string;
-            PROJECT: string;
-            NAME: string;
-            TITLE: string;
-            DESCRIPTION: string;
+            readonly VERSION: string;
+            readonly PROJECT: string;
+            readonly NAME: string;
+            readonly TITLE: string;
+            readonly DESCRIPTION: string;
 
             // SECTION: base config
-            PORT: string;
-            API_PREFIX: string;
-            SWAGGER_UI: 'false' | 'true';
+            readonly PORT: string;
+            readonly API_PREFIX: string;
+            readonly SWAGGER_UI: 'false' | 'true';
 
             // SECTION: localization
-            TZ: string;
-            LANG: string;
+            readonly TZ: string;
+            readonly LANG: string;
         }
     }
 
