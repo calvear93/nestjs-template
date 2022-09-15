@@ -50,6 +50,9 @@
                 "quoteProps": "as-needed",
                 "arrowParens": "always",
                 "endOfLine": "auto"
+            },
+            {
+                "usePrettierrc": false
             }
         ],
         "@typescript-eslint/explicit-function-return-type": "off",
