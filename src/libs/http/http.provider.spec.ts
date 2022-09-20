@@ -33,7 +33,7 @@ describe('HttpProvider', () => {
             providers: [
                 HttpProvider.register({ baseURL }, axiosInterceptors),
                 HttpProvider.register({
-                    token: altToken,
+                    useToken: altToken,
                     baseURL: baseURLAlt
                 })
             ]

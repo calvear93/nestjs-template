@@ -1,4 +1,4 @@
-import { FactoryProvider, Injectable } from '@nestjs/common';
+import { FactoryProvider, Injectable, InjectionToken } from '@nestjs/common';
 import axios, {
     AxiosError,
     AxiosInstance,
@@ -32,6 +32,10 @@ export interface AxiosResponseInterceptorUse {
     ) => Promise<AxiosResponse<unknown>> | AxiosResponse<unknown>;
 
     onRejected?: (error: AxiosError) => Promise<unknown> | unknown | never;
+}
+
+export interface HttpProviderConfig extends AxiosRequestConfig {
+    useToken?: InjectionToken;
 }
 
 /**
@@ -245,11 +249,11 @@ export class HttpProvider {
      * @returns {Provider} provider
      */
     static register(
-        config?: AxiosRequestConfig & { token?: string },
+        config?: HttpProviderConfig,
         interceptors?: AxiosInterceptorConfig
     ): FactoryProvider<HttpProvider> {
         return {
-            provide: config?.token ?? HttpProvider,
+            provide: config?.useToken ?? HttpProvider,
             useFactory: () => new HttpProvider(config, interceptors)
         };
     }
