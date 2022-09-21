@@ -42,13 +42,13 @@ ARG APP_DIR
 # working directory setup
 WORKDIR ${APP_DIR}
 
-# sets NGINX
 COPY --from=builder ${APP_DIR}'dist' ${APP_DIR}
 COPY --from=builder ${APP_DIR}'package*.json' ${APP_DIR}
 
 # alpine security updates
 RUN apk --no-cache -U upgrade
 
+# localization
 ENV TZ America/Santiago
 ENV LANG es-CL.UTF-8
 
