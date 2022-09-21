@@ -4,9 +4,9 @@
         "outDir": "dist",
         "paths": {
             "@libs/*": ["libs/*"],
-            "@http": ["libs/http"],
             "@time": ["libs/time"],
-            "@crypto": ["libs/crypto"],
+            "@http": ["libs/http/http.provider"],
+            "@crypto": ["libs/crypto/crypto.provider"],
             "@common/*": ["libs/utils/*", "libs/decorators/*"]
         },
 
