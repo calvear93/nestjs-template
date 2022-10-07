@@ -47,7 +47,8 @@
         "class-validator": "^0.13.2",
         "luxon": "^3.0.4",
         "reflect-metadata": "^0.1.13",
-        "rxjs": "^7.5.7"
+        "rxjs": "^7.5.7",
+        "tslib": "^2.4.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.19.3",
