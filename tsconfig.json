@@ -3,8 +3,6 @@
         "baseUrl": "src",
         "outDir": "dist",
         "paths": {
-            "@libs/*": ["libs/*"],
-            "@time": ["libs/time"],
             "@http": ["libs/http/http.provider"],
             "@crypto": ["libs/crypto/crypto.provider"],
             "@common/*": ["libs/utils/*", "libs/decorators/*"]
