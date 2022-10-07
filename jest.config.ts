@@ -1,5 +1,4 @@
-import type { Config } from '@jest/types';
-import { pathsToModuleNameMapper } from 'ts-jest';
+import { JestConfigWithTsJest, pathsToModuleNameMapper } from 'ts-jest';
 import { compilerOptions } from './tsconfig.json';
 
 export default {
@@ -29,4 +28,4 @@ export default {
         '__reports__'
     ],
     moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths)
-} as Config.InitialOptions;
+} as JestConfigWithTsJest;
