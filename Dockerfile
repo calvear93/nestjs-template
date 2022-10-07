@@ -23,16 +23,16 @@ WORKDIR ${APP_DIR}
 
 # adds node-prune (https://github.com/tj/node-prune)
 RUN apk add curl
-RUN curl -sf https://gobinaries.com/tj/node-prune | sh
+RUN curl -sf 'https://gobinaries.com/tj/node-prune' | sh
 
 # prepares source files
 COPY . ${APP_DIR}
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # builds the app
 ENV NODE_ENV production
 RUN npm run build:${ENV}
-COPY package*.json ${OUT_DIR}/
+COPY 'package*.json' ${OUT_DIR}/
 
 # install app dependencies
 WORKDIR ${APP_DIR}${OUT_DIR}

@@ -6,7 +6,7 @@
     "explorer.fileNesting.expand": false,
     "explorer.fileNesting.patterns": {
         "README*": "CHANGELOG*, LICENSE*",
-        "package.json": "package-lock.json, yarn.lock",
+        "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
         "tsconfig.json": "tsconfig.*.json",
         ".eslintrc.json": ".eslintignore",
         "*.ts": "${capture}.*",
