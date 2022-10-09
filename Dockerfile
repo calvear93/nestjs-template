@@ -29,8 +29,6 @@ FROM base AS builder
 # prepares source files
 COPY . ${APP_DIR}
 RUN npm ci --ignore-scripts
-# download environment secrets
-RUN node_modules/.bin/env pull -e ${ENV} -o
 # builds the app
 ENV NODE_ENV production
 RUN npm run build:${ENV}
