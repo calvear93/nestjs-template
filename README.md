@@ -65,11 +65,11 @@ Main feature are:
 
 -   Replace globally these terms:
 
-    -   `<base-path>` api base path, i.e. access (for get /api/access/v*/*)
-    -   `<app-name>` app name, i.e. access-api
-    -   `<project-name>` project name, i.e. my-project
-    -   `<project-title>` project title, i.e. My Project
-    -   `<project-description>` project description, i.e. API for manage user data
+    -   `(((base-path)))` api base path, i.e. access (for get /api/access/v*/*)
+    -   `(((app-name)))` app name, i.e. access-api
+    -   `(((app-title)))` project name, i.e. my-project
+    -   `(((project-name)))` project title, i.e. My Project
+    -   `(((project-description)))` project description, i.e. API for manage user data
 
 -   Set up your `dev.local.env.json` with:
 

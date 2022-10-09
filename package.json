@@ -1,9 +1,9 @@
 {
     "version": "0.0.1",
-    "project": "<project-name>",
-    "name": "<app-name>",
+    "project": "(((app-title)))",
+    "name": "(((app-name)))",
     "title": "<app-title>",
-    "description": "<project-description>",
+    "description": "(((project-description)))",
     "license": "MIT",
     "private": false,
     "repository": {
