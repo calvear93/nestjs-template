@@ -1,0 +1,222 @@
+{
+	"root": true,
+	"env": {
+		"es2022": true,
+		"node": true,
+		"worker": true
+	},
+	"parser": "@typescript-eslint/parser",
+	"reportUnusedDisableDirectives": true,
+	"parserOptions": {
+		"ecmaVersion": 2022,
+		"sourceType": "module",
+		"emitDecoratorMetadata": true,
+		"project": ["tsconfig.json"]
+	},
+	"plugins": [
+		"@typescript-eslint",
+		"@typescript-eslint/eslint-plugin",
+		"tsdoc",
+		"prettier",
+		"import",
+		"promise",
+		"sonarjs",
+		"unicorn",
+		"regexp",
+		"redos"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:@typescript-eslint/strict",
+		// "plugin:@typescript-eslint/recommended-requiring-type-checking",
+		"plugin:prettier/recommended",
+		"plugin:import/recommended",
+		"plugin:import/typescript",
+		"plugin:promise/recommended",
+		"plugin:sonarjs/recommended",
+		"plugin:unicorn/recommended",
+		"plugin:regexp/recommended"
+	],
+	"rules": {
+		"tsdoc/syntax": "warn",
+		"prettier/prettier": "warn",
+		"@typescript-eslint/explicit-function-return-type": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"@typescript-eslint/interface-name-prefix": "off",
+		"@typescript-eslint/no-empty-function": "warn",
+		"@typescript-eslint/no-empty-interface": [
+			"error",
+			{
+				"allowSingleExtends": true
+			}
+		],
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-extraneous-class": "off",
+		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/no-unused-vars": [
+			"warn",
+			{
+				"args": "after-used",
+				"caughtErrors": "all",
+				"vars": "local",
+				"varsIgnorePattern": "^_.*"
+			}
+		],
+		"@typescript-eslint/no-use-before-define": [
+			"warn",
+			{
+				"classes": true,
+				"enums": true,
+				"functions": false,
+				"ignoreTypeReferences": true,
+				"typedefs": true,
+				"variables": true
+			}
+		],
+		"array-callback-return": "error",
+		"capitalized-comments": [
+			"warn",
+			"never",
+			{
+				"block": {
+					"ignorePattern": ".*"
+				},
+				"line": {
+					"ignoreConsecutiveComments": true,
+					"ignorePattern": "[A-Z]*:.*"
+				}
+			}
+		],
+		"complexity": ["warn", 15],
+		"default-case": "warn",
+		"default-case-last": "warn",
+		"default-param-last": "warn",
+		"eqeqeq": "warn",
+		"func-style": [
+			"warn",
+			"declaration",
+			{
+				"allowArrowFunctions": true
+			}
+		],
+		"getter-return": [
+			"error",
+			{
+				"allowImplicit": true
+			}
+		],
+		"grouped-accessor-pairs": "warn",
+		"import/extensions": [
+			"error",
+			"always",
+			{
+				"ignorePackages": true
+			}
+		],
+		"import/no-extraneous-dependencies": [
+			"off",
+			{
+				"bundledDependencies": false,
+				"devDependencies": true,
+				"optionalDependencies": false,
+				"peerDependencies": false
+			}
+		],
+		"import/no-unresolved": "off",
+		"import/order": [
+			"warn",
+			{
+				"newlines-between": "never",
+				"groups": [
+					"builtin",
+					"external",
+					"internal",
+					"sibling",
+					"parent",
+					"index",
+					"object"
+				],
+				"alphabetize": {
+					"order": "desc",
+					"orderImportKind": "desc",
+					"caseInsensitive": true
+				}
+			}
+		],
+		"max-classes-per-file": "warn",
+		"max-params": ["warn", 5],
+		"no-console": "warn",
+		"no-debugger": "warn",
+		"no-empty-static-block": "warn",
+		"no-extra-label": "warn",
+		"no-lonely-if": "warn",
+		"no-mixed-spaces-and-tabs": ["warn", "smart-tabs"],
+		"no-new-wrappers": "warn",
+		"no-return-await": "warn",
+		"no-throw-literal": "error",
+		"no-undef-init": "warn",
+		"no-unneeded-ternary": "warn",
+		"no-unreachable": "error",
+		"no-useless-computed-key": "warn",
+		"object-shorthand": "warn",
+		"prefer-arrow-callback": "warn",
+		"prefer-exponentiation-operator": "warn",
+		"prefer-promise-reject-errors": "warn",
+		"prefer-regex-literals": "warn",
+		"prefer-template": "warn",
+		"quotes": [
+			"warn",
+			"single",
+			{
+				"avoidEscape": true,
+				"allowTemplateLiterals": false
+			}
+		],
+		"quote-props": ["warn", "as-needed"],
+		"radix": ["warn", "as-needed"],
+		"redos/no-vulnerable": ["error", { "cache": true }],
+		"require-await": "error",
+		"sonarjs/cognitive-complexity": ["warn", 15],
+		"sonarjs/max-switch-cases": ["warn", 15],
+		"sonarjs/no-duplicate-string": ["warn", 3],
+		"unicorn/custom-error-definition": "off",
+		"unicorn/filename-case": [
+			"error",
+			{
+				"cases": {
+					"kebabCase": true,
+					"pascalCase": true
+				}
+			}
+		],
+		"unicorn/no-array-callback-reference": "off",
+		"unicorn/no-array-reduce": "off",
+		"unicorn/no-for-loop": "warn",
+		"unicorn/no-hex-escape": "off",
+		"unicorn/no-keyword-prefix": "warn",
+		"unicorn/no-nested-ternary": "off",
+		"unicorn/no-null": "off",
+		"unicorn/no-unsafe-regex": "warn",
+		"unicorn/no-unused-properties": "warn",
+		"unicorn/relative-url-style": "off",
+		"unicorn/prefer-at": "off",
+		"unicorn/prefer-module": "error",
+		"unicorn/prefer-query-selector": "off",
+		"unicorn/prefer-ternary": "off",
+		"unicorn/prefer-top-level-await": "off",
+		"unicorn/prevent-abbreviations": "off",
+		"unicorn/switch-case-braces": "off",
+		"unicorn/template-indent": "warn",
+		"yoda": "warn"
+	},
+	"overrides": [
+		{
+			"files": ["**/*.(spec|test).ts(x)"],
+			"rules": {
+				"redos/no-vulnerable": "off",
+				"unicorn/no-unsafe-regex": "warn"
+			}
+		}
+	]
+}

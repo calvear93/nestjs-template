@@ -1,0 +1,6 @@
+{
+	"expand": false,
+	"nullable": false,
+	"schemaValidate": true,
+	"nestingDelimiter": "_"
+}

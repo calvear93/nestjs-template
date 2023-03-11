@@ -1,9 +1,0 @@
-{
-  "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
-  "compilerOptions": {
-    "webpack": false,
-    "deleteOutDir": false,
-    "plugins": ["@nestjs/swagger"]
-  }
-}

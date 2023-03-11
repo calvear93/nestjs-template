@@ -1,4 +1,6 @@
-build/**/*
-dist/**/*
-k8s/**/*
-environment/**/*
+.vscode
+build
+dist
+.rollup.cache
+*.js
+*.json

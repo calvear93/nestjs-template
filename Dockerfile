@@ -1,64 +1,96 @@
 ###
-###   NESTJS DOCKERFILE
+###   NESTJS with PNPM
 ###
 
 # global variables
-ARG NODE=node:16.5.0-alpine
+ARG NODE=node:18.14.2-alpine
+ARG TIME_ZONE='America/Santiago'
+ARG LANG='es-CL.UTF-8'
+ARG PNPM_VER=7.29.1
 ARG APP_DIR='/app/'
-
-
+ARG OUT_DIR='dist'
 
 
 ##
-## STAGE 1: node setup
+## STAGE 0: base config
 ##
-FROM ${NODE} AS builder
+FROM ${NODE} AS base
+
+ARG PNPM_VER
+# installs pnpm
+RUN npm i -g pnpm@${PNPM_VER}
+
+
+##
+## STAGE 1: build
+##
+FROM base AS builder
 
 ARG APP_DIR
+ARG OUT_DIR
 ARG ENV
 
-# working directory setup
 WORKDIR ${APP_DIR}
 
-COPY package*.json ${APP_DIR}
-RUN npm ci
-
+# prepares source files
 COPY . ${APP_DIR}
-
+RUN pnpm install --frozen-lockfile --ignore-scripts
 # builds the app
 ENV NODE_ENV production
-RUN npm run build:${ENV}
-
-
+RUN pnpm build:${ENV}
+COPY 'package.json' 'pnpm-lock.yaml' ${OUT_DIR}/
 
 
 ##
-## STAGE 2: server setup
+## STAGE 2: prepare
+##
+FROM base AS bundler
+
+ARG APP_DIR
+ARG OUT_DIR
+
+WORKDIR ${APP_DIR}
+
+# adds node-prune (https://github.com/tj/node-prune)
+RUN apk add curl
+RUN curl -sf 'https://gobinaries.com/tj/node-prune' | sh
+# gets build app
+COPY --from=builder ${APP_DIR}${OUT_DIR} ${APP_DIR}
+# install app build dependencies
+RUN pnpm install --frozen-lockfile --prod --no-optional --ignore-scripts
+RUN node-prune
+# removes unnecessary files and dependencies
+RUN rm -rf \
+	'package.json' \
+	'pnpm-lock.yaml' \
+	'node_modules/.bin/'
+
+
+##
+## STAGE 3: exec
 ##
 FROM ${NODE}
 
 ARG APP_DIR
+ARG LANG
+ARG TIME_ZONE
 
-# working directory setup
 WORKDIR ${APP_DIR}
 
-# sets NGINX
-COPY --from=builder ${APP_DIR}'dist' ${APP_DIR}
-COPY --from=builder ${APP_DIR}'package*.json' ${APP_DIR}
-
+# build artifacts
+COPY --from=bundler ${APP_DIR} ${APP_DIR}
 # alpine security updates
 RUN apk --no-cache -U upgrade
-
-ENV NODE_ENV production
-RUN npm ci --production
-RUN npm cache clean --force
-
+# localization
+ENV TZ ${TIME_ZONE}
+ENV LANG ${LANG}
 # non root user mode
 RUN chown -R node:node ${APP_DIR}
 USER node
 
 # exec command
+ENV NODE_ENV production
 ENTRYPOINT ["node"]
 CMD ["main"]
 
-EXPOSE 8080
+EXPOSE 8080/tcp
