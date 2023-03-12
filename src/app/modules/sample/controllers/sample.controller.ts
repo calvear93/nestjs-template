@@ -1,13 +1,13 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { SampleControllerDocs } from './sample.controller.docs.js';
 import { SampleService } from '../services/sample.service.js';
-import { AttachDocs } from '../../../decorators/docs.decorator.js';
+import { ApplyControllerDocs } from '../../../decorators/docs.decorator.js';
 
 @Controller({
 	path: 'basic',
 	version: '1',
 })
-@AttachDocs(SampleControllerDocs)
+@ApplyControllerDocs(SampleControllerDocs)
 export class SampleController {
 	constructor(private readonly _service: SampleService) {}
 
