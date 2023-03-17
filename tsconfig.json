@@ -8,6 +8,8 @@
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 
+		"lib": ["es2022"],
+
 		"allowJs": false,
 		"checkJs": false,
 

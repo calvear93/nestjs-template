@@ -183,7 +183,7 @@
 		],
 		"quote-props": ["warn", "as-needed"],
 		"radix": ["warn", "as-needed"],
-		"redos/no-vulnerable": ["error", { "cache": true }],
+		"redos/no-vulnerable": ["error"],
 		"require-await": "error",
 		"sonarjs/cognitive-complexity": ["warn", 15],
 		"sonarjs/max-switch-cases": ["warn", 15],
