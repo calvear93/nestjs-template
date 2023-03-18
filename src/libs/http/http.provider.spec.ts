@@ -9,6 +9,7 @@ import {
 	vi,
 } from 'vitest';
 import nock from 'nock';
+import { InternalAxiosRequestConfig } from 'axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AxiosInterceptorConfig, HttpProvider } from './http.provider.js';
 
@@ -22,14 +23,16 @@ describe(HttpProvider.name, () => {
 
 	const axiosInterceptors: AxiosInterceptorConfig = {
 		request: {
-			onFulfilled: vi.fn().mockImplementation((response) => response),
-			onRejected: vi.fn().mockImplementation((error) => {
+			onFulfilled: vi.fn(
+				(response) => response as InternalAxiosRequestConfig
+			),
+			onRejected: vi.fn((error) => {
 				throw error;
 			}),
 		},
 		response: {
-			onFulfilled: vi.fn().mockImplementation((response) => response),
-			onRejected: vi.fn().mockImplementation((error) => {
+			onFulfilled: vi.fn((response) => response),
+			onRejected: vi.fn((error) => {
 				throw error;
 			}),
 		},
