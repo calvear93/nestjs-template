@@ -4,7 +4,8 @@
 		"incremental": false,
 		"sourceMap": false,
 		"declaration": false,
-		"declarationMap": false
+		"declarationMap": false,
+		"removeComments": true
 	},
 	"include": ["src"],
 	"exclude": [

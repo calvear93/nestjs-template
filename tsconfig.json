@@ -20,7 +20,6 @@
 		"sourceMap": true,
 		"declaration": true,
 		"declarationMap": true,
-		"removeComments": true,
 
 		"isolatedModules": true,
 		"esModuleInterop": true,
