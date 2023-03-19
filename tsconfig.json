@@ -10,9 +10,6 @@
 
 		"lib": ["es2022"],
 
-		"allowJs": false,
-		"checkJs": false,
-
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 

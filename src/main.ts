@@ -9,7 +9,6 @@ app.enableVersioning();
 app.setGlobalPrefix(process.env.API_PREFIX);
 app.useGlobalPipes(
 	new ValidationPipe({
-		whitelist: true,
 		stopAtFirstError: true,
 		transform: true,
 	})
