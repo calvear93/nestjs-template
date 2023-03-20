@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common';
 import { SampleControllerDocs } from './sample.controller.docs.js';
 import { SampleService } from '../services/sample.service.js';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.js';
@@ -27,7 +27,10 @@ export class SampleController {
 	 * @returns sum result
 	 */
 	@Get('/sum')
-	sum(@Query('num1') num1: number, @Query('num2') num2: number): number {
+	sum(
+		@Query('num1', ParseIntPipe) num1: number,
+		@Query('num2', ParseIntPipe) num2: number
+	): number {
 		return num1 + num2;
 	}
 }
