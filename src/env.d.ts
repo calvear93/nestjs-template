@@ -48,11 +48,6 @@ declare global {
 
 	// https://en.wikipedia.org/wiki/ISO_8601#Durations
 	type DurationISO8601 = string;
-
-	type Class = new (...args: any[]) => any;
-
-	// type EntityId = Opaque<number>;
-	type Opaque<T> = T & { __opaque__: any };
 }
 
 export {};
