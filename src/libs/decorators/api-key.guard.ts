@@ -42,7 +42,7 @@ import {
 class ApiKeyGuard implements CanActivate {
 	constructor(
 		private readonly _headerName: string,
-		private readonly _apiKey: string
+		private readonly _apiKey: string,
 	) {}
 
 	/**
@@ -72,12 +72,12 @@ class ApiKeyGuard implements CanActivate {
 export function ApiKeyFactory(
 	headerName: string,
 	apiKey: string,
-	guardName: string
+	guardName: string,
 ): [ClassDecorator, SecuritySchemeObject] {
 	return [
 		applyDecorators(
 			UseGuards(new ApiKeyGuard(headerName, apiKey)),
-			ApiSecurity(guardName)
+			ApiSecurity(guardName),
 		),
 		{
 			name: headerName,

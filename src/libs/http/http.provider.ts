@@ -13,7 +13,7 @@ import { FactoryProvider, Injectable, InjectionToken } from '@nestjs/common';
  */
 export interface AxiosRequestInterceptorUse {
 	onFulfilled?: (
-		value: AxiosRequestConfig
+		value: AxiosRequestConfig,
 	) =>
 		| Promise<InternalAxiosRequestConfig<unknown>>
 		| InternalAxiosRequestConfig<unknown>;
@@ -26,7 +26,7 @@ export interface AxiosRequestInterceptorUse {
  */
 export interface AxiosResponseInterceptorUse {
 	onFulfilled?: (
-		value: AxiosResponse
+		value: AxiosResponse,
 	) => Promise<AxiosResponse<unknown>> | AxiosResponse<unknown>;
 
 	onRejected?: (error: AxiosError) => Promise<unknown> | unknown | never;
@@ -70,7 +70,7 @@ export class HttpProvider {
 	 */
 	constructor(
 		config?: AxiosRequestConfig,
-		interceptors?: AxiosInterceptorConfig
+		interceptors?: AxiosInterceptorConfig,
 	) {
 		this._client = axios.create(config);
 
@@ -80,13 +80,13 @@ export class HttpProvider {
 			request &&
 				this._client.interceptors.request.use(
 					request.onFulfilled,
-					request.onRejected
+					request.onRejected,
 				);
 
 			response &&
 				this._client.interceptors.response.use(
 					response.onFulfilled,
-					response.onRejected
+					response.onRejected,
 				);
 		}
 	}
@@ -109,7 +109,7 @@ export class HttpProvider {
 	 * @returns
 	 */
 	request<R, D = unknown>(
-		config: AxiosRequestConfig<D>
+		config: AxiosRequestConfig<D>,
 	): Promise<AxiosResponse<R, D>> | never | undefined {
 		return this._client.request<R, AxiosResponse<R>, D>(config);
 	}
@@ -126,7 +126,7 @@ export class HttpProvider {
 	 */
 	get<R>(
 		url: string,
-		config?: AxiosRequestConfig
+		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<R>> {
 		return this._client.get<R>(url, config);
 	}
@@ -146,7 +146,7 @@ export class HttpProvider {
 	post<R, B = any>(
 		url: string,
 		body?: B,
-		config?: AxiosRequestConfig
+		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<R, unknown>> {
 		return this._client.post<R>(url, body, config);
 	}
@@ -166,7 +166,7 @@ export class HttpProvider {
 	put<R, B = any>(
 		url: string,
 		body?: B,
-		config?: AxiosRequestConfig
+		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<R, unknown>> {
 		return this._client.put<R>(url, body, config);
 	}
@@ -186,7 +186,7 @@ export class HttpProvider {
 	patch<R, B = any>(
 		url: string,
 		body?: B,
-		config?: AxiosRequestConfig
+		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<R, unknown>> {
 		return this._client.patch<R>(url, body, config);
 	}
@@ -203,7 +203,7 @@ export class HttpProvider {
 	 */
 	delete<R>(
 		url: string,
-		config?: AxiosRequestConfig
+		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<R>> {
 		return this._client.delete<R>(url, config);
 	}
@@ -220,7 +220,7 @@ export class HttpProvider {
 	 */
 	head<R>(
 		url: string,
-		config?: AxiosRequestConfig
+		config?: AxiosRequestConfig,
 	): Promise<AxiosResponse<R>> {
 		return this._client.head<R>(url, config);
 	}
@@ -236,7 +236,7 @@ export class HttpProvider {
 	 */
 	static register(
 		config?: HttpProviderConfig,
-		interceptors?: AxiosInterceptorConfig
+		interceptors?: AxiosInterceptorConfig,
 	): FactoryProvider<HttpProvider> {
 		return {
 			provide: config?.useToken ?? HttpProvider,

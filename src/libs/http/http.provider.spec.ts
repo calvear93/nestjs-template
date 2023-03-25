@@ -24,7 +24,7 @@ describe(HttpProvider.name, () => {
 	const axiosInterceptors: AxiosInterceptorConfig = {
 		request: {
 			onFulfilled: vi.fn(
-				(response) => response as InternalAxiosRequestConfig
+				(response) => response as InternalAxiosRequestConfig,
 			),
 			onRejected: vi.fn((error) => {
 				throw error;
@@ -202,7 +202,7 @@ describe(HttpProvider.name, () => {
 
 		// request phase
 		await expect(
-			provider.get<string>('/', { timeout: 100 })
+			provider.get<string>('/', { timeout: 100 }),
 		).resolves.toBeDefined();
 	});
 
@@ -212,7 +212,7 @@ describe(HttpProvider.name, () => {
 
 		// request phase
 		await expect(
-			provider.get<string>('/', { timeout: 20 })
+			provider.get<string>('/', { timeout: 20 }),
 		).rejects.toThrow();
 	});
 

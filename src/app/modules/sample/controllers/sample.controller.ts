@@ -29,7 +29,7 @@ export class SampleController {
 	@Get('/sum')
 	sum(
 		@Query('num1', ParseIntPipe) num1: number,
-		@Query('num2', ParseIntPipe) num2: number
+		@Query('num2', ParseIntPipe) num2: number,
 	): number {
 		return num1 + num2;
 	}

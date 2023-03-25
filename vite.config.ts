@@ -60,7 +60,7 @@ function loadEnv() {
 			Object.entries(process.env).map(([key, value]) => [
 				`process.env.${key}`,
 				`"${value}"`,
-			])
+			]),
 		);
 	}
 

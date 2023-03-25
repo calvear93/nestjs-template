@@ -13,7 +13,7 @@ import {
  * @returns class decorator if swagger is enabled
  */
 export function ApplyControllerDocs(
-	decorators: DecoratorsLookUp
+	decorators: DecoratorsLookUp,
 ): ClassDecorator {
 	return process.env.SWAGGER_UI === 'true'
 		? ApplyToClass(decorators)

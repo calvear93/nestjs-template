@@ -11,7 +11,7 @@ app.useGlobalPipes(
 	new ValidationPipe({
 		stopAtFirstError: true,
 		transform: true,
-	})
+	}),
 );
 
 if (process.env.SWAGGER_UI === 'true') swaggerInit(app);
@@ -22,6 +22,6 @@ await app.listen(
 		process.env.NODE_ENV === 'development' &&
 		// eslint-disable-next-line no-console
 		console.log(
-			`\n \x1B[32m➜\x1B[0m Local: \x1B[36mhttp://localhost:${process.env.PORT}/${process.env.API_PREFIX}`
-		)
+			`\n \x1B[32m➜\x1B[0m Local: \x1B[36mhttp://localhost:${process.env.PORT}/${process.env.API_PREFIX}`,
+		),
 );

@@ -56,7 +56,7 @@ export function ApplyToClass({
 
 			const property = Object.getOwnPropertyDescriptor(
 				target.prototype,
-				key
+				key,
 			);
 
 			if (property && decorators) {
@@ -104,7 +104,7 @@ export function ApplyToProperty({
 	return <T extends object, Y>(
 		target: T,
 		key: PropertyKey,
-		descriptor?: TypedPropertyDescriptor<Y>
+		descriptor?: TypedPropertyDescriptor<Y>,
 	) => {
 		const decorators = properties[key as any];
 

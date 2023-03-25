@@ -97,7 +97,7 @@ export class CryptoProvider {
 	constructor(
 		key: string,
 		vector: string,
-		private readonly _algorithm: CipherAlgorithm
+		private readonly _algorithm: CipherAlgorithm,
 	) {
 		this._key = Buffer.from(key);
 		this._vector = Buffer.from(vector);
@@ -128,7 +128,7 @@ export class CryptoProvider {
 		const cipher: Cipher = crypto.createCipheriv(
 			this._algorithm,
 			this._key,
-			this._vector
+			this._vector,
 		);
 
 		return cipher.update(str, 'utf8', 'hex') + cipher.final('hex');
@@ -145,7 +145,7 @@ export class CryptoProvider {
 		const decipher: Decipher = crypto.createDecipheriv(
 			this._algorithm,
 			this._key,
-			this._vector
+			this._vector,
 		);
 
 		return decipher.update(str, 'hex', 'utf8') + decipher.final('utf8');
@@ -163,7 +163,7 @@ export class CryptoProvider {
 	static register(
 		key: string,
 		vector: string,
-		algorithm: CipherAlgorithm
+		algorithm: CipherAlgorithm,
 	): Provider<CryptoProvider> {
 		return {
 			provide: CryptoProvider,
