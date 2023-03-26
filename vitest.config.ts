@@ -23,5 +23,6 @@ export default {
 			],
 		},
 	},
-	plugins: [typescript()],
+	// include only src for vitest debugging
+	plugins: [typescript({ include: ['src'] })],
 } satisfies UserConfigExport;
