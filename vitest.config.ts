@@ -24,5 +24,5 @@ export default {
 		},
 	},
 	// include only src for vitest debugging
-	plugins: [typescript({ include: ['src'] })],
+	plugins: [typescript({ tsconfig: 'tsconfig.test.json' })],
 } satisfies UserConfigExport;

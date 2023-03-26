@@ -40,4 +40,11 @@ describe(CryptoProvider.name, () => {
 			expect(phrase).not.toBe(hashed);
 		}
 	});
+
+	test('random UUID generation', () => {
+		const uuidOne = provider.uuid();
+		const uuidTwo = provider.uuid();
+
+		expect(uuidOne).not.toBe(uuidTwo);
+	});
 });

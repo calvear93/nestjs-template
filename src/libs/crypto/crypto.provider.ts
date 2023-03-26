@@ -3,6 +3,7 @@ import crypto, {
 	CipherCCMTypes,
 	CipherGCMTypes,
 	Decipher,
+	RandomUUIDOptions,
 } from 'node:crypto';
 import { Injectable, Provider } from '@nestjs/common';
 
@@ -78,16 +79,6 @@ export type HashAlgorithm =
 @Injectable()
 export class CryptoProvider {
 	/**
-	 * Crypto key.
-	 */
-	private readonly _key: Buffer;
-
-	/**
-	 * Vector initializer.
-	 */
-	private readonly _vector: Buffer;
-
-	/**
 	 * Creates an instance of CryptoProvider.
 	 *
 	 * @param key - crypto key, should be length 32
@@ -101,6 +92,13 @@ export class CryptoProvider {
 	) {
 		this._key = Buffer.from(key);
 		this._vector = Buffer.from(vector);
+	}
+
+	/**
+	 * Generates a random UUID.
+	 */
+	uuid(options?: RandomUUIDOptions): string {
+		return crypto.randomUUID(options);
 	}
 
 	/**
@@ -150,6 +148,16 @@ export class CryptoProvider {
 
 		return decipher.update(str, 'hex', 'utf8') + decipher.final('utf8');
 	}
+
+	/**
+	 * Crypto key.
+	 */
+	private readonly _key: Buffer;
+
+	/**
+	 * Vector initializer.
+	 */
+	private readonly _vector: Buffer;
 
 	/**
 	 * Provider initializer for module.
