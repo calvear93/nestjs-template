@@ -17,7 +17,7 @@ describe('Sample', () => {
 		await app.init();
 	});
 
-	test('GET basic should return Hello World', () => {
+	test('get basic should return Hello World', () => {
 		const expected = 'Hello World';
 
 		return request(app.getHttpServer())

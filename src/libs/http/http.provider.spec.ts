@@ -74,7 +74,7 @@ describe(HttpProvider.name, () => {
 		expect(altProvider.axiosRef.defaults.baseURL).toBe(baseURLAlt);
 	});
 
-	test('GET request is success', async () => {
+	test('get request is success', async () => {
 		// mocking phase
 		nock(baseURL).get('/').reply(200, 'ok');
 
@@ -84,7 +84,7 @@ describe(HttpProvider.name, () => {
 		expect(response.data).toBe('ok');
 	});
 
-	test('GET request with json response is success', async () => {
+	test('get request with json response is success', async () => {
 		// mocking phase
 		const data = { value: 1 };
 		nock(baseURL).get('/').reply(200, data);
@@ -95,7 +95,7 @@ describe(HttpProvider.name, () => {
 		expect(response.data).toEqual(data);
 	});
 
-	test('GET request with params is success', async () => {
+	test('get request with params is success', async () => {
 		// mocking phase
 		const params = { id: 1, name: 'test' };
 		nock(baseURL).get('/').query(params).reply(200, 'ok');
@@ -108,7 +108,7 @@ describe(HttpProvider.name, () => {
 		expect(response.data).toBe('ok');
 	});
 
-	test('POST request is success', async () => {
+	test('post request is success', async () => {
 		// mocking phase
 		const body = { id: 1, name: 'test' };
 		const result = { result: { ...body, time: Date.now() } };
@@ -120,7 +120,7 @@ describe(HttpProvider.name, () => {
 		expect(response.data).toEqual(result);
 	});
 
-	test('PUT request is success', async () => {
+	test('put request is success', async () => {
 		// mocking phase
 		const body = { id: 1, name: 'test' };
 		nock(baseURL).put('/', body).reply(204, 'ok');
@@ -131,7 +131,7 @@ describe(HttpProvider.name, () => {
 		expect(response.data).toBe('ok');
 	});
 
-	test('PATCH request is success', async () => {
+	test('patch request is success', async () => {
 		// mocking phase
 		const body = { id: 1, name: 'test' };
 		nock(baseURL).patch('/', body).reply(204, 'ok');
@@ -142,7 +142,7 @@ describe(HttpProvider.name, () => {
 		expect(response.data).toBe('ok');
 	});
 
-	test('DELETE request with params is success', async () => {
+	test('delete request with params is success', async () => {
 		// mocking phase
 		nock(baseURL).delete('/').reply(204, 'ok');
 
@@ -243,5 +243,7 @@ describe(HttpProvider.name, () => {
 		} catch (error: AnyError) {
 			expect(HttpProvider.isAxiosError(error)).toBeTruthy();
 		}
+
+		expect.assertions(1);
 	});
 });
