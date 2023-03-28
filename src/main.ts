@@ -18,6 +18,7 @@ if (process.env.SWAGGER_UI === 'true') swaggerInit(app);
 
 await app.listen(
 	+process.env.PORT,
+	// use '0.0.0.0' here as "hostname" arg if you use Fastify adapter
 	() =>
 		process.env.NODE_ENV === 'development' &&
 		// eslint-disable-next-line no-console
