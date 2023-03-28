@@ -9,7 +9,7 @@ import {
 	vi,
 } from 'vitest';
 import nock from 'nock';
-import { InternalAxiosRequestConfig } from 'axios';
+import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AxiosInterceptorConfig, HttpProvider } from './http.provider.js';
 
@@ -237,13 +237,9 @@ describe(HttpProvider.name, () => {
 		});
 	});
 
-	test('AxiosError is matched by isAxiosError method', async () => {
-		try {
-			await provider.get('/not-found');
-		} catch (error: AnyError) {
-			expect(HttpProvider.isAxiosError(error)).toBeTruthy();
-		}
+	test('AxiosError is matched by isAxiosError method', () => {
+		const axiosError = new AxiosError('axios error');
 
-		expect.assertions(1);
+		expect(HttpProvider.isAxiosError(axiosError)).toBeTruthy();
 	});
 });
