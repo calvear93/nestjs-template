@@ -6,7 +6,7 @@
 ARG NODE=node:18.15.0-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
-ARG PNPM_VER=8.0.0
+ARG PNPM_VER=8.1.0
 ARG APP_DIR='/app/'
 ARG OUT_DIR='dist'
 
@@ -34,7 +34,7 @@ WORKDIR ${APP_DIR}
 
 # prepares source files
 COPY . ${APP_DIR}
-RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm install --frozen-lockfile
 # builds the app
 ENV NODE_ENV production
 RUN pnpm build:${ENV}
