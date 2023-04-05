@@ -12,6 +12,7 @@ export default {
 		sourcemap: false,
 		rollupOptions: {
 			output: {
+				format: 'esm',
 				compact: true,
 				preserveModules: true,
 				preserveModulesRoot: 'src',
