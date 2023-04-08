@@ -18,7 +18,6 @@
 		"@typescript-eslint/eslint-plugin",
 		"tsdoc",
 		"prettier",
-		"vitest",
 		"import",
 		"promise",
 		"sonarjs",
@@ -32,7 +31,6 @@
 		"plugin:@typescript-eslint/strict",
 		// "plugin:@typescript-eslint/recommended-requiring-type-checking",
 		"plugin:prettier/recommended",
-		"plugin:vitest/recommended",
 		"plugin:import/recommended",
 		"plugin:import/typescript",
 		"plugin:promise/recommended",
@@ -222,19 +220,21 @@
 		"unicorn/prevent-abbreviations": "off",
 		"unicorn/switch-case-braces": "off",
 		"unicorn/template-indent": "warn",
-		"vitest/consistent-test-filename": "off",
-		"vitest/consistent-test-it": "off",
-		"vitest/no-hooks": "off",
-		"vitest/expect-expect": "off",
-		"vitest/valid-title": "off",
 		"yoda": "warn"
 	},
 	"overrides": [
 		{
 			"files": ["**/*.(spec|test).ts(x)"],
+			"plugins": ["vitest"],
+			"extends": ["plugin:vitest/all"],
 			"rules": {
 				"redos/no-vulnerable": "off",
-				"unicorn/no-unsafe-regex": "warn"
+				"unicorn/no-unsafe-regex": "warn",
+				"vitest/consistent-test-filename": "off",
+				"vitest/consistent-test-it": "off",
+				"vitest/no-hooks": "off",
+				"vitest/expect-expect": "off",
+				"vitest/valid-title": "off"
 			}
 		}
 	]
