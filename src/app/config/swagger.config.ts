@@ -1,9 +1,9 @@
 import {
 	SwaggerModule,
 	DocumentBuilder,
-	SwaggerDocumentOptions,
+	type SwaggerDocumentOptions,
 } from '@nestjs/swagger';
-import { INestApplication } from '@nestjs/common';
+import { type INestApplication } from '@nestjs/common';
 
 /**
  * Swagger base configuration.

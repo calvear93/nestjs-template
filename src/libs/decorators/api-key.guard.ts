@@ -1,10 +1,10 @@
-import { Request } from 'express';
-import { SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.js';
+import { type Request } from 'express';
+import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.js';
 import { ApiSecurity } from '@nestjs/swagger';
 import {
 	applyDecorators,
-	CanActivate,
-	ExecutionContext,
+	type CanActivate,
+	type ExecutionContext,
 	Injectable,
 	UseGuards,
 } from '@nestjs/common';

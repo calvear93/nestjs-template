@@ -1,7 +1,7 @@
 import {
 	ApplyToClass,
 	ApplyToProperty,
-	DecoratorsLookUp,
+	type DecoratorsLookUp,
 } from '../../libs/decorators/apply.decorator.js';
 
 /**

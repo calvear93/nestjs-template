@@ -1,11 +1,11 @@
 import crypto, {
-	Cipher,
-	CipherCCMTypes,
-	CipherGCMTypes,
-	Decipher,
-	RandomUUIDOptions,
+	type Cipher,
+	type CipherCCMTypes,
+	type CipherGCMTypes,
+	type Decipher,
+	type RandomUUIDOptions,
 } from 'node:crypto';
-import { Injectable, Provider } from '@nestjs/common';
+import { Injectable, type Provider } from '@nestjs/common';
 
 // https://gist.github.com/reggi/4459803
 export type CipherAlgorithm =

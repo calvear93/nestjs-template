@@ -49,15 +49,20 @@
 				}
 			}
 		],
+		"@typescript-eslint/consistent-type-imports": [
+			"warn",
+			{
+				"prefer": "type-imports",
+				"fixStyle": "inline-type-imports"
+			}
+		],
 		"@typescript-eslint/explicit-function-return-type": "off",
 		"@typescript-eslint/explicit-module-boundary-types": "off",
 		"@typescript-eslint/interface-name-prefix": "off",
 		"@typescript-eslint/no-empty-function": "warn",
 		"@typescript-eslint/no-empty-interface": [
 			"error",
-			{
-				"allowSingleExtends": true
-			}
+			{ "allowSingleExtends": true }
 		],
 		"@typescript-eslint/no-explicit-any": "off",
 		"@typescript-eslint/no-extraneous-class": "off",
@@ -112,20 +117,9 @@
 				"allowArrowFunctions": true
 			}
 		],
-		"getter-return": [
-			"error",
-			{
-				"allowImplicit": true
-			}
-		],
+		"getter-return": ["error", { "allowImplicit": true }],
 		"grouped-accessor-pairs": "warn",
-		"import/extensions": [
-			"error",
-			"always",
-			{
-				"ignorePackages": true
-			}
-		],
+		"import/extensions": ["error", "always", { "ignorePackages": true }],
 		"import/no-extraneous-dependencies": [
 			"off",
 			{

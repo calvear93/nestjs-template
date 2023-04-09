@@ -5,8 +5,8 @@ import {
 	ApiTags,
 	ApiProduces,
 } from '@nestjs/swagger';
-import { SampleController } from './sample.controller.js';
-import { DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.js';
+import { type SampleController } from './sample.controller.js';
+import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.js';
 
 export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 	class: [ApiTags('Sample')],

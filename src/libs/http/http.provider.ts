@@ -1,12 +1,12 @@
-import axios from 'axios';
-import type {
-	AxiosError,
-	AxiosInstance,
-	AxiosRequestConfig,
-	AxiosResponse,
-	InternalAxiosRequestConfig,
+import axios, {
+	type AxiosRequestConfig,
+	type AxiosError,
+	type AxiosInstance,
+	type AxiosResponse,
+	type InternalAxiosRequestConfig,
 } from 'axios';
-import { FactoryProvider, Injectable, InjectionToken } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import type { FactoryProvider, InjectionToken } from '@nestjs/common';
 
 /**
  * Request interceptor.

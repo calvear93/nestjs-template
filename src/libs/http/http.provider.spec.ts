@@ -4,14 +4,14 @@ import {
 	beforeAll,
 	describe,
 	expect,
-	Mock,
+	type Mock,
 	test,
 	vi,
 } from 'vitest';
 import nock from 'nock';
-import { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { Test, TestingModule } from '@nestjs/testing';
-import { AxiosInterceptorConfig, HttpProvider } from './http.provider.js';
+import { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { type AxiosInterceptorConfig, HttpProvider } from './http.provider.js';
 
 describe(HttpProvider.name, () => {
 	let module: TestingModule;

@@ -1,6 +1,6 @@
 import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get, VERSION_NEUTRAL } from '@nestjs/common';
-import { HealthCheckResult } from './models/health-check-result.js';
+import { type HealthCheckResult } from './models/health-check-result.js';
 
 @Controller({
 	path: 'health',
