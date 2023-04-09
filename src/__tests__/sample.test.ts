@@ -7,16 +7,22 @@ import { SampleModule } from '../app/modules/index.js';
 describe('Sample', () => {
 	let app: INestApplication;
 
+	// hooks
 	beforeAll(async () => {
-		const moduleRef = await Test.createTestingModule({
+		const mainModule = await Test.createTestingModule({
 			imports: [SampleModule],
 		}).compile();
 
-		app = moduleRef.createNestApplication();
+		app = mainModule.createNestApplication();
 		app.enableShutdownHooks();
 		await app.init();
 	});
 
+	afterAll(async () => {
+		await app.close();
+	});
+
+	// tests
 	test('get basic should return Hello World', () => {
 		const expected = 'Hello World';
 
@@ -24,9 +30,5 @@ describe('Sample', () => {
 			.get('/basic')
 			.expect(200)
 			.expect(expected);
-	});
-
-	afterAll(async () => {
-		await app.close();
 	});
 });

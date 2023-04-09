@@ -14,8 +14,8 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { type AxiosInterceptorConfig, HttpProvider } from './http.provider.js';
 
 describe(HttpProvider.name, () => {
-	let module: TestingModule;
-	let provider: HttpProvider;
+	let _module: TestingModule;
+	let _provider: HttpProvider;
 
 	const altToken = 'alt';
 	const baseURL = 'https://api.com';
@@ -40,7 +40,7 @@ describe(HttpProvider.name, () => {
 
 	// hooks
 	beforeAll(async () => {
-		module = await Test.createTestingModule({
+		_module = await Test.createTestingModule({
 			providers: [
 				HttpProvider.register({ baseURL }, axiosInterceptors),
 				HttpProvider.register({
@@ -50,7 +50,7 @@ describe(HttpProvider.name, () => {
 			],
 		}).compile();
 
-		provider = module.get<HttpProvider>(HttpProvider);
+		_provider = _module.get<HttpProvider>(HttpProvider);
 	});
 
 	afterEach(() => {
@@ -58,17 +58,17 @@ describe(HttpProvider.name, () => {
 	});
 
 	afterAll(async () => {
-		await module.close();
+		await _module.close();
 		nock.cleanAll();
 	});
 
 	// tests
 	test('common http provider should be defined', () => {
-		expect(provider).toBeDefined();
+		expect(_provider).toBeDefined();
 	});
 
 	test('alternative http provider should be defined and configured', () => {
-		const altProvider = module.get<HttpProvider>(altToken);
+		const altProvider = _module.get<HttpProvider>(altToken);
 
 		expect(altProvider).toBeDefined();
 		expect(altProvider.axiosRef.defaults.baseURL).toBe(baseURLAlt);
@@ -79,7 +79,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).get('/').reply(200, 'ok');
 
 		// request phase
-		const response = await provider.get<string>('/');
+		const response = await _provider.get<string>('/');
 
 		expect(response.data).toBe('ok');
 	});
@@ -90,7 +90,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).get('/').reply(200, data);
 
 		// request phase
-		const response = await provider.get<typeof data>('/');
+		const response = await _provider.get<typeof data>('/');
 
 		expect(response.data).toEqual(data);
 	});
@@ -101,7 +101,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).get('/').query(params).reply(200, 'ok');
 
 		// request phase
-		const response = await provider.get<string>('/', {
+		const response = await _provider.get<string>('/', {
 			params,
 		});
 
@@ -115,7 +115,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).post('/', body).reply(201, result);
 
 		// request phase
-		const response = await provider.post<typeof result>('/', body);
+		const response = await _provider.post<typeof result>('/', body);
 
 		expect(response.data).toEqual(result);
 	});
@@ -126,7 +126,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).put('/', body).reply(204, 'ok');
 
 		// request phase
-		const response = await provider.put<string>('/', body);
+		const response = await _provider.put<string>('/', body);
 
 		expect(response.data).toBe('ok');
 	});
@@ -137,7 +137,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).patch('/', body).reply(204, 'ok');
 
 		// request phase
-		const response = await provider.patch<string>('/', body);
+		const response = await _provider.patch<string>('/', body);
 
 		expect(response.data).toBe('ok');
 	});
@@ -147,7 +147,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).delete('/').reply(204, 'ok');
 
 		// request phase
-		const response = await provider.delete<string>('/');
+		const response = await _provider.delete<string>('/');
 
 		expect(response.data).toBe('ok');
 	});
@@ -157,7 +157,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).head('/').reply(200, 'ok');
 
 		// request phase
-		const response = await provider.head<string>('/');
+		const response = await _provider.head<string>('/');
 
 		expect(response.data).toBe('ok');
 	});
@@ -167,7 +167,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).get('/').reply(200, 'ok');
 
 		// request phase
-		const response = await provider.get<string>('/');
+		const response = await _provider.get<string>('/');
 
 		// interception mocks validation
 		const requestOnFulfilled = axiosInterceptors.request
@@ -185,7 +185,7 @@ describe(HttpProvider.name, () => {
 		nock(baseURL).get('/').reply(500);
 
 		// request phase
-		await expect(provider.get('/')).rejects.toThrow();
+		await expect(_provider.get('/')).rejects.toThrow();
 
 		// interception mocks validation
 		const requestOnRejected = axiosInterceptors.request?.onRejected as Mock;
@@ -202,7 +202,7 @@ describe(HttpProvider.name, () => {
 
 		// request phase
 		await expect(
-			provider.get<string>('/', { timeout: 100 }),
+			_provider.get<string>('/', { timeout: 100 }),
 		).resolves.toBeDefined();
 	});
 
@@ -212,7 +212,7 @@ describe(HttpProvider.name, () => {
 
 		// request phase
 		await expect(
-			provider.get<string>('/', { timeout: 20 }),
+			_provider.get<string>('/', { timeout: 20 }),
 		).rejects.toThrow();
 	});
 
@@ -223,7 +223,7 @@ describe(HttpProvider.name, () => {
 		// request phase
 		const controller = new AbortController();
 
-		const promise = provider.request({
+		const promise = _provider.request({
 			url: '/',
 			method: 'get',
 			signal: controller.signal,
