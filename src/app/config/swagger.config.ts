@@ -4,6 +4,10 @@ import {
 	type SwaggerDocumentOptions,
 } from '@nestjs/swagger';
 import { type INestApplication } from '@nestjs/common';
+import {
+	APY_KEY_GUARD_NAME,
+	SECURITY_API_SCHEMA,
+} from '../decorators/api-key.decorator.js';
 
 /**
  * Swagger base configuration.
@@ -15,6 +19,7 @@ export const swaggerInit = (app: INestApplication) => {
 		.setTitle(process.env.TITLE)
 		.setDescription(process.env.DESCRIPTION)
 		.setVersion(process.env.VERSION)
+		.addApiKey(SECURITY_API_SCHEMA, APY_KEY_GUARD_NAME)
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);

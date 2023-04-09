@@ -24,6 +24,11 @@ declare global {
 			// SECTION: localization
 			readonly TZ: string;
 			readonly LANG: string;
+
+			// SECTION: api security
+			SECURITY_ENABLED?: 'true' | 'false';
+			SECURITY_HEADER_NAME: string; // name of the api key header
+			SECURITY_API_KEY: string; // value of the api key header
 		}
 	}
 

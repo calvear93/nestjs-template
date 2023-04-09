@@ -56,6 +56,18 @@ export interface AxiosInterceptorConfig {
 @Injectable()
 export class HttpProvider {
 	/**
+	 * Axios instance,
+	 */
+	private readonly _client: AxiosInstance;
+
+	/**
+	 * Returns axios instance.
+	 */
+	get axiosRef(): AxiosInstance {
+		return this._client;
+	}
+
+	/**
 	 * Creates an instance of HttpProvider.
 	 *
 	 * @see https://axios-http.com/docs/req_config
@@ -212,18 +224,6 @@ export class HttpProvider {
 	): Promise<AxiosResponse<R>> {
 		return this._client.head<R>(url, config);
 	}
-
-	/**
-	 * Returns axios instance.
-	 */
-	get axiosRef(): AxiosInstance {
-		return this._client;
-	}
-
-	/**
-	 * Axios instance,
-	 */
-	private readonly _client: AxiosInstance;
 
 	/**
 	 * Provider initializer for module.
