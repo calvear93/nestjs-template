@@ -79,30 +79,46 @@ export const ApiKeyGuardFactory = (
 	guardName: string,
 	enabled = true,
 ) => {
-	return (): ClassDecorator => {
-		if (!enabled) return () => void 0;
+	// eslint-disable-next-line unicorn/consistent-function-scoping
+	if (!enabled) return () => () => void 0;
 
-		return <T extends Function>(target: T) => {
-			const properties = Object.getOwnPropertyDescriptors(
-				target.prototype,
+	const apply = (descriptor: PropertyDescriptor) =>
+		applyDecorators(
+			UseGuards(new ApiKeyGuard(headerName, apiKey)),
+			ApiSecurity(guardName),
+		)(descriptor.value, descriptor.value.name, descriptor);
+
+	return (): ClassDecorator & MethodDecorator => {
+		return <T extends Function>(
+			target: T | object,
+			_?: PropertyKey,
+			descriptor?: PropertyDescriptor,
+		) => {
+			// method decoration
+			if (!(target instanceof Function) && descriptor) {
+				apply(descriptor);
+
+				return;
+			}
+
+			// class decoration
+			const descriptors = Object.getOwnPropertyDescriptors(
+				(target as T).prototype,
 			);
-			const keys = Object.keys(properties).filter<string>(isString);
 
-			// // apply method decorators
+			const keys = Object.keys(descriptors).filter<string>(isString);
+
+			// apply to class methods
 			for (const key of keys) {
 				const ignore = Reflect.getMetadata(
 					ALLOW_ANONYMOUS,
-					target.prototype,
+					(target as T).prototype,
 					key,
 				);
+
 				if (ignore || key === 'constructor') continue;
 
-				const property = properties[key];
-
-				applyDecorators(
-					UseGuards(new ApiKeyGuard(headerName, apiKey)),
-					ApiSecurity(guardName),
-				)(property.value, property.value.name, property);
+				apply(descriptors[key]);
 			}
 		};
 	};
