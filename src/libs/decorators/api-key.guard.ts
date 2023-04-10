@@ -4,6 +4,11 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common';
 
 const ALLOW_ANONYMOUS = Symbol('allow-anonymous');
 
+const isString = (key: PropertyKey): key is string => typeof key === 'string';
+
+const isFn = (value: Function | object): value is Function =>
+	value instanceof Function;
+
 /**
  * ApiKey guard.
  *
@@ -26,11 +31,22 @@ const ALLOW_ANONYMOUS = Symbol('allow-anonymous');
  *	  .build();
  *
  *  // any.controller.ts
- *	import { ApiKey } from '...';
+ *	import { ApiKey, AllowAnonymous } from '...';
  *
  *	\@Controller('sample')
  *	\@ApiKey()
- *	export class AnyController { ... }
+ *	export class AnyController {
+ *		\secured() { ... }
+ *
+ *		@AllowAnonymous()
+ *		\open() { ... }
+ *	}
+ *	// or
+ *	\@Controller('sample-two')
+ *	export class AnyController {
+ *		\@ApiKey()
+ *		secured() { ... }
+ *	}
  * ```
  */
 @Injectable()
@@ -55,14 +71,12 @@ class ApiKeyGuard implements CanActivate {
 	}
 }
 
-const isString = (key: PropertyKey): key is string => typeof key === 'string';
-
 /**
  * Ignores method to be protected by ApiKey guard.
  */
 export function AllowAnonymous(): MethodDecorator {
 	return (target: object, key: PropertyKey) => {
-		if (typeof key !== 'number') {
+		if (isString(key)) {
 			Reflect.defineMetadata(ALLOW_ANONYMOUS, true, target, key);
 		}
 	};
@@ -95,15 +109,13 @@ export const ApiKeyGuardFactory = (
 			descriptor?: PropertyDescriptor,
 		) => {
 			// method decoration
-			if (!(target instanceof Function) && descriptor) {
-				apply(descriptor);
-
-				return;
+			if (!isFn(target)) {
+				return descriptor && apply(descriptor);
 			}
 
 			// class decoration
 			const descriptors = Object.getOwnPropertyDescriptors(
-				(target as T).prototype,
+				target.prototype,
 			);
 
 			const keys = Object.keys(descriptors).filter<string>(isString);
@@ -112,7 +124,7 @@ export const ApiKeyGuardFactory = (
 			for (const key of keys) {
 				const ignore = Reflect.getMetadata(
 					ALLOW_ANONYMOUS,
-					(target as T).prototype,
+					target.prototype,
 					key,
 				);
 
