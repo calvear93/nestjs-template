@@ -7,7 +7,7 @@ import { type INestApplication } from '@nestjs/common';
 import {
 	APY_KEY_GUARD_NAME,
 	SECURITY_API_SCHEMA,
-} from '../decorators/api-key.decorator.js';
+} from '../decorators/api-key.guard.js';
 
 /**
  * Swagger base configuration.

@@ -2,7 +2,9 @@ import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common';
 import { SampleControllerDocs } from './sample.controller.docs.js';
 import { SampleService } from '../services/sample.service.js';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.js';
+import { AllowAnonymous, ApiKey } from '../../../decorators/api-key.guard.js';
 
+@ApiKey()
 @Controller({
 	path: 'basic',
 	version: '1',
@@ -17,6 +19,7 @@ export class SampleController {
 	 * @returns sample string
 	 */
 	@Get()
+	@AllowAnonymous()
 	run(): string {
 		return this._service.sample();
 	}
