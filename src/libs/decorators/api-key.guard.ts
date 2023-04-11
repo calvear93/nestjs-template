@@ -22,21 +22,31 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common';
  *	  )
  *	  .build();
  *
- *  // any.controller.ts
- *	import { ApiKey, AllowAnonymous } from '...';
+ *  // api-key.guard.ts
+ *	import { SecurityGuardFactory } from '...';
+ *	import { ApiKeyGuard } from '...';
  *
- *	\@Controller('sample')
- *	\@ApiKey()
+ *	export [ApiKey, AllowAnonymous] = SecurityGuardFactory(
+ *		ApiKeyGuard,
+ *		'API_KEY_GUARD_NAME',
+ *		...,
+ *	);
+ *
+ *  // any.controller.ts
+ *	import { ApiKey, AllowAnonymous } from '.../api-key.guard';
+ *
+ *	@Controller('sample')
+ *	@ApiKey()
  *	export class AnyController {
- *		\secured() { ... }
+ *		secured() { ... }
  *
  *		@AllowAnonymous()
- *		\open() { ... }
+ *		open() { ... }
  *	}
  *	// or
- *	\@Controller('sample-two')
+ *	@Controller('sample-two')
  *	export class AnyController {
- *		\@ApiKey()
+ *		@ApiKey()
  *		secured() { ... }
  *	}
  * ```
