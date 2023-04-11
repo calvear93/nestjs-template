@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { SampleService } from './sample.service.js';
 
 describe(SampleService.name, () => {
-	let service: SampleService;
+	let _service: SampleService;
 
 	// hooks
 	beforeAll(async () => {
@@ -11,15 +11,15 @@ describe(SampleService.name, () => {
 			providers: [SampleService],
 		}).compile();
 
-		service = module.get<SampleService>(SampleService);
+		_service = module.get(SampleService);
 	});
 
 	// tests
 	test('should be defined', () => {
-		expect(service).toBeDefined();
+		expect(_service).toBeDefined();
 	});
 
 	test('should return Hello World', () => {
-		expect(service.sample()).toBe('Hello World');
+		expect(_service.sample()).toBe('Hello World');
 	});
 });

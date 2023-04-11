@@ -5,7 +5,7 @@ import crypto, {
 	type Decipher,
 	type RandomUUIDOptions,
 } from 'node:crypto';
-import { Injectable, type Provider } from '@nestjs/common';
+import { Injectable, type FactoryProvider } from '@nestjs/common';
 
 // https://gist.github.com/reggi/4459803
 export type CipherAlgorithm =
@@ -172,7 +172,7 @@ export class CryptoProvider {
 		key: string,
 		vector: string,
 		algorithm: CipherAlgorithm,
-	): Provider<CryptoProvider> {
+	): FactoryProvider<CryptoProvider> {
 		return {
 			provide: CryptoProvider,
 			useFactory: () => new CryptoProvider(key, vector, algorithm),

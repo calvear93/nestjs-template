@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { HealthController } from './health.controller.js';
 
 describe(HealthController.name, () => {
-	let controller: HealthController;
+	let _controller: HealthController;
 
 	// hooks
 	beforeAll(async () => {
@@ -11,15 +11,15 @@ describe(HealthController.name, () => {
 			controllers: [HealthController],
 		}).compile();
 
-		controller = module.get<HealthController>(HealthController);
+		_controller = module.get(HealthController);
 	});
 
 	// tests
 	test('should be defined', () => {
-		expect(controller).toBeDefined();
+		expect(_controller).toBeDefined();
 	});
 
 	test('should response ok', async () => {
-		expect(await controller.check()).toMatchObject({ status: 'ok' });
+		expect(await _controller.check()).toMatchObject({ status: 'ok' });
 	});
 });

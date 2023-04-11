@@ -17,7 +17,7 @@ describe(HttpProvider.name, () => {
 	let _module: TestingModule;
 	let _provider: HttpProvider;
 
-	const altToken = 'alt';
+	const HTTP_ALT_TOKEN = 'alt';
 	const baseURL = 'https://api.com';
 	const baseURLAlt = 'https://api.com/alt';
 
@@ -44,13 +44,13 @@ describe(HttpProvider.name, () => {
 			providers: [
 				HttpProvider.register({ baseURL }, axiosInterceptors),
 				HttpProvider.register({
-					useToken: altToken,
+					useToken: HTTP_ALT_TOKEN,
 					baseURL: baseURLAlt,
 				}),
 			],
 		}).compile();
 
-		_provider = _module.get<HttpProvider>(HttpProvider);
+		_provider = _module.get(HttpProvider);
 	});
 
 	afterEach(() => {
@@ -68,7 +68,7 @@ describe(HttpProvider.name, () => {
 	});
 
 	test('alternative http provider should be defined and configured', () => {
-		const altProvider = _module.get<HttpProvider>(altToken);
+		const altProvider = _module.get<HttpProvider>(HTTP_ALT_TOKEN);
 
 		expect(altProvider).toBeDefined();
 		expect(altProvider.axiosRef.defaults.baseURL).toBe(baseURLAlt);

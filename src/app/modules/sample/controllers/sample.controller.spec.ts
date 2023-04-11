@@ -4,7 +4,7 @@ import { SampleController } from './sample.controller.js';
 import { SampleService } from '../services/sample.service.js';
 
 describe(SampleController.name, () => {
-	let controller: SampleController;
+	let _controller: SampleController;
 
 	// hooks
 	beforeAll(async () => {
@@ -13,11 +13,11 @@ describe(SampleController.name, () => {
 			providers: [SampleService],
 		}).compile();
 
-		controller = module.get<SampleController>(SampleController);
+		_controller = module.get(SampleController);
 	});
 
 	// tests
 	test('should be defined', () => {
-		expect(controller).toBeDefined();
+		expect(_controller).toBeDefined();
 	});
 });
