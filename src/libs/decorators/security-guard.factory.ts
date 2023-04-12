@@ -12,11 +12,11 @@ const isFn = (value: Function | object): value is Function =>
  * with a security guard, and applies
  * Swagger security schema.
  */
-const createSecureDecorator = <T extends Class<any>>(
-	Guard: T,
+const createSecureDecorator = <G extends Class<any>>(
+	Guard: G,
 	guardName: string,
 	allowSignal: symbol,
-	args: ConstructorParameters<T>,
+	args: ConstructorParameters<G>,
 ) => {
 	const apply = (descriptor: PropertyDescriptor) =>
 		applyDecorators(UseGuards(new Guard(...args)), ApiSecurity(guardName))(
