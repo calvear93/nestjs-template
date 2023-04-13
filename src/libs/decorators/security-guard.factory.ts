@@ -18,8 +18,11 @@ const createSecureDecorator = <G extends Class<any>>(
 	allowSignal: symbol,
 	args: ConstructorParameters<G>,
 ) => {
+	const guard = UseGuards(new Guard(...args));
+	const schema = ApiSecurity(guardName);
+
 	const apply = (descriptor: PropertyDescriptor) =>
-		applyDecorators(UseGuards(new Guard(...args)), ApiSecurity(guardName))(
+		applyDecorators(guard, schema)(
 			descriptor.value,
 			descriptor.value.name,
 			descriptor,
