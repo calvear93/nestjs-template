@@ -12,6 +12,28 @@ export interface DecoratorsLookUp<T extends object = any> {
 	properties?: ExtractMembersMatching<T, PropertyKey, MethodDecorator[]>;
 }
 
+export type DecoratorsLookUpFn<T extends object = any> =
+	() => DecoratorsLookUp<T>;
+
+/**
+ * Whether a value is decorators function
+ */
+export const isDecoratorsFn = (value: unknown): value is DecoratorsLookUpFn => {
+	return typeof value === 'function';
+};
+
+/**
+ * Calcs decorators fn in
+ * case of lazy decorators.
+ */
+export const getDecorators = (
+	decorators: DecoratorsLookUp | DecoratorsLookUpFn,
+): DecoratorsLookUp => {
+	if (isDecoratorsFn(decorators)) return decorators();
+
+	return decorators;
+};
+
 /**
  * Decorator factory for apply many decorators
  * to class and its methods in a clean way.

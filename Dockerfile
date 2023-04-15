@@ -3,7 +3,7 @@
 ###
 
 # global variables
-ARG NODE=node:18.15.0-alpine
+ARG NODE=node:18.16.0-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
 ARG PNPM_VER=8.2.0

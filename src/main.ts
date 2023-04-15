@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ZodValidationPipe } from './libs/zod/zod.pipe.js';
 import { MainModule } from './app/main.module.js';
 import { swaggerInit } from './app/config/swagger.config.js';
 
@@ -7,12 +7,7 @@ const app = await NestFactory.create(MainModule, { cors: true });
 
 app.enableVersioning();
 app.setGlobalPrefix(process.env.API_PREFIX);
-app.useGlobalPipes(
-	new ValidationPipe({
-		stopAtFirstError: true,
-		transform: true,
-	}),
-);
+app.useGlobalPipes(new ZodValidationPipe());
 
 if (process.env.SWAGGER_UI === 'true') swaggerInit(app);
 

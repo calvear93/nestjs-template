@@ -8,6 +8,7 @@ import {
 	APY_KEY_GUARD_NAME,
 	SECURITY_API_SCHEMA,
 } from '../decorators/api-key.guard.js';
+import { registerDtoSchemas } from '../../libs/zod/create-zod-dto.js';
 
 /**
  * Swagger base configuration.
@@ -23,6 +24,8 @@ export const swaggerInit = (app: INestApplication) => {
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
+
+	registerDtoSchemas(document);
 
 	SwaggerModule.setup(process.env.API_PREFIX, app, document, {
 		customSiteTitle: process.env.TITLE,
