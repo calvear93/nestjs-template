@@ -18,10 +18,12 @@
 ## ⛩ **Structure**
 
 ```bash
-├── README.md
 ├── env/
-│   └── appsettings.json
+│   ├── appsettings.json
+│   ├── dev.env.json # secret file, autogen
+│   └── release.env.json # secret file, autogen
 ├── src/
+│   ├── __tests__/
 │   ├── app/
 │   │   ├── main.module.ts
 │   │   ├── config/
@@ -31,7 +33,6 @@
 │   │           ├── controllers/
 │   │           ├── services/
 │   │           └── sample.module.ts
-│   ├── __tests__/
 │   ├── libs/
 │   ├── main.ts # entry file
 │   └── env.d.ts
@@ -78,4 +79,4 @@ it environment may be 'dev' or 'release'.
 | pnpm env:schema              | updates env JSON schema      |
 | pnpm format                  | code format                  |
 | pnpm lint                    | code style review            |
-| pnpm lint --fix              | code style review/fix        |
+| pnpm lint -- -- --fix        | code style review/fix        |
