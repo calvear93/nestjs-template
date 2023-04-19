@@ -20,11 +20,11 @@ export class ZodValidationPipe implements PipeTransform {
 
 			if (result.success) return result.data;
 
-			const message = result.error.errors.map(
+			const errorMessage = result.error.errors.map(
 				({ path, message }) => `${path.join('.')}: ${message}`,
 			);
 
-			throw new BadRequestException(message);
+			throw new BadRequestException(errorMessage);
 		}
 
 		return value;

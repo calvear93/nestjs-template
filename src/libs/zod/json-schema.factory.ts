@@ -253,9 +253,7 @@ const toUnion = ({
 }: ParsingArgs<
 	z.ZodUnion<[z.ZodTypeAny, ...z.ZodTypeAny[]]>
 >): SchemaObject => {
-	schema.oneOf = (
-		zodRef as z.ZodUnion<[z.ZodTypeAny, ...z.ZodTypeAny[]]>
-	)._def.options.map((schema) => zodToJsonSchema(schema));
+	schema.oneOf = zodRef._def.options.map((s) => zodToJsonSchema(s));
 
 	return schema;
 };
@@ -267,22 +265,12 @@ const toDiscriminatedUnion = ({
 	z.ZodDiscriminatedUnion<string, z.ZodDiscriminatedUnionOption<string>[]>
 >): SchemaObject => {
 	schema.discriminator = {
-		propertyName: (
-			zodRef as z.ZodDiscriminatedUnion<
-				string,
-				z.ZodDiscriminatedUnionOption<string>[]
-			>
-		)._def.discriminator,
+		propertyName: zodRef._def.discriminator,
 	};
 
-	schema.oneOf = [
-		...(
-			zodRef as z.ZodDiscriminatedUnion<
-				string,
-				z.ZodDiscriminatedUnionOption<string>[]
-			>
-		)._def.options.values(),
-	].map((schema) => zodToJsonSchema(schema));
+	schema.oneOf = [...zodRef._def.options.values()].map((s) =>
+		zodToJsonSchema(s),
+	);
 
 	return schema;
 };
