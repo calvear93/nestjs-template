@@ -2,9 +2,9 @@ import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-
 import { SecurityGuardFactory } from '../../libs/decorators/security-guard.factory.js';
 import { ApiKeyGuard } from '../../libs/decorators/api-key.guard.js';
 
-const ENABLED = process.env.SECURITY_ENABLED === 'true';
 const HEADER_NAME = process.env.SECURITY_HEADER_NAME;
 const API_KEY = process.env.SECURITY_API_KEY;
+const ENABLED = process.env.SECURITY_ENABLED === 'true' && !!API_KEY;
 
 export const APY_KEY_GUARD_NAME = 'API_KEY_GUARD';
 

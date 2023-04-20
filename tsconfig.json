@@ -20,7 +20,6 @@
 
 		"isolatedModules": true,
 		"esModuleInterop": true,
-		"importHelpers": true,
 		"allowSyntheticDefaultImports": true,
 
 		"strict": true,
@@ -29,6 +28,11 @@
 		"strictPropertyInitialization": false,
 
 		"skipLibCheck": true
+	},
+	"ts-node": {
+		"esm": true,
+		"transpileOnly": true,
+		"swc": true
 	},
 	"include": ["src", "vite.config.ts", "vitest.config.ts"]
 }
