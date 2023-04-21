@@ -13,6 +13,7 @@ jspm_packages
 # Rollup & Vite cache
 .rollup.cache
 vite.config.ts.*
+vitest.config.ts.*
 
 # Wireit cache
 .wireit
