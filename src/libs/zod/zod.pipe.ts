@@ -3,7 +3,7 @@ import {
 	type ArgumentMetadata,
 	type PipeTransform,
 } from '@nestjs/common';
-import { type ZodDto } from './create-zod-dto';
+import { type ZodDto } from './create-zod-dto.js';
 
 const isZodDto = (dto: any): dto is ZodDto => {
 	return !!dto.schema;

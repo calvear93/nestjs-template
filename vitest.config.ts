@@ -3,7 +3,7 @@ import typescript from '@rollup/plugin-typescript';
 
 export default {
 	test: {
-		silent: true,
+		silent: false,
 		include: ['src/**/*.{spec,test}.{ts,cts,mts}'],
 		reporters: ['junit', 'verbose'],
 		outputFile: {

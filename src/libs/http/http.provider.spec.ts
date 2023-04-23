@@ -92,7 +92,7 @@ describe(HttpProvider.name, () => {
 		// request phase
 		const response = await _provider.get<typeof data>('/');
 
-		expect(response.data).toEqual(data);
+		expect(response.data).toStrictEqual(data);
 	});
 
 	test('get request with params is success', async () => {
@@ -117,7 +117,7 @@ describe(HttpProvider.name, () => {
 		// request phase
 		const response = await _provider.post<typeof result>('/', body);
 
-		expect(response.data).toEqual(result);
+		expect(response.data).toStrictEqual(result);
 	});
 
 	test('put request is success', async () => {

@@ -1,10 +1,10 @@
-import { Logger, Module } from '@nestjs/common';
-import { HealthModule, SampleModule } from '../app/modules/index.js';
+import { Logger, Module, type OnModuleInit } from '@nestjs/common';
+import { SampleModule } from '../app/modules/index.js';
 
 @Module({
-	imports: [HealthModule, SampleModule],
+	imports: [SampleModule],
 })
-export class MainModule {
+export class MainModule implements OnModuleInit {
 	onModuleInit(): void {
 		this._logger.debug('Started');
 	}
