@@ -5,28 +5,28 @@ import { HttpStatus, type INestApplication } from '@nestjs/common';
 import { MainModule } from '../app/main.module.js';
 
 describe('App', () => {
-	let app: INestApplication;
+	let _app: INestApplication;
 
 	// hooks
 	beforeAll(async () => {
-		const mainModule = await Test.createTestingModule({
+		const module = await Test.createTestingModule({
 			imports: [MainModule],
 		}).compile();
 
-		app = mainModule.createNestApplication();
-		app.enableShutdownHooks();
-		await app.init();
+		_app = module.createNestApplication();
+		_app.enableShutdownHooks();
+		await _app.init();
 	});
 
 	afterAll(async () => {
-		await app.close();
+		await _app.close();
 	});
 
 	// tests
 	test('get basic should return Hello World', async () => {
 		const expected = 'Hello World';
 
-		const { statusCode, text } = await request(app.getHttpServer())
+		const { statusCode, text } = await request(_app.getHttpServer())
 			.get('/basic')
 			.expect(200)
 			.expect(expected);
@@ -39,7 +39,7 @@ describe('App', () => {
 		const [num1, num2] = [1, 2];
 		const expected = (num1 + num2).toString();
 
-		const { statusCode, text } = await request(app.getHttpServer())
+		const { statusCode, text } = await request(_app.getHttpServer())
 			.get('/basic/sum')
 			.query({ num1, num2 });
 

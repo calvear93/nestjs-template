@@ -229,9 +229,12 @@
 				"vitest/consistent-test-it": "off",
 				"vitest/expect-expect": "off",
 				"vitest/no-hooks": "off",
+				"vitest/no-mocks-import": "off",
 				"vitest/no-test-return-statement": "off",
 				"vitest/prefer-lowercase-title": "off",
+				"vitest/require-hook": "off",
 				"vitest/require-to-throw-message": "off",
+				"vitest/require-top-level-describe": "off",
 				"vitest/valid-title": "off"
 			}
 		}

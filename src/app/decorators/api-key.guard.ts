@@ -1,5 +1,5 @@
 import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.js';
-import { SecurityGuardFactory } from '../../libs/decorators/security-guard.factory.js';
+import { createSecurityGuard } from '../../libs/decorators/security-guard.factory.js';
 import { ApiKeyGuard } from '../../libs/decorators/api-key.guard.js';
 
 const HEADER_NAME = process.env.SECURITY_HEADER_NAME;
@@ -15,7 +15,7 @@ export const SECURITY_API_SCHEMA: SecuritySchemeObject = {
 	in: 'header',
 };
 
-export const [ApiKey, AllowAnonymous] = SecurityGuardFactory(
+export const [ApiKey, AllowAnonymous] = createSecurityGuard(
 	ApiKeyGuard,
 	APY_KEY_GUARD_NAME,
 	ENABLED,

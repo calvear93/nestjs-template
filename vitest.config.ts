@@ -4,20 +4,16 @@ import typescript from '@rollup/plugin-typescript';
 export default {
 	test: {
 		silent: false,
+		testTimeout: 6000,
 		include: ['src/**/*.{spec,test}.{ts,cts,mts}'],
-		reporters: ['junit', 'verbose'],
-		outputFile: {
-			junit: '.reports/junit.xml',
-		},
+		reporters: ['verbose'],
 		coverage: {
 			all: true,
 			reportsDirectory: '.reports/coverage',
 			reporter: ['text', 'text-summary', 'lcov', 'cobertura', 'json'],
 			include: ['src/**/*.{ts,cts,mts}'],
 			exclude: [
-				'**/*.d.{ts,cts,mts}',
-				'**/*.mock.{ts,cts,mts}',
-				'**/*.config.{ts,cts,mts}',
+				'**/*.{d,config,mock,fixture}.{ts,cts,mts}',
 				'**/{index,main}.{ts,cts,mts}',
 				'**/__{tests,mocks,fixtures}__',
 			],

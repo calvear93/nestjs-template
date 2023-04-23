@@ -83,7 +83,7 @@ const disabled = () => () => void 0;
  * Generates a protect and allow
  * decorator for your security guard.
  */
-export const SecurityGuardFactory = <T extends Class<any>>(
+export const createSecurityGuard = <T extends Class<any>>(
 	Guard: T,
 	name: string,
 	enabled = true,
