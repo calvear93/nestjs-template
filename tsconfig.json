@@ -29,10 +29,5 @@
 
 		"skipLibCheck": true
 	},
-	"ts-node": {
-		"esm": true,
-		"swc": true,
-		"transpileOnly": true
-	},
 	"include": ["src", "vite.config.ts", "vitest.config.ts"]
 }
