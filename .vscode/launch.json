@@ -21,7 +21,12 @@
 			"smartStep": true,
 			"autoAttachChildProcesses": true,
 			"runtimeExecutable": "pnpm",
-			"runtimeArgs": ["test:${input:environmentName}", "${relativeFile}"],
+			"runtimeArgs": [
+				"test:${input:environmentName}",
+				"${relativeFile}",
+				"--test-timeout",
+				"0"
+			],
 			"outFiles": ["${workspaceFolder}/src/**/*.ts"],
 			"skipFiles": ["<node_internals>/**", "**/node_modules/**"],
 			"console": "integratedTerminal",
@@ -35,7 +40,11 @@
 			"smartStep": true,
 			"autoAttachChildProcesses": true,
 			"runtimeExecutable": "pnpm",
-			"runtimeArgs": ["test:${input:environmentName}"],
+			"runtimeArgs": [
+				"test:${input:environmentName}",
+				"--test-timeout",
+				"0"
+			],
 			"outFiles": ["${workspaceFolder}/src/**/*.ts"],
 			"skipFiles": ["<node_internals>/**", "**/node_modules/**"],
 			"console": "integratedTerminal",
