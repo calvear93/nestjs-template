@@ -6,11 +6,14 @@ import { dependencies } from './package.json';
 
 export default {
 	build: {
-		ssr: 'src/main.ts',
+		ssr: true,
 		minify: 'terser',
 		target: process.env.TARGET,
 		sourcemap: false,
 		rollupOptions: {
+			input: {
+				main: 'src/main.ts',
+			},
 			output: {
 				format: 'esm',
 				compact: true,
