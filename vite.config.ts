@@ -1,5 +1,4 @@
 import { writeFile } from 'node:fs/promises';
-import { viteStaticCopy as assets } from 'vite-plugin-static-copy';
 import type { UserConfigExport } from 'vite';
 import typescript from '@rollup/plugin-typescript';
 import { dependencies } from './package.json';
@@ -23,18 +22,7 @@ export default {
 		},
 		terserOptions: { keep_classnames: true },
 	},
-	plugins: [
-		typescript({ tsconfig: 'tsconfig.release.json' }),
-		pkgJson(),
-		assets({
-			targets: [
-				{
-					src: 'src/**/*.html',
-					dest: '.',
-				},
-			],
-		}),
-	],
+	plugins: [typescript({ tsconfig: 'tsconfig.release.json' }), pkgJson()],
 	define: loadEnv(),
 } satisfies UserConfigExport;
 
