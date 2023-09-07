@@ -11,7 +11,7 @@ export class MainModule implements OnModuleInit {
 				process.env.SECURITY_ENABLED === 'true'
 					? '\x1B[32mON'
 					: '\x1B[31mOFF'
-			}`,
+			}\x1B[0m`,
 		);
 	}
 

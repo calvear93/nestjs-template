@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { SampleController } from './sample.controller.js';
 import { SampleService } from '../services/sample.service.js';
 
-describe(SampleController.name, () => {
+describe(SampleController, () => {
 	let _controller: SampleController;
 
 	// hooks

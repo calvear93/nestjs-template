@@ -17,13 +17,13 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 			}),
 			ApiProduces('text/plain'),
 			ApiResponse({
+				description: 'Sample string',
 				status: 200,
 				type: String,
-				description: 'Sample string',
 			}),
 			ApiResponse({
-				status: 500,
 				description: 'Internal error',
+				status: 500,
 			}),
 		],
 		sum: [
@@ -40,13 +40,13 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 			}),
 			ApiProduces('text/plain'),
 			ApiResponse({
+				description: 'Sum result',
 				status: 200,
 				type: Number,
-				description: 'Sum result',
 			}),
 			ApiResponse({
-				status: 500,
 				description: 'Internal error',
+				status: 500,
 			}),
 		],
 	},

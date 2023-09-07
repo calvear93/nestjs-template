@@ -5,7 +5,7 @@ import crypto, {
 	type Decipher,
 	type RandomUUIDOptions,
 } from 'node:crypto';
-import { Injectable, type FactoryProvider } from '@nestjs/common';
+import { type FactoryProvider } from '@nestjs/common';
 
 // https://gist.github.com/reggi/4459803
 export type CipherAlgorithm =
@@ -76,7 +76,6 @@ export type HashAlgorithm =
 /**
  * Handles hashing, encryption and decryption using node crypto.
  */
-@Injectable()
 export class CryptoProvider {
 	/**
 	 * Crypto key.

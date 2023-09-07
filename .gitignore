@@ -16,6 +16,9 @@ jspm_packages
 vite.config.ts.*
 vitest.config.ts.*
 
+# Stryker cache
+.stryker-tmp
+
 # Wireit cache
 .wireit
 

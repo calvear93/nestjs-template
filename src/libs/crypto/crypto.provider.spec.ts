@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, test } from 'vitest';
 import { CryptoProvider } from './crypto.provider.js';
 
-describe(CryptoProvider.name, () => {
+describe(CryptoProvider, () => {
 	let provider: CryptoProvider;
 
 	// crypto config
@@ -23,22 +23,18 @@ describe(CryptoProvider.name, () => {
 	});
 
 	// tests
-	test('encryption and decryption capabilities', () => {
-		for (const phrase of phrases) {
-			const encrypted = provider.encrypt(phrase);
-			const decrypted = provider.decrypt(encrypted);
+	test.each(phrases)('encrypt and decrypt "%s"', (phrase) => {
+		const encrypted = provider.encrypt(phrase);
+		const decrypted = provider.decrypt(encrypted);
 
-			expect(phrase).not.toBe(encrypted);
-			expect(phrase).toBe(decrypted);
-		}
+		expect(phrase).not.toBe(encrypted);
+		expect(phrase).toBe(decrypted);
 	});
 
-	test('hashing capabilities', () => {
-		for (const phrase of phrases) {
-			const hashed = provider.hash(phrase);
+	test.each(phrases)('hash "%s"', (phrase) => {
+		const hashed = provider.hash(phrase);
 
-			expect(phrase).not.toBe(hashed);
-		}
+		expect(phrase).not.toBe(hashed);
 	});
 
 	test('random UUID generation', () => {

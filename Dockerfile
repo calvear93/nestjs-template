@@ -3,10 +3,10 @@
 ###
 
 # global variables
-ARG NODE=node:20.4.0-alpine
+ARG NODE=node:20.6.0-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
-ARG PNPM_VER=8.6.7
+ARG PNPM_VER=8.7.4
 ARG APP_DIR='/app/'
 ARG OUT_DIR='dist'
 

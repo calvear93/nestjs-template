@@ -4,11 +4,11 @@
 		"outDir": "dist",
 
 		"target": "es2022",
-		"module": "es2022",
-		"moduleResolution": "node",
+		"module": "node16",
+		"moduleResolution": "node16",
 		"resolveJsonModule": true,
 
-		"lib": ["es2022"],
+		"lib": ["es2023", "dom"],
 
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,

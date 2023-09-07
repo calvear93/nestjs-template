@@ -9,10 +9,10 @@ const ENABLED = process.env.SECURITY_ENABLED === 'true' && !!API_KEY;
 export const APY_KEY_GUARD_NAME = 'API_KEY_GUARD';
 
 export const SECURITY_API_SCHEMA: SecuritySchemeObject = {
-	name: HEADER_NAME,
-	type: 'apiKey',
 	description: 'Security Api Key',
 	in: 'header',
+	name: HEADER_NAME,
+	type: 'apiKey',
 };
 
 export const [ApiKey, AllowAnonymous] = createSecurityGuard(

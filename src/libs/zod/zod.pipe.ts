@@ -14,14 +14,14 @@ const isZodDto = (dto: any): dto is ZodDto => {
  * on controller input.
  */
 export class ZodValidationPipe implements PipeTransform {
-	public transform(value: unknown, { metatype }: ArgumentMetadata): unknown {
+	transform(value: unknown, { metatype }: ArgumentMetadata): unknown {
 		if (isZodDto(metatype)) {
 			const result = metatype.schema.safeParse(value);
 
 			if (result.success) return result.data;
 
 			const errorMessage = result.error.errors.map(
-				({ path, message }) => `${path.join('.')}: ${message}`,
+				({ message, path }) => `${path.join('.')}: ${message}`,
 			);
 
 			throw new BadRequestException(errorMessage);

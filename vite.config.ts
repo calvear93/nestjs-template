@@ -1,29 +1,29 @@
 import { writeFile } from 'node:fs/promises';
 import type { UserConfigExport } from 'vite';
-import typescript from '@rollup/plugin-typescript';
+import swc from 'unplugin-swc';
 import { dependencies } from './package.json';
 
 export default {
 	build: {
-		ssr: true,
 		minify: 'terser',
-		target: process.env.TARGET,
-		sourcemap: false,
 		rollupOptions: {
 			input: {
 				main: 'src/main.ts',
 			},
 			output: {
-				format: 'esm',
 				compact: true,
+				format: 'esm',
 				preserveModules: true,
 				preserveModulesRoot: 'src',
 			},
 		},
+		sourcemap: false,
+		ssr: true,
+		target: process.env.TARGET,
 		terserOptions: { keep_classnames: true },
 	},
-	plugins: [typescript({ tsconfig: 'tsconfig.release.json' }), pkgJson()],
 	define: loadEnv(),
+	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' }), pkgJson()],
 } satisfies UserConfigExport;
 
 /**
@@ -31,15 +31,15 @@ export default {
  */
 function pkgJson() {
 	return {
-		name: 'package-json-gen',
 		closeBundle: () => {
 			const pkg = {
-				type: 'module',
 				dependencies,
+				type: 'module',
 			};
 
 			return writeFile('dist/package.json', JSON.stringify(pkg, null, 4));
 		},
+		name: 'package-json-gen',
 	};
 }
 

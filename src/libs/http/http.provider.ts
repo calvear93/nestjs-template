@@ -1,100 +1,48 @@
-import axios, {
-	type AxiosRequestConfig,
-	type AxiosError,
-	type AxiosInstance,
-	type AxiosResponse,
-	type InternalAxiosRequestConfig,
-} from 'axios';
-import { Injectable } from '@nestjs/common';
 import type { FactoryProvider, InjectionToken } from '@nestjs/common';
+import { HttpError } from './http.error.js';
+import { HttpMethod } from './enums/http-method.enum.js';
 
-/**
- * Request interceptor.
- */
-export interface AxiosRequestInterceptorUse {
-	onFulfilled?: (
-		value: AxiosRequestConfig,
-	) =>
-		| Promise<InternalAxiosRequestConfig<unknown>>
-		| InternalAxiosRequestConfig<unknown>;
+export type RequestURL = string | URL;
 
-	onRejected?: (error: unknown) => Promise<unknown> | unknown | never;
+export interface HttpRequestOptions extends RequestInit {
+	query?: Record<string, string>;
 }
 
-/**
- * Response interceptor.
- */
-export interface AxiosResponseInterceptorUse {
-	onFulfilled?: (
-		value: AxiosResponse,
-	) => Promise<AxiosResponse<unknown>> | AxiosResponse<unknown>;
-
-	onRejected?: (error: AxiosError) => Promise<unknown> | unknown | never;
+export interface HttpRequestBodyOptions extends HttpRequestOptions {
+	data?: object;
 }
 
-export interface HttpProviderConfig extends AxiosRequestConfig {
+export interface HttpProviderConfig extends Omit<HttpRequestOptions, 'body'> {
+	url?: RequestURL;
 	useToken?: InjectionToken;
 }
 
-/**
- * Interceptors config.
- *
- * @see https://axios-http.com/docs/interceptors
- */
-export interface AxiosInterceptorConfig {
-	request?: AxiosRequestInterceptorUse;
-	response?: AxiosResponseInterceptorUse;
+export interface HttpResponse<R = unknown> extends Response {
+	json<J = R>(): Promise<J>;
 }
 
 /**
- * Http provider using axios.
+ * Http provider using fetch.
  * NOTE: import it in your context module at 'providers' array.
  *
- * @see https://axios-http.com/
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
  * @see https://docs.nestjs.com/providers
  */
-@Injectable()
 export class HttpProvider {
-	/**
-	 * Axios instance,
-	 */
-	private readonly _client: AxiosInstance;
-
-	/**
-	 * Returns axios instance.
-	 */
-	get axiosRef(): AxiosInstance {
-		return this._client;
-	}
-
 	/**
 	 * Creates an instance of HttpProvider.
 	 *
-	 * @see https://axios-http.com/docs/req_config
-	 *
-	 * @param config - axios config
-	 * @param interceptors - request and response interceptors
+	 * @param config - fetch config
 	 */
-	constructor(
-		config?: AxiosRequestConfig,
-		interceptors?: AxiosInterceptorConfig,
-	) {
-		this._client = axios.create(config);
+	constructor(config?: HttpRequestOptions & { url?: RequestURL }) {
+		if (config) {
+			const { url, ...cfg } = config;
 
-		if (interceptors) {
-			const { request, response } = interceptors;
-
-			request &&
-				this._client.interceptors.request.use(
-					request.onFulfilled,
-					request.onRejected,
-				);
-
-			response &&
-				this._client.interceptors.response.use(
-					response.onFulfilled,
-					response.onRejected,
-				);
+			this._baseUrl = url ?? '';
+			this._baseConfig = {
+				cache: 'no-cache',
+				...cfg,
+			};
 		}
 	}
 
@@ -102,16 +50,29 @@ export class HttpProvider {
 	 * Makes a request.
 	 *
 	 * @typeParam R - response data
-	 * @typeParam D - request/config body or data
 	 * @param config - config object
 	 *
-	 * @throws AxiosError on http status code out of 2.x.x range
-	 * @returns
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns HttpResponse<R>
 	 */
-	request<R, D = unknown>(
-		config: AxiosRequestConfig<D>,
-	): Promise<AxiosResponse<R, D>> | never | undefined {
-		return this._client.request<R, AxiosResponse<R>, D>(config);
+	async request<R = unknown>(
+		url: RequestURL,
+		{ query, ...config }: HttpRequestOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		const response = await fetch(
+			new URL(
+				query ? `?${new URLSearchParams(query)}` : url,
+				this._baseUrl,
+			),
+			{
+				...this._baseConfig,
+				...config,
+			},
+		);
+
+		if (!response.ok) throw new HttpError(response);
+
+		return response;
 	}
 
 	/**
@@ -119,76 +80,78 @@ export class HttpProvider {
 	 *
 	 * @typeParam R - response data
 	 * @param url - request url
-	 * @param config - axios config
+	 * @param config - fetch config
 	 *
-	 * @throws AxiosError on http status code out of 2.x.x range
-	 * @returns
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns HttpResponse<R>
 	 */
 	get<R>(
-		url: string,
-		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<R>> {
-		return this._client.get<R>(url, config);
+		url: RequestURL,
+		config: HttpRequestOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		config.method = HttpMethod.GET;
+
+		return this.request(url, config);
 	}
 
 	/**
 	 * Makes a POST request.
 	 *
 	 * @typeParam R - response data
-	 * @typeParam B - request/config body
 	 * @param url - request url
-	 * @param body - request body
-	 * @param config - axios config
+	 * @param config - fetch config
 	 *
-	 * @throws AxiosError on http status code out of 2.x.x range
-	 * @returns
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns HttpResponse<R>
 	 */
-	post<R, B = any>(
-		url: string,
-		body?: B,
-		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<R, unknown>> {
-		return this._client.post<R>(url, body, config);
+	post<R>(
+		url: RequestURL,
+		config: HttpRequestBodyOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		this._serializeBody(config);
+		config.method = HttpMethod.POST;
+
+		return this.request(url, config);
 	}
 
 	/**
 	 * Makes a PUT request.
 	 *
 	 * @typeParam R - response data
-	 * @typeParam B - request/config body
 	 * @param url - request url
-	 * @param body - request body
-	 * @param config - axios config
+	 * @param config - fetch config
 	 *
-	 * @throws AxiosError on http status code out of 2.x.x range
-	 * @returns
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns HttpResponse<R>
 	 */
-	put<R, B = any>(
-		url: string,
-		body?: B,
-		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<R, unknown>> {
-		return this._client.put<R>(url, body, config);
+	put<R>(
+		url: RequestURL,
+		config: HttpRequestBodyOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		this._serializeBody(config);
+		config.method = HttpMethod.PUT;
+
+		return this.request(url, config);
 	}
 
 	/**
 	 * Makes a PATCH request.
 	 *
 	 * @typeParam R - response data
-	 * @typeParam B - request/config body
 	 * @param url - request url
-	 * @param body - request body
-	 * @param config - axios config
+	 * @param config - fetch config
 	 *
-	 * @throws AxiosError on http status code out of 2.x.x range
-	 * @returns
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns HttpResponse<R>
 	 */
-	patch<R, B = any>(
-		url: string,
-		body?: B,
-		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<R, unknown>> {
-		return this._client.patch<R>(url, body, config);
+	patch<R>(
+		url: RequestURL,
+		config: HttpRequestBodyOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		this._serializeBody(config);
+		config.method = HttpMethod.PATCH;
+
+		return this.request(url, config);
 	}
 
 	/**
@@ -196,39 +159,50 @@ export class HttpProvider {
 	 *
 	 * @typeParam R - response data
 	 * @param url - request url
-	 * @param config - axios config
+	 * @param config - fetch config
 	 *
-	 * @throws AxiosError on http status code out of 2.x.x range
-	 * @returns
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns HttpResponse<R>
 	 */
 	delete<R>(
-		url: string,
-		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<R>> {
-		return this._client.delete<R>(url, config);
+		url: RequestURL,
+		config: HttpRequestOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		config.method = HttpMethod.DELETE;
+
+		return this.request(url, config);
 	}
 
 	/**
-	 * Makes a HEAD request.
+	 * Serializes "data" property from
+	 * config into "body" and adds json content type.
 	 *
-	 * @typeParam R - response data
-	 * @param url - request url
-	 * @param config - axios config
-	 *
-	 * @throws AxiosError on http status code out of 2.x.x range
-	 * @returns
+	 * @param config - fetch config
 	 */
-	head<R>(
-		url: string,
-		config?: AxiosRequestConfig,
-	): Promise<AxiosResponse<R>> {
-		return this._client.head<R>(url, config);
+	private _serializeBody(config: HttpRequestBodyOptions = {}) {
+		if (typeof config.data === 'object') {
+			config.body = JSON.stringify(config.data);
+			config.headers = {
+				'content-type': 'application/json',
+				...config.headers,
+			};
+		}
 	}
+
+	/**
+	 * Client base URL.
+	 */
+	private readonly _baseUrl: RequestURL;
+
+	/**
+	 * Client base config.
+	 */
+	private readonly _baseConfig?: HttpRequestOptions;
 
 	/**
 	 * Provider initializer for module.
 	 *
-	 * @param config - axios config and token
+	 * @param config - fetch config and token
 	 *  for handle multiple injected instances
 	 * @param interceptors - request and response interceptors
 	 *
@@ -236,21 +210,10 @@ export class HttpProvider {
 	 */
 	static register(
 		config?: HttpProviderConfig,
-		interceptors?: AxiosInterceptorConfig,
 	): FactoryProvider<HttpProvider> {
 		return {
 			provide: config?.useToken ?? HttpProvider,
-			useFactory: () => new HttpProvider(config, interceptors),
+			useFactory: () => new HttpProvider(config),
 		};
-	}
-
-	/**
-	 * Validates if Error is AxiosError.
-	 *
-	 * @param error - Error object
-	 * @returns whether input is an AxiosError
-	 */
-	static isAxiosError(error: unknown): error is AxiosError {
-		return 'isAxiosError' in (error as AxiosError);
 	}
 }

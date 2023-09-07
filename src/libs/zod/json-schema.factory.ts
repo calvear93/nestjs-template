@@ -4,7 +4,7 @@ import {
 	type ZodOptionalType,
 	type ZodTypeAny,
 } from 'zod';
-import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.js';
 
 interface ParsingArgs<T> {
 	zodRef: T;
@@ -29,11 +29,11 @@ const iterateZodObject = ({ zodRef }: ParsingArgs<AnyZodObject>) => {
 };
 
 const toObject = ({
-	zodRef,
 	schema,
+	zodRef,
 }: ParsingArgs<z.ZodObject<any>>): SchemaObject => {
 	schema.type = 'object';
-	schema.properties = iterateZodObject({ zodRef, schema });
+	schema.properties = iterateZodObject({ schema, zodRef });
 
 	const required = Object.keys(zodRef.shape).filter((key) => {
 		const item = zodRef.shape[key];
@@ -46,8 +46,8 @@ const toObject = ({
 };
 
 const toRecord = ({
-	zodRef,
 	schema,
+	zodRef,
 }: ParsingArgs<z.ZodRecord>): SchemaObject => {
 	schema.type = 'object';
 	schema.additionalProperties =
@@ -65,8 +65,8 @@ const toBoolean = ({ schema }: ParsingArgs<z.ZodBoolean>): SchemaObject => {
 };
 
 const toString = ({
-	zodRef,
 	schema,
+	zodRef,
 }: ParsingArgs<z.ZodString>): SchemaObject => {
 	schema.type = 'string';
 
@@ -118,8 +118,8 @@ const toLiteral = ({
 };
 
 const toNumber = ({
-	zodRef,
 	schema,
+	zodRef,
 }: ParsingArgs<z.ZodNumber>): SchemaObject => {
 	schema.type = 'number';
 
@@ -296,8 +296,8 @@ const toDefault = ({
 };
 
 const toTransformer = ({
-	zodRef,
 	schema,
+	zodRef,
 }: ParsingArgs<
 	z.ZodTransformer<never> | z.ZodEffects<never>
 >): SchemaObject => {
@@ -309,37 +309,37 @@ const catchAll = ({ schema }: ParsingArgs<ZodTypeAny>): SchemaObject => {
 };
 
 const PARSERS_LOOKUP = {
-	ZodObject: toObject,
-	ZodRecord: toRecord,
-	ZodBoolean: toBoolean,
-	ZodString: toString,
-	ZodLiteral: toLiteral,
-	ZodNumber: toNumber,
-	ZodBigInt: toBigInt,
-	ZodNaN: toNaN,
-	ZodDate: toDate,
-	ZodNull: toNull,
-	ZodUndefined: toVoidOrNever,
-	ZodVoid: toVoidOrNever,
-	ZodNever: toVoidOrNever,
-	ZodArray: toArray,
-	ZodTuple: toTuple,
-	ZodEnum: toEnum,
-	ZodNativeEnum: toEnum,
-	ZodIntersection: toIntersection,
-	ZodUnion: toUnion,
-	ZodDiscriminatedUnion: toDiscriminatedUnion,
-	ZodOptional: toOptionalNullable,
-	ZodNullable: toOptionalNullable,
-	ZodDefault: toDefault,
-	ZodTransformer: toTransformer,
-	ZodEffects: toTransformer,
-	ZodMap: catchAll,
-	ZodFunction: catchAll,
-	ZodLazy: catchAll,
-	ZodPromise: catchAll,
 	ZodAny: catchAll,
+	ZodArray: toArray,
+	ZodBigInt: toBigInt,
+	ZodBoolean: toBoolean,
+	ZodDate: toDate,
+	ZodDefault: toDefault,
+	ZodDiscriminatedUnion: toDiscriminatedUnion,
+	ZodEffects: toTransformer,
+	ZodEnum: toEnum,
+	ZodFunction: catchAll,
+	ZodIntersection: toIntersection,
+	ZodLazy: catchAll,
+	ZodLiteral: toLiteral,
+	ZodMap: catchAll,
+	ZodNaN: toNaN,
+	ZodNativeEnum: toEnum,
+	ZodNever: toVoidOrNever,
+	ZodNull: toNull,
+	ZodNullable: toOptionalNullable,
+	ZodNumber: toNumber,
+	ZodObject: toObject,
+	ZodOptional: toOptionalNullable,
+	ZodPromise: catchAll,
+	ZodRecord: toRecord,
+	ZodString: toString,
+	ZodTransformer: toTransformer,
+	ZodTuple: toTuple,
+	ZodUndefined: toVoidOrNever,
+	ZodUnion: toUnion,
 	ZodUnknown: catchAll,
+	ZodVoid: toVoidOrNever,
 };
 
 const hasLookupParser = (key: string): key is keyof typeof PARSERS_LOOKUP => {
@@ -354,9 +354,9 @@ const hasLookupParser = (key: string): key is keyof typeof PARSERS_LOOKUP => {
  */
 export function zodToJsonSchema(zodRef: ZodTypeAny): SchemaObject {
 	const {
-		isNullable,
-		description,
 		_def: { typeName },
+		description,
+		isNullable,
 	} = zodRef;
 
 	const schema: SchemaObject = {};
@@ -366,8 +366,8 @@ export function zodToJsonSchema(zodRef: ZodTypeAny): SchemaObject {
 
 	if (hasLookupParser(typeName)) {
 		return PARSERS_LOOKUP[typeName]({
-			zodRef: zodRef as any,
 			schema,
+			zodRef: zodRef as any,
 		});
 	}
 

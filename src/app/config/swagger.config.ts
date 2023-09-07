@@ -30,9 +30,9 @@ export const swaggerInit = (app: INestApplication) => {
 	SwaggerModule.setup(process.env.API_PREFIX, app, document, {
 		customSiteTitle: process.env.TITLE,
 		swaggerOptions: {
-			tryItOutEnabled: true,
-			persistAuthorization: true,
 			displayRequestDuration: true,
+			persistAuthorization: true,
+			tryItOutEnabled: true,
 		} as SwaggerDocumentOptions,
 	});
 };

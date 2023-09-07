@@ -28,7 +28,6 @@
 │   │   ├── main.module.ts
 │   │   ├── config/
 │   │   └── modules/
-│   │       ├── health/
 │   │       └── sample/
 │   │           ├── controllers/
 │   │           ├── services/

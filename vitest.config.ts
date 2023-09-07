@@ -1,23 +1,23 @@
 import type { UserConfigExport } from 'vitest/config';
-import typescript from '@rollup/plugin-typescript';
+import swc from 'unplugin-swc';
 
 export default {
+	plugins: [swc.vite({ tsconfigFile: 'tsconfig.test.json' })],
 	test: {
-		silent: false,
-		testTimeout: 6000,
-		include: ['src/**/*.{spec,test}.{ts,cts,mts}'],
-		reporters: ['verbose'],
 		coverage: {
 			all: true,
-			reportsDirectory: '.reports/coverage',
-			reporter: ['text', 'text-summary', 'lcov', 'cobertura', 'json'],
-			include: ['src/**/*.{ts,cts,mts}'],
 			exclude: [
 				'**/*.{d,config,mock,fixture}.{ts,cts,mts}',
 				'**/{index,main}.{ts,cts,mts}',
 				'**/__{tests,mocks,fixtures}__',
 			],
+			include: ['src/**/*.{ts,cts,mts}'],
+			reporter: ['text', 'text-summary', 'lcov', 'cobertura', 'json'],
+			reportsDirectory: '.reports/coverage',
 		},
+		include: ['src/**/*.{spec,test}.{ts,cts,mts}'],
+		reporters: ['verbose'],
+		silent: false,
+		testTimeout: 6000,
 	},
-	plugins: [typescript({ tsconfig: 'tsconfig.test.json' })],
 } satisfies UserConfigExport;

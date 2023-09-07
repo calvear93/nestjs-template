@@ -1,57 +1,63 @@
 import { mock } from 'vitest-mock-extended';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import request from 'supertest';
-import { Test } from '@nestjs/testing';
-import { HttpStatus, type INestApplication } from '@nestjs/common';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { type NestFastifyApplication } from '@nestjs/platform-fastify';
+import { createFastifyApplication } from './utils/fastify-test-module.js';
+import { HttpMethod, HttpStatusCode } from '../libs/http/index.js';
 import { SampleService } from '../app/modules/sample/services/sample.service.js';
 import { MainModule } from '../app/main.module.js';
 
-describe('App', () => {
-	let _app: INestApplication;
+describe(MainModule, () => {
+	let _app: NestFastifyApplication;
+	let _module: TestingModule;
 	const _sampleServiceMock = mock<SampleService>({
 		sample: () => 'Hello World Mock',
 	});
 
 	// hooks
 	beforeAll(async () => {
-		const module = await Test.createTestingModule({
+		_module = await Test.createTestingModule({
 			imports: [MainModule],
 		})
 			.overrideProvider(SampleService)
 			.useValue(_sampleServiceMock)
 			.compile();
 
-		_app = module.createNestApplication();
-		_app.enableShutdownHooks();
-		await _app.init();
+		_app = await createFastifyApplication(_module, true);
 	});
 
 	afterAll(async () => {
+		await _module.close();
 		await _app.close();
 	});
 
 	// tests
-	test('get basic should return service "Hello World Mock"', async () => {
+	test('get /v1/basic should return Hello World', async () => {
 		const expected = 'Hello World Mock';
 
-		const { statusCode, text } = await request(_app.getHttpServer())
-			.get('/basic')
-			.expect(200)
-			.expect(expected);
+		const { body, statusCode } = await _app.inject({
+			method: HttpMethod.GET,
+			url: '/v1/basic',
+		});
 
-		expect(statusCode).toBe(HttpStatus.OK);
-		expect(text).toBe(expected);
+		expect(statusCode).toBe(HttpStatusCode.OK);
+		expect(body).toBe(expected);
 	});
 
-	test('get basic/sum should sum two number', async () => {
+	test('get /v1/basic/sum should sum two number', async () => {
 		const [num1, num2] = [1, 2];
 		const expected = (num1 + num2).toString();
 
-		const { statusCode, text } = await request(_app.getHttpServer())
-			.get('/basic/sum')
-			.query({ num1, num2 });
+		const { body, statusCode } = await _app.inject({
+			method: HttpMethod.GET,
+			query: {
+				num1: num1.toString(),
+				num2: num2.toString(),
+			},
+			url: '/v1/basic/sum',
+		});
 
-		expect(statusCode).toBe(HttpStatus.OK);
-		expect(text).toBe(expected);
+		expect(statusCode).toBe(HttpStatusCode.OK);
+		expect(body).toBe(expected);
 	});
 });

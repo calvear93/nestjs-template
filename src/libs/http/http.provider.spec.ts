@@ -4,53 +4,40 @@ import {
 	beforeAll,
 	describe,
 	expect,
-	type Mock,
 	test,
 	vi,
+	type SpyInstance,
 } from 'vitest';
-import nock from 'nock';
-import { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { type AxiosInterceptorConfig, HttpProvider } from './http.provider.js';
+import { HttpProvider } from './http.provider.js';
+import { HttpError } from './http.error.js';
+import { HttpStatusCode } from './enums/http-status.enum.js';
 
-describe(HttpProvider.name, () => {
-	let _module: TestingModule;
-	let _provider: HttpProvider;
+describe(HttpProvider, () => {
+	let module: TestingModule;
+	let provider: HttpProvider;
+	let fetchMock: SpyInstance<
+		Parameters<typeof fetch>,
+		ReturnType<typeof fetch>
+	>;
 
-	const HTTP_ALT_TOKEN = 'alt';
-	const baseURL = 'https://api.com';
-	const baseURLAlt = 'https://api.com/alt';
-
-	const axiosInterceptors: AxiosInterceptorConfig = {
-		request: {
-			onFulfilled: vi.fn(
-				(response) => response as InternalAxiosRequestConfig,
-			),
-			onRejected: vi.fn((error) => {
-				throw error;
-			}),
-		},
-		response: {
-			onFulfilled: vi.fn((response) => response),
-			onRejected: vi.fn((error) => {
-				throw error;
-			}),
-		},
-	};
+	const altToken = 'alt';
+	const url = 'https://api.com';
 
 	// hooks
 	beforeAll(async () => {
-		_module = await Test.createTestingModule({
+		module = await Test.createTestingModule({
 			providers: [
-				HttpProvider.register({ baseURL }, axiosInterceptors),
+				HttpProvider.register({ url }),
 				HttpProvider.register({
-					useToken: HTTP_ALT_TOKEN,
-					baseURL: baseURLAlt,
+					useToken: altToken,
 				}),
 			],
 		}).compile();
 
-		_provider = _module.get(HttpProvider);
+		provider = module.get<HttpProvider>(HttpProvider);
+		// fetch mock
+		fetchMock = vi.spyOn(globalThis, 'fetch');
 	});
 
 	afterEach(() => {
@@ -58,188 +45,157 @@ describe(HttpProvider.name, () => {
 	});
 
 	afterAll(async () => {
-		await _module.close();
-		nock.cleanAll();
+		await module.close();
 	});
 
 	// tests
 	test('common http provider should be defined', () => {
-		expect(_provider).toBeDefined();
+		expect(provider).toBeDefined();
 	});
 
 	test('alternative http provider should be defined and configured', () => {
-		const altProvider = _module.get<HttpProvider>(HTTP_ALT_TOKEN);
+		const altProvider = module.get<HttpProvider>(altToken);
 
 		expect(altProvider).toBeDefined();
-		expect(altProvider.axiosRef.defaults.baseURL).toBe(baseURLAlt);
+	});
+
+	test('request not ok (status in the range 200-299) throws HttpError', () => {
+		// mocking phase
+		fetchMock.mockResolvedValueOnce({
+			ok: false,
+			status: HttpStatusCode.BAD_REQUEST, // doesn't affect this test due to mock
+		} as Response);
+
+		// request phase
+		expect(provider.request('/')).rejects.toThrowError(HttpError);
+	});
+
+	test('request with json response is success', async () => {
+		// mocking phase
+		const expectedData = { value: 1 };
+		fetchMock.mockResolvedValueOnce({
+			json: () => Promise.resolve(expectedData),
+			ok: true,
+			status: HttpStatusCode.OK,
+		} as Response);
+
+		// request phase
+		const response = await provider.request<typeof expectedData>('/');
+		const data = await response.json();
+
+		expect(response.status).toBe(HttpStatusCode.OK);
+		expect(data).toStrictEqual(expectedData);
+	});
+
+	test('request with text response is success', async () => {
+		// mocking phase
+		const expectedData = 'ok';
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.OK,
+			text: () => Promise.resolve(expectedData),
+		} as Response);
+
+		// request phase
+		const response = await provider.request<string>('/');
+		const data = await response.text();
+
+		expect(response.status).toBe(HttpStatusCode.OK);
+		expect(data).toStrictEqual(expectedData);
+	});
+
+	test('request with params is success', async () => {
+		// mocking phase
+		const query = { id: '1', name: 'test' };
+		const expectedUrl = `${url}/?${new URLSearchParams(query)}`;
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.OK,
+		} as Response);
+
+		// request phase
+		const { status } = await provider.request('/', {
+			query,
+		});
+
+		// assertion data
+		const innerUrl = (fetchMock.mock.calls[0][0] as URL).href;
+
+		expect(status).toBe(HttpStatusCode.OK);
+		expect(innerUrl).toBe(expectedUrl);
 	});
 
 	test('get request is success', async () => {
 		// mocking phase
-		nock(baseURL).get('/').reply(200, 'ok');
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.OK,
+		} as Response);
 
 		// request phase
-		const response = await _provider.get<string>('/');
+		const { status } = await provider.get('/');
 
-		expect(response.data).toBe('ok');
-	});
-
-	test('get request with json response is success', async () => {
-		// mocking phase
-		const data = { value: 1 };
-		nock(baseURL).get('/').reply(200, data);
-
-		// request phase
-		const response = await _provider.get<typeof data>('/');
-
-		expect(response.data).toStrictEqual(data);
-	});
-
-	test('get request with params is success', async () => {
-		// mocking phase
-		const params = { id: 1, name: 'test' };
-		nock(baseURL).get('/').query(params).reply(200, 'ok');
-
-		// request phase
-		const response = await _provider.get<string>('/', {
-			params,
-		});
-
-		expect(response.data).toBe('ok');
+		expect(status).toBe(HttpStatusCode.OK);
 	});
 
 	test('post request is success', async () => {
 		// mocking phase
 		const body = { id: 1, name: 'test' };
-		const result = { result: { ...body, time: Date.now() } };
-		nock(baseURL).post('/', body).reply(201, result);
+		const expectedSerializedBody = JSON.stringify(body);
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.CREATED,
+		} as Response);
 
 		// request phase
-		const response = await _provider.post<typeof result>('/', body);
+		const { status } = await provider.post('/', {
+			data: body,
+		});
 
-		expect(response.data).toStrictEqual(result);
+		// assertion data
+		const innerBody = (fetchMock.mock.calls[0][1] as Record<string, string>)
+			.body;
+
+		expect(status).toBe(HttpStatusCode.CREATED);
+		expect(innerBody).toBe(expectedSerializedBody);
 	});
 
 	test('put request is success', async () => {
 		// mocking phase
-		const body = { id: 1, name: 'test' };
-		nock(baseURL).put('/', body).reply(204, 'ok');
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.NO_CONTENT,
+		} as Response);
 
 		// request phase
-		const response = await _provider.put<string>('/', body);
+		const { status } = await provider.put('/');
 
-		expect(response.data).toBe('ok');
+		expect(status).toBe(HttpStatusCode.NO_CONTENT);
 	});
 
 	test('patch request is success', async () => {
 		// mocking phase
-		const body = { id: 1, name: 'test' };
-		nock(baseURL).patch('/', body).reply(204, 'ok');
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.NO_CONTENT,
+		} as Response);
 
 		// request phase
-		const response = await _provider.patch<string>('/', body);
+		const { status } = await provider.patch('/');
 
-		expect(response.data).toBe('ok');
+		expect(status).toBe(HttpStatusCode.NO_CONTENT);
 	});
 
-	test('delete request with params is success', async () => {
+	test('delete request is success', async () => {
 		// mocking phase
-		nock(baseURL).delete('/').reply(204, 'ok');
+		fetchMock.mockResolvedValueOnce({
+			ok: true,
+			status: HttpStatusCode.ACCEPTED,
+		} as Response);
 
 		// request phase
-		const response = await _provider.delete<string>('/');
+		const { status } = await provider.delete('/');
 
-		expect(response.data).toBe('ok');
-	});
-
-	test('HEAD request with params is success', async () => {
-		// mocking phase
-		nock(baseURL).head('/').reply(200, 'ok');
-
-		// request phase
-		const response = await _provider.head<string>('/');
-
-		expect(response.data).toBe('ok');
-	});
-
-	test('request and response interceptors should been called on success', async () => {
-		// mocking phase
-		nock(baseURL).get('/').reply(200, 'ok');
-
-		// request phase
-		const response = await _provider.get<string>('/');
-
-		// interception mocks validation
-		const requestOnFulfilled = axiosInterceptors.request
-			?.onFulfilled as Mock;
-		const responeOnFulfilled = axiosInterceptors.response
-			?.onFulfilled as Mock;
-
-		expect(response.data).toBe('ok');
-		expect(requestOnFulfilled).toHaveBeenCalledTimes(1);
-		expect(responeOnFulfilled).toHaveBeenCalledTimes(1);
-	});
-
-	test('request and response interceptors should been called on error', async () => {
-		// mocking phase
-		nock(baseURL).get('/').reply(500);
-
-		// request phase
-		await expect(_provider.get('/')).rejects.toThrow();
-
-		// interception mocks validation
-		const requestOnRejected = axiosInterceptors.request?.onRejected as Mock;
-		const responeOnRejected = axiosInterceptors.response
-			?.onRejected as Mock;
-
-		expect(requestOnRejected).toHaveBeenCalledTimes(0);
-		expect(responeOnRejected).toHaveBeenCalledTimes(1);
-	});
-
-	test('request does not fails for timeout if response completes before', async () => {
-		// mocking phase
-		nock(baseURL).get('/').delay(20).reply(200);
-
-		// request phase
-		await expect(
-			_provider.get<string>('/', { timeout: 100 }),
-		).resolves.toBeDefined();
-	});
-
-	test('request fails for timeout', async () => {
-		// mocking phase
-		nock(baseURL).get('/').delay(200).reply(200);
-
-		// request phase
-		await expect(
-			_provider.get<string>('/', { timeout: 20 }),
-		).rejects.toThrow();
-	});
-
-	test('request can be aborted', async () => {
-		// mocking phase
-		nock(baseURL).get('/').delay(200).reply(200);
-
-		// request phase
-		const controller = new AbortController();
-
-		const promise = _provider.request({
-			url: '/',
-			method: 'get',
-			signal: controller.signal,
-		});
-
-		controller.abort();
-
-		await expect(promise).rejects.toMatchObject({
-			code: 'ERR_CANCELED',
-			message: 'canceled',
-		});
-	});
-
-	test('AxiosError is matched by isAxiosError method', () => {
-		const axiosError = new AxiosError('axios error');
-
-		expect(HttpProvider.isAxiosError(axiosError)).toBeTruthy();
+		expect(status).toBe(HttpStatusCode.ACCEPTED);
 	});
 });
