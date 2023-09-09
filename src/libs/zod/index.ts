@@ -1,2 +1,2 @@
-export { createZodDto, registerDtoSchemas } from './create-zod-dto.js';
-export { ZodValidationPipe } from './zod.pipe.js';
+export { createZodDto, registerDtoSchemas } from './create-zod-dto.ts';
+export { ZodValidationPipe } from './zod.pipe.ts';

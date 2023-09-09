@@ -3,8 +3,8 @@ import {
 	type OpenAPIObject,
 	type ReferenceObject,
 	type SchemaObject,
-} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.js';
-import { zodToJsonSchema } from './json-schema.factory.js';
+} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
+import { zodToJsonSchema } from './json-schema.factory.ts';
 
 export type Constructor<T, Arguments extends unknown[] = any[]> = new (
 	...arguments_: Arguments

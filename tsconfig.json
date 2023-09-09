@@ -15,8 +15,8 @@
 
 		"incremental": true,
 		"sourceMap": true,
-		"declaration": true,
-		"declarationMap": true,
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
 
 		"isolatedModules": true,
 		"esModuleInterop": true,

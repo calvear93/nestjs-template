@@ -1,6 +1,6 @@
 import type { FactoryProvider, InjectionToken } from '@nestjs/common';
-import { HttpError } from './http.error.js';
-import { HttpMethod } from './enums/http-method.enum.js';
+import { HttpError } from './http.error.ts';
+import { HttpMethod } from './enums/http-method.enum.ts';
 
 export type RequestURL = string | URL;
 

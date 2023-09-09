@@ -7,8 +7,8 @@ import { type INestApplication } from '@nestjs/common';
 import {
 	APY_KEY_GUARD_NAME,
 	SECURITY_API_SCHEMA,
-} from '../decorators/api-key.guard.js';
-import { registerDtoSchemas } from '../../libs/zod/create-zod-dto.js';
+} from '../decorators/api-key.guard.ts';
+import { registerDtoSchemas } from '../../libs/zod/create-zod-dto.ts';
 
 /**
  * Swagger base configuration.

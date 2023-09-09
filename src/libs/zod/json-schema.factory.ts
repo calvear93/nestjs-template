@@ -4,7 +4,7 @@ import {
 	type ZodOptionalType,
 	type ZodTypeAny,
 } from 'zod';
-import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.js';
+import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 
 interface ParsingArgs<T> {
 	zodRef: T;

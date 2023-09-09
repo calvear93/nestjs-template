@@ -1,8 +1,8 @@
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { NestFactory } from '@nestjs/core';
-import { ZodValidationPipe } from './libs/zod/zod.pipe.js';
-import { MainModule } from './app/main.module.js';
-import { swaggerInit } from './app/config/swagger.config.js';
+import { ZodValidationPipe } from './libs/zod/zod.pipe.ts';
+import { MainModule } from './app/main.module.ts';
+import { swaggerInit } from './app/config/swagger.config.ts';
 
 const PORT = +process.env.PORT;
 const PREFIX = process.env.API_PREFIX;

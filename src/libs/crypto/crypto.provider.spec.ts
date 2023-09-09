@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, test } from 'vitest';
-import { CryptoProvider } from './crypto.provider.js';
+import { CryptoProvider } from './crypto.provider.ts';
 
 describe(CryptoProvider, () => {
 	let provider: CryptoProvider;

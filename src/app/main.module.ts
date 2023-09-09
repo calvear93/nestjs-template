@@ -1,5 +1,5 @@
 import { Logger, Module, type OnModuleInit } from '@nestjs/common';
-import { SampleModule } from '../app/modules/index.js';
+import { SampleModule } from '../app/modules/index.ts';
 
 @Module({
 	imports: [SampleModule],

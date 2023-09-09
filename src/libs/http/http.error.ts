@@ -1,5 +1,5 @@
-import { type HttpResponse } from './http.provider.js';
-import { HttpStatusCode } from './enums/http-status.enum.js';
+import { type HttpResponse } from './http.provider.ts';
+import { HttpStatusCode } from './enums/http-status.enum.ts';
 
 /**
  * Http Error.

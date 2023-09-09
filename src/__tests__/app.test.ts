@@ -2,10 +2,10 @@ import { mock } from 'vitest-mock-extended';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { type NestFastifyApplication } from '@nestjs/platform-fastify';
-import { createFastifyApplication } from './utils/fastify-test-module.js';
-import { HttpMethod, HttpStatusCode } from '../libs/http/index.js';
-import { SampleService } from '../app/modules/sample/services/sample.service.js';
-import { MainModule } from '../app/main.module.js';
+import { createFastifyApplication } from './utils/fastify-test-module.ts';
+import { HttpMethod, HttpStatusCode } from '../libs/http/index.ts';
+import { SampleService } from '../app/modules/sample/services/sample.service.ts';
+import { MainModule } from '../app/main.module.ts';
 
 describe(MainModule, () => {
 	let _app: NestFastifyApplication;

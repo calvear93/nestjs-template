@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { describe, expect, test } from 'vitest';
 import { type OpenAPIObject } from '@nestjs/swagger';
 import { BadRequestException } from '@nestjs/common';
-import { ZodValidationPipe } from './zod.pipe.js';
-import { createZodDto, registerDtoSchemas } from './create-zod-dto.js';
+import { ZodValidationPipe } from './zod.pipe.ts';
+import { createZodDto, registerDtoSchemas } from './create-zod-dto.ts';
 
 describe('zod', () => {
 	// tests

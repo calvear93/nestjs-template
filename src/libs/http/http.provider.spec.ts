@@ -9,9 +9,9 @@ import {
 	type SpyInstance,
 } from 'vitest';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { HttpProvider } from './http.provider.js';
-import { HttpError } from './http.error.js';
-import { HttpStatusCode } from './enums/http-status.enum.js';
+import { HttpProvider } from './http.provider.ts';
+import { HttpError } from './http.error.ts';
+import { HttpStatusCode } from './enums/http-status.enum.ts';
 
 describe(HttpProvider, () => {
 	let module: TestingModule;
