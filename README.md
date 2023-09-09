@@ -56,6 +56,12 @@
 -   Execute `pnpm env:schema` command.
 -   Run either `pnpm start:dev` or `pnpm test:dev` commands.
 
+-   Using Docker.
+    -   Exec `pnpm exec env export -p ".env" -e dev -m build`
+    -   Exec `docker build --no-cache -f Dockerfile --tag image_name .`
+    -   Exec `docker run --env-file .env -d -it -p 8080:8080/tcp --name container_name image_name`
+    -   Open `http://localhost:8080/api/(((base-path)))` in browser
+
 ## 📋 **Branches and Environments**
 
 Project has 2 environments (infrastructure) base for project building.

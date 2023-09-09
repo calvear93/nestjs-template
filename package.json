@@ -5,10 +5,10 @@
 	"title": "(((app-title)))",
 	"description": "(((project-description)))",
 	"scripts": {
-		"start:dev": "env -e dev -m debug --log debug : pnpm start --watch",
-		"start:release": "env -e release -m debug : pnpm start --watch",
-		"build:dev": "env -e dev -m build : pnpm build",
-		"build:release": "env -e release -m build : pnpm build",
+		"start:dev": "env -e dev -m debug --log debug : pnpm _start --watch",
+		"start:release": "env -e release -m debug : pnpm _start --watch",
+		"build": "wireit",
+		"preview": "wireit",
 		"test:dev": "env -e dev -m test : vitest",
 		"test:release": "env -e release -m test : vitest",
 		"test:mutation": "env -e dev -m test : stryker run",
@@ -16,9 +16,7 @@
 		"lint": "wireit",
 		"format": "wireit",
 		"clean": "pnpx del-cli **/node_modules **/dist **/.reports **/*.tsbuildinfo .rollup.cache .wireit",
-		"start": "wireit",
-		"build": "wireit",
-		"preview": "wireit"
+		"_start": "wireit"
 	},
 	"license": "MIT",
 	"private": false,
@@ -54,7 +52,7 @@
 		"zod": "^3.22.2"
 	},
 	"devDependencies": {
-		"@calvear/env": "^2.7.0",
+		"@calvear/env": "^2.8.0",
 		"@nestjs/testing": "^10.2.4",
 		"@stryker-mutator/core": "^7.1.1",
 		"@stryker-mutator/typescript-checker": "^7.1.1",
@@ -120,9 +118,9 @@
 			]
 		},
 		"preview": {
-			"command": "node dist/main",
+			"command": "env -e dev -m build --log debug : node dist/main",
 			"dependencies": [
-				"build:dev"
+				"build"
 			]
 		},
 		"format": {

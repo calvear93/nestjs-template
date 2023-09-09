@@ -22,7 +22,7 @@ export default {
 		target: process.env.TARGET,
 		terserOptions: { keep_classnames: true },
 	},
-	define: loadEnv(),
+	// define: loadEnv(),
 	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' }), pkgJson()],
 } satisfies UserConfigExport;
 
@@ -46,6 +46,7 @@ function pkgJson() {
 /**
  * Loads environment variables for define injector.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function loadEnv() {
 	if (process.env.NODE_ENV === 'production') {
 		return Object.fromEntries(
@@ -55,6 +56,4 @@ function loadEnv() {
 			]),
 		);
 	}
-
-	return void 0;
 }

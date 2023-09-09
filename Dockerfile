@@ -28,7 +28,6 @@ FROM base AS builder
 
 ARG APP_DIR
 ARG OUT_DIR
-ARG ENV
 
 WORKDIR ${APP_DIR}
 
@@ -37,7 +36,7 @@ COPY . ${APP_DIR}
 RUN pnpm install --frozen-lockfile
 # builds the app
 ENV NODE_ENV production
-RUN pnpm build:${ENV}
+RUN pnpm build
 COPY 'package.json' 'pnpm-lock.yaml' ${OUT_DIR}/
 
 
@@ -61,7 +60,6 @@ RUN pnpm install --frozen-lockfile --prod --no-optional --ignore-scripts
 RUN node-prune
 # removes unnecessary files and dependencies
 RUN rm -rf \
-	'package.json' \
 	'pnpm-lock.yaml' \
 	'node_modules/.bin/'
 
