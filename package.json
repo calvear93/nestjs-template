@@ -86,7 +86,7 @@
 		"wireit": "^0.13.0"
 	},
 	"wireit": {
-		"start": {
+		"_start": {
 			"command": "node --no-warnings --loader @swc-node/register/esm src/main.ts",
 			"files": [
 				"src/**/*",
