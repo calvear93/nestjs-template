@@ -37,7 +37,6 @@ RUN pnpm install --frozen-lockfile
 # builds the app
 ENV NODE_ENV production
 RUN pnpm build
-COPY 'package.json' 'pnpm-lock.yaml' ${OUT_DIR}/
 
 
 ##
@@ -56,7 +55,7 @@ RUN curl -sf 'https://gobinaries.com/tj/node-prune' | sh
 # gets build app
 COPY --from=builder ${APP_DIR}${OUT_DIR} ${APP_DIR}
 # install app build dependencies
-RUN pnpm install --frozen-lockfile --prod --no-optional --ignore-scripts
+RUN pnpm install --prod --no-optional --ignore-scripts
 RUN node-prune
 # removes unnecessary files and dependencies
 RUN rm -rf \
