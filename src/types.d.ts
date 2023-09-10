@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 
-declare global {
+export declare global {
 	// SECTION: built-in types tweaks
 	interface JSON {
 		parse<T = unknown>(
@@ -42,5 +42,3 @@ declare global {
 	// https://en.wikipedia.org/wiki/ISO_8601#Durations
 	type DurationISO8601 = string;
 }
-
-export {};
