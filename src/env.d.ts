@@ -1,4 +1,4 @@
-declare global {
+export declare global {
 	namespace NodeJS {
 		// NOTE: only string type is supported
 		interface ProcessEnv {
@@ -29,5 +29,3 @@ declare global {
 		}
 	}
 }
-
-export {};
