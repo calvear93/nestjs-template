@@ -26,6 +26,7 @@ export interface HttpResponse<R = unknown> extends Response {
  * NOTE: import it in your context module at 'providers' array.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/fetch
  * @see https://docs.nestjs.com/providers
  */
 export class HttpProvider {
