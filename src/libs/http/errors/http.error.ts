@@ -1,11 +1,8 @@
-import { type HttpResponse } from './http.provider.ts';
-import { HttpStatusCode } from './enums/http-status.enum.ts';
+import { type HttpResponse } from '../http.provider.ts';
+import { HttpStatusCode } from '../enums/http-status.enum.ts';
 
 /**
  * Http Error.
- *
- * @remarks errors are critical problems should stop application, meanwhile
- *  exceptions are expected behavior on certain situations.
  */
 export class HttpError extends Error {
 	constructor(response: HttpResponse) {

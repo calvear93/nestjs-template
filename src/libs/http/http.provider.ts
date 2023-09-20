@@ -1,8 +1,10 @@
 import type { FactoryProvider, InjectionToken } from '@nestjs/common';
-import { HttpError } from './http.error.ts';
+import { TimeoutError } from './errors/timeout.error.ts';
+import { HttpError } from './errors/http.error.ts';
 import { HttpMethod } from './enums/http-method.enum.ts';
 
 type RequestOptions = Omit<RequestInit, 'signal' | 'window'>;
+
 export type RequestURL = string | URL;
 
 /**
@@ -29,6 +31,8 @@ export class HttpProvider {
 				...cfg,
 			};
 		}
+
+		this._timeoutReason = new TimeoutError();
 	}
 
 	/**
@@ -38,7 +42,7 @@ export class HttpProvider {
 	 * @param config - config object
 	 *
 	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns HttpResponse<R>
+	 * @returns async response
 	 */
 	async request<R = unknown>(
 		url: RequestURL,
@@ -48,7 +52,7 @@ export class HttpProvider {
 			config.cancel ??= new AbortController();
 
 			const requestTimeout = setTimeout(() => {
-				config.cancel!.abort();
+				config.cancel!.abort(this._timeoutReason);
 				clearTimeout(requestTimeout);
 			}, timeout);
 		}
@@ -80,7 +84,7 @@ export class HttpProvider {
 	 * @param config - fetch config
 	 *
 	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns HttpResponse<R>
+	 * @returns async response
 	 */
 	get<R>(
 		url: RequestURL,
@@ -99,7 +103,7 @@ export class HttpProvider {
 	 * @param config - fetch config
 	 *
 	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns HttpResponse<R>
+	 * @returns async response
 	 */
 	post<R>(
 		url: RequestURL,
@@ -119,7 +123,7 @@ export class HttpProvider {
 	 * @param config - fetch config
 	 *
 	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns HttpResponse<R>
+	 * @returns async response
 	 */
 	put<R>(
 		url: RequestURL,
@@ -139,7 +143,7 @@ export class HttpProvider {
 	 * @param config - fetch config
 	 *
 	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns HttpResponse<R>
+	 * @returns async response
 	 */
 	patch<R>(
 		url: RequestURL,
@@ -159,7 +163,7 @@ export class HttpProvider {
 	 * @param config - fetch config
 	 *
 	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns HttpResponse<R>
+	 * @returns async response
 	 */
 	delete<R>(
 		url: RequestURL,
@@ -195,6 +199,11 @@ export class HttpProvider {
 	 * Client base config.
 	 */
 	private readonly _baseConfig?: HttpRequestOptions;
+
+	/**
+	 * Reason for timeout
+	 */
+	private readonly _timeoutReason: TimeoutError;
 
 	/**
 	 * Provider initializer for module.

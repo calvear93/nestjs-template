@@ -16,7 +16,8 @@ import {
 } from 'vitest';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { HttpProvider } from './http.provider.ts';
-import { HttpError } from './http.error.ts';
+import { TimeoutError } from './errors/timeout.error.ts';
+import { HttpError } from './errors/http.error.ts';
 import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
 
@@ -227,7 +228,7 @@ describe(HttpProvider, () => {
 		// request phase
 		await expect(
 			_provider.get<string>('/', { timeout: 1 }),
-		).rejects.toThrow();
+		).rejects.toThrow(TimeoutError);
 	});
 
 	test('request can be aborted', async () => {

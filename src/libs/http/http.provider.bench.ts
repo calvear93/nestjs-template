@@ -10,7 +10,8 @@ import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.t
 
 const PORT = 5678;
 const BENCH_CONFIG: Parameters<typeof bench>[2] = {
-	warmupIterations: 5000,
+	time: 5000,
+	warmupIterations: 100,
 };
 
 describe(HttpProvider.name, () => {
@@ -38,11 +39,12 @@ describe(HttpProvider.name, () => {
 	});
 
 	bench(
-		'native fetch',
+		'HTTP provider',
 		async () => {
-			const response = await fetch(_url, {
-				body: JSON.stringify({ id: 1, name: 'a name' }),
-				method: 'POST',
+			const response = await _provider.post(_url, {
+				data: { id: 1, name: 'a name' },
+				query: { name: 'test' },
+				timeout: 200,
 			});
 
 			const body = await response.json();
@@ -54,10 +56,11 @@ describe(HttpProvider.name, () => {
 	);
 
 	bench(
-		'HTTP provider',
+		'native fetch',
 		async () => {
-			const response = await _provider.post(_url, {
-				data: { id: 1, name: 'a name' },
+			const response = await fetch(_url, {
+				body: JSON.stringify({ id: 1, name: 'a name' }),
+				method: 'POST',
 			});
 
 			const body = await response.json();

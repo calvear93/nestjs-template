@@ -5,6 +5,14 @@ import http, {
 } from 'node:http';
 import { vi, type Mock } from 'vitest';
 
+/**
+ * Creates a basic HTTP server
+ * for tests requests.
+ *
+ * @param port - localhost port
+ *
+ * @returns HTTP server and request handler mocker
+ */
 export const createHttpMockServer = (
 	port: number,
 ): [Server, Mock<[IncomingMessage, ServerResponse]>] => {
