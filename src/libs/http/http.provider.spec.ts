@@ -198,4 +198,38 @@ describe(HttpProvider, () => {
 
 		expect(status).toBe(HttpStatusCode.ACCEPTED);
 	});
+
+	// test('request fails for timeout', async () => {
+	// 	// mocking phase
+	// 	fetchMock.mockResolvedValueOnce({
+	// 		ok: true,
+	// 		status: HttpStatusCode.ACCEPTED,
+	// 	} as Response);
+
+	// 	// request phase
+	// 	await expect(
+	// 		_provider.get<string>('/', { timeout: 20 }),
+	// 	).rejects.toThrow();
+	// });
+
+	// test('request can be aborted', async () => {
+	// 	// mocking phase
+	// 	nock(baseURL).get('/').delay(200).reply(200);
+
+	// 	// request phase
+	// 	const controller = new AbortController();
+
+	// 	const promise = _provider.request({
+	// 		method: 'get',
+	// 		signal: controller.signal,
+	// 		url: '/',
+	// 	});
+
+	// 	controller.abort();
+
+	// 	await expect(promise).rejects.toMatchObject({
+	// 		code: 'ERR_CANCELED',
+	// 		message: 'canceled',
+	// 	});
+	// });
 });

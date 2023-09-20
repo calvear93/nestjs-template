@@ -2,24 +2,8 @@ import type { FactoryProvider, InjectionToken } from '@nestjs/common';
 import { HttpError } from './http.error.ts';
 import { HttpMethod } from './enums/http-method.enum.ts';
 
+type RequestOptions = Omit<RequestInit, 'signal' | 'window'>;
 export type RequestURL = string | URL;
-
-export interface HttpRequestOptions extends RequestInit {
-	query?: Record<string, string>;
-}
-
-export interface HttpRequestBodyOptions extends HttpRequestOptions {
-	data?: object;
-}
-
-export interface HttpProviderConfig extends Omit<HttpRequestOptions, 'body'> {
-	url?: RequestURL;
-	useToken?: InjectionToken;
-}
-
-export interface HttpResponse<R = unknown> extends Response {
-	json<J = R>(): Promise<J>;
-}
 
 /**
  * Http provider using fetch.
@@ -33,13 +17,13 @@ export class HttpProvider {
 	/**
 	 * Creates an instance of HttpProvider.
 	 *
-	 * @param config - fetch config
+	 * @param config - fetch config and url (base url)
 	 */
-	constructor(config?: HttpRequestOptions & { url?: RequestURL }) {
+	constructor(config?: HttpProviderConfig) {
 		if (config) {
 			const { url, ...cfg } = config;
 
-			this._baseUrl = url ?? '';
+			this._baseUrl = url;
 			this._baseConfig = {
 				cache: 'no-cache',
 				...cfg,
@@ -58,8 +42,20 @@ export class HttpProvider {
 	 */
 	async request<R = unknown>(
 		url: RequestURL,
-		{ query, ...config }: HttpRequestOptions = {},
+		{ query, timeout, ...config }: HttpRequestOptions = {},
 	): Promise<HttpResponse<R>> | never {
+		if (timeout) {
+			config.cancel ??= new AbortController();
+
+			const requestTimeout = setTimeout(() => {
+				config.cancel!.abort();
+				clearTimeout(requestTimeout);
+			}, timeout);
+		}
+
+		// sets fetch cancel signal from abort controller
+		(config as RequestInit).signal ??= config.cancel?.signal;
+
 		const response = await fetch(
 			new URL(
 				query ? `?${new URLSearchParams(query)}` : url,
@@ -193,7 +189,7 @@ export class HttpProvider {
 	/**
 	 * Client base URL.
 	 */
-	private readonly _baseUrl: RequestURL;
+	private readonly _baseUrl?: RequestURL;
 
 	/**
 	 * Client base config.
@@ -210,11 +206,29 @@ export class HttpProvider {
 	 * @returns provider
 	 */
 	static register(
-		config?: HttpProviderConfig,
+		config?: HttpProviderConfig & { useToken?: InjectionToken },
 	): FactoryProvider<HttpProvider> {
 		return {
 			provide: config?.useToken ?? HttpProvider,
 			useFactory: () => new HttpProvider(config),
 		};
 	}
+}
+
+export interface HttpRequestOptions extends RequestOptions {
+	query?: Record<string, string>;
+	timeout?: millis;
+	cancel?: AbortController;
+}
+
+export interface HttpRequestBodyOptions extends HttpRequestOptions {
+	data?: object;
+}
+
+export interface HttpProviderConfig extends HttpRequestOptions {
+	url?: RequestURL;
+}
+
+export interface HttpResponse<R = unknown> extends Response {
+	json<J = R>(): Promise<J>;
 }

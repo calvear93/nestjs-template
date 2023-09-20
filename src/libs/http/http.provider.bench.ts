@@ -1,6 +1,6 @@
-import { describe } from 'node:test';
+import { describe, after, before } from 'node:test';
 import http, { type Server } from 'node:http';
-import { afterAll, beforeAll, bench, expect } from 'vitest';
+import { bench, expect } from 'vitest';
 import { HttpProvider } from './http.provider.ts';
 
 const PORT = 5678;
@@ -21,18 +21,18 @@ const createHttpServer = (responseBody: object): Server => {
 	return server;
 };
 
-describe(`${HttpProvider.name} benchmark`, () => {
+describe(HttpProvider.name, () => {
 	let _server: Server;
 	let _provider: HttpProvider;
 	const _url = `http://localhost:${PORT}`;
 	const _responseBody = { message: 'Ok' };
 
-	beforeAll(() => {
+	before(() => {
 		_server = createHttpServer(_responseBody);
 		_provider = new HttpProvider({ url: _url });
 	});
 
-	afterAll(() => {
+	after(() => {
 		_server.closeAllConnections();
 		_server.close();
 	});
