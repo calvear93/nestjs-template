@@ -184,7 +184,7 @@ export class HttpProvider {
 		if (typeof config.data === 'object') {
 			config.body = JSON.stringify(config.data);
 			config.headers = {
-				'content-type': 'application/json',
+				'content-type': 'application/json;charset=UTF-8',
 				...config.headers,
 			};
 		}

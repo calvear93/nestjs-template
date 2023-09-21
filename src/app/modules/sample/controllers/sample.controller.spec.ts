@@ -21,13 +21,13 @@ describe(SampleController, () => {
 		expect(_controller).toBeDefined();
 	});
 
-	test('run returns "Hello World"', () => {
+	test('run() returns "Hello World"', () => {
 		const expected = 'Hello World';
 
 		expect(_controller.run()).toBe(expected);
 	});
 
-	test('sum of 1 and 2 returns 3', () => {
+	test('sum() of 1 and 2 returns 3', () => {
 		const [num1, num2] = [1, 2];
 		const expected = num1 + num2;
 

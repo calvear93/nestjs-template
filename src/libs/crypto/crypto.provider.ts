@@ -78,16 +78,6 @@ export type HashAlgorithm =
  */
 export class CryptoProvider {
 	/**
-	 * Crypto key.
-	 */
-	private readonly _key: Buffer;
-
-	/**
-	 * Vector initializer.
-	 */
-	private readonly _vector: Buffer;
-
-	/**
 	 * Creates an instance of CryptoProvider.
 	 *
 	 * @param key - crypto key, should be length 32
@@ -157,6 +147,16 @@ export class CryptoProvider {
 
 		return decipher.update(str, 'hex', 'utf8') + decipher.final('utf8');
 	}
+
+	/**
+	 * Crypto key.
+	 */
+	private readonly _key: Buffer;
+
+	/**
+	 * Vector initializer.
+	 */
+	private readonly _vector: Buffer;
 
 	/**
 	 * Provider initializer for module.

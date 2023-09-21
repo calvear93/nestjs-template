@@ -4,11 +4,11 @@ import {
 	type SwaggerDocumentOptions,
 } from '@nestjs/swagger';
 import { type INestApplication } from '@nestjs/common';
+import { registerDtoSchemas } from '../libs/zod/create-zod-dto.ts';
 import {
 	APY_KEY_GUARD_NAME,
 	SECURITY_API_SCHEMA,
-} from '../decorators/api-key.guard.ts';
-import { registerDtoSchemas } from '../../libs/zod/create-zod-dto.ts';
+} from '../app/decorators/api-key.guard.ts';
 
 /**
  * Swagger base configuration.

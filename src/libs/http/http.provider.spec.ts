@@ -22,10 +22,11 @@ import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
 
 describe(HttpProvider, () => {
-	let _server: Server;
-	let _responseMock: Mock<[IncomingMessage, ServerResponse]>;
 	let _module: TestingModule;
 	let _provider: HttpProvider;
+
+	let _server: Server;
+	let _responseMock: Mock<[IncomingMessage, ServerResponse]>;
 	let _fetchMock: SpyInstance<
 		Parameters<typeof fetch>,
 		ReturnType<typeof fetch>
@@ -51,7 +52,7 @@ describe(HttpProvider, () => {
 
 		// mock server
 		[_server, _responseMock] = createHttpMockServer(_PORT);
-		// fetch mock
+		// fetch spy
 		_fetchMock = vi.spyOn(globalThis, 'fetch');
 	});
 
@@ -79,8 +80,7 @@ describe(HttpProvider, () => {
 	test('request not ok (status in the range 200-299) throws HttpError', () => {
 		// mocking phase
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.BAD_REQUEST);
-			response.end();
+			response.writeHead(HttpStatusCode.BAD_REQUEST).end();
 		});
 
 		// request phase
@@ -91,10 +91,11 @@ describe(HttpProvider, () => {
 		// mocking phase
 		const expectedData = { value: 1 };
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.OK, 'Ok', {
-				'Content-Type': 'application/json',
-			});
-			response.end(JSON.stringify(expectedData));
+			response
+				.writeHead(HttpStatusCode.OK, 'Ok', {
+					'Content-Type': 'application/json',
+				})
+				.end(JSON.stringify(expectedData));
 		});
 
 		// request phase
@@ -109,10 +110,11 @@ describe(HttpProvider, () => {
 		// mocking phase
 		const expectedData = 'ok';
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.OK, 'Ok', {
-				'Content-Type': 'text/plain',
-			});
-			response.end(expectedData);
+			response
+				.writeHead(HttpStatusCode.OK, 'Ok', {
+					'Content-Type': 'text/plain',
+				})
+				.end(expectedData);
 		});
 
 		// request phase
@@ -146,8 +148,7 @@ describe(HttpProvider, () => {
 	test('get request is success', async () => {
 		// mocking phase
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.OK);
-			response.end();
+			response.writeHead(HttpStatusCode.OK).end();
 		});
 
 		// request phase
@@ -161,8 +162,7 @@ describe(HttpProvider, () => {
 		const body = { id: 1, name: 'test' };
 		const expectedSerializedBody = JSON.stringify(body);
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.CREATED);
-			response.end();
+			response.writeHead(HttpStatusCode.CREATED).end();
 		});
 
 		// request phase
@@ -182,8 +182,7 @@ describe(HttpProvider, () => {
 	test('put request is success', async () => {
 		// mocking phase
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.NO_CONTENT);
-			response.end();
+			response.writeHead(HttpStatusCode.NO_CONTENT).end();
 		});
 
 		// request phase
@@ -195,8 +194,7 @@ describe(HttpProvider, () => {
 	test('patch request is success', async () => {
 		// mocking phase
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.NO_CONTENT);
-			response.end();
+			response.writeHead(HttpStatusCode.NO_CONTENT).end();
 		});
 
 		// request phase
@@ -208,8 +206,7 @@ describe(HttpProvider, () => {
 	test('delete request is success', async () => {
 		// mocking phase
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.ACCEPTED);
-			response.end();
+			response.writeHead(HttpStatusCode.ACCEPTED).end();
 		});
 
 		// request phase
@@ -221,8 +218,7 @@ describe(HttpProvider, () => {
 	test('request fails for timeout', async () => {
 		// mocking phase
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.OK);
-			response.end();
+			response.writeHead(HttpStatusCode.OK).end();
 		});
 
 		// request phase
@@ -234,8 +230,7 @@ describe(HttpProvider, () => {
 	test('request can be aborted', async () => {
 		// mocking phase
 		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.OK);
-			response.end();
+			response.writeHead(HttpStatusCode.OK).end();
 		});
 
 		// request phase

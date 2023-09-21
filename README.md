@@ -20,18 +20,18 @@
 ```bash
 ├── env/
 │   ├── appsettings.json
-│   ├── dev.env.json # secret file, autogen
-│   └── release.env.json # secret file, autogen
+│   ├── dev.env.json # secret file, initial autogen
+│   └── release.env.json # secret file, initial autogen
 ├── src/
 │   ├── __tests__/
 │   ├── app/
 │   │   ├── main.module.ts
-│   │   ├── config/
 │   │   └── modules/
 │   │       └── sample/
 │   │           ├── controllers/
 │   │           ├── services/
 │   │           └── sample.module.ts
+│   ├── config/
 │   ├── libs/
 │   ├── main.ts # entry file
 │   └── env.d.ts

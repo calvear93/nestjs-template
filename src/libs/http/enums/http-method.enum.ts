@@ -3,12 +3,6 @@
  */
 export enum HttpMethod {
 	/**
-	 * The `CONNECT` method establishes a tunnel to the server identified by the
-	 * target resource.
-	 */
-	CONNECT = 'CONNECT',
-
-	/**
 	 * The `GET` method requests a representation of the specified resource.
 	 * Requests using GET should only retrieve data.
 	 */

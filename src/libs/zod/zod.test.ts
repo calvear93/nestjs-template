@@ -5,7 +5,7 @@ import { BadRequestException } from '@nestjs/common';
 import { ZodValidationPipe } from './zod.pipe.ts';
 import { createZodDto, registerDtoSchemas } from './create-zod-dto.ts';
 
-describe('zod', () => {
+describe(ZodValidationPipe, () => {
 	// tests
 	test('register DTO schemas', () => {
 		const name = 'DemoSchema';
