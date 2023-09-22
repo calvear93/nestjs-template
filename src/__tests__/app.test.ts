@@ -23,7 +23,7 @@ describe(MainModule, () => {
 			.useValue(_sampleServiceMock)
 			.compile();
 
-		_app = await createFastifyApplication(_module, true);
+		_app = await createFastifyApplication(_module);
 	});
 
 	afterAll(async () => {

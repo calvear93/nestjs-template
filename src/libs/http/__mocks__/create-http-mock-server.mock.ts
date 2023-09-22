@@ -15,9 +15,10 @@ import { vi, type Mock } from 'vitest';
  */
 export const createHttpMockServer = (
 	port: number,
+	hostname = 'localhost',
 ): [Server, Mock<[IncomingMessage, ServerResponse]>] => {
 	const mock = vi.fn<[IncomingMessage, ServerResponse]>();
-	const server = http.createServer().listen(port, 'localhost');
+	const server = http.createServer().listen(port, hostname);
 
 	server.on('request', mock);
 

@@ -181,10 +181,17 @@ export class HttpProvider {
 	 * @param config - fetch config
 	 */
 	private _serializeBody(config: HttpRequestBodyOptions = {}) {
-		if (typeof config.data === 'object') {
+		if (config.data instanceof URLSearchParams) {
+			config.body = config.data;
+			config.headers = {
+				'content-type':
+					'application/x-www-form-urlencoded;charset=utf-8',
+				...config.headers,
+			};
+		} else if (typeof config.data === 'object') {
 			config.body = JSON.stringify(config.data);
 			config.headers = {
-				'content-type': 'application/json;charset=UTF-8',
+				'content-type': 'application/json;charset=utf-8',
 				...config.headers,
 			};
 		}

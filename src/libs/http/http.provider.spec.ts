@@ -26,7 +26,7 @@ describe(HttpProvider, () => {
 	let _provider: HttpProvider;
 
 	let _server: Server;
-	let _responseMock: Mock<[IncomingMessage, ServerResponse]>;
+	let _serverResponse: Mock<[IncomingMessage, ServerResponse]>;
 	let _fetchMock: SpyInstance<
 		Parameters<typeof fetch>,
 		ReturnType<typeof fetch>
@@ -48,12 +48,12 @@ describe(HttpProvider, () => {
 			],
 		}).compile();
 
-		_provider = _module.get<HttpProvider>(HttpProvider);
-
 		// mock server
-		[_server, _responseMock] = createHttpMockServer(_PORT);
+		[_server, _serverResponse] = createHttpMockServer(_PORT);
 		// fetch spy
 		_fetchMock = vi.spyOn(globalThis, 'fetch');
+
+		_provider = _module.get<HttpProvider>(HttpProvider);
 	});
 
 	afterEach(() => {
@@ -79,7 +79,7 @@ describe(HttpProvider, () => {
 
 	test('request not ok (status in the range 200-299) throws HttpError', () => {
 		// mocking phase
-		_responseMock.mockImplementationOnce((_, response) => {
+		_serverResponse.mockImplementationOnce((_, response) => {
 			response.writeHead(HttpStatusCode.BAD_REQUEST).end();
 		});
 
@@ -90,12 +90,8 @@ describe(HttpProvider, () => {
 	test('request with json response is success', async () => {
 		// mocking phase
 		const expectedData = { value: 1 };
-		_responseMock.mockImplementationOnce((_, response) => {
-			response
-				.writeHead(HttpStatusCode.OK, 'Ok', {
-					'Content-Type': 'application/json',
-				})
-				.end(JSON.stringify(expectedData));
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end(JSON.stringify(expectedData));
 		});
 
 		// request phase
@@ -109,12 +105,8 @@ describe(HttpProvider, () => {
 	test('request with text response is success', async () => {
 		// mocking phase
 		const expectedData = 'ok';
-		_responseMock.mockImplementationOnce((_, response) => {
-			response
-				.writeHead(HttpStatusCode.OK, 'Ok', {
-					'Content-Type': 'text/plain',
-				})
-				.end(expectedData);
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end(expectedData);
 		});
 
 		// request phase
@@ -129,7 +121,7 @@ describe(HttpProvider, () => {
 		// mocking phase
 		const query = { id: '1', name: 'test' };
 		const expectedUrl = `/?${new URLSearchParams(query)}`;
-		_responseMock.mockImplementationOnce((_, response) => {
+		_serverResponse.mockImplementationOnce((_, response) => {
 			response.end();
 		});
 
@@ -139,7 +131,7 @@ describe(HttpProvider, () => {
 		});
 
 		// assertion data
-		const receivedUrl = _responseMock.mock.calls[0][0].url;
+		const receivedUrl = _serverResponse.mock.calls[0][0].url;
 
 		expect(status).toBe(HttpStatusCode.OK);
 		expect(receivedUrl).toBe(expectedUrl);
@@ -147,8 +139,8 @@ describe(HttpProvider, () => {
 
 	test('get request is success', async () => {
 		// mocking phase
-		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.OK).end();
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
 		});
 
 		// request phase
@@ -157,11 +149,11 @@ describe(HttpProvider, () => {
 		expect(status).toBe(HttpStatusCode.OK);
 	});
 
-	test('post request is success', async () => {
+	test('post request with json body is success', async () => {
 		// mocking phase
 		const body = { id: 1, name: 'test' };
 		const expectedSerializedBody = JSON.stringify(body);
-		_responseMock.mockImplementationOnce((_, response) => {
+		_serverResponse.mockImplementationOnce((_, response) => {
 			response.writeHead(HttpStatusCode.CREATED).end();
 		});
 
@@ -171,17 +163,39 @@ describe(HttpProvider, () => {
 		});
 
 		// assertion data
-		const innerBody = (
-			_fetchMock.mock.calls[0][1] as Record<string, string>
-		).body;
+		const request = _fetchMock.mock.calls[0][1]!;
 
 		expect(status).toBe(HttpStatusCode.CREATED);
-		expect(innerBody).toBe(expectedSerializedBody);
+		expect(request.body).toBe(expectedSerializedBody);
+	});
+
+	test('post request with url encoded body has correct content-type', async () => {
+		// mocking phase
+		const body = { value: 'test' };
+		const expectedContentType =
+			'application/x-www-form-urlencoded;charset=utf-8';
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.writeHead(HttpStatusCode.CREATED).end();
+		});
+
+		// request phase
+		const { status } = await _provider.post('/', {
+			data: new URLSearchParams(body),
+		});
+
+		// assertion data
+		const headers = _fetchMock.mock.calls[0][1]!.headers as Record<
+			string,
+			string
+		>;
+
+		expect(status).toBe(HttpStatusCode.CREATED);
+		expect(headers['content-type']).toBe(expectedContentType);
 	});
 
 	test('put request is success', async () => {
 		// mocking phase
-		_responseMock.mockImplementationOnce((_, response) => {
+		_serverResponse.mockImplementationOnce((_, response) => {
 			response.writeHead(HttpStatusCode.NO_CONTENT).end();
 		});
 
@@ -193,7 +207,7 @@ describe(HttpProvider, () => {
 
 	test('patch request is success', async () => {
 		// mocking phase
-		_responseMock.mockImplementationOnce((_, response) => {
+		_serverResponse.mockImplementationOnce((_, response) => {
 			response.writeHead(HttpStatusCode.NO_CONTENT).end();
 		});
 
@@ -205,7 +219,7 @@ describe(HttpProvider, () => {
 
 	test('delete request is success', async () => {
 		// mocking phase
-		_responseMock.mockImplementationOnce((_, response) => {
+		_serverResponse.mockImplementationOnce((_, response) => {
 			response.writeHead(HttpStatusCode.ACCEPTED).end();
 		});
 
@@ -217,8 +231,8 @@ describe(HttpProvider, () => {
 
 	test('request fails for timeout', async () => {
 		// mocking phase
-		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.OK).end();
+		_serverResponse.mockImplementationOnce((_, response) => {
+			setTimeout(() => response.end(), 2);
 		});
 
 		// request phase
@@ -229,8 +243,8 @@ describe(HttpProvider, () => {
 
 	test('request can be aborted', async () => {
 		// mocking phase
-		_responseMock.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.OK).end();
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
 		});
 
 		// request phase
