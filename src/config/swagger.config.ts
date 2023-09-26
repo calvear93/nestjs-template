@@ -1,7 +1,7 @@
 import {
 	SwaggerModule,
 	DocumentBuilder,
-	type SwaggerDocumentOptions,
+	type SwaggerCustomOptions,
 } from '@nestjs/swagger';
 import { type INestApplication } from '@nestjs/common';
 import { registerDtoSchemas } from '../libs/zod/create-zod-dto.ts';
@@ -33,6 +33,6 @@ export const swaggerInit = (app: INestApplication) => {
 			displayRequestDuration: true,
 			persistAuthorization: true,
 			tryItOutEnabled: true,
-		} as SwaggerDocumentOptions,
-	});
+		},
+	} satisfies SwaggerCustomOptions);
 };
