@@ -6,6 +6,7 @@ dev-dist
 # dependency directories
 node_modules
 jspm_packages
+.pnp.cjs
 
 # TypeScript cache
 *.tsbuildinfo
