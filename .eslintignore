@@ -1,6 +1,9 @@
 .vscode
+.reports
+.rollup.cache
 build
 dist
-.rollup.cache
 *.js
+*.mjs
+*.cjs
 *.json
