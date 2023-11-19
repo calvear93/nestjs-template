@@ -26,3 +26,10 @@ app.useGlobalPipes(new ZodValidationPipe());
 if (SWAGGER_UI) swaggerInit(app);
 
 await app.listen(PORT, '0.0.0.0', onStart);
+
+// disposing on hot reload dev
+if (import.meta.hot) {
+	import.meta.hot.on('vite:beforeFullReload', () => {
+		return app.close();
+	});
+}

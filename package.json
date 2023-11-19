@@ -5,8 +5,8 @@
 	"title": "(((app-title)))",
 	"description": "(((project-description)))",
 	"scripts": {
-		"start:dev": "env -e dev -m debug --log debug : pnpm _start --watch",
-		"start:release": "env -e release -m debug : pnpm _start --watch",
+		"start:dev": "env -e dev -m debug --log debug : pnpm _start",
+		"start:release": "env -e release -m debug : pnpm _start",
 		"build": "wireit",
 		"preview": "wireit",
 		"test:dev": "env -e dev -m test : vitest",
@@ -17,7 +17,7 @@
 		"lint": "wireit",
 		"format": "wireit",
 		"clean": "pnpx del-cli **/node_modules **/dist **/.reports **/*.tsbuildinfo .rollup.cache .wireit",
-		"_start": "wireit"
+		"_start": "vite-node --watch src/main.ts"
 	},
 	"license": "MIT",
 	"repository": "https://github.com/calvear93/nestjs-template",
@@ -50,7 +50,7 @@
 		"@stryker-mutator/typescript-checker": "7.3.0",
 		"@stryker-mutator/vitest-runner": "7.3.0",
 		"@types/luxon": "3.3.4",
-		"@types/node": "20.9.1",
+		"@types/node": "20.9.2",
 		"@typescript-eslint/eslint-plugin": "6.11.0",
 		"@typescript-eslint/parser": "6.11.0",
 		"@vitest/coverage-v8": "0.34.6",
@@ -78,15 +78,6 @@
 		"wireit": "0.14.1"
 	},
 	"wireit": {
-		"_start": {
-			"command": "vite-node src/main.ts",
-			"files": [
-				"src/**/*",
-				"tsconfig.json",
-				"!**/*.{spec,test}.*",
-				"!**/__{tests,mocks,fixtures}__/**/*"
-			]
-		},
 		"build": {
 			"command": "vite build",
 			"clean": "if-file-deleted",

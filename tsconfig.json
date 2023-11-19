@@ -7,9 +7,9 @@
 		"module": "node16",
 		"moduleResolution": "node16",
 		"resolveJsonModule": true,
-		"allowImportingTsExtensions": true,
 
-		"lib": ["es2023"],
+		"lib": ["dom", "es2023"],
+		"types": ["vite/client"],
 
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
@@ -21,6 +21,7 @@
 		"isolatedModules": true,
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
+		"allowImportingTsExtensions": true,
 
 		"strict": true,
 		"noUnusedLocals": false,
