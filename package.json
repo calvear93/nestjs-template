@@ -5,8 +5,8 @@
 	"title": "(((app-title)))",
 	"description": "(((project-description)))",
 	"scripts": {
-		"start:dev": "env -e dev -m debug --log debug : pnpm _start",
-		"start:release": "env -e release -m debug : pnpm _start",
+		"start:dev": "env -e dev -m debug --log debug : vite-node --watch src/main.ts",
+		"start:release": "env -e release -m debug : vite-node --watch src/main.ts",
 		"build": "wireit",
 		"preview": "wireit",
 		"test:dev": "env -e dev -m test : vitest",
@@ -16,8 +16,7 @@
 		"env:schema": "wireit",
 		"lint": "wireit",
 		"format": "wireit",
-		"clean": "pnpx del-cli **/node_modules **/dist **/.reports **/*.tsbuildinfo .rollup.cache .wireit",
-		"_start": "vite-node --watch src/main.ts"
+		"clean": "pnpx del-cli **/node_modules **/dist **/.reports **/*.tsbuildinfo .rollup.cache .wireit"
 	},
 	"license": "MIT",
 	"repository": "https://github.com/calvear93/nestjs-template",
