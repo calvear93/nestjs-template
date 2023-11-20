@@ -16,6 +16,7 @@ export default {
 				preserveModules: true,
 				preserveModulesRoot: 'src',
 			},
+			plugins: [pkgJson()],
 		},
 		sourcemap: false,
 		ssr: true,
@@ -23,7 +24,7 @@ export default {
 		terserOptions: { keep_classnames: true },
 	},
 	// define: loadEnv(),
-	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' }), pkgJson()],
+	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' })],
 } satisfies UserConfigExport;
 
 /**

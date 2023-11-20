@@ -16,7 +16,7 @@
 		"env:schema": "wireit",
 		"lint": "wireit",
 		"format": "wireit",
-		"clean": "pnpx del-cli **/node_modules **/dist **/.reports **/*.tsbuildinfo .rollup.cache .wireit"
+		"clean": "pnpx del-cli **/node_modules **/dist **/.reports **/*.tsbuildinfo .rollup.cache .swc .wireit"
 	},
 	"license": "MIT",
 	"repository": "https://github.com/calvear93/nestjs-template",
@@ -31,9 +31,9 @@
 	],
 	"dependencies": {
 		"@fastify/static": "6.12.0",
-		"@nestjs/common": "10.2.9",
-		"@nestjs/core": "10.2.9",
-		"@nestjs/platform-fastify": "10.2.9",
+		"@nestjs/common": "10.2.10",
+		"@nestjs/core": "10.2.10",
+		"@nestjs/platform-fastify": "10.2.10",
 		"@nestjs/swagger": "7.1.16",
 		"fastify": "4.24.3",
 		"luxon": "3.4.4",
@@ -44,7 +44,7 @@
 	},
 	"devDependencies": {
 		"@calvear/env": "2.8.0",
-		"@nestjs/testing": "10.2.9",
+		"@nestjs/testing": "10.2.10",
 		"@stryker-mutator/core": "7.3.0",
 		"@stryker-mutator/typescript-checker": "7.3.0",
 		"@stryker-mutator/vitest-runner": "7.3.0",
@@ -64,7 +64,7 @@
 		"eslint-plugin-sonarjs": "0.23.0",
 		"eslint-plugin-tsdoc": "0.2.17",
 		"eslint-plugin-unicorn": "49.0.0",
-		"eslint-plugin-vitest": "0.3.9",
+		"eslint-plugin-vitest": "0.3.10",
 		"prettier": "3.1.0",
 		"terser": "5.24.0",
 		"type-fest": "4.8.1",
