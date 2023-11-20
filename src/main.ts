@@ -1,3 +1,4 @@
+import { type Server } from 'node:http';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { NestFactory } from '@nestjs/core';
 import { ZodValidationPipe } from './libs/zod/zod.pipe.ts';
@@ -30,6 +31,8 @@ await app.listen(PORT, '0.0.0.0', onStart);
 // disposing on hot reload dev
 if (import.meta.hot) {
 	import.meta.hot.on('vite:beforeFullReload', () => {
+		const server = app.getHttpServer() as Server;
+		server.closeAllConnections();
 		return app.close();
 	});
 }
