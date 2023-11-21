@@ -1,3 +1,5 @@
+/// <reference lib="es2023" />
+
 export declare global {
 	// SECTION: built-in types tweaks
 	interface JSON {
