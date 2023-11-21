@@ -1,10 +1,10 @@
 import { Logger, Module, type OnModuleInit } from '@nestjs/common';
-import { SampleModule } from '../app/modules/index.ts';
+import { SampleModule } from './modules/index.ts';
 
 @Module({
 	imports: [SampleModule],
 })
-export class MainModule implements OnModuleInit {
+export class AppModule implements OnModuleInit {
 	onModuleInit() {
 		this._logger.debug(
 			`\x1B[4mApi Key\x1B[0m enabled: ${
@@ -15,5 +15,5 @@ export class MainModule implements OnModuleInit {
 		);
 	}
 
-	private readonly _logger: Logger = new Logger(MainModule.name);
+	private readonly _logger: Logger = new Logger(AppModule.name);
 }

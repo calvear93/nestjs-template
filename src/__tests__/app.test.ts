@@ -5,9 +5,9 @@ import { type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { createFastifyApplication } from './utils/fastify-test-module.ts';
 import { HttpMethod, HttpStatusCode } from '../libs/http/index.ts';
 import { SampleService } from '../app/modules/sample/services/sample.service.ts';
-import { MainModule } from '../app/main.module.ts';
+import { AppModule } from '../app/app.module.ts';
 
-describe(MainModule, () => {
+describe(AppModule, () => {
 	let _app: NestFastifyApplication;
 	let _module: TestingModule;
 	const _sampleServiceMock = mock<SampleService>({
@@ -17,7 +17,7 @@ describe(MainModule, () => {
 	// hooks
 	beforeAll(async () => {
 		_module = await Test.createTestingModule({
-			imports: [MainModule],
+			imports: [AppModule],
 		})
 			.overrideProvider(SampleService)
 			.useValue(_sampleServiceMock)

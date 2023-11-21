@@ -8,7 +8,7 @@ export default {
 			all: true,
 			exclude: [
 				'**/*.{d,config,mock,fixture}.{ts,cts,mts}',
-				'**/{index,main}.{ts,cts,mts}',
+				'**/{index,main,app}.{ts,cts,mts}',
 				'**/__{tests,mocks,fixtures}__',
 			],
 			include: ['src/**/*.{ts,cts,mts}'],
