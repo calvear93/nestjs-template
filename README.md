@@ -1,5 +1,5 @@
 <h2 align="center"><b>NestJS Skeleton</b></h2>
-<h3 align="center"><b>API REST</b></h3>
+<h3 align="center"><b>API</b></h3>
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
@@ -14,31 +14,6 @@
 	<img src="https://img.shields.io/github/license/calvear93/nestjs-template" alt="Package License" />
   </a>
 </p>
-
-## ⛩ **Structure**
-
-```bash
-├── env/
-│   ├── appsettings.json
-│   ├── dev.env.json # secret file, initial autogen
-│   └── release.env.json # secret file, initial autogen
-├── src/
-│   ├── __tests__/
-│   ├── app/
-│   │   ├── main.module.ts
-│   │   └── modules/
-│   │       └── sample/
-│   │           ├── controllers/
-│   │           ├── services/
-│   │           └── sample.module.ts
-│   ├── config/
-│   ├── libs/
-│   ├── main.ts # entry file
-│   └── env.d.ts
-├── Dockerfile
-├── tsconfig.json
-└── package.json
-```
 
 ## 📥 **Getting Started**
 
