@@ -1,7 +1,8 @@
 import { writeFile } from 'node:fs/promises';
 import type { UserConfigExport } from 'vite';
 import swc from 'unplugin-swc';
-import { compilerOptions } from './tsconfig.release.json';
+import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
+import { compilerOptions as tsconfig } from './tsconfig.json';
 import { dependencies } from './package.json';
 
 export default {
@@ -19,9 +20,9 @@ export default {
 			},
 			plugins: [pkgJson()],
 		},
-		sourcemap: compilerOptions.sourceMap,
+		sourcemap: tsconfigRelease.sourceMap,
 		ssr: true,
-		target: process.env.TARGET,
+		target: tsconfig.target,
 		terserOptions: { keep_classnames: true },
 	},
 	// define: loadEnv(),
