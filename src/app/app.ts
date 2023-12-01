@@ -14,16 +14,12 @@ import { AppModule } from './app.module.ts';
 import { ZodValidationPipe } from '../libs/zod/zod.pipe.ts';
 import { registerDtoSchemas } from '../libs/zod/create-zod-dto.ts';
 
-const PORT = +process.env.PORT;
-const PREFIX = process.env.API_PREFIX;
-const SWAGGER_UI = process.env.SWAGGER_UI === 'true';
-
 /**
  * Swagger base configuration.
  *
  * @param app - app bootstrap
  */
-export const addSwagger = (app: INestApplication) => {
+export const addSwagger = (app: INestApplication, prefix: string) => {
 	const config = new DocumentBuilder()
 		.setTitle(process.env.TITLE)
 		.setDescription(process.env.DESCRIPTION)
@@ -35,7 +31,7 @@ export const addSwagger = (app: INestApplication) => {
 
 	registerDtoSchemas(document);
 
-	SwaggerModule.setup(process.env.API_PREFIX, app, document, {
+	SwaggerModule.setup(prefix, app, document, {
 		customSiteTitle: process.env.TITLE,
 		swaggerOptions: {
 			displayRequestDuration: true,
@@ -45,24 +41,31 @@ export const addSwagger = (app: INestApplication) => {
 	} satisfies SwaggerCustomOptions);
 };
 
+export interface AppStartConfig {
+	port?: number;
+	prefix: string;
+	swagger?: boolean;
+}
+
 /**
  * App initializing.
  */
-export const start = async () => {
-	const app = await NestFactory.create(AppModule, new FastifyAdapter(), {
+export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
+	const adapter = new FastifyAdapter();
+	const app = await NestFactory.create(AppModule, adapter, {
 		cors: true,
 	});
 
 	app.enableVersioning();
-	app.setGlobalPrefix(PREFIX);
+	app.setGlobalPrefix(prefix);
 	app.useGlobalPipes(new ZodValidationPipe());
 
-	if (SWAGGER_UI) addSwagger(app);
+	if (swagger) addSwagger(app, prefix);
 
-	await app.listen(PORT, '0.0.0.0', () => {
+	await app.listen(port, '0.0.0.0', () => {
 		// eslint-disable-next-line no-console
 		console.info(
-			`\n \x1B[32m➜\x1B[0m Local: \x1B[36mhttp://localhost:${PORT}/${PREFIX}\x1B[0m`,
+			`\n \x1B[32m➜\x1B[0m Local: \x1B[36mhttp://localhost:${port}/${prefix}\x1B[0m`,
 		);
 	});
 
