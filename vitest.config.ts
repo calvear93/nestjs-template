@@ -7,7 +7,7 @@ export default {
 		coverage: {
 			all: true,
 			exclude: [
-				'**/*.{d,config,mock,fixture}.{ts,cts,mts}',
+				'**/*.{d,config,mock,fixture,bench}.{ts,cts,mts}',
 				'**/{index,main,app}.{ts,cts,mts}',
 				'**/__{tests,mocks,fixtures}__',
 			],
