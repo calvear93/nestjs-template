@@ -7,7 +7,7 @@ const app = await start({
 	swagger: process.env.SWAGGER_UI === 'true',
 });
 
-// disposing on hot reload dev
+// disposing on hot reload, dev mode only
 if (import.meta.hot) {
 	// https://vitejs.dev/guide/api-hmr
 	import.meta.hot.on('vite:beforeFullReload', () => {

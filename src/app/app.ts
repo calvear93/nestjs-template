@@ -49,6 +49,10 @@ export interface AppStartConfig {
 
 /**
  * App initializing.
+ *
+ * @param port - HTTP server port
+ * @param prefix - base prefix
+ * @param swagger - if swagger is enabled
  */
 export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 	const adapter = new FastifyAdapter();
