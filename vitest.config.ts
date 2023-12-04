@@ -5,7 +5,6 @@ export default {
 	plugins: [swc.vite({ tsconfigFile: 'tsconfig.test.json' })],
 	test: {
 		coverage: {
-			all: true,
 			exclude: [
 				'**/*.{d,config,mock,fixture,bench}.{ts,cts,mts}',
 				'**/{index,main,app}.{ts,cts,mts}',
@@ -17,7 +16,5 @@ export default {
 		},
 		include: ['src/**/*.{spec,test}.{ts,cts,mts}'],
 		reporters: ['verbose'],
-		silent: false,
-		testTimeout: 6000,
 	},
 } satisfies UserConfigExport;
