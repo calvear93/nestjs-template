@@ -12,7 +12,7 @@ import {
 	test,
 	vi,
 	type Mock,
-	type SpyInstance,
+	type MockInstance,
 } from 'vitest';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { HttpProvider } from './http.provider.ts';
@@ -27,7 +27,7 @@ describe(HttpProvider, () => {
 
 	let _server: Server;
 	let _serverResponse: Mock<[IncomingMessage, ServerResponse]>;
-	let _fetchMock: SpyInstance<
+	let _fetchMock: MockInstance<
 		Parameters<typeof fetch>,
 		ReturnType<typeof fetch>
 	>;

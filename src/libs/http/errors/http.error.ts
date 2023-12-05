@@ -6,14 +6,13 @@ import { HttpStatusCode } from '../enums/http-status.enum.ts';
  */
 export class HttpError extends Error {
 	constructor(response: HttpResponse) {
-		const statusCodeText = HttpStatusCode[response.status];
+		const { status, url } = response;
+		const statusCodeText = HttpStatusCode[status];
 
-		super(
-			`HTTP ${statusCodeText} error has ocurred calling ${response.url}`,
-		);
+		super(`HTTP ${statusCodeText} error has ocurred calling ${url}`);
 
 		this.response = response;
-		this.status = response.status;
+		this.status = status;
 		this.statusText = statusCodeText;
 	}
 
