@@ -46,8 +46,13 @@ export class HttpProvider {
 	 */
 	async request<R = unknown>(
 		url: RequestURL,
-		{ query, timeout, ...config }: HttpRequestOptions = {},
+		options?: HttpRequestOptions,
 	): Promise<HttpResponse<R>> | never {
+		const { query, timeout, ...config } = {
+			...this._baseConfig,
+			...options,
+		};
+
 		if (timeout) {
 			config.cancel ??= new AbortController();
 
@@ -65,10 +70,7 @@ export class HttpProvider {
 				query ? `?${new URLSearchParams(query)}` : url,
 				this._baseUrl,
 			),
-			{
-				...this._baseConfig,
-				...config,
-			},
+			config,
 		);
 
 		if (!response.ok) throw new HttpError(response);
