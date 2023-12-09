@@ -5,7 +5,7 @@ import { HttpStatusCode } from '../enums/http-status.enum.ts';
  * Http Error.
  */
 export class HttpError extends Error {
-	constructor(response: HttpResponse) {
+	constructor(readonly response: HttpResponse) {
 		const { status, url } = response;
 		const statusCodeText = HttpStatusCode[status];
 
@@ -16,11 +16,9 @@ export class HttpError extends Error {
 		this.statusText = statusCodeText;
 	}
 
-	status: HttpStatusCode;
+	readonly status: HttpStatusCode;
 
-	statusText: string;
-
-	response: HttpResponse;
+	readonly statusText: string;
 
 	json<R = unknown>() {
 		return this.response.json<R>();
