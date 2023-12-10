@@ -77,14 +77,14 @@ describe(HttpProvider, () => {
 		expect(altProvider).toBeDefined();
 	});
 
-	test('request not ok (status in the range 200-299) throws HttpError', () => {
+	test('request not ok (status in the range 200-299) throws HttpError', async () => {
 		// mocking phase
 		_serverResponse.mockImplementationOnce((_, response) => {
 			response.writeHead(HttpStatusCode.BAD_REQUEST).end();
 		});
 
 		// request phase
-		expect(_provider.request('/')).rejects.toThrowError(HttpError);
+		await expect(_provider.request('/')).rejects.toThrowError(HttpError);
 	});
 
 	test('request with json response is success', async () => {
