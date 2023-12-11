@@ -23,12 +23,10 @@
     -   `(((app-name)))` app name, i.e. sample-api
     -   `(((app-title)))` app title, i.e. Sample API
     -   `(((project-name)))` project name, i.e. my-project
-    -   `(((project-description)))` project description, i.e. API for manage user data
 
 -   Install [NodeJS](https://nodejs.org/es/).
 -   Install [PNPM](https://pnpm.io/installation)
 -   Execute `pnpm install` command.
--   Execute `pnpm env:schema` command.
 -   Run either `pnpm start:dev` or `pnpm test:dev` commands.
 
 -   Using Docker.
@@ -54,9 +52,9 @@ it environment may be 'dev' or 'release'.
 | ---------------------------- | ---------------------------- |
 | pnpm start:`<env>`           | executes the app             |
 | pnpm build:`<env>`           | build the app                |
+| pnpm preview                 | builds and serves the app    |
 | pnpm test:`<env>`            | executes tests               |
 | pnpm test:`<env>` --coverage | executes tests with coverage |
 | pnpm env:schema              | updates env JSON schema      |
 | pnpm format                  | code format                  |
 | pnpm lint                    | code style review            |
-| pnpm lint -- -- --fix        | code style review/fix        |

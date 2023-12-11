@@ -3,7 +3,6 @@
 	"project": "(((project-name)))",
 	"name": "(((app-name)))",
 	"title": "(((app-title)))",
-	"description": "(((project-description)))",
 	"scripts": {
 		"start:dev": "env -e dev -m debug --log debug : vite-node --watch src/main.ts",
 		"start:release": "env -e release -m debug : vite-node --watch src/main.ts",
