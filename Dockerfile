@@ -36,7 +36,7 @@ COPY . ${APP_DIR}
 RUN pnpm install --frozen-lockfile
 # builds the app
 ENV NODE_ENV production
-RUN pnpm build
+RUN pnpm exec vite build
 
 
 ##
