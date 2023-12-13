@@ -25,6 +25,7 @@ export default {
 		target: tsconfig.target,
 		terserOptions: { keep_classnames: true },
 	},
+	mode: process.env.ENV,
 	// define: loadEnv(),
 	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' })],
 } satisfies UserConfigExport;
