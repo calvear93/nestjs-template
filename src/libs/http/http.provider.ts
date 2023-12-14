@@ -48,6 +48,7 @@ export class HttpProvider {
 		url: RequestURL,
 		options?: HttpRequestOptions,
 	): Promise<HttpResponse<R>> | never {
+		let clrFn: NodeJS.Timeout | null = null;
 		const { query, timeout, ...config } = {
 			...this._baseConfig,
 			...options,
@@ -56,9 +57,8 @@ export class HttpProvider {
 		if (timeout) {
 			config.cancel ??= new AbortController();
 
-			const requestTimeout = setTimeout(() => {
+			clrFn = setTimeout(() => {
 				config.cancel!.abort(this._timeoutReason);
-				clearTimeout(requestTimeout);
 			}, timeout);
 		}
 
@@ -73,6 +73,7 @@ export class HttpProvider {
 			config,
 		);
 
+		if (clrFn) clearTimeout(clrFn);
 		if (!response.ok) throw new HttpError(response);
 
 		return response;
