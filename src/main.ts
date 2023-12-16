@@ -3,7 +3,7 @@ import { start } from './app/app.ts';
 
 const app = await start({
 	port: +process.env.PORT,
-	prefix: process.env.API_PREFIX,
+	prefix: process.env.BASE_URL,
 	swagger: process.env.SWAGGER_UI === 'true',
 });
 

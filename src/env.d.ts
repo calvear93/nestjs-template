@@ -1,9 +1,12 @@
 export declare global {
+	type MODE = 'development' | 'production' | 'test';
+	type ENV = 'dev' | 'release';
+
 	namespace NodeJS {
 		// NOTE: only string type is supported
 		interface ProcessEnv {
-			readonly NODE_ENV: 'development' | 'production' | 'test';
-			readonly ENV: 'dev' | 'release';
+			readonly NODE_ENV: MODE;
+			readonly ENV: ENV;
 			readonly DEBUG?: string;
 
 			// SECTION: project info from package.json
@@ -15,7 +18,7 @@ export declare global {
 
 			// SECTION: base
 			readonly PORT: string;
-			readonly API_PREFIX: string;
+			readonly BASE_URL: string;
 			readonly SWAGGER_UI: 'false' | 'true';
 
 			// SECTION: localization
