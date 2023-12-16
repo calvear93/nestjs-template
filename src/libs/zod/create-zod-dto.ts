@@ -15,21 +15,6 @@ import { zodToJsonSchema } from './json-schema.factory.ts';
 const registered: [name: string, jsonSchema: SchemaObject | ReferenceObject][] =
 	[];
 
-const a = {
-	id: z.coerce.number(),
-	name: z.string(),
-};
-
-const b = z.object({
-	id: z.coerce.number(),
-	name: z.string(),
-});
-
-type ZodDtoReturn<T extends ZodRawShape> = ReturnType<typeof z.object<T>>;
-type T = ZodDtoReturn<typeof a>;
-type T2 = typeof b;
-type x = z.infer<T2>;
-
 /**
  * Creates a DTO from Zod schema,
  * with schema and jsonSchema
@@ -43,9 +28,11 @@ type x = z.infer<T2>;
  *	import { z } from 'zod';
  *	import { createZodDto } from '@libs/zod';
  *
- *	const SampleSchema = z.object({ id: z.number(), name: z.string() });
+ *	export class SampleDto extends createZodDto({
+ *		id: z.number(),
+ *		name: z.string()
+ *	}) {}
  *
- *	export class SampleDto extends createZodDto(SampleSchema) {}
  *	SampleDto.register();
  *
  *	// sample.controller.ts
@@ -66,23 +53,23 @@ type x = z.infer<T2>;
  *	}
  * ```
  */
-// export const createZodDto = <T extends ZodRawShape>(
-export const createZodDto = <T extends ZodType>(
-	schema: T,
+export const createZodDto = <
+	T extends ZodRawShape,
+	S extends ZodType = ReturnType<typeof z.object<T>>,
+>(
+	shape: T,
 	params?: RawCreateParams,
-): ZodDto<T> => {
-	// const schema = z.object(shape);
+): ZodDto<S> => {
+	const schema = z.object(shape, params) as any;
 	const jsonSchema = zodToJsonSchema(schema);
 
 	return class {
 		static readonly schema = schema;
 
+		static readonly jsonSchema = zodToJsonSchema(schema);
+
 		static register() {
 			registered.push([this.name, jsonSchema]);
-		}
-
-		static get jsonSchema() {
-			return jsonSchema;
 		}
 	};
 };
@@ -119,11 +106,9 @@ export type Constructor<T, Arguments extends unknown[] = any[]> = new (
 	...arguments_: Arguments
 ) => T;
 
-// returnType<typeof z.object<T>>;
-
 export interface ZodDto<T extends ZodType = ZodTypeAny>
 	extends Constructor<z.infer<T>> {
 	readonly schema: T;
+	readonly jsonSchema: SchemaObject;
 	register: () => void;
-	get jsonSchema(): SchemaObject;
 }
