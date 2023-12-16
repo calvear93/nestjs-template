@@ -225,10 +225,10 @@ export class HttpProvider {
 	 * @returns provider
 	 */
 	static register(
-		config?: HttpProviderConfig & { useToken?: InjectionToken },
+		config?: HttpProviderConfig & { name?: InjectionToken },
 	): FactoryProvider<HttpProvider> {
 		return {
-			provide: config?.useToken ?? HttpProvider,
+			provide: config?.name ?? HttpProvider,
 			useFactory: () => new HttpProvider(config),
 		};
 	}

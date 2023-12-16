@@ -20,6 +20,14 @@ describe(ZodValidationPipe, () => {
 		expect(components?.schemas?.[name]).toBeDefined();
 	});
 
+	test('DTO generates JSON schema', () => {
+		const name = 'DemoSchema';
+
+		const dto = createZodDto(z.object({ id: z.number() }), name);
+
+		expect(dto.jsonSchema).toBeDefined();
+	});
+
 	describe('validation pipe', () => {
 		const _pipe = new ZodValidationPipe();
 		const _dto = createZodDto(

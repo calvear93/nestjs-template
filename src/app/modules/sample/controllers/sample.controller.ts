@@ -1,6 +1,14 @@
-import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	ParseIntPipe,
+	Post,
+	Query,
+} from '@nestjs/common';
 import { SampleControllerDocs } from './sample.controller.docs.ts';
 import { SampleService } from '../services/sample.service.ts';
+import { SampleDto } from '../schemas/sample.dto.ts';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
 import { AllowAnonymous, ApiKey } from '../../../decorators/api-key.guard.ts';
 
@@ -35,5 +43,15 @@ export class SampleController {
 		@Query('num2', ParseIntPipe) num2: number,
 	): number {
 		return num1 + num2;
+	}
+
+	/**
+	 * Receives, validate and returns a DTO
+	 *
+	 * @returns dto
+	 */
+	@Post('/dto')
+	dto(@Body() sample: SampleDto): SampleDto {
+		return sample;
 	}
 }

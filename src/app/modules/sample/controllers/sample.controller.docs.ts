@@ -1,16 +1,28 @@
 import {
 	ApiOperation,
+	ApiProduces,
 	ApiQuery,
 	ApiResponse,
 	ApiTags,
-	ApiProduces,
 } from '@nestjs/swagger';
 import { type SampleController } from './sample.controller.ts';
+import { SampleDto } from '../schemas/sample.dto.ts';
+import { HttpStatusCode } from '../../../../libs/http/index.ts';
 import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
 
 export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 	class: [ApiTags('Sample')],
 	method: {
+		dto: [
+			ApiOperation({
+				summary: 'Receives, validate and returns a DTO',
+			}),
+			ApiResponse({
+				description: 'DTO',
+				schema: SampleDto.jsonSchema,
+				status: HttpStatusCode.CREATED,
+			}),
+		],
 		run: [
 			ApiOperation({
 				summary: 'Returns a hello world',

@@ -6,20 +6,8 @@ import {
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 import { zodToJsonSchema } from './json-schema.factory.ts';
 
-export type Constructor<T, Arguments extends unknown[] = any[]> = new (
-	...arguments_: Arguments
-) => T;
-
-export interface ZodDto<T = any, S extends ZodType = ZodTypeAny>
-	extends Constructor<T> {
-	readonly schema: S;
-	get jsonSchema(): SchemaObject;
-}
-
-const registered: [
-	name: string,
-	genSchema: () => SchemaObject | ReferenceObject,
-][] = [];
+const registered: [name: string, jsonSchema: SchemaObject | ReferenceObject][] =
+	[];
 
 /**
  * Creates a DTO from Zod schema,
@@ -27,7 +15,6 @@ const registered: [
  * static properties.
  *
  * @param schema - zod schema
- * @param name - json schema name for register
  *
  * @example
  * ```ts
@@ -37,7 +24,8 @@ const registered: [
  *
  *	const SampleSchema = z.object({ id: z.number(), name: z.string() });
  *
- *	export class SampleDto extends createZodDto(SampleSchema, 'Sample') {}
+ *	export class SampleDto extends createZodDto(SampleSchema) {}
+ *	SampleDto.register();
  *
  *	// sample.controller.ts
  *	import { SampleDto } from './sample.dto.ts';
@@ -59,21 +47,18 @@ const registered: [
  */
 export const createZodDto = <T extends ZodType>(
 	schema: T,
-	name?: string,
 ): ZodDto<z.infer<T>, T> => {
-	let jsonSchema: SchemaObject | undefined;
-	const getSchema = () =>
-		jsonSchema ?? (jsonSchema = zodToJsonSchema(schema));
-
-	if (name) {
-		registered.push([name, getSchema]);
-	}
+	const jsonSchema = zodToJsonSchema(schema);
 
 	return class {
 		static readonly schema = schema;
 
+		static register() {
+			registered.push([this.name, jsonSchema]);
+		}
+
 		static get jsonSchema() {
-			return getSchema();
+			return jsonSchema;
 		}
 	};
 };
@@ -99,9 +84,20 @@ export const registerDtoSchemas = (openApi: OpenAPIObject): OpenAPIObject => {
 	openApi.components ??= {};
 	openApi.components.schemas ??= {};
 
-	for (const [name, genSchema] of registered) {
-		openApi.components.schemas[name] = genSchema();
+	for (const [name, schema] of registered) {
+		openApi.components.schemas[name] = schema;
 	}
 
 	return openApi;
 };
+
+export type Constructor<T, Arguments extends unknown[] = any[]> = new (
+	...arguments_: Arguments
+) => T;
+
+export interface ZodDto<T = any, S extends ZodType = ZodTypeAny>
+	extends Constructor<T> {
+	readonly schema: S;
+	register: () => void;
+	get jsonSchema(): SchemaObject;
+}

@@ -29,6 +29,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 
 	const document = SwaggerModule.createDocument(app, config);
 
+	// register zod DTOs
 	registerDtoSchemas(document);
 
 	SwaggerModule.setup(prefix, app, document, {
