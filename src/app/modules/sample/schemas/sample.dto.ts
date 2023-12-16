@@ -6,5 +6,5 @@ export class SampleDto extends createZodDto({
 	name: z.string(),
 }) {}
 
-// register to Swagger OpenAPI
+// register DTO schema to OpenApi
 SampleDto.register();
