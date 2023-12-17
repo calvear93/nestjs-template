@@ -1,4 +1,5 @@
 import { writeFile } from 'node:fs/promises';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import type { UserConfigExport } from 'vite';
 import swc from 'unplugin-swc';
 import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
@@ -26,7 +27,10 @@ export default {
 		terserOptions: { keep_classnames: true },
 	},
 	// define: loadEnv(),
-	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' })],
+	plugins: [
+		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
+		tsconfigPaths(),
+	],
 } satisfies UserConfigExport;
 
 /**

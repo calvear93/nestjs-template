@@ -6,13 +6,12 @@ import {
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { NestFactory } from '@nestjs/core';
 import { type INestApplication } from '@nestjs/common';
+import { ZodValidationPipe, registerDtoOpenApiSchemas } from '@libs/zod';
 import {
 	APY_KEY_GUARD_NAME,
 	SECURITY_API_SCHEMA,
 } from './decorators/api-key.guard.ts';
 import { AppModule } from './app.module.ts';
-import { ZodValidationPipe } from '../libs/zod/zod.pipe.ts';
-import { registerDtoOpenApiSchemas } from '../libs/zod/index.ts';
 
 /**
  * Swagger base configuration.

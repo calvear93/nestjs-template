@@ -1,10 +1,4 @@
-import {
-	type ZodTypeAny,
-	type ZodType,
-	z,
-	type ZodRawShape,
-	type RawCreateParams,
-} from 'zod';
+import { z, type RawCreateParams, type ZodObject, type ZodRawShape } from 'zod';
 import {
 	type OpenAPIObject,
 	type ReferenceObject,
@@ -21,14 +15,15 @@ const registered: [name: string, jsonSchema: SchemaObject | ReferenceObject][] =
  * static properties.
  *
  * @param schema - zod schema
+ * @param config - zod object config
  *
  * @example
  * ```ts
  *	// sample.dto.ts
  *	import { z } from 'zod';
- *	import { createZodDto } from '@libs/zod';
+ *	import { zodDto } from '@libs/zod';
  *
- *	export class SampleDto extends createZodDto({
+ *	export class SampleDto extends zodDto({
  *		id: z.number(),
  *		name: z.string()
  *	}) {}
@@ -53,25 +48,27 @@ const registered: [name: string, jsonSchema: SchemaObject | ReferenceObject][] =
  *	}
  * ```
  */
-export const zodDto = <
-	T extends ZodRawShape,
-	S extends ZodType = ReturnType<typeof z.object<T>>,
->(
-	shape: T,
-	params?: RawCreateParams,
+export const zodDto = <S extends ZodRawShape>(
+	shape: S,
+	config?: RawCreateParams,
 ): ZodDto<S> => {
-	const schema = z.object(shape, params) as any;
-	const jsonSchema = zodToJsonSchema(schema);
+	const schema = z.object(shape, config);
 
 	return class {
+		constructor(fields?: z.infer<ZodObject<S>>) {
+			if (fields) {
+				Object.assign(this, schema.parse(fields));
+			}
+		}
+
 		static readonly schema = schema;
 
 		static readonly jsonSchema = zodToJsonSchema(schema);
 
 		static registerOpenApi() {
-			registered.push([this.name, jsonSchema]);
+			registered.push([this.name, this.jsonSchema]);
 		}
-	};
+	} as ZodDto<S>;
 };
 
 /**
@@ -104,13 +101,11 @@ export const registerDtoOpenApiSchemas = (
 	return openApi;
 };
 
-export type Constructor<T, Arguments extends unknown[] = any[]> = new (
-	...arguments_: Arguments
-) => T;
+export type ZodConstructor<T> = new (value?: Partial<T>) => T;
 
-export interface ZodDto<T extends ZodType = ZodTypeAny>
-	extends Constructor<z.infer<T>> {
-	readonly schema: T;
+export interface ZodDto<S extends ZodRawShape = any>
+	extends ZodConstructor<z.infer<ZodObject<S>>> {
+	readonly schema: ZodObject<S>;
 	readonly jsonSchema: SchemaObject;
 	registerOpenApi: () => void;
 }

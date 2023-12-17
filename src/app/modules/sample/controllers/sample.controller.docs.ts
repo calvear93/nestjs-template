@@ -5,9 +5,9 @@ import {
 	ApiResponse,
 	ApiTags,
 } from '@nestjs/swagger';
+import { HttpStatusCode } from '@libs/http';
 import { type SampleController } from './sample.controller.ts';
 import { SampleDto } from '../schemas/sample.dto.ts';
-import { HttpStatusCode } from '../../../../libs/http/index.ts';
 import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
 
 export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {

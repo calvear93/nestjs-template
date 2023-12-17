@@ -121,6 +121,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "string",
     },
     "endsWith": {
+      "format": "endsWith",
       "type": "string",
     },
     "enum": {
@@ -146,6 +147,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "number",
     },
     "includes": {
+      "format": "includes",
       "type": "string",
     },
     "int": {
@@ -186,6 +188,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "string",
     },
     "length": {
+      "format": "length",
       "maxLength": 5,
       "minLength": 5,
       "type": "string",
@@ -206,10 +209,12 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "number",
     },
     "max": {
+      "format": "max",
       "maxLength": 3,
       "type": "string",
     },
     "min": {
+      "format": "min",
       "minLength": 10,
       "type": "string",
     },
@@ -298,10 +303,12 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "object",
     },
     "regex": {
+      "format": "regex",
       "pattern": "[a-c]",
       "type": "string",
     },
     "startsWith": {
+      "format": "startsWith",
       "type": "string",
     },
     "string": {

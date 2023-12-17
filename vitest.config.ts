@@ -1,8 +1,8 @@
 import type { UserConfigExport } from 'vitest/config';
-import swc from 'unplugin-swc';
+import vite from './vite.config.ts';
 
 export default {
-	plugins: [swc.vite({ tsconfigFile: 'tsconfig.test.json' })],
+	plugins: vite.plugins,
 	test: {
 		coverage: {
 			exclude: [

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zodDto } from '../../../../libs/zod/create-zod-dto.ts';
+import { zodDto } from '@libs/zod';
 
 export class SampleDto extends zodDto({
 	id: z.coerce.number(),
