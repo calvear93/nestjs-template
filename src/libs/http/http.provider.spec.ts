@@ -256,4 +256,16 @@ describe(HttpProvider, () => {
 
 		await expect(promise).rejects.toThrowError();
 	});
+
+	test('basic auth', () => {
+		const user = 'user';
+		const password = 'password';
+		const expected = `${user}:${password}`;
+
+		// request phase
+		const encoded = HttpProvider.basicAuth(user, password);
+		const decode = Buffer.from(encoded, 'base64url').toString('utf8');
+
+		expect(decode).toBe(expected);
+	});
 });

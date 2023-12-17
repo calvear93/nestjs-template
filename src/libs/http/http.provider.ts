@@ -216,6 +216,18 @@ export class HttpProvider {
 	private readonly _timeoutReason: TimeoutError;
 
 	/**
+	 * Encodes user and password for basic auth.
+	 *
+	 * @param user - user name
+	 * @param password - user password
+	 *
+	 * @returns base64 encoded basic auth
+	 */
+	static basicAuth(user: string, password: string) {
+		return Buffer.from(`${user}:${password}`, 'utf8').toString('base64url');
+	}
+
+	/**
 	 * Provider initializer for module.
 	 *
 	 * @param config - fetch config and token
