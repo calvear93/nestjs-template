@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { createZodDto } from '../../../../libs/zod/create-zod-dto.ts';
+import { zodDto } from '../../../../libs/zod/create-zod-dto.ts';
 
-export class SampleDto extends createZodDto({
+export class SampleDto extends zodDto({
 	id: z.coerce.number(),
 	name: z.string(),
 }) {}
 
-// register DTO schema to OpenApi
-SampleDto.register();
+// register DTO OpenApi schema to Swagger
+SampleDto.registerOpenApi();

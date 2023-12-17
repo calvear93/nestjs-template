@@ -12,7 +12,7 @@ import {
 } from './decorators/api-key.guard.ts';
 import { AppModule } from './app.module.ts';
 import { ZodValidationPipe } from '../libs/zod/zod.pipe.ts';
-import { registerDtoSchemas } from '../libs/zod/create-zod-dto.ts';
+import { registerDtoOpenApiSchemas } from '../libs/zod/create-zod-dto.ts';
 
 /**
  * Swagger base configuration.
@@ -30,7 +30,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 	const document = SwaggerModule.createDocument(app, config);
 
 	// register zod DTOs
-	registerDtoSchemas(document);
+	registerDtoOpenApiSchemas(document);
 
 	SwaggerModule.setup(prefix, app, document, {
 		customSiteTitle: process.env.TITLE,

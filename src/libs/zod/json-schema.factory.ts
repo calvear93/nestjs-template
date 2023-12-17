@@ -80,11 +80,21 @@ const toString = ({
 			case 'uuid':
 				schema.format = 'uuid';
 				break;
+			case 'ulid':
+				schema.format = 'ulid';
+				schema.example = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
+				break;
 			case 'cuid':
 				schema.format = 'cuid';
+				schema.example = 'cjld2cjxh0000qzrmn831i7rn';
+				break;
+			case 'cuid2':
+				schema.format = 'cuid2';
+				schema.example = 'tz4a98xxat96iws9zmbrgj3a';
 				break;
 			case 'url':
 				schema.format = 'uri';
+				schema.example = 'http://www.example.com/';
 				break;
 			case 'length':
 				schema.minLength = item.value;
@@ -98,6 +108,17 @@ const toString = ({
 				break;
 			case 'regex':
 				schema.pattern = item.regex.source;
+				break;
+			case 'datetime':
+				schema.format = 'date-time';
+				break;
+			case 'ip':
+				item.version ??= 'v4';
+				schema.format = `ip${item.version}`;
+				break;
+			case 'emoji':
+				schema.format = 'emoji';
+				schema.example = '😜';
 				break;
 			default:
 				break;
@@ -219,6 +240,7 @@ const toTuple = <
 	(schema as any).prefixItems = zodRef._def.items.map((t) =>
 		zodToJsonSchema(t),
 	);
+	schema.minItems = zodRef._def.items.length;
 
 	return schema;
 };

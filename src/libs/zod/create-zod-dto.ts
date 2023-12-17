@@ -33,7 +33,7 @@ const registered: [name: string, jsonSchema: SchemaObject | ReferenceObject][] =
  *		name: z.string()
  *	}) {}
  *
- *	SampleDto.register();
+ *	SampleDto.registerOpenApi();
  *
  *	// sample.controller.ts
  *	import { SampleDto } from './sample.dto.ts';
@@ -53,7 +53,7 @@ const registered: [name: string, jsonSchema: SchemaObject | ReferenceObject][] =
  *	}
  * ```
  */
-export const createZodDto = <
+export const zodDto = <
 	T extends ZodRawShape,
 	S extends ZodType = ReturnType<typeof z.object<T>>,
 >(
@@ -68,7 +68,7 @@ export const createZodDto = <
 
 		static readonly jsonSchema = zodToJsonSchema(schema);
 
-		static register() {
+		static registerOpenApi() {
 			registered.push([this.name, jsonSchema]);
 		}
 	};
@@ -91,7 +91,9 @@ export const createZodDto = <
  *	registerDtoSchemas(document);
  * ```
  */
-export const registerDtoSchemas = (openApi: OpenAPIObject): OpenAPIObject => {
+export const registerDtoOpenApiSchemas = (
+	openApi: OpenAPIObject,
+): OpenAPIObject => {
 	openApi.components ??= {};
 	openApi.components.schemas ??= {};
 
@@ -110,5 +112,5 @@ export interface ZodDto<T extends ZodType = ZodTypeAny>
 	extends Constructor<z.infer<T>> {
 	readonly schema: T;
 	readonly jsonSchema: SchemaObject;
-	register: () => void;
+	registerOpenApi: () => void;
 }
