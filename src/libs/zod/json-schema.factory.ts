@@ -73,23 +73,16 @@ const toString = ({
 	const { checks = [] } = zodRef._def;
 
 	for (const item of checks) {
+		schema.format = item.kind;
+
 		switch (item.kind) {
-			case 'email':
-				schema.format = 'email';
-				break;
-			case 'uuid':
-				schema.format = 'uuid';
-				break;
 			case 'ulid':
-				schema.format = 'ulid';
 				schema.example = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
 				break;
 			case 'cuid':
-				schema.format = 'cuid';
 				schema.example = 'cjld2cjxh0000qzrmn831i7rn';
 				break;
 			case 'cuid2':
-				schema.format = 'cuid2';
 				schema.example = 'tz4a98xxat96iws9zmbrgj3a';
 				break;
 			case 'url':
@@ -117,7 +110,6 @@ const toString = ({
 				schema.format = `ip${item.version}`;
 				break;
 			case 'emoji':
-				schema.format = 'emoji';
 				schema.example = '😜';
 				break;
 			default:

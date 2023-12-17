@@ -12,7 +12,7 @@ import {
 } from './decorators/api-key.guard.ts';
 import { AppModule } from './app.module.ts';
 import { ZodValidationPipe } from '../libs/zod/zod.pipe.ts';
-import { registerDtoOpenApiSchemas } from '../libs/zod/create-zod-dto.ts';
+import { registerDtoOpenApiSchemas } from '../libs/zod/index.ts';
 
 /**
  * Swagger base configuration.
