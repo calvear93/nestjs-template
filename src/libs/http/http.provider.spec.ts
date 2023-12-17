@@ -262,7 +262,6 @@ describe(HttpProvider, () => {
 		const password = 'password';
 		const expected = `${user}:${password}`;
 
-		// request phase
 		const encoded = HttpProvider.basicAuth(user, password);
 		const decode = Buffer.from(encoded, 'base64url').toString('utf8');
 
