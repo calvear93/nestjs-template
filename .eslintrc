@@ -243,6 +243,7 @@
 				"vitest/no-mocks-import": "off",
 				"vitest/no-test-return-statement": "off",
 				"vitest/prefer-called-with": "off",
+				"vitest/prefer-expect-assertions": "off",
 				"vitest/prefer-lowercase-title": "off",
 				"vitest/prefer-to-be-falsy": "off",
 				"vitest/prefer-to-be-truthy": "off",

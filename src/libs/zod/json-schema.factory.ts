@@ -73,16 +73,17 @@ const toString = ({
 	const { checks = [] } = zodRef._def;
 
 	for (const item of checks) {
-		schema.format = item.kind;
-
 		switch (item.kind) {
 			case 'ulid':
+				schema.format = item.kind;
 				schema.example = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
 				break;
 			case 'cuid':
+				schema.format = item.kind;
 				schema.example = 'cjld2cjxh0000qzrmn831i7rn';
 				break;
 			case 'cuid2':
+				schema.format = item.kind;
 				schema.example = 'tz4a98xxat96iws9zmbrgj3a';
 				break;
 			case 'url':

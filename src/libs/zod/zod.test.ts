@@ -61,6 +61,7 @@ describe(ZodValidationPipe, () => {
 			endsWith: z.string().endsWith('z'),
 			ipv4: z.string().ip(), // ipv4
 			ipv6: z.string().ip({ version: 'v6' }),
+			multiple: z.string().email().max(12).default('test@test.cl'),
 			// numbers
 			gt: z.number().gt(5),
 			gte: z.number().gte(5), // alias .min(5)
