@@ -234,6 +234,7 @@ const toTuple = <
 		zodToJsonSchema(t),
 	);
 	schema.minItems = zodRef._def.items.length;
+	schema.maxItems = zodRef._def.items.length;
 
 	return schema;
 };

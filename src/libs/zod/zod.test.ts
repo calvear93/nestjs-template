@@ -4,14 +4,18 @@ import { describe, expect, test } from 'vitest';
 import { type OpenAPIObject } from '@nestjs/swagger';
 import { BadRequestException } from '@nestjs/common';
 import { ZodValidationPipe } from './zod.pipe.ts';
-import { zodDto, registerDtoOpenApiSchemas } from './create-zod-dto.ts';
+import {
+	ZodDto,
+	ZodIterableDto,
+	registerDtoOpenApiSchemas,
+} from './zod-dto.ts';
 
 describe(ZodValidationPipe, () => {
 	// tests
 	test('register DTO schemas', () => {
 		const openApi = {} as OpenAPIObject;
 
-		class Dto extends zodDto({ id: z.number() }) {}
+		class Dto extends ZodDto({ id: z.number() }) {}
 		Dto.registerOpenApi();
 		registerDtoOpenApiSchemas(openApi);
 
@@ -22,7 +26,7 @@ describe(ZodValidationPipe, () => {
 	});
 
 	test('DTO generates JSON schema', () => {
-		const dto = zodDto({
+		const dto = ZodDto({
 			// primitive values
 			string: z.string(),
 			number: z.number(),
@@ -124,9 +128,34 @@ describe(ZodValidationPipe, () => {
 		expect(dto.jsonSchema).toMatchSnapshot();
 	});
 
+	test('object DTO parses values on instantiation', () => {
+		class Dto extends ZodDto({ id: z.number() }) {}
+
+		const dto = new Dto({ id: 1 });
+
+		expect(dto.id).toBe(1);
+	});
+
+	test('iterable (array) DTO parses values on instantiation', () => {
+		class DtoIterable extends ZodIterableDto([z.number()]) {}
+
+		const dto = new DtoIterable([1]);
+
+		expect(dto[0]).toBe(1);
+	});
+
+	test('iterable (tuple) DTO parses values on instantiation', () => {
+		class DtoIterable extends ZodIterableDto([z.number(), z.boolean()]) {}
+
+		const dto = new DtoIterable([1, true]);
+
+		expect(dto[0]).toBe(1);
+		expect(dto[1]).toBe(true);
+	});
+
 	describe('validation pipe', () => {
 		const _pipe = new ZodValidationPipe();
-		const _dto = zodDto({
+		const _dto = ZodDto({
 			number: z.number(),
 			string: z.string(),
 		});

@@ -334,6 +334,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     },
     "tuple": {
       "items": [],
+      "maxItems": 2,
       "minItems": 2,
       "prefixItems": [
         {
