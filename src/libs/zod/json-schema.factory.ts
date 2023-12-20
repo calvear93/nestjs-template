@@ -230,7 +230,7 @@ const toTuple = <
 }: ParsingArgs<z.ZodTuple<T, Rest>>): SchemaObject => {
 	schema.type = 'array';
 	schema.items = {
-		oneOf: zodRef._def.items.map((t) => zodToJsonSchema(t))
+		oneOf: zodRef._def.items.map((t) => zodToJsonSchema(t)),
 	};
 	schema.minItems = zodRef._def.items.length;
 	schema.maxItems = zodRef._def.items.length;
