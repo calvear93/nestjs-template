@@ -33,6 +33,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 
 	SwaggerModule.setup(prefix, app, document, {
 		customSiteTitle: process.env.TITLE,
+		jsonDocumentUrl: `${prefix}/openapi`,
 		swaggerOptions: {
 			displayRequestDuration: true,
 			persistAuthorization: true,
@@ -66,12 +67,7 @@ export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 
 	if (swagger) addSwagger(app, prefix);
 
-	await app.listen(port, '0.0.0.0', () => {
-		// eslint-disable-next-line no-console
-		console.info(
-			`\n \x1B[32m➜\x1B[0m Local: \x1B[36mhttp://localhost:${port}/${prefix}\x1B[0m`,
-		);
-	});
+	await app.listen(port, '0.0.0.0');
 
 	return app;
 };

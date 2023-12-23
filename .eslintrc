@@ -153,7 +153,12 @@
 		],
 		"max-classes-per-file": "warn",
 		"max-params": ["warn", 5],
-		"no-console": "warn",
+		"no-console": [
+			"warn",
+			{
+				"allow": ["info", "error", "warn"]
+			}
+		],
 		"no-debugger": "warn",
 		"no-empty-static-block": "warn",
 		"no-extra-label": "warn",
