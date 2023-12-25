@@ -3,7 +3,8 @@ export declare global {
 	type ENV = 'dev' | 'release';
 
 	namespace NodeJS {
-		// NOTE: only string type is supported
+		// NOTE: only string/literal type is supported,
+		// numbers or booleans are loaded as string
 		interface ProcessEnv {
 			readonly NODE_ENV: MODE;
 			readonly ENV: ENV;

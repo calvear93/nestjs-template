@@ -6,19 +6,7 @@ import { SampleModule } from './modules/index.ts';
 })
 export class AppModule implements OnModuleInit {
 	onModuleInit() {
-		this._logger.debug(
-			`\x1B[4mSwagger\x1B[0m enabled: ${
-				process.env.SWAGGER_UI === 'true' ? '\x1B[32mON' : '\x1B[31mOFF'
-			}\x1B[0m`,
-		);
-
-		this._logger.debug(
-			`\x1B[4mApi Key\x1B[0m enabled: ${
-				process.env.SECURITY_ENABLED === 'true'
-					? '\x1B[32mON'
-					: '\x1B[31mOFF'
-			}\x1B[0m`,
-		);
+		this._logger.debug('Module started');
 	}
 
 	private readonly _logger: Logger = new Logger(AppModule.name);
