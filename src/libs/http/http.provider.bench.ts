@@ -14,7 +14,7 @@ const BENCH_CONFIG: Parameters<typeof bench>[2] = {
 	warmupIterations: 100,
 };
 
-describe(HttpProvider.name, () => {
+await describe(HttpProvider.name, () => {
 	let _server: Server;
 	let _serverMock: Mock<[IncomingMessage, ServerResponse]>;
 	let _provider: HttpProvider;

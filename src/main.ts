@@ -32,9 +32,9 @@ if (import.meta.env.DEV) {
 
 // disposing on hot reload dev
 if (import.meta.hot) {
-	import.meta.hot.on('vite:beforeFullReload', () => {
+	import.meta.hot.on('vite:beforeFullReload', async () => {
 		const server = app.getHttpServer() as Server;
 		server.closeAllConnections();
-		return app.close();
+		await app.close();
 	});
 }
