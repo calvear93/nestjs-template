@@ -68,7 +68,13 @@
 		],
 		"@typescript-eslint/no-explicit-any": "off",
 		"@typescript-eslint/no-extraneous-class": "off",
-		"@typescript-eslint/no-floating-promises": "warn",
+		"@typescript-eslint/no-floating-promises": [
+			"warn",
+			{
+				"ignoreVoid": true,
+				"ignoreIIFE": true
+			}
+		],
 		"@typescript-eslint/no-namespace": [
 			"warn",
 			{ "allowDeclarations": true }
