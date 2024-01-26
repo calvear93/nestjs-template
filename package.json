@@ -17,22 +17,11 @@
 		"format": "wireit",
 		"clean": "pnpx del-cli dist .reports **/*.tsbuildinfo .rollup.cache .swc .wireit .node_modules"
 	},
-	"license": "MIT",
-	"repository": "https://github.com/calvear93/nestjs-template",
-	"keywords": [
-		"node",
-		"nest",
-		"fastify",
-		"pnpm",
-		"vite",
-		"vitest",
-		"typescript"
-	],
 	"dependencies": {
 		"@fastify/static": "6.12.0",
-		"@nestjs/common": "10.3.0",
-		"@nestjs/core": "10.3.0",
-		"@nestjs/platform-fastify": "10.3.0",
+		"@nestjs/common": "10.3.1",
+		"@nestjs/core": "10.3.1",
+		"@nestjs/platform-fastify": "10.3.1",
 		"@nestjs/swagger": "7.2.0",
 		"fastify": "4.25.2",
 		"luxon": "3.4.4",
@@ -43,14 +32,14 @@
 	},
 	"devDependencies": {
 		"@calvear/env": "2.9.2",
-		"@nestjs/testing": "10.3.0",
+		"@nestjs/testing": "10.3.1",
 		"@stryker-mutator/core": "8.0.0",
 		"@stryker-mutator/typescript-checker": "8.0.0",
 		"@stryker-mutator/vitest-runner": "8.0.0",
 		"@types/luxon": "3.4.2",
-		"@types/node": "20.11.5",
-		"@typescript-eslint/eslint-plugin": "6.19.0",
-		"@typescript-eslint/parser": "6.19.0",
+		"@types/node": "20.11.7",
+		"@typescript-eslint/eslint-plugin": "6.19.1",
+		"@typescript-eslint/parser": "6.19.1",
 		"@vitest/coverage-v8": "1.2.1",
 		"eslint": "8.56.0",
 		"eslint-config-prettier": "9.1.0",
@@ -66,7 +55,7 @@
 		"eslint-plugin-vitest": "0.3.20",
 		"prettier": "3.2.4",
 		"terser": "5.27.0",
-		"type-fest": "4.9.0",
+		"type-fest": "4.10.1",
 		"typescript": "5.3.3",
 		"unplugin-swc": "1.4.4",
 		"vite": "5.0.12",
@@ -138,5 +127,16 @@
 		"node": ">=20",
 		"npm": ">=9",
 		"pnpm": ">=8"
-	}
+	},
+	"license": "MIT",
+	"repository": "https://github.com/calvear93/nestjs-template",
+	"keywords": [
+		"node",
+		"nest",
+		"fastify",
+		"pnpm",
+		"vite",
+		"vitest",
+		"typescript"
+	]
 }
