@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import type { UserConfigExport } from 'vite';
+import type { PluginOption, UserConfigExport } from 'vite';
 import swc from 'unplugin-swc';
 import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
 import { compilerOptions as tsconfig } from './tsconfig.json';
@@ -36,9 +36,10 @@ export default {
 /**
  * Generates build package.json.
  */
-function pkgJson() {
+function pkgJson(): PluginOption {
 	return {
-		closeBundle: () => {
+		name: 'package-json-gen',
+		writeBundle: () => {
 			const pkg = {
 				dependencies,
 				type: 'module',
@@ -46,7 +47,6 @@ function pkgJson() {
 
 			return writeFile('dist/package.json', JSON.stringify(pkg, null, 4));
 		},
-		name: 'package-json-gen',
 	};
 }
 
