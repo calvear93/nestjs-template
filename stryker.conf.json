@@ -30,7 +30,7 @@
 		"allowEmojis": true,
 		"logTests": true
 	},
-	"incrementalFile": ".reports/stryker-incremental.json",
+	"incrementalFile": "node_modules/.cache/stryker/cache.json",
 	"htmlReporter": {
 		"fileName": ".reports/mutations.html"
 	},

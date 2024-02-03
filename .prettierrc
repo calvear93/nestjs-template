@@ -1,4 +1,5 @@
 {
+	"$schema": "https://json.schemastore.org/prettierrc.json",
 	"arrowParens": "always",
 	"bracketSameLine": false,
 	"bracketSpacing": true,
@@ -11,5 +12,13 @@
 	"singleQuote": true,
 	"tabWidth": 4,
 	"trailingComma": "all",
-	"useTabs": true
+	"useTabs": true,
+	"overrides": [
+		{
+			"files": ["tsconfig.json"],
+			"options": {
+				"trailingComma": "none"
+			}
+		}
+	]
 }
