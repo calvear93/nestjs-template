@@ -32,7 +32,7 @@
 		"zod": "3.22.4"
 	},
 	"devDependencies": {
-		"@calvear/env": "2.9.2",
+		"@calvear/env": "2.10.1",
 		"@nestjs/testing": "10.3.1",
 		"@stryker-mutator/core": "8.2.3",
 		"@stryker-mutator/typescript-checker": "8.2.3",

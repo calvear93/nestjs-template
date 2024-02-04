@@ -1,4 +1,5 @@
 {
+	"$schema": "../../node_modules/@calvear/env/schemas/settings.schema.json",
 	"expand": false,
 	"nullable": false,
 	"schemaValidate": true,
