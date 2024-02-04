@@ -7,15 +7,12 @@ export declare global {
 		// numbers or booleans are loaded as string
 		interface ProcessEnv {
 			readonly NODE_ENV: MODE;
-			readonly ENV: ENV;
+			readonly APP_ENV: ENV;
 			readonly DEBUG?: string;
 
 			// SECTION: project info from package.json
-			readonly VERSION: string;
-			readonly PROJECT: string;
-			readonly NAME: string;
-			readonly TITLE: string;
-			readonly DESCRIPTION: string;
+			readonly APP_VERSION: string;
+			readonly APP_NAME: string;
 
 			// SECTION: base
 			readonly PORT: string;

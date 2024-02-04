@@ -20,9 +20,8 @@ import { AppModule } from './app.module.ts';
  */
 export const addSwagger = (app: INestApplication, prefix: string) => {
 	const config = new DocumentBuilder()
-		.setTitle(process.env.TITLE)
-		.setDescription(process.env.DESCRIPTION)
-		.setVersion(process.env.VERSION)
+		.setTitle(process.env.APP_NAME)
+		.setVersion(process.env.APP_VERSION)
 		.addApiKey(SECURITY_API_SCHEMA, APY_KEY_GUARD_NAME)
 		.build();
 

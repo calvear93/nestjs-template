@@ -1,6 +1,6 @@
 {
 	"$schema": "../../node_modules/@calvear/env/schemas/settings.schema.json",
-	"expand": false,
+	"expand": true,
 	"nullable": false,
 	"schemaValidate": true,
 	"nestingDelimiter": "_"
