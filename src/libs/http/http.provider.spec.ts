@@ -33,7 +33,7 @@ describe(HttpProvider, () => {
 	>;
 
 	const _PORT = 5678;
-	const _URL = `http://localhost:${_PORT}`;
+	const _URL = `http://localhost:${_PORT}/`;
 
 	const _altToken = 'alt';
 
@@ -266,5 +266,68 @@ describe(HttpProvider, () => {
 		const decode = Buffer.from(encoded, 'base64url').toString('utf8');
 
 		expect(decode).toBe(expected);
+	});
+
+	describe('url parsing', () => {
+		// hooks
+		beforeAll(() => {
+			_serverResponse.mockImplementation((_, response) => {
+				response.end();
+			});
+		});
+
+		afterAll(() => {
+			_serverResponse.mockClear();
+		});
+
+		// tests
+		test('root', async () => {
+			// mocking phase
+			const path = '/';
+			const expectedUrl = `${_URL}`;
+
+			// request phase
+			const http = new HttpProvider({ url: _URL });
+			await http.request(path);
+
+			// assertion data
+			const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+
+			expect(receivedUrl).toBe(expectedUrl);
+		});
+
+		test('path with many slashes', async () => {
+			// mocking phase
+			const path = '//api/path';
+			const expectedUrl = `${_URL}api/path`;
+
+			// request phase
+			const http = new HttpProvider({ url: _URL });
+			await http.request(path);
+
+			// assertion data
+			const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+
+			expect(receivedUrl).toBe(expectedUrl);
+		});
+
+		test('with params', async () => {
+			// mocking phase
+			const path = '//api//path';
+			const query = {
+				p1: 1,
+				p2: 'hello',
+			};
+			const expectedUrl = `${_URL}api/path?p1=1&p2=hello`;
+
+			// request phase
+			const http = new HttpProvider({ url: _URL });
+			await http.request(path, { query });
+
+			// assertion data
+			const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+
+			expect(receivedUrl).toBe(expectedUrl);
+		});
 	});
 });

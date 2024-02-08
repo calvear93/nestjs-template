@@ -1,3 +1,4 @@
+import { join } from 'node:path/posix';
 import type { FactoryProvider, InjectionToken } from '@nestjs/common';
 import { TimeoutError } from './errors/timeout.error.ts';
 import { HttpError } from './errors/http.error.ts';
@@ -52,6 +53,10 @@ export class HttpProvider {
 		const { query, timeout, ...config } = {
 			...this._baseConfig,
 			...options,
+			headers: {
+				...this._baseConfig?.headers,
+				...options?.headers,
+			},
 		};
 
 		if (timeout) {
@@ -65,13 +70,8 @@ export class HttpProvider {
 		// sets fetch cancel signal from abort controller
 		(config as RequestInit).signal ??= config.cancel?.signal;
 
-		const response = await fetch(
-			new URL(
-				query ? `?${new URLSearchParams(query)}` : url,
-				this._baseUrl,
-			),
-			config,
-		);
+		const fullUrl = this._getFullUrl(url.toString(), query);
+		const response = await fetch(fullUrl, config);
 
 		if (clrFn) clearTimeout(clrFn);
 		if (!response.ok) throw new HttpError(response);
@@ -177,6 +177,16 @@ export class HttpProvider {
 		return this.request(url, config);
 	}
 
+	private _getFullUrl(
+		path: string,
+		query?: Record<string, string | number | boolean>,
+	) {
+		path = query
+			? `${path}?${new URLSearchParams(query as Record<string, string>)}`
+			: path;
+		return new URL(join(`${this._baseUrl}/${path}`));
+	}
+
 	/**
 	 * Serializes "data" property from
 	 * config into "body" and adds json content type.
@@ -247,7 +257,7 @@ export class HttpProvider {
 }
 
 export interface HttpRequestOptions extends RequestOptions {
-	query?: Record<string, string>;
+	query?: Record<string, string | number | boolean>;
 	timeout?: millis;
 	cancel?: AbortController;
 }
