@@ -177,6 +177,12 @@ export class HttpProvider {
 		return this.request(url, config);
 	}
 
+	/**
+	 * Merges and normalizes request URL.
+	 *
+	 * @param path - request path
+	 * @param query - query params
+	 */
 	private _getFullUrl(
 		path: string,
 		query?: Record<string, string | number | boolean>,
