@@ -1,9 +1,9 @@
-import { join } from 'node:path/posix';
 import type { FactoryProvider, InjectionToken } from '@nestjs/common';
 import { TimeoutError } from './errors/timeout.error.ts';
 import { HttpError } from './errors/http.error.ts';
 import { HttpMethod } from './enums/http-method.enum.ts';
 
+type Primitive = string | number | boolean;
 type RequestOptions = Omit<RequestInit, 'signal' | 'window'>;
 
 export type RequestURL = string | URL;
@@ -26,7 +26,7 @@ export class HttpProvider {
 		if (config) {
 			const { url, ...cfg } = config;
 
-			this._baseUrl = url;
+			this._baseUrl = url?.endsWith('/') ? url : `${url}/`;
 			this._baseConfig = {
 				cache: 'no-cache',
 				...cfg,
@@ -183,14 +183,16 @@ export class HttpProvider {
 	 * @param path - request path
 	 * @param query - query params
 	 */
-	private _getFullUrl(
-		path: string,
-		query?: Record<string, string | number | boolean>,
-	) {
+	private _getFullUrl(path: string, query?: Record<string, Primitive>) {
+		if (path.startsWith('/')) {
+			path = path.slice(1);
+		}
+
 		path = query
 			? `${path}?${new URLSearchParams(query as Record<string, string>)}`
 			: path;
-		return new URL(join(`${this._baseUrl}/${path}`));
+
+		return new URL(path, this._baseUrl);
 	}
 
 	/**
@@ -263,7 +265,7 @@ export class HttpProvider {
 }
 
 export interface HttpRequestOptions extends RequestOptions {
-	query?: Record<string, string | number | boolean>;
+	query?: Record<string, Primitive>;
 	timeout?: millis;
 	cancel?: AbortController;
 }
@@ -273,7 +275,7 @@ export interface HttpRequestBodyOptions extends HttpRequestOptions {
 }
 
 export interface HttpProviderConfig extends HttpRequestOptions {
-	url?: RequestURL;
+	url?: string;
 }
 
 export interface HttpResponse<R = unknown> extends Response {

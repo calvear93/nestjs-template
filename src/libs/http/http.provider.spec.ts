@@ -296,9 +296,24 @@ describe(HttpProvider, () => {
 			expect(receivedUrl).toBe(expectedUrl);
 		});
 
-		test('path with many slashes', async () => {
+		test('path with slash', async () => {
 			// mocking phase
-			const path = '//api/path';
+			const path = '/api/path';
+			const expectedUrl = `${_URL}api/path`;
+
+			// request phase
+			const http = new HttpProvider({ url: _URL });
+			await http.request(path);
+
+			// assertion data
+			const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+
+			expect(receivedUrl).toBe(expectedUrl);
+		});
+
+		test('path without slash', async () => {
+			// mocking phase
+			const path = 'api/path';
 			const expectedUrl = `${_URL}api/path`;
 
 			// request phase
@@ -313,7 +328,7 @@ describe(HttpProvider, () => {
 
 		test('with params', async () => {
 			// mocking phase
-			const path = '//api//path';
+			const path = '/api/path';
 			const query = {
 				p1: 1,
 				p2: 'hello',
