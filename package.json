@@ -79,7 +79,7 @@
 				"tsconfig.json",
 				"tsconfig.release.json",
 				"vite.config.ts",
-				"env/*.env.json",
+				"env/*.json",
 				"!**/*.{spec,test}.*",
 				"!**/__{tests,mocks,fixtures}__/**/*"
 			]
