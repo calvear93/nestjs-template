@@ -67,6 +67,17 @@ function loadEnv() {
 
 /**
  * Turns a record in a text-writable key pair format.
+ *
+ * @example
+ * ```ts
+ * const npmrc = toKeyPairContent({
+ * 	'ignore-scripts': true,
+ * 	'node-linker': 'hoisted',
+ * 	'prefer-frozen-lockfile': false,
+ * });
+ *
+ * await writeFile('dist/.npmrc', npmrc);
+ * ```
  */
 function toKeyPairContent(data: Record<string, string | boolean | number>) {
 	let content = '';
