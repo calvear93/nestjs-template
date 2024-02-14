@@ -39,13 +39,13 @@ export default {
 function pkgJson(): PluginOption {
 	return {
 		name: 'package-json-gen',
-		writeBundle: () => {
+		writeBundle: async () => {
 			const pkg = {
 				dependencies,
 				type: 'module',
 			};
 
-			return writeFile('dist/package.json', JSON.stringify(pkg, null, 4));
+			await writeFile('dist/package.json', JSON.stringify(pkg, null, 4));
 		},
 	};
 }
@@ -63,4 +63,17 @@ function loadEnv() {
 			]),
 		);
 	}
+}
+
+/**
+ * Turns a record in a text-writable key pair format.
+ */
+function toKeyPairContent(data: Record<string, string | boolean | number>) {
+	let content = '';
+
+	for (const key in data) {
+		content += `${key}=${data[key]}\n`;
+	}
+
+	return content;
 }
