@@ -21,8 +21,8 @@ const logFeatureStatus = (name: string, enabled: boolean) => {
 	console.info(`  ${bullet}\x1B[0m ${name}: ${message}\x1B[0m`);
 };
 
-logFeatureStatus('Swagger', SWAGGER_ENABLED);
-logFeatureStatus('Api Key', SECURITY_ENABLED);
+logFeatureStatus(' 📑 Swagger', SWAGGER_ENABLED);
+logFeatureStatus(' 🔒 Api Key', SECURITY_ENABLED);
 
 if (import.meta.env.DEV) {
 	console.info(
