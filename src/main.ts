@@ -6,6 +6,11 @@ const BASE_URL = process.env.BASE_URL;
 const SWAGGER_ENABLED = process.env.SWAGGER_UI === 'true';
 const SECURITY_ENABLED = process.env.SECURITY_ENABLED === 'true';
 
+// clears previous instance when event isn't fired
+if (import.meta.hot) {
+	await (globalThis as any).__dispose?.();
+}
+
 // application init
 const app = await start({
 	port: PORT,
@@ -37,4 +42,15 @@ if (import.meta.hot) {
 		server.closeAllConnections();
 		await app.close();
 	});
+}
+
+if (import.meta.hot) {
+	const dispose = async () => {
+		const server = app.getHttpServer() as Server;
+		server.closeAllConnections();
+		await app.close();
+	};
+	(globalThis as any).__dispose = dispose;
+	// registers disposing event
+	import.meta.hot.on('vite:beforeFullReload', dispose);
 }
