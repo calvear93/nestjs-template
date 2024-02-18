@@ -37,14 +37,6 @@ if (import.meta.env.DEV) {
 
 // disposing on hot reload dev
 if (import.meta.hot) {
-	import.meta.hot.on('vite:beforeFullReload', async () => {
-		const server = app.getHttpServer() as Server;
-		server.closeAllConnections();
-		await app.close();
-	});
-}
-
-if (import.meta.hot) {
 	const dispose = async () => {
 		const server = app.getHttpServer() as Server;
 		server.closeAllConnections();
