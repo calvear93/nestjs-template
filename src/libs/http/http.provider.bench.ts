@@ -43,7 +43,7 @@ await describe(HttpProvider.name, () => {
 		async () => {
 			const response = await _provider.post(_url, {
 				data: { id: 1, name: 'a name' },
-				query: { name: 'test' },
+				query: { id: 1, name: 'test', page: 100, size: 999 },
 				timeout: 200,
 			});
 
@@ -58,7 +58,14 @@ await describe(HttpProvider.name, () => {
 	bench(
 		'native fetch',
 		async () => {
-			const response = await fetch(_url, {
+			const query = new URLSearchParams({
+				id: '1',
+				name: 'test',
+				page: '100',
+				size: '999',
+			});
+
+			const response = await fetch(`${_url}?${query})}`, {
 				body: JSON.stringify({ id: 1, name: 'a name' }),
 				method: 'POST',
 			});

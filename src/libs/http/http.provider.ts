@@ -3,7 +3,7 @@ import { TimeoutError } from './errors/timeout.error.ts';
 import { HttpError } from './errors/http.error.ts';
 import { HttpMethod } from './enums/http-method.enum.ts';
 
-type Primitive = string | number | boolean;
+type Primitive = string | number | boolean | bigint | null | undefined;
 type RequestOptions = Omit<RequestInit, 'signal' | 'window'>;
 
 export type RequestURL = string | URL;
@@ -188,11 +188,28 @@ export class HttpProvider {
 			path = path.slice(1);
 		}
 
-		path = query
-			? `${path}?${new URLSearchParams(query as Record<string, string>)}`
-			: path;
+		path = `${path}${this._buildQuery(query)}`;
 
 		return new URL(path, this._baseUrl);
+	}
+
+	/**
+	 * Merges and normalizes request URL.
+	 *
+	 * @param query - query params
+	 */
+	private _buildQuery(query?: Record<string, Primitive>) {
+		if (!query) return '';
+
+		return `?${Object.keys(query)
+			.map((key) => {
+				const value = query[key];
+
+				if (!value) return '';
+
+				return `${key}=${query[key]}`;
+			})
+			.join('&')}`;
 	}
 
 	/**
