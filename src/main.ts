@@ -7,8 +7,8 @@ const SWAGGER_ENABLED = process.env.SWAGGER_UI === 'true';
 const SECURITY_ENABLED = process.env.SECURITY_ENABLED === 'true';
 
 // clears previous instance when event isn't fired
-if (import.meta.hot) {
-	await (globalThis as any).__dispose?.();
+if (import.meta.hot?.data.__dispose) {
+	await import.meta.hot.data.__dispose?.();
 }
 
 // application init
@@ -42,7 +42,7 @@ if (import.meta.hot) {
 		server.closeAllConnections();
 		await app.close();
 	};
-	(globalThis as any).__dispose = dispose;
+	import.meta.hot.data.__dispose = dispose;
 	// registers disposing event
 	import.meta.hot.on('vite:beforeFullReload', dispose);
 }
