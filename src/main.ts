@@ -6,10 +6,9 @@ const BASE_URL = process.env.BASE_URL;
 const SWAGGER_ENABLED = process.env.SWAGGER_UI === 'true';
 const SECURITY_ENABLED = process.env.SECURITY_ENABLED === 'true';
 
-// hmr cleanup funcs
+// resolves pending async cleanup
 if (import.meta.hot) {
 	const { data } = import.meta.hot;
-	// resolves pending async cleanup
 	if (data.__pendingCleanup) {
 		console.info(
 			'  \x1B[32m⚙\x1B[0m HMR: \x1B[36mReloading Module ...\x1B[0m\n',
