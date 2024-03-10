@@ -39,10 +39,16 @@ describe(HttpProvider, () => {
 
 	// hooks
 	beforeAll(async () => {
+		vi.useFakeTimers();
+
 		_module = await Test.createTestingModule({
 			providers: [
 				HttpProvider.register({ url: _URL }),
-				HttpProvider.register({ name: _altToken }),
+				HttpProvider.register({
+					throwOnError: false,
+					token: _altToken,
+					url: _URL,
+				}),
 			],
 		}).compile();
 
@@ -56,9 +62,12 @@ describe(HttpProvider, () => {
 
 	afterEach(() => {
 		vi.clearAllMocks();
+		vi.clearAllTimers();
 	});
 
 	afterAll(async () => {
+		vi.useRealTimers();
+
 		await _module.close();
 		_server.closeAllConnections();
 		_server.close();
@@ -73,6 +82,21 @@ describe(HttpProvider, () => {
 		const altProvider = _module.get<HttpProvider>(_altToken);
 
 		expect(altProvider).toBeDefined();
+	});
+
+	test('failed request does not throw on throwOnError false', async () => {
+		const altProvider = _module.get<HttpProvider>(_altToken);
+
+		// mocking phase
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.writeHead(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
+		});
+
+		const response = await altProvider.get('/');
+
+		// request phase
+		expect(response.ok).toBe(false);
+		expect(response.status).toBe(HttpStatusCode.INTERNAL_SERVER_ERROR);
 	});
 
 	test('request not ok (status in the range 200-299) throws HttpError', async () => {
@@ -229,14 +253,15 @@ describe(HttpProvider, () => {
 
 	test('request fails for timeout', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			setTimeout(() => response.end(), 2);
+		_serverResponse.mockImplementationOnce(async (_, response) => {
+			await vi.advanceTimersToNextTimerAsync(); // wait for http timeout
+			response.end();
 		});
 
+		const request = _provider.get<string>('/', { timeout: 1 });
+
 		// request phase
-		await expect(
-			_provider.get<string>('/', { timeout: 1 }),
-		).rejects.toThrow(TimeoutError);
+		await expect(request).rejects.toThrow(TimeoutError);
 	});
 
 	test('request can be aborted', async () => {

@@ -24,9 +24,10 @@ export class HttpProvider {
 	 */
 	constructor(config?: HttpProviderConfig) {
 		if (config) {
-			const { url, ...cfg } = config;
+			const { throwOnError = true, url, ...cfg } = config;
 
 			this._baseUrl = url?.endsWith('/') ? url : `${url}/`;
+			this._throwOnError = throwOnError;
 			this._baseConfig = {
 				cache: 'no-cache',
 				...cfg,
@@ -74,7 +75,7 @@ export class HttpProvider {
 		const response = await fetch(fullUrl, config);
 
 		if (clrFn) clearTimeout(clrFn);
-		if (!response.ok) throw new HttpError(response);
+		if (this._throwOnError && !response.ok) throw new HttpError(response);
 
 		return response;
 	}
@@ -241,6 +242,11 @@ export class HttpProvider {
 	private readonly _baseUrl?: RequestURL;
 
 	/**
+	 * If not ok response throw HttpError.
+	 */
+	private readonly _throwOnError?: boolean;
+
+	/**
 	 * Client base config.
 	 */
 	private readonly _baseConfig?: HttpRequestOptions;
@@ -272,10 +278,10 @@ export class HttpProvider {
 	 * @returns provider
 	 */
 	static register(
-		config?: HttpProviderConfig & { name?: InjectionToken },
+		config?: HttpProviderConfig & { token?: InjectionToken },
 	): FactoryProvider<HttpProvider> {
 		return {
-			provide: config?.name ?? HttpProvider,
+			provide: config?.token ?? HttpProvider,
 			useFactory: () => new HttpProvider(config),
 		};
 	}
@@ -293,6 +299,7 @@ export interface HttpRequestBodyOptions extends HttpRequestOptions {
 
 export interface HttpProviderConfig extends HttpRequestOptions {
 	url?: string;
+	throwOnError?: boolean;
 }
 
 export interface HttpResponse<R = unknown> extends Response {
