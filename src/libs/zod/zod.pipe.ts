@@ -1,9 +1,6 @@
-import {
-	BadRequestException,
-	type ArgumentMetadata,
-	type PipeTransform,
-} from '@nestjs/common';
+import { type ArgumentMetadata, type PipeTransform } from '@nestjs/common';
 import { type ZodDto } from './zod-dto.ts';
+import { ZodSchemaException } from './exceptions/zod-schema.exception.ts';
 
 const isZodDto = (dto: any): dto is ZodDto => {
 	return !!dto.schema;
@@ -20,11 +17,7 @@ export class ZodValidationPipe implements PipeTransform {
 
 			if (result.success) return result.data;
 
-			const errorMessage = result.error.errors.map(
-				({ message, path }) => `${path.join('.')}: ${message}`,
-			);
-
-			throw new BadRequestException(errorMessage);
+			throw new ZodSchemaException(result.error);
 		}
 
 		return value;
