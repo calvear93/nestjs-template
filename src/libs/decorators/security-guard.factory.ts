@@ -34,12 +34,12 @@ const createSecureDecorator = <G extends Class<any>>(
 			_?: PropertyKey,
 			descriptor?: PropertyDescriptor,
 		) => {
-			// method decoration
+			// class decoration
 			if (!isFn(target)) {
 				return descriptor && apply(descriptor);
 			}
 
-			// class decoration
+			// method decoration
 			const descriptors = Object.getOwnPropertyDescriptors(
 				target.prototype,
 			);

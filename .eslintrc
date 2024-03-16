@@ -130,7 +130,6 @@
 		],
 		"getter-return": ["error", { "allowImplicit": true }],
 		"grouped-accessor-pairs": "warn",
-		"import/extensions": ["error", "always", { "ignorePackages": true }],
 		"import/no-extraneous-dependencies": [
 			"off",
 			{
