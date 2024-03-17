@@ -67,9 +67,11 @@
 		"**/pnpm-lock.yaml": true
 	},
 	"typescript.disableAutomaticTypeAcquisition": true,
-	"typescript.preferences.importModuleSpecifier": "relative",
+	"typescript.preferences.importModuleSpecifier": "shortest",
 	"typescript.preferences.importModuleSpecifierEnding": "js",
+	"typescript.preferences.preferTypeOnlyAutoImports": true,
 	"typescript.preferences.quoteStyle": "single",
+	"typescript.preferences.useAliasesForRenames": false,
 	"typescript.suggest.autoImports": true,
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"typescript.validate.enable": true,
