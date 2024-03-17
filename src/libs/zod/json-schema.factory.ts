@@ -74,6 +74,10 @@ const toString = ({
 
 	for (const item of checks) {
 		switch (item.kind) {
+			case 'email':
+				schema.format = item.kind;
+				schema.example = 'sample@email.com';
+				break;
 			case 'ulid':
 				schema.format = item.kind;
 				schema.example = '01ARZ3NDEKTSV4RRFFQ69G5FAV';

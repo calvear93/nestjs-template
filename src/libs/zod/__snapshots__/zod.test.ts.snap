@@ -112,6 +112,8 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       ],
     },
     "email": {
+      "example": "sample@email.com",
+      "format": "email",
       "type": "string",
     },
     "emoji": {
@@ -213,6 +215,8 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     },
     "multiple": {
       "default": "test@test.cl",
+      "example": "sample@email.com",
+      "format": "email",
       "maxLength": 12,
       "type": "string",
     },
