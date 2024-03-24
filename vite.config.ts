@@ -1,5 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { checker } from 'vite-plugin-checker';
 import type { PluginOption, UserConfigExport } from 'vite';
 import swc from 'unplugin-swc';
 import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
@@ -30,6 +31,11 @@ export default {
 	plugins: [
 		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
 		tsconfigPaths(),
+		checker({
+			enableBuild: true,
+			terminal: true,
+			typescript: true,
+		}),
 	],
 } satisfies UserConfigExport;
 
