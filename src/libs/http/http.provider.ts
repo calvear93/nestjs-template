@@ -1,4 +1,5 @@
 import type { FactoryProvider, InjectionToken } from '@nestjs/common';
+import { HttpStatusCode } from './index.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
 import { HttpError } from './errors/http.error.ts';
 import { HttpMethod } from './enums/http-method.enum.ts';
@@ -72,7 +73,18 @@ export class HttpProvider {
 		(config as RequestInit).signal ??= config.cancel?.signal;
 
 		const fullUrl = this._getFullUrl(url.toString(), query);
-		const response = await fetch(fullUrl, config);
+		const response = await fetch(fullUrl, config).catch((error) => {
+			if (error instanceof TypeError) {
+				throw new HttpError({
+					json: () => Promise.resolve(error.message),
+					ok: false,
+					status: HttpStatusCode.BAD_GATEWAY,
+					url,
+				} as HttpResponse);
+			}
+
+			throw error;
+		});
 
 		if (clrFn) clearTimeout(clrFn);
 		if (this._throwOnError && !response.ok) throw new HttpError(response);

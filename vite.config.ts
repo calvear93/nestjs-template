@@ -27,6 +27,7 @@ export default {
 		target: tsconfig.target,
 		terserOptions: { keep_classnames: true },
 	},
+	clearScreen: false,
 	// define: loadEnv(),
 	plugins: [
 		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
