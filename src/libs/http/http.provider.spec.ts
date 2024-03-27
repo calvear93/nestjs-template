@@ -45,7 +45,7 @@ describe(HttpProvider, () => {
 			providers: [
 				HttpProvider.register({ url: _URL }),
 				HttpProvider.register({
-					throwOnError: false,
+					throwOnClientError: false,
 					token: _altToken,
 					url: _URL,
 				}),

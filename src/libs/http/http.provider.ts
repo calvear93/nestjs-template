@@ -25,10 +25,10 @@ export class HttpProvider {
 	 */
 	constructor(config?: HttpProviderConfig) {
 		if (config) {
-			const { throwOnError = true, url, ...cfg } = config;
+			const { throwOnClientError = true, url, ...cfg } = config;
 
 			this._baseUrl = url?.endsWith('/') ? url : `${url}/`;
-			this._throwOnError = throwOnError;
+			this._throwOnError = throwOnClientError;
 			this._baseConfig = {
 				cache: 'no-cache',
 				...cfg,
@@ -311,7 +311,7 @@ export interface HttpRequestBodyOptions extends HttpRequestOptions {
 
 export interface HttpProviderConfig extends HttpRequestOptions {
 	url?: string;
-	throwOnError?: boolean;
+	throwOnClientError?: boolean;
 }
 
 export interface HttpResponse<R = unknown> extends Response {
