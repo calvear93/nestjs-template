@@ -28,7 +28,7 @@ export class HttpProvider {
 			const { throwOnClientError = true, url, ...cfg } = config;
 
 			this._baseUrl = url?.endsWith('/') ? url : `${url}/`;
-			this._throwOnError = throwOnClientError;
+			this._throwOnClientError = throwOnClientError;
 			this._baseConfig = {
 				cache: 'no-cache',
 				...cfg,
@@ -87,7 +87,7 @@ export class HttpProvider {
 		});
 
 		if (clrFn) clearTimeout(clrFn);
-		if (this._throwOnError && !response.ok) throw new HttpError(response);
+		if (this._throwOnClientError && !response.ok) throw new HttpError(response);
 
 		return response;
 	}
@@ -254,9 +254,9 @@ export class HttpProvider {
 	private readonly _baseUrl?: RequestURL;
 
 	/**
-	 * If not ok response throw HttpError.
+	 * When true, throws HttpError if a client error occurs (4XX).
 	 */
-	private readonly _throwOnError?: boolean;
+	private readonly _throwOnClientError?: boolean;
 
 	/**
 	 * Client base config.
