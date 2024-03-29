@@ -9,7 +9,7 @@ import {
 	vi,
 	type MockInstance,
 } from 'vitest';
-import { type CanActivate, type ExecutionContext } from '@nestjs/common';
+import { type CanActivate } from '@nestjs/common';
 import { createSecurityGuard } from './security-guard.factory.ts';
 
 class MockDecoratedClass {

@@ -5,7 +5,7 @@ import {
 	type ServerResponse,
 } from 'node:http';
 import { bench, expect, type Mock } from 'vitest';
-import { HttpProvider } from './http.provider.ts';
+import { HttpClient } from './http.client.ts';
 import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
 
 const PORT = 5678;
@@ -14,16 +14,16 @@ const BENCH_CONFIG: Parameters<typeof bench>[2] = {
 	warmupIterations: 100,
 };
 
-await describe(HttpProvider.name, () => {
+await describe(HttpClient.name, () => {
 	let _server: Server;
 	let _serverMock: Mock<[IncomingMessage, ServerResponse]>;
-	let _provider: HttpProvider;
+	let _provider: HttpClient;
 	const _url = `http://localhost:${PORT}`;
 	const _responseBody = { message: 'Ok' };
 
 	before(() => {
 		[_server, _serverMock] = createHttpMockServer(PORT);
-		_provider = new HttpProvider({ url: _url });
+		_provider = new HttpClient({ url: _url });
 
 		_serverMock.mockImplementation((_, response) => {
 			response.writeHead(200, 'Ok', {
@@ -39,7 +39,7 @@ await describe(HttpProvider.name, () => {
 	});
 
 	bench(
-		'HTTP provider',
+		'HTTP client',
 		async () => {
 			const response = await _provider.post(_url, {
 				data: { id: 1, name: 'a name' },

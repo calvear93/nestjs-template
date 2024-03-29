@@ -1,4 +1,4 @@
-import { type HttpResponse } from '../http.provider.ts';
+import { type HttpResponse } from '../http.client.ts';
 import { HttpStatusCode } from '../enums/http-status.enum.ts';
 
 /**
