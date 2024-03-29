@@ -7,6 +7,7 @@ import {
 	afterAll,
 	afterEach,
 	beforeAll,
+	beforeEach,
 	describe,
 	expect,
 	test,
@@ -50,6 +51,11 @@ describe(HttpClient, () => {
 		});
 	});
 
+	beforeEach(() => {
+		// fetch spy
+		_fetchMock = vi.spyOn(globalThis, 'fetch');
+	});
+
 	afterEach(() => {
 		vi.clearAllMocks();
 		vi.clearAllTimers();
@@ -57,6 +63,7 @@ describe(HttpClient, () => {
 
 	afterAll(() => {
 		vi.useRealTimers();
+		vi.resetAllMocks();
 
 		_server.closeAllConnections();
 		_server.close();
