@@ -1,10 +1,4 @@
-import { after, before, describe } from 'node:test';
-import {
-	type IncomingMessage,
-	type Server,
-	type ServerResponse,
-} from 'node:http';
-import { bench, expect, type Mock } from 'vitest';
+import { bench, describe, expect } from 'vitest';
 import { HttpClient } from './http.client.ts';
 import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
 
@@ -14,28 +8,18 @@ const BENCH_CONFIG: Parameters<typeof bench>[2] = {
 	warmupIterations: 100,
 };
 
-await describe(HttpClient.name, () => {
-	let _server: Server;
-	let _serverMock: Mock<[IncomingMessage, ServerResponse]>;
-	let _provider: HttpClient;
+describe(HttpClient.name, () => {
 	const _url = `http://localhost:${PORT}`;
 	const _responseBody = { message: 'Ok' };
 
-	before(() => {
-		[_server, _serverMock] = createHttpMockServer(PORT);
-		_provider = new HttpClient({ url: _url });
+	const [_server, _serverMock] = createHttpMockServer(PORT);
+	const _provider = new HttpClient({ url: _url });
 
-		_serverMock.mockImplementation((_, response) => {
-			response.writeHead(200, 'Ok', {
-				'Content-Type': 'application/json',
-			});
-			response.end(JSON.stringify(_responseBody));
+	_serverMock.mockImplementation((_, response) => {
+		response.writeHead(200, 'Ok', {
+			'Content-Type': 'application/json',
 		});
-	});
-
-	after(() => {
-		_server.closeAllConnections();
-		_server.close();
+		response.end(JSON.stringify(_responseBody));
 	});
 
 	bench(
