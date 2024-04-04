@@ -8,11 +8,11 @@ const BENCH_CONFIG: Parameters<typeof bench>[2] = {
 	warmupIterations: 100,
 };
 
-describe(HttpClient.name, () => {
+describe(HttpClient, async () => {
 	const _url = `http://localhost:${PORT}`;
 	const _responseBody = { message: 'Ok' };
 
-	const [_server, _serverMock] = createHttpMockServer(PORT);
+	const [_, _serverMock] = await createHttpMockServer(PORT);
 	const _provider = new HttpClient({ url: _url });
 
 	_serverMock.mockImplementation((_, response) => {

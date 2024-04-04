@@ -7,7 +7,6 @@ import {
 	afterAll,
 	afterEach,
 	beforeAll,
-	beforeEach,
 	describe,
 	expect,
 	test,
@@ -25,6 +24,7 @@ describe(HttpClient, () => {
 	let _httpClient: HttpClient;
 	let _altHttpClient: HttpClient;
 
+	let port: number;
 	let _server: Server;
 	let _serverResponse: Mock<[IncomingMessage, ServerResponse]>;
 	let _fetchMock: MockInstance<
@@ -32,28 +32,24 @@ describe(HttpClient, () => {
 		ReturnType<typeof fetch>
 	>;
 
-	const _PORT = 5678;
-	const _URL = `http://localhost:${_PORT}/`;
+	let _URL: string;
 
 	// hooks
-	beforeAll(() => {
+	beforeAll(async () => {
 		vi.useFakeTimers();
 
 		// mock server
-		[_server, _serverResponse] = createHttpMockServer(_PORT);
+		[_server, _serverResponse, port] = await createHttpMockServer();
+		_URL = `http://localhost:${port}/`;
 		// fetch spy
-		_fetchMock = vi.spyOn(globalThis, 'fetch');
+		globalThis.fetch = vi.fn(fetch);
+		_fetchMock = vi.mocked(fetch);
 
 		_httpClient = new HttpClient({ url: _URL });
 		_altHttpClient = new HttpClient({
 			throwOnClientError: false,
 			url: _URL,
 		});
-	});
-
-	beforeEach(() => {
-		// fetch spy
-		_fetchMock = vi.spyOn(globalThis, 'fetch');
 	});
 
 	afterEach(() => {

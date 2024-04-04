@@ -260,6 +260,7 @@
 				"vitest/prefer-called-exactly-once-with": "off",
 				"vitest/prefer-expect-assertions": "off",
 				"vitest/prefer-lowercase-title": "off",
+				"vitest/prefer-spy-on": "off",
 				"vitest/prefer-to-be-falsy": "off",
 				"vitest/prefer-to-be-truthy": "off",
 				"vitest/require-hook": "off",

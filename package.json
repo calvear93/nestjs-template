@@ -57,7 +57,7 @@
 		"prettier": "3.2.5",
 		"terser": "5.30.3",
 		"type-fest": "4.15.0",
-		"typescript": "5.4.3",
+		"typescript": "5.4.4",
 		"unplugin-swc": "1.4.4",
 		"vite": "5.2.8",
 		"vite-node": "1.4.0",
