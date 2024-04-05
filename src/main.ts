@@ -1,4 +1,3 @@
-import { type Server } from 'node:http';
 import { start } from './app/app.ts';
 
 const PORT = +process.env.PORT;
