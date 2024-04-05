@@ -1,3 +1,4 @@
+import type { Server } from 'node:http';
 import {
 	DocumentBuilder,
 	SwaggerModule,
@@ -68,5 +69,11 @@ export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 
 	await app.listen(port, '0.0.0.0');
 
-	return app;
+	const dispose = async () => {
+		const server = app.getHttpServer() as Server;
+		server.closeAllConnections();
+		await app.close();
+	};
+
+	return { adapter, app, dispose };
 };

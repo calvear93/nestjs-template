@@ -19,7 +19,7 @@ if (import.meta.hot) {
 }
 
 // application init
-const app = await start({
+const { dispose } = await start({
 	port: PORT,
 	prefix: BASE_URL,
 	swagger: SWAGGER_ENABLED,
@@ -40,12 +40,9 @@ if (import.meta.env.DEV) {
 	console.info(
 		`\n  \x1B[32m➜\x1B[0m Local: \x1B[36mhttp://localhost:${PORT}/${BASE_URL}\x1B[0m\n`,
 	);
-}
 
-// disposing on hot reload dev
-import.meta.hot?.on('vite:beforeFullReload', () => {
-	const server = app.getHttpServer() as Server;
-	server.closeAllConnections();
-	// pending async cleanup
-	import.meta.hot!.data.__pendingCleanup[0] = app.close();
-});
+	// disposing on hot reload dev
+	import.meta.hot?.on('vite:beforeFullReload', () => {
+		import.meta.hot!.data.__pendingCleanup.push(dispose());
+	});
+}
