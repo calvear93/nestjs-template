@@ -1,8 +1,0 @@
-.vscode
-.reports
-.rollup.cache
-build
-dist
-*.js
-*.mjs
-*.cjs

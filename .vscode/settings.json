@@ -2,7 +2,7 @@
 	"[javascript][typescript]": {
 		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 	},
-	"[json][jsonc][markdown][css][less][scss]": {
+	"[json][jsonc][markdown]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"editor.detectIndentation": true,
@@ -23,13 +23,18 @@
 		"*.mts": "${capture}.mts.*",
 		"*.ts": "${capture}.*",
 		"*.tsx": "${capture}.*",
-		".eslintrc*": ".eslintignore, .prettierrc*, .prettierignore",
 		"dockerfile": ".dockerignore, docker-compose.*, dockerfile*",
+		"eslint.config.*": ".prettierrc*, .prettierignore",
 		"main.ts": "*.config.ts, *.d.ts",
 		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, pnpm-workspace.yaml, package.*.json, .npmrc, .pnp.cjs",
 		"readme*": "changelog*, license*, code_of_conduct*, contributing*",
 		"tsconfig.json": "tsconfig.*.json",
 		"vite.config.ts": "vitest.config.ts, stryker.conf.*"
+	},
+	"workbench.editor.customLabels.patterns": {
+		"**/*.{spec,test}.*": "🧪 ${filename}.${extname}",
+		"env/appsettings.json": "⚙️ ${filename}.${extname}",
+		"env/*.env.json": "⚙️ ${filename}.${extname}"
 	},
 	"explorer.incrementalNaming": "smart",
 	"explorer.sortOrder": "type",

@@ -10,7 +10,7 @@ if (import.meta.hot) {
 	const { data } = import.meta.hot;
 	if (data.__pendingCleanup) {
 		console.info(
-			'  \x1B[32m⚙\x1B[0m HMR: \x1B[36mReloading Module ...\x1B[0m\n',
+			'  \u001B[32m⚙\u001B[0m HMR: \u001B[36mReloading Module ...\u001B[0m\n',
 		);
 		await Promise.allSettled(data.__pendingCleanup);
 	}
@@ -26,10 +26,10 @@ const { dispose } = await start({
 
 // application features logging
 const logFeatureStatus = (name: string, enabled: boolean) => {
-	const bullet = enabled ? '\x1B[32m⦿' : '\x1B[31m⦿';
-	const message = enabled ? '\x1B[32mON' : '\x1B[31mOFF';
+	const bullet = enabled ? '\u001B[32m⦿' : '\u001B[31m⦿';
+	const message = enabled ? '\u001B[32mON' : '\u001B[31mOFF';
 
-	console.info(`  ${bullet}\x1B[0m ${name}: ${message}\x1B[0m`);
+	console.info(`  ${bullet}\u001B[0m ${name}: ${message}\u001B[0m`);
 };
 
 logFeatureStatus(' 📑 Swagger', SWAGGER_ENABLED);
@@ -37,7 +37,7 @@ logFeatureStatus(' 🔒 Api Key', SECURITY_ENABLED);
 
 if (import.meta.env.DEV) {
 	console.info(
-		`\n  \x1B[32m➜\x1B[0m Local: \x1B[36mhttp://localhost:${PORT}/${BASE_URL}\x1B[0m\n`,
+		`\n  \u001B[32m➜\u001B[0m Local: \u001B[36mhttp://localhost:${PORT}/${BASE_URL}\u001B[0m\n`,
 	);
 
 	// disposing on hot reload dev
