@@ -64,6 +64,7 @@ const toBoolean = ({ schema }: ParsingArgs<z.ZodBoolean>): SchemaObject => {
 	return schema;
 };
 
+// eslint-disable-next-line complexity
 const toString = ({
 	schema,
 	zodRef,

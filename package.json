@@ -107,9 +107,8 @@
 				"./node_modules/.cache/eslint/"
 			],
 			"files": [
-				".eslintrc",
-				".eslintignore",
-				"src/**/*.{ts,cts,mts}"
+				"eslint.config.js",
+				"**/*.{js,mjs,cjs,ts,cts,mts,json}"
 			]
 		},
 		"env:schema": {

@@ -1,4 +1,3 @@
-import eslint from '@eslint/js';
 import perfectionist from 'eslint-plugin-perfectionist/configs/recommended-natural';
 import prettier from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
@@ -12,24 +11,34 @@ import globals from 'globals';
 import typescript from 'typescript-eslint';
 
 const SRC_GLOB = '**/*.{js,cjs,mjs,ts,cts,mts}';
-const TEST_GLOB = '**/*.{spec,test}.{js,mjs,cjs,ts,cts,mts}';
-const ASSETS_GLOB = '**/*.{js,mjs,cjs,ts,cts,mts,json}';
+const TYPESCRIPT_GLOB = '**/*.{ts,cts,mts}';
+const TEST_GLOB = 'src/**/*.{spec,test}.{js,mjs,cjs,ts,cts,mts}';
+const CODE_STYLE_GLOB = '**/*.{js,mjs,cjs,ts,cts,mts,json}';
 
 const ERROR = 'error';
 const WARN = 'warn';
 const OFF = 'off';
 
 export default [
-	// SECTION: ecmascript
 	{
-		files: ['**/*.{js,mjs,cjs,ts,cts,mts}'],
+		ignores: [
+			'build/**/*',
+			'dist/**/*',
+			'**/node_modules/**/*',
+			'.reports/**/*',
+			'.wireit/**/*',
+			'.vscode/**/*',
+		],
+	},
+	// #region ecmascript
+	{
+		files: [SRC_GLOB],
 		languageOptions: {
 			ecmaVersion: 2023,
 			globals: { ...globals.node },
 			sourceType: 'module',
 		},
 		rules: {
-			...eslint.configs.recommended.rules,
 			'array-callback-return': ERROR,
 			'capitalized-comments': [
 				WARN,
@@ -45,39 +54,82 @@ export default [
 				},
 			],
 			complexity: [WARN, 15],
+			'constructor-super': ERROR,
 			'default-case': WARN,
 			'default-case-last': WARN,
 			'default-param-last': WARN,
 			eqeqeq: WARN,
-			'func-style': [
-				WARN,
-				'declaration',
-				{
-					allowArrowFunctions: true,
-				},
-			],
+			'for-direction': ERROR,
+			'func-style': [WARN, 'declaration', { allowArrowFunctions: true }],
 			'getter-return': [ERROR, { allowImplicit: true }],
 			'grouped-accessor-pairs': WARN,
-			'max-classes-per-file': WARN,
+			'max-classes-per-file': [WARN, { ignoreExpressions: true, max: 1 }],
 			'max-params': [WARN, 5],
-			'no-console': [
-				WARN,
-				{
-					allow: ['info', ERROR, WARN],
-				},
-			],
+			'no-async-promise-executor': ERROR,
+			'no-case-declarations': ERROR,
+			'no-class-assign': ERROR,
+			'no-compare-neg-zero': ERROR,
+			'no-cond-assign': ERROR,
+			'no-console': [WARN, { allow: ['info', ERROR, WARN] }],
+			'no-const-assign': ERROR,
+			'no-constant-binary-expression': ERROR,
+			'no-constant-condition': ERROR,
+			'no-control-regex': ERROR,
 			'no-debugger': WARN,
-			'no-empty-static-block': WARN,
+			'no-delete-var': ERROR,
+			'no-dupe-args': ERROR,
+			'no-dupe-class-members': ERROR,
+			'no-dupe-else-if': ERROR,
+			'no-dupe-keys': ERROR,
+			'no-duplicate-case': ERROR,
+			'no-empty': ERROR,
+			'no-empty-character-class': ERROR,
+			'no-empty-pattern': ERROR,
+			'no-empty-static-block': ERROR,
+			'no-ex-assign': ERROR,
+			'no-extra-boolean-cast': ERROR,
 			'no-extra-label': WARN,
+			'no-fallthrough': ERROR,
+			'no-func-assign': ERROR,
+			'no-global-assign': ERROR,
+			'no-import-assign': ERROR,
+			'no-invalid-regexp': ERROR,
+			'no-irregular-whitespace': ERROR,
 			'no-lonely-if': WARN,
+			'no-loss-of-precision': ERROR,
+			'no-misleading-character-class': ERROR,
 			'no-mixed-spaces-and-tabs': [WARN, 'smart-tabs'],
+			'no-new-native-nonconstructor': ERROR,
 			'no-new-wrappers': WARN,
+			'no-nonoctal-decimal-escape': ERROR,
+			'no-obj-calls': ERROR,
+			'no-octal': ERROR,
+			'no-prototype-builtins': ERROR,
+			'no-redeclare': ERROR,
+			'no-regex-spaces': ERROR,
 			'no-return-await': WARN,
+			'no-self-assign': ERROR,
+			'no-setter-return': ERROR,
+			'no-shadow-restricted-names': ERROR,
+			'no-sparse-arrays': ERROR,
+			'no-this-before-super': ERROR,
 			'no-throw-literal': ERROR,
+			'no-undef': ERROR,
 			'no-undef-init': WARN,
+			'no-unexpected-multiline': ERROR,
 			'no-unneeded-ternary': WARN,
 			'no-unreachable': ERROR,
+			'no-unsafe-finally': ERROR,
+			'no-unsafe-negation': ERROR,
+			'no-unsafe-optional-chaining': ERROR,
+			'no-unused-labels': ERROR,
+			'no-unused-private-class-members': ERROR,
+			'no-unused-vars': ERROR,
+			'no-useless-backreference': ERROR,
+			'no-useless-catch': ERROR,
 			'no-useless-computed-key': WARN,
+			'no-useless-escape': ERROR,
+			'no-with': ERROR,
 			'object-shorthand': WARN,
 			'prefer-arrow-callback': WARN,
 			'prefer-exponentiation-operator': WARN,
@@ -95,13 +147,18 @@ export default [
 			],
 			radix: [WARN, 'as-needed'],
 			'require-await': ERROR,
+			'require-yield': ERROR,
+			'use-isnan': ERROR,
+			'valid-typeof': ERROR,
 			yoda: WARN,
 		},
 	},
-	// SECTION: typescript
+	// #endregion
+
+	// #region typescript
 	typescript.configs.strict[0],
 	{
-		files: ['**/*.{ts,cts,mts}'],
+		files: [TYPESCRIPT_GLOB],
 		languageOptions: {
 			parserOptions: {
 				emitDecoratorMetadata: true,
@@ -192,9 +249,11 @@ export default [
 			],
 		},
 	},
-	// SECTION: sonar
+	// #endregion
+
+	// #region sonar
 	{
-		files: ['**/*.{js,mjs,cjs,ts,cts,mts}'],
+		files: [SRC_GLOB],
 		plugins: { sonarjs },
 		rules: {
 			'sonarjs/cognitive-complexity': [WARN, 16],
@@ -222,9 +281,11 @@ export default [
 			'sonarjs/prefer-while': ERROR,
 		},
 	},
-	// SECTION: unicorn
+	// #endregion
+
+	// #region unicorn
 	{
-		files: ['**/*.{js,mjs,cjs,ts,cts,mts}'],
+		files: [SRC_GLOB],
 		plugins: { unicorn },
 		rules: {
 			'no-negated-condition': OFF,
@@ -321,7 +382,9 @@ export default [
 			'unicorn/throw-new-error': ERROR,
 		},
 	},
-	// SECTION: perfectionist
+	// #endregion
+
+	// #region perfectionist
 	{
 		files: [SRC_GLOB],
 		plugins: { ...perfectionist.plugins },
@@ -434,14 +497,16 @@ export default [
 					groups: ['top', 'unknown'],
 					'ignore-case': false,
 					order: 'asc',
-					'partition-by-comment': 'SECTION:**',
+					'partition-by-comment': '#region**',
 					'partition-by-new-line': true,
 					type: 'natural',
 				},
 			],
 		},
 	},
-	// SECTION: promise
+	// #endregion
+
+	// #region promise
 	{
 		files: [SRC_GLOB],
 		plugins: { promise },
@@ -455,7 +520,9 @@ export default [
 			'promise/valid-params': WARN,
 		},
 	},
-	// SECTION: regexp
+	// #endregion
+
+	// #region regexp
 	{
 		files: [SRC_GLOB],
 		plugins: { regexp },
@@ -551,13 +618,17 @@ export default [
 			'regexp/use-ignore-case': ERROR,
 		},
 	},
-	// SECTION: redos
+	// #endregion
+
+	// #region redos
 	{
 		files: [SRC_GLOB],
 		plugins: { redos },
 		rules: { 'redos/no-vulnerable': ERROR },
 	},
-	// SECTION: vitest
+	// #endregion
+
+	// #region vitest
 	{
 		files: [TEST_GLOB],
 		plugins: { vitest },
@@ -604,16 +675,21 @@ export default [
 			'vitest/valid-title': OFF,
 		},
 	},
-	// SECTION: prettier
+	// #endregion
+
+	// #region prettier
 	{
-		files: [ASSETS_GLOB],
+		files: [CODE_STYLE_GLOB],
 		...prettier,
 		rules: { 'prettier/prettier': WARN },
 	},
-	// SECTION: tsdoc
+	// #endregion
+
+	// #region tsdoc
 	{
 		files: [SRC_GLOB],
 		plugins: { tsdoc },
 		rules: { 'tsdoc/syntax': WARN },
 	},
+	// #endregion
 ];
