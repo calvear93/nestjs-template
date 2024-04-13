@@ -1,6 +1,6 @@
 import { bench, describe, expect } from 'vitest';
-import { HttpClient } from './http.client.ts';
 import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
+import { HttpClient } from './http.client.ts';
 
 const PORT = 5678;
 const BENCH_CONFIG: Parameters<typeof bench>[2] = {

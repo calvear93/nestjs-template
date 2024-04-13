@@ -1,6 +1,6 @@
 import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
-import { createSecurityGuard } from '../../libs/decorators/security-guard.factory.ts';
 import { ApiKeyGuard } from '../../libs/decorators/api-key.guard.ts';
+import { createSecurityGuard } from '../../libs/decorators/security-guard.factory.ts';
 
 const HEADER_NAME = process.env.SECURITY_HEADER_NAME;
 const API_KEY = process.env.SECURITY_API_KEY;

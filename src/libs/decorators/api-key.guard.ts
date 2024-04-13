@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 /**
  * ApiKey guard.
@@ -53,11 +53,6 @@ import type { CanActivate, ExecutionContext } from '@nestjs/common';
  */
 @Injectable()
 export class ApiKeyGuard implements CanActivate {
-	constructor(
-		private readonly _headerName: string,
-		private readonly _apiKey: string,
-	) {}
-
 	/**
 	 * Protects api with api-key
 	 *
@@ -71,4 +66,9 @@ export class ApiKeyGuard implements CanActivate {
 
 		return apiKey === this._apiKey;
 	}
+
+	constructor(
+		private readonly _headerName: string,
+		private readonly _apiKey: string,
+	) {}
 }

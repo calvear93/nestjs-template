@@ -3,10 +3,27 @@
  */
 export enum HttpMethod {
 	/**
+	 * The `DELETE` method deletes the specified resource.
+	 */
+	DELETE = 'DELETE',
+
+	/**
 	 * The `GET` method requests a representation of the specified resource.
 	 * Requests using GET should only retrieve data.
 	 */
 	GET = 'GET',
+
+	/**
+	 * The `HEAD` method asks for a response identical to that of a GET request,
+	 * but without the response body.
+	 */
+	HEAD = 'HEAD',
+
+	/**
+	 * The `OPTIONS` method is used to describe the communication options for the
+	 * target resource.
+	 */
+	OPTIONS = 'OPTIONS',
 
 	/**
 	 * The PATCH method is used to apply partial modifications to a resource.
@@ -24,23 +41,6 @@ export enum HttpMethod {
 	 * resource with the request payload.
 	 */
 	PUT = 'PUT',
-
-	/**
-	 * The `DELETE` method deletes the specified resource.
-	 */
-	DELETE = 'DELETE',
-
-	/**
-	 * The `OPTIONS` method is used to describe the communication options for the
-	 * target resource.
-	 */
-	OPTIONS = 'OPTIONS',
-
-	/**
-	 * The `HEAD` method asks for a response identical to that of a GET request,
-	 * but without the response body.
-	 */
-	HEAD = 'HEAD',
 
 	/**
 	 * The `TRACE` method performs a message loop-back test along the path to the

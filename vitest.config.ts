@@ -2,6 +2,7 @@ import type { UserConfigExport } from 'vitest/config';
 import vite from './vite.config.ts';
 
 export default {
+	clearScreen: false,
 	plugins: vite.plugins,
 	test: {
 		coverage: {

@@ -96,7 +96,7 @@ describe(HttpClient, () => {
 		// request phase
 		const rejected = _httpClient.request('/');
 
-		await expect(rejected).rejects.toThrowError(HttpError);
+		await expect(rejected).rejects.toThrow(HttpError);
 	});
 
 	test('request failed with TypeError throws Bad Gateway HttpError', async () => {
@@ -106,7 +106,7 @@ describe(HttpClient, () => {
 		// request phase
 		const rejected = _httpClient.request('/');
 
-		await expect(rejected).rejects.toThrowError(HttpError);
+		await expect(rejected).rejects.toThrow(HttpError);
 		await expect(rejected).rejects.toHaveProperty(
 			'status',
 			HttpStatusCode.BAD_GATEWAY,
@@ -283,7 +283,7 @@ describe(HttpClient, () => {
 
 		controller.abort();
 
-		await expect(promise).rejects.toThrowError();
+		await expect(promise).rejects.toThrow();
 	});
 
 	test('basic auth', () => {

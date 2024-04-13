@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import { type TestingModule } from '@nestjs/testing';
 import {
 	FastifyAdapter,
 	type NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { type TestingModule } from '@nestjs/testing';
 
 export const createFastifyApplication = async (
 	module: TestingModule,
@@ -12,11 +12,11 @@ export const createFastifyApplication = async (
 	const adapter = new FastifyAdapter();
 
 	if (debug) {
-		console.debug('\n\x1B[4m\x1B[33mFastify routes:\x1B[0m');
+		console.debug('\n\u001B[4m\u001B[33mFastify routes:\u001B[0m');
 
 		adapter.getInstance().addHook('onRoute', ({ method, url }: any) => {
 			if (method !== 'HEAD')
-				console.debug(` ${method}: \x1B[34m${url}\x1B[0m`);
+				console.debug(` ${method}: \u001B[34m${url}\u001B[0m`);
 		});
 	}
 

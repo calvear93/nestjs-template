@@ -1,6 +1,6 @@
 import { type StringValidation, z } from 'zod';
 
-const PHONE_REGEX = /^\+?\(?\d{1,3}\)?[\s.-]?\d{3}[\s.-]?\d{4,6}$/;
+const PHONE_REGEX = /^\+?\(?\d{1,3}\)?[\s\-.]?\d{3}[\s\-.]?\d{4,6}$/v;
 
 export const phone = () =>
 	z

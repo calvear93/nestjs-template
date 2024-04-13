@@ -4,7 +4,7 @@ import http, {
 	type Server,
 	type ServerResponse,
 } from 'node:http';
-import { vi, type Mock } from 'vitest';
+import { type Mock, vi } from 'vitest';
 
 /**
  * Creates a basic HTTP server

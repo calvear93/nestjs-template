@@ -1,6 +1,6 @@
 import type { Class } from 'type-fest';
+import { UseGuards, applyDecorators } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
-import { applyDecorators, UseGuards } from '@nestjs/common';
 
 const isString = (key: PropertyKey): key is string => typeof key === 'string';
 

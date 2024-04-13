@@ -1,15 +1,15 @@
+import { type CanActivate } from '@nestjs/common';
 import { afterEach } from 'node:test';
-import { mock } from 'vitest-mock-extended';
 import {
+	type MockInstance,
 	afterAll,
 	beforeAll,
 	describe,
 	expect,
 	test,
 	vi,
-	type MockInstance,
 } from 'vitest';
-import { type CanActivate } from '@nestjs/common';
+import { mock } from 'vitest-mock-extended';
 import { createSecurityGuard } from './security-guard.factory.ts';
 
 class MockDecoratedClass {
@@ -54,7 +54,7 @@ describe('security-guard.factory', () => {
 		);
 		allowDecorate(_mockDecoratedClass, 'key', {} as any);
 
-		expect(_spyReflectDefineMetadata).not.toBeCalled();
+		expect(_spyReflectDefineMetadata).not.toHaveBeenCalled();
 	});
 
 	test('when enabled and is a class instance, return guard and allow decorators', () => {
@@ -70,7 +70,7 @@ describe('security-guard.factory', () => {
 		);
 		allowDecorate(_mockDecoratedClass, 'key', {} as any);
 
-		expect(_spyReflectDefineMetadata).toBeCalledTimes(3);
+		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(3);
 	});
 
 	test('when enabled and is a fn, return guard and allow decorators', () => {

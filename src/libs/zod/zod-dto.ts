@@ -1,6 +1,10 @@
 /* eslint-disable max-classes-per-file */
 import {
-	z,
+	type OpenAPIObject,
+	type ReferenceObject,
+	type SchemaObject,
+} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
+import {
 	type AnyZodObject,
 	type AnyZodTuple,
 	type RawCreateParams,
@@ -8,15 +12,11 @@ import {
 	type ZodObject,
 	type ZodRawShape,
 	type ZodTypeAny,
+	z,
 } from 'zod';
-import {
-	type OpenAPIObject,
-	type ReferenceObject,
-	type SchemaObject,
-} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 import { zodToJsonSchema } from './json-schema.factory.ts';
 
-const registered: [name: string, jsonSchema: SchemaObject | ReferenceObject][] =
+const registered: [name: string, jsonSchema: ReferenceObject | SchemaObject][] =
 	[];
 
 type InferTuple<Tuple extends [...ZodTypeAny[]]> = {
@@ -79,9 +79,9 @@ export const ZodDto = <
 			}
 		}
 
-		static readonly schema = schema as unknown as Z;
-
 		static readonly jsonSchema = zodToJsonSchema(schema);
+
+		static readonly schema = schema as unknown as Z;
 
 		static registerOpenApi() {
 			registered.push([this.name, this.jsonSchema]);
@@ -130,7 +130,7 @@ export const ZodDto = <
  */
 export const ZodIterableDto = <
 	T extends [ZodTypeAny, ...ZodTypeAny[]],
-	Z extends ZodArray<ZodTypeAny> | AnyZodTuple = T['length'] extends 1
+	Z extends AnyZodTuple | ZodArray<ZodTypeAny> = T['length'] extends 1
 		? ZodArray<z.ZodTypeAny>
 		: AnyZodTuple,
 	I = T['length'] extends 1 ? InferArray<T> : InferTuple<T>,
@@ -149,9 +149,9 @@ export const ZodIterableDto = <
 			}
 		}
 
-		static readonly schema = schema as unknown as Z;
-
 		static readonly jsonSchema = zodToJsonSchema(schema);
+
+		static readonly schema = schema as unknown as Z;
 
 		static registerOpenApi() {
 			registered.push([this.name, this.jsonSchema]);
@@ -193,9 +193,9 @@ export const registerDtoOpenApiSchemas = (
  * Zod DTO base.
  */
 export interface ZodDto<Z extends ZodTypeAny = ZodTypeAny> {
-	readonly schema: Z;
 	readonly jsonSchema: SchemaObject;
 	registerOpenApi: () => void;
+	readonly schema: Z;
 }
 
 /**
@@ -211,7 +211,7 @@ export interface ZodObjectDto<Z extends ZodTypeAny = ZodTypeAny, T = z.infer<Z>>
  */
 export interface ZodIterableDto<
 	Z extends ZodTypeAny = ZodTypeAny,
-	I = InferTuple<any> | InferArray<any>,
+	I = InferArray<any> | InferTuple<any>,
 	T = I extends (infer A)[] ? A : I extends [...infer B] ? B : any[],
 > extends ZodDto<Z> {
 	new (items?: I): T[];

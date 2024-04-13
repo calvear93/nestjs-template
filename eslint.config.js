@@ -17,6 +17,7 @@ const ASSETS_GLOB = '**/*.{js,mjs,cjs,ts,cts,mts,json,md,yml,yaml}';
 
 const ERROR = 'error';
 const WARN = 'warn';
+const OFF = 'off';
 
 export default [
 	// SECTION: ecmascript
@@ -125,16 +126,16 @@ export default [
 					prefer: 'type-imports',
 				},
 			],
-			'@typescript-eslint/explicit-function-return-type': 'off',
-			'@typescript-eslint/explicit-module-boundary-types': 'off',
-			'@typescript-eslint/interface-name-prefix': 'off',
+			'@typescript-eslint/explicit-function-return-type': OFF,
+			'@typescript-eslint/explicit-module-boundary-types': OFF,
+			'@typescript-eslint/interface-name-prefix': OFF,
 			'@typescript-eslint/no-empty-function': WARN,
 			'@typescript-eslint/no-empty-interface': [
 				ERROR,
 				{ allowSingleExtends: true },
 			],
-			'@typescript-eslint/no-explicit-any': 'off',
-			'@typescript-eslint/no-extraneous-class': 'off',
+			'@typescript-eslint/no-explicit-any': OFF,
+			'@typescript-eslint/no-extraneous-class': OFF,
 			'@typescript-eslint/no-floating-promises': [
 				WARN,
 				{
@@ -146,7 +147,7 @@ export default [
 				WARN,
 				{ allowDeclarations: true },
 			],
-			'@typescript-eslint/no-non-null-assertion': 'off',
+			'@typescript-eslint/no-non-null-assertion': OFF,
 			'@typescript-eslint/no-redundant-type-constituents': ERROR,
 			'@typescript-eslint/no-unused-vars': [
 				WARN,
@@ -227,8 +228,8 @@ export default [
 		files: ['**/*.{js,mjs,cjs,ts,cts,mts}'],
 		plugins: { unicorn },
 		rules: {
-			'no-negated-condition': 'off',
-			'no-nested-ternary': 'off',
+			'no-negated-condition': OFF,
+			'no-nested-ternary': OFF,
 			'unicorn/better-regex': WARN,
 			'unicorn/catch-error-name': WARN,
 			'unicorn/consistent-destructuring': ERROR,
@@ -447,7 +448,6 @@ export default [
 		plugins: { promise },
 		rules: {
 			'promise/always-return': WARN,
-			'promise/avoid-new': WARN,
 			'promise/catch-or-return': ERROR,
 			'promise/no-callback-in-promise': WARN,
 			'promise/no-new-statics': ERROR,
@@ -462,11 +462,11 @@ export default [
 		plugins: { regexp },
 		rules: {
 			'no-control-regex': ERROR,
-			'no-empty-character-class': 'off',
-			'no-invalid-regexp': 'off',
+			'no-empty-character-class': OFF,
+			'no-invalid-regexp': OFF,
 			'no-misleading-character-class': ERROR,
 			'no-regex-spaces': ERROR,
-			'no-useless-backreference': 'off',
+			'no-useless-backreference': OFF,
 			'prefer-regex-literals': WARN,
 			'regexp/confusing-quantifier': WARN,
 			'regexp/control-character-escape': ERROR,
@@ -563,10 +563,10 @@ export default [
 		files: [TEST_GLOB],
 		plugins: { vitest },
 		rules: {
-			'max-classes-per-file': 'off',
-			'unicorn/consistent-function-scoping': 'off',
-			'unicorn/no-unsafe-regex': 'off',
-			'vitest/expect-expect': 'off',
+			'max-classes-per-file': OFF,
+			'unicorn/consistent-function-scoping': OFF,
+			'unicorn/no-unsafe-regex': OFF,
+			'vitest/expect-expect': OFF,
 			'vitest/max-expects': WARN,
 			'vitest/max-nested-describe': WARN,
 			'vitest/no-alias-methods': ERROR,
@@ -578,18 +578,18 @@ export default [
 			'vitest/no-duplicate-hooks': WARN,
 			'vitest/no-focused-tests': WARN,
 			'vitest/no-large-snapshots': WARN,
-			'vitest/no-mocks-import': 'off',
+			'vitest/no-mocks-import': OFF,
 			'vitest/no-restricted-matchers': WARN,
 			'vitest/no-restricted-vi-methods': WARN,
 			'vitest/no-standalone-expect': WARN,
 			'vitest/no-test-prefixes': WARN,
 			'vitest/no-test-return-statement': WARN,
-			'vitest/prefer-called-exactly-once-with': 'off',
+			'vitest/prefer-called-exactly-once-with': OFF,
 			'vitest/prefer-called-with': WARN,
 			'vitest/prefer-comparison-matcher': WARN,
 			'vitest/prefer-each': WARN,
 			'vitest/prefer-equality-matcher': WARN,
-			'vitest/prefer-expect-assertions': 'off',
+			'vitest/prefer-expect-assertions': OFF,
 			'vitest/prefer-expect-resolves': WARN,
 			'vitest/prefer-hooks-in-order': WARN,
 			'vitest/prefer-hooks-on-top': WARN,
@@ -602,7 +602,7 @@ export default [
 			'vitest/prefer-to-contain': WARN,
 			'vitest/prefer-to-have-length': WARN,
 			'vitest/prefer-todo': WARN,
-			'vitest/valid-title': 'off',
+			'vitest/valid-title': OFF,
 		},
 	},
 	// SECTION: prettier

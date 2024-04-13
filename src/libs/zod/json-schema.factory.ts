@@ -1,14 +1,14 @@
+import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 import {
-	z,
 	type AnyZodObject,
 	type ZodOptionalType,
 	type ZodTypeAny,
+	z,
 } from 'zod';
-import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 
 interface ParsingArgs<T> {
-	zodRef: T;
 	schema: SchemaObject;
+	zodRef: T;
 }
 
 const isOptional = (item: ZodTypeAny): item is ZodOptionalType<any> => {
@@ -298,7 +298,7 @@ const toOptionalNullable = ({
 	schema,
 	zodRef,
 }: ParsingArgs<
-	z.ZodOptional<ZodTypeAny> | z.ZodNullable<ZodTypeAny>
+	z.ZodNullable<ZodTypeAny> | z.ZodOptional<ZodTypeAny>
 >): SchemaObject => {
 	return { ...schema, ...zodToJsonSchema(zodRef.unwrap()) };
 };
@@ -318,7 +318,7 @@ const toTransformer = ({
 	schema,
 	zodRef,
 }: ParsingArgs<
-	z.ZodTransformer<never> | z.ZodEffects<never>
+	z.ZodEffects<never> | z.ZodTransformer<never>
 >): SchemaObject => {
 	return { ...schema, ...zodToJsonSchema(zodRef._def.schema) };
 };

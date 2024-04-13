@@ -1,8 +1,8 @@
 /* eslint-disable perfectionist/sort-objects */
-import { z } from 'zod';
-import { describe, expect, test } from 'vitest';
-import { type OpenAPIObject } from '@nestjs/swagger';
 import { BadRequestException } from '@nestjs/common';
+import { type OpenAPIObject } from '@nestjs/swagger';
+import { describe, expect, test } from 'vitest';
+import { z } from 'zod';
 import { ZodValidationPipe } from './zod.pipe.ts';
 import {
 	ZodDto,
@@ -59,7 +59,7 @@ describe(ZodValidationPipe, () => {
 			cuid: z.string().cuid(),
 			cuid2: z.string().cuid2(),
 			ulid: z.string().ulid(),
-			regex: z.string().regex(/[a-c]/),
+			regex: z.string().regex(/[a-c]/v),
 			includes: z.string().includes('hello'),
 			startsWith: z.string().startsWith('a'),
 			endsWith: z.string().endsWith('z'),

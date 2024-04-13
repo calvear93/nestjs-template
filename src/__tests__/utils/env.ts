@@ -1,6 +1,6 @@
 const realEnv: Record<string, string | undefined> = {};
 
-export const mockEnv = (key: string, value: string | number | boolean) => {
+export const mockEnv = (key: string, value: boolean | number | string) => {
 	realEnv[key] ??= process.env[key];
 	process.env[key] = value.toString();
 };
