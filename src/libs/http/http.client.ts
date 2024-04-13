@@ -1,13 +1,13 @@
-import { TimeoutError } from './errors/timeout.error.ts';
-import { HttpError } from './errors/http.error.ts';
-import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { HttpMethod } from './enums/http-method.enum.ts';
+import { HttpStatusCode } from './enums/http-status.enum.ts';
+import { HttpError } from './errors/http.error.ts';
+import { TimeoutError } from './errors/timeout.error.ts';
 
-type Primitive = string | number | boolean | bigint | null | undefined;
+type Primitive = bigint | boolean | number | string | null | undefined;
 
 type RequestOptions = Omit<RequestInit, 'signal' | 'window'>;
 
-export type RequestURL = string | URL;
+export type RequestURL = URL | string;
 
 /**
  * Http client using fetch.
@@ -17,23 +17,101 @@ export type RequestURL = string | URL;
  */
 export class HttpClient {
 	/**
-	 * Creates an instance of HttpCLient.
+	 * Makes a DELETE request.
 	 *
-	 * @param config - fetch config and url (base url)
+	 * @typeParam R - response data
+	 * @param url - request url
+	 * @param config - fetch config
+	 *
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns async response
 	 */
-	constructor(config?: HttpClientConfig) {
-		if (config) {
-			const { throwOnClientError = true, url, ...cfg } = config;
+	delete<R>(
+		url: RequestURL,
+		config: HttpRequestOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		config.method = HttpMethod.DELETE;
 
-			this._baseUrl = url?.endsWith('/') ? url : `${url}/`;
-			this._throwOnClientError = throwOnClientError;
-			this._baseConfig = {
-				cache: 'no-cache',
-				...cfg,
-			};
-		}
+		return this.request(url, config);
+	}
 
-		this._timeoutReason = new TimeoutError();
+	/**
+	 * Makes a GET request.
+	 *
+	 * @typeParam R - response data
+	 * @param url - request url
+	 * @param config - fetch config
+	 *
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns async response
+	 */
+	get<R>(
+		url: RequestURL,
+		config: HttpRequestOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		config.method = HttpMethod.GET;
+
+		return this.request(url, config);
+	}
+
+	/**
+	 * Makes a PATCH request.
+	 *
+	 * @typeParam R - response data
+	 * @param url - request url
+	 * @param config - fetch config
+	 *
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns async response
+	 */
+	patch<R>(
+		url: RequestURL,
+		config: HttpRequestBodyOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		this._serializeBody(config);
+		config.method = HttpMethod.PATCH;
+
+		return this.request(url, config);
+	}
+
+	/**
+	 * Makes a POST request.
+	 *
+	 * @typeParam R - response data
+	 * @param url - request url
+	 * @param config - fetch config
+	 *
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns async response
+	 */
+	post<R>(
+		url: RequestURL,
+		config: HttpRequestBodyOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		this._serializeBody(config);
+		config.method = HttpMethod.POST;
+
+		return this.request(url, config);
+	}
+
+	/**
+	 * Makes a PUT request.
+	 *
+	 * @typeParam R - response data
+	 * @param url - request url
+	 * @param config - fetch config
+	 *
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns async response
+	 */
+	put<R>(
+		url: RequestURL,
+		config: HttpRequestBodyOptions = {},
+	): Promise<HttpResponse<R>> | never {
+		this._serializeBody(config);
+		config.method = HttpMethod.PUT;
+
+		return this.request(url, config);
 	}
 
 	/**
@@ -92,120 +170,6 @@ export class HttpClient {
 	}
 
 	/**
-	 * Makes a GET request.
-	 *
-	 * @typeParam R - response data
-	 * @param url - request url
-	 * @param config - fetch config
-	 *
-	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns async response
-	 */
-	get<R>(
-		url: RequestURL,
-		config: HttpRequestOptions = {},
-	): Promise<HttpResponse<R>> | never {
-		config.method = HttpMethod.GET;
-
-		return this.request(url, config);
-	}
-
-	/**
-	 * Makes a POST request.
-	 *
-	 * @typeParam R - response data
-	 * @param url - request url
-	 * @param config - fetch config
-	 *
-	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns async response
-	 */
-	post<R>(
-		url: RequestURL,
-		config: HttpRequestBodyOptions = {},
-	): Promise<HttpResponse<R>> | never {
-		this._serializeBody(config);
-		config.method = HttpMethod.POST;
-
-		return this.request(url, config);
-	}
-
-	/**
-	 * Makes a PUT request.
-	 *
-	 * @typeParam R - response data
-	 * @param url - request url
-	 * @param config - fetch config
-	 *
-	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns async response
-	 */
-	put<R>(
-		url: RequestURL,
-		config: HttpRequestBodyOptions = {},
-	): Promise<HttpResponse<R>> | never {
-		this._serializeBody(config);
-		config.method = HttpMethod.PUT;
-
-		return this.request(url, config);
-	}
-
-	/**
-	 * Makes a PATCH request.
-	 *
-	 * @typeParam R - response data
-	 * @param url - request url
-	 * @param config - fetch config
-	 *
-	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns async response
-	 */
-	patch<R>(
-		url: RequestURL,
-		config: HttpRequestBodyOptions = {},
-	): Promise<HttpResponse<R>> | never {
-		this._serializeBody(config);
-		config.method = HttpMethod.PATCH;
-
-		return this.request(url, config);
-	}
-
-	/**
-	 * Makes a DELETE request.
-	 *
-	 * @typeParam R - response data
-	 * @param url - request url
-	 * @param config - fetch config
-	 *
-	 * @throws HttpError on http status code greater than 2.x.x
-	 * @returns async response
-	 */
-	delete<R>(
-		url: RequestURL,
-		config: HttpRequestOptions = {},
-	): Promise<HttpResponse<R>> | never {
-		config.method = HttpMethod.DELETE;
-
-		return this.request(url, config);
-	}
-
-	/**
-	 * Merges and normalizes request URL.
-	 *
-	 * @param path - request path
-	 * @param query - query params
-	 */
-	private _getFullUrl(path: string, query?: Record<string, Primitive>) {
-		if (path.startsWith('/')) {
-			path = path.slice(1);
-		}
-
-		path = `${path}${this._buildQuery(query)}`;
-
-		return new URL(path, this._baseUrl);
-	}
-
-	/**
 	 * Merges and normalizes request URL.
 	 *
 	 * @param query - query params
@@ -222,6 +186,22 @@ export class HttpClient {
 				return `${key}=${query[key]}`;
 			})
 			.join('&')}`;
+	}
+
+	/**
+	 * Merges and normalizes request URL.
+	 *
+	 * @param path - request path
+	 * @param query - query params
+	 */
+	private _getFullUrl(path: string, query?: Record<string, Primitive>) {
+		if (path.startsWith('/')) {
+			path = path.slice(1);
+		}
+
+		path = `${path}${this._buildQuery(query)}`;
+
+		return new URL(path, this._baseUrl);
 	}
 
 	/**
@@ -248,6 +228,31 @@ export class HttpClient {
 	}
 
 	/**
+	 * Creates an instance of HttpCLient.
+	 *
+	 * @param config - fetch config and url (base url)
+	 */
+	constructor(config?: HttpClientConfig) {
+		if (config) {
+			const { throwOnClientError = true, url, ...cfg } = config;
+
+			this._baseUrl = url?.endsWith('/') ? url : `${url}/`;
+			this._throwOnClientError = throwOnClientError;
+			this._baseConfig = {
+				cache: 'no-cache',
+				...cfg,
+			};
+		}
+
+		this._timeoutReason = new TimeoutError();
+	}
+
+	/**
+	 * Client base config.
+	 */
+	private readonly _baseConfig?: HttpRequestOptions;
+
+	/**
 	 * Client base URL.
 	 */
 	private readonly _baseUrl?: RequestURL;
@@ -256,11 +261,6 @@ export class HttpClient {
 	 * When true, throws HttpError if a client error occurs (4XX).
 	 */
 	private readonly _throwOnClientError?: boolean;
-
-	/**
-	 * Client base config.
-	 */
-	private readonly _baseConfig?: HttpRequestOptions;
 
 	/**
 	 * Reason for timeout
@@ -281,9 +281,9 @@ export class HttpClient {
 }
 
 export interface HttpRequestOptions extends RequestOptions {
+	cancel?: AbortController;
 	query?: Record<string, Primitive>;
 	timeout?: millis;
-	cancel?: AbortController;
 }
 
 export interface HttpRequestBodyOptions extends HttpRequestOptions {
@@ -291,10 +291,10 @@ export interface HttpRequestBodyOptions extends HttpRequestOptions {
 }
 
 export interface HttpClientConfig extends HttpRequestOptions {
-	// base url
-	url?: string;
 	// when true, throws HttpError if a client error occurs (4XX).
 	throwOnClientError?: boolean;
+	// base url
+	url?: string;
 }
 
 export interface HttpResponse<R = unknown> extends Response {

@@ -13,7 +13,7 @@ import typescript from 'typescript-eslint';
 
 const SRC_GLOB = '**/*.{js,cjs,mjs,ts,cts,mts}';
 const TEST_GLOB = '**/*.{spec,test}.{js,mjs,cjs,ts,cts,mts}';
-const ASSETS_GLOB = '**/*.{js,mjs,cjs,ts,cts,mts,json,md,yml,yaml}';
+const ASSETS_GLOB = '**/*.{js,mjs,cjs,ts,cts,mts,json}';
 
 const ERROR = 'error';
 const WARN = 'warn';
@@ -197,8 +197,8 @@ export default [
 		files: ['**/*.{js,mjs,cjs,ts,cts,mts}'],
 		plugins: { sonarjs },
 		rules: {
-			'sonarjs/cognitive-complexity': [WARN, 12],
-			'sonarjs/max-switch-cases': [WARN, 10],
+			'sonarjs/cognitive-complexity': [WARN, 16],
+			'sonarjs/max-switch-cases': [WARN, 12],
 			'sonarjs/no-all-duplicated-branches': ERROR,
 			'sonarjs/no-collapsible-if': ERROR,
 			'sonarjs/no-collection-size-mischeck': ERROR,
@@ -217,7 +217,6 @@ export default [
 			'sonarjs/no-small-switch': ERROR,
 			'sonarjs/no-useless-catch': ERROR,
 			'sonarjs/non-existent-operator': ERROR,
-			'sonarjs/prefer-immediate-return': ERROR,
 			'sonarjs/prefer-object-literal': ERROR,
 			'sonarjs/prefer-single-boolean-return': ERROR,
 			'sonarjs/prefer-while': ERROR,
@@ -595,7 +594,7 @@ export default [
 			'vitest/prefer-hooks-on-top': WARN,
 			'vitest/prefer-mock-promise-shorthand': WARN,
 			'vitest/prefer-snapshot-hint': WARN,
-			'vitest/prefer-spy-on': WARN,
+			'vitest/prefer-spy-on': OFF,
 			'vitest/prefer-strict-equal': WARN,
 			'vitest/prefer-to-be': WARN,
 			'vitest/prefer-to-be-object': WARN,

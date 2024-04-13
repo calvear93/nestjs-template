@@ -6,11 +6,11 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common';
-import { SampleControllerDocs } from './sample.controller.docs.ts';
-import { SampleService } from '../services/sample.service.ts';
-import { SampleDto } from '../schemas/sample.dto.ts';
-import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
 import { AllowAnonymous, ApiKey } from '../../../decorators/api-key.guard.ts';
+import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
+import { SampleDto } from '../schemas/sample.dto.ts';
+import { SampleService } from '../services/sample.service.ts';
+import { SampleControllerDocs } from './sample.controller.docs.ts';
 
 @ApiKey()
 @Controller({
@@ -19,7 +19,15 @@ import { AllowAnonymous, ApiKey } from '../../../decorators/api-key.guard.ts';
 })
 @ApplyControllerDocs(SampleControllerDocs)
 export class SampleController {
-	constructor(private readonly _service: SampleService) {}
+	/**
+	 * Receives, validate and returns a DTO
+	 *
+	 * @returns dto
+	 */
+	@Post('/dto')
+	dto(@Body() sample: SampleDto): SampleDto {
+		return sample;
+	}
 
 	/**
 	 * Returns a hello world.
@@ -45,13 +53,5 @@ export class SampleController {
 		return num1 + num2;
 	}
 
-	/**
-	 * Receives, validate and returns a DTO
-	 *
-	 * @returns dto
-	 */
-	@Post('/dto')
-	dto(@Body() sample: SampleDto): SampleDto {
-		return sample;
-	}
+	constructor(private readonly _service: SampleService) {}
 }

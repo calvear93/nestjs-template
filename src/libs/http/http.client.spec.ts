@@ -4,6 +4,8 @@ import {
 	type ServerResponse,
 } from 'node:http';
 import {
+	type Mock,
+	type MockInstance,
 	afterAll,
 	afterEach,
 	beforeAll,
@@ -11,14 +13,12 @@ import {
 	expect,
 	test,
 	vi,
-	type Mock,
-	type MockInstance,
 } from 'vitest';
-import { HttpClient } from './http.client.ts';
-import { TimeoutError } from './errors/timeout.error.ts';
-import { HttpError } from './errors/http.error.ts';
-import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
+import { HttpStatusCode } from './enums/http-status.enum.ts';
+import { HttpError } from './errors/http.error.ts';
+import { TimeoutError } from './errors/timeout.error.ts';
+import { HttpClient } from './http.client.ts';
 
 describe(HttpClient, () => {
 	let _httpClient: HttpClient;

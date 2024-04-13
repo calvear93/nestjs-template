@@ -89,6 +89,7 @@ function loadEnvironment() {
  * await writeFile('dist/.npmrc', npmrc);
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function toKeyPairContent(data: Record<string, boolean | number | string>) {
 	let content = '';
 
