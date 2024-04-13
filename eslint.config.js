@@ -44,9 +44,7 @@ export default [
 				WARN,
 				'never',
 				{
-					block: {
-						ignorePattern: '.*',
-					},
+					block: { ignorePattern: '.*' },
 					line: {
 						ignoreConsecutiveComments: true,
 						ignorePattern: '[A-Z]*:.*',
@@ -171,9 +169,7 @@ export default [
 			'@typescript-eslint/ban-types': [
 				ERROR,
 				{
-					types: {
-						Function: false,
-					},
+					types: { Function: false },
 				},
 			],
 			'@typescript-eslint/consistent-type-imports': [
@@ -301,10 +297,7 @@ export default [
 			'unicorn/filename-case': [
 				ERROR,
 				{
-					cases: {
-						kebabCase: true,
-						pascalCase: true,
-					},
+					cases: { kebabCase: true, pascalCase: true },
 				},
 			],
 			'unicorn/new-for-builtins': ERROR,
@@ -449,9 +442,7 @@ export default [
 			'perfectionist/sort-interfaces': [
 				WARN,
 				{
-					'custom-groups': {
-						top: 'id',
-					},
+					'custom-groups': { top: 'id' },
 					groups: ['top', 'unknown'],
 					'ignore-case': false,
 					order: 'asc',
@@ -478,9 +469,7 @@ export default [
 			'perfectionist/sort-object-types': [
 				WARN,
 				{
-					'custom-groups': {
-						top: 'id',
-					},
+					'custom-groups': { top: 'id' },
 					groups: ['top', 'unknown'],
 					'ignore-case': false,
 					order: 'asc',
@@ -491,9 +480,7 @@ export default [
 			'perfectionist/sort-objects': [
 				WARN,
 				{
-					'custom-groups': {
-						top: 'id',
-					},
+					'custom-groups': { top: 'id' },
 					groups: ['top', 'unknown'],
 					'ignore-case': false,
 					order: 'asc',

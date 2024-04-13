@@ -2,7 +2,6 @@
 	"recommendations": [
 		"christian-kohler.path-intellisense",
 		"dbaeumer.vscode-eslint",
-		"manuelalabor.rxjs-debugging-for-vs-code",
 		"svipas.prettier-plus"
 	]
 }
