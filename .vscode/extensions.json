@@ -1,6 +1,5 @@
 {
 	"recommendations": [
-		"christian-kohler.path-intellisense",
 		"dbaeumer.vscode-eslint",
 		"svipas.prettier-plus"
 	]
