@@ -1,4 +1,4 @@
-import perfectionist from 'eslint-plugin-perfectionist/configs/recommended-natural';
+import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import redos from 'eslint-plugin-redos';
@@ -380,7 +380,7 @@ export default [
 	// #region perfectionist
 	{
 		files: [SRC_GLOB],
-		plugins: { ...perfectionist.plugins },
+		plugins: { perfectionist },
 		rules: {
 			'perfectionist/sort-array-includes': [
 				WARN,
@@ -615,6 +615,22 @@ export default [
 	},
 	// #endregion
 
+	// #region prettier
+	{
+		files: [CODE_STYLE_GLOB],
+		...prettier,
+		rules: { 'prettier/prettier': WARN },
+	},
+	// #endregion
+
+	// #region tsdoc
+	{
+		files: [SRC_GLOB],
+		plugins: { tsdoc },
+		rules: { 'tsdoc/syntax': WARN },
+	},
+	// #endregion
+
 	// #region vitest
 	{
 		files: [TEST_GLOB],
@@ -642,7 +658,6 @@ export default [
 			'vitest/no-test-prefixes': WARN,
 			'vitest/no-test-return-statement': WARN,
 			'vitest/prefer-called-exactly-once-with': OFF,
-			'vitest/prefer-called-with': WARN,
 			'vitest/prefer-comparison-matcher': WARN,
 			'vitest/prefer-each': WARN,
 			'vitest/prefer-equality-matcher': WARN,
@@ -661,22 +676,6 @@ export default [
 			'vitest/prefer-todo': WARN,
 			'vitest/valid-title': OFF,
 		},
-	},
-	// #endregion
-
-	// #region prettier
-	{
-		files: [CODE_STYLE_GLOB],
-		...prettier,
-		rules: { 'prettier/prettier': WARN },
-	},
-	// #endregion
-
-	// #region tsdoc
-	{
-		files: [SRC_GLOB],
-		plugins: { tsdoc },
-		rules: { 'tsdoc/syntax': WARN },
 	},
 	// #endregion
 ];
