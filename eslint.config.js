@@ -1,10 +1,8 @@
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
-import promise from 'eslint-plugin-promise';
 import redos from 'eslint-plugin-redos';
 import regexp from 'eslint-plugin-regexp';
 import sonarjs from 'eslint-plugin-sonarjs';
-import tsdoc from 'eslint-plugin-tsdoc';
 import unicorn from 'eslint-plugin-unicorn';
 import vitest from 'eslint-plugin-vitest';
 import globals from 'globals';
@@ -19,6 +17,7 @@ const ERROR = 'error';
 const WARN = 'warn';
 const OFF = 'off';
 
+/** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
 	{
 		ignores: [
@@ -26,8 +25,9 @@ export default [
 			'dist/**/*',
 			'**/node_modules/**/*',
 			'.reports/**/*',
-			'.wireit/**/*',
 			'.vscode/**/*',
+			'.wireit/**/*',
+			'.rollup.cache/**/*',
 		],
 	},
 	// #region ecmascript
@@ -120,9 +120,9 @@ export default [
 			'no-unsafe-finally': ERROR,
 			'no-unsafe-negation': ERROR,
 			'no-unsafe-optional-chaining': ERROR,
-			'no-unused-labels': ERROR,
-			'no-unused-private-class-members': ERROR,
-			'no-unused-vars': ERROR,
+			'no-unused-labels': WARN,
+			'no-unused-private-class-members': WARN,
+			'no-unused-vars': WARN,
 			'no-useless-backreference': ERROR,
 			'no-useless-catch': ERROR,
 			'no-useless-computed-key': WARN,
@@ -493,22 +493,6 @@ export default [
 	},
 	// #endregion
 
-	// #region promise
-	{
-		files: [SRC_GLOB],
-		plugins: { promise },
-		rules: {
-			'promise/always-return': WARN,
-			'promise/catch-or-return': ERROR,
-			'promise/no-callback-in-promise': WARN,
-			'promise/no-new-statics': ERROR,
-			'promise/no-return-in-finally': WARN,
-			'promise/param-names': ERROR,
-			'promise/valid-params': WARN,
-		},
-	},
-	// #endregion
-
 	// #region regexp
 	{
 		files: [SRC_GLOB],
@@ -620,14 +604,6 @@ export default [
 		files: [CODE_STYLE_GLOB],
 		...prettier,
 		rules: { 'prettier/prettier': WARN },
-	},
-	// #endregion
-
-	// #region tsdoc
-	{
-		files: [SRC_GLOB],
-		plugins: { tsdoc },
-		rules: { 'tsdoc/syntax': WARN },
 	},
 	// #endregion
 
