@@ -341,7 +341,7 @@ export default [
 			'unicorn/prefer-code-point': WARN,
 			'unicorn/prefer-date-now': WARN,
 			'unicorn/prefer-default-parameters': WARN,
-			'unicorn/prefer-event-target': WARN,
+			'unicorn/prefer-event-target': ERROR,
 			'unicorn/prefer-export-from': WARN,
 			'unicorn/prefer-includes': WARN,
 			'unicorn/prefer-json-parse-buffer': WARN,
