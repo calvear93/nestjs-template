@@ -2,7 +2,6 @@ import type { PluginOption, UserConfigExport } from 'vite';
 import { writeFile } from 'node:fs/promises';
 import swc from 'unplugin-swc';
 import { checker } from 'vite-plugin-checker';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { dependencies } from './package.json';
 import { compilerOptions as tsconfig } from './tsconfig.json';
 import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
@@ -31,7 +30,6 @@ export default {
 	// define: loadEnv(),
 	plugins: [
 		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
-		tsconfigPaths(),
 		checker({
 			enableBuild: true,
 			terminal: true,

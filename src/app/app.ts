@@ -1,5 +1,5 @@
 import type { Server } from 'node:http';
-import { ZodValidationPipe, registerDtoOpenApiSchemas } from '@libs/zod';
+import { ZodValidationPipe, registerDtoOpenApiSchemas } from '#libs/zod';
 import { type INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';

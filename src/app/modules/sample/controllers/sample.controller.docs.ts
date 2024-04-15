@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '@libs/http';
+import { HttpStatusCode } from '#libs/http';
 import {
 	ApiOperation,
 	ApiProduces,

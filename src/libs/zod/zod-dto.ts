@@ -35,7 +35,7 @@ type InferArray<Arr extends [...ZodTypeAny[]]> = z.infer<Arr[0]>[];
  * ```ts
  *	// sample.dto.ts
  *	import { z } from 'zod';
- *	import { ZodDto } from '@libs/zod';
+ *	import { ZodDto } from #libs/zod';
  *
  *	export class SampleDto extends ZodDto({
  *		id: z.number(),
@@ -100,7 +100,7 @@ export const ZodDto = <
  * ```ts
  *	// sample.dto.ts
  *	import { z } from 'zod';
- *	import { ZodIterableDto } from '@libs/zod';
+ *	import { ZodIterableDto } from '@zod';
  *
  *	export class SampleDtoIterable extends ZodIterableDto([
  *		z.number(),
@@ -165,7 +165,7 @@ export const ZodIterableDto = <
  * @example
  * ```ts
  *	import { ... } from '...';
- *	import { registerDtoSchemas } from '@libs/zod';
+ *	import { registerDtoSchemas } from '@zod';
  *
  *	const app = await NestFactory.create(AppModule);
  *

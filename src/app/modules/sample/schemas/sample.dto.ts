@@ -1,4 +1,4 @@
-import { ZodDto } from '@libs/zod';
+import { ZodDto } from '#libs/zod';
 import { z } from 'zod';
 
 export class SampleDto extends ZodDto({

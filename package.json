@@ -18,6 +18,11 @@
 		"format": "wireit",
 		"clean": "pnpx del-cli dist .reports **/*.tsbuildinfo .rollup.cache .swc .wireit .node_modules"
 	},
+	"imports": {
+		"#libs/zod": "./src/libs/zod/index.ts",
+		"#libs/http": "./src/libs/http/index.ts",
+		"#testing": "./src/__tests__/index.ts"
+	},
 	"dependencies": {
 		"@fastify/static": "7.0.3",
 		"@nestjs/common": "10.3.7",
@@ -49,7 +54,7 @@
 		"eslint-plugin-regexp": "2.5.0",
 		"eslint-plugin-sonarjs": "0.25.1",
 		"eslint-plugin-unicorn": "52.0.0",
-		"eslint-plugin-vitest": "0.5.2",
+		"eslint-plugin-vitest": "0.5.3",
 		"globals": "^15.0.0",
 		"prettier": "3.2.5",
 		"terser": "5.30.3",

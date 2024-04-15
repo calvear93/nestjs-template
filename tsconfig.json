@@ -1,14 +1,9 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig.json",
 	"compilerOptions": {
+		"rootDir": ".",
 		"baseUrl": "src",
 		"outDir": "dist",
-
-		"paths": {
-			"@testing": ["__tests__/utils/fastify-test-module.ts", "env.ts"],
-			"@libs/http": ["libs/http/index.ts"],
-			"@libs/zod": ["libs/zod/index.ts"]
-		},
 
 		"target": "es2022",
 		"module": "node16",
