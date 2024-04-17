@@ -78,13 +78,13 @@ export const ZodDto = <
 			}
 		}
 
-		static readonly jsonSchema = zodToJsonSchema(schema);
-
-		static readonly schema = schema as unknown as Z;
-
 		static registerOpenApi() {
 			registered.push([this.name, this.jsonSchema]);
 		}
+
+		static readonly jsonSchema = zodToJsonSchema(schema);
+
+		static readonly schema = schema as unknown as Z;
 	};
 };
 
@@ -148,13 +148,13 @@ export const ZodIterableDto = <
 			}
 		}
 
-		static readonly jsonSchema = zodToJsonSchema(schema);
-
-		static readonly schema = schema as unknown as Z;
-
 		static registerOpenApi() {
 			registered.push([this.name, this.jsonSchema]);
 		}
+
+		static readonly jsonSchema = zodToJsonSchema(schema);
+
+		static readonly schema = schema as unknown as Z;
 	};
 };
 

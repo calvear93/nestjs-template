@@ -395,15 +395,20 @@ export default [
 				WARN,
 				{
 					groups: [
+						'decorated-method',
 						'method',
 						'private-method',
 						'constructor',
+						'decorated-property',
 						'property',
+						'private-decorated-property',
 						'private-property',
+						['decorated-set-method', 'decorated-set-method'],
 						['get-method', 'set-method'],
 						'index-signature',
-						'static-property',
 						'static-method',
+						'static-private-method',
+						'static-property',
 						'unknown',
 					],
 					'ignore-case': false,
@@ -449,10 +454,6 @@ export default [
 					'partition-by-new-line': true,
 					type: 'natural',
 				},
-			],
-			'perfectionist/sort-jsx-props': [
-				WARN,
-				{ 'ignore-case': false, order: 'asc', type: 'natural' },
 			],
 			'perfectionist/sort-maps': [
 				WARN,
