@@ -310,7 +310,6 @@ export default [
 			'unicorn/no-empty-file': ERROR,
 			'unicorn/no-hex-escape': WARN,
 			'unicorn/no-instanceof-array': WARN,
-			'unicorn/no-keyword-prefix': WARN,
 			'unicorn/no-lonely-if': WARN,
 			'unicorn/no-negated-condition': ERROR,
 			'unicorn/no-new-array': ERROR,
