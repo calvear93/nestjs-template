@@ -214,7 +214,7 @@ export default [
 			'@typescript-eslint/no-use-before-define': [
 				WARN,
 				{
-					classes: true,
+					classes: false,
 					enums: true,
 					functions: false,
 					ignoreTypeReferences: true,
