@@ -9,7 +9,7 @@ ARG RUNNER=gcr.io/distroless/nodejs20-debian12
 ARG NODE=node:20.12.2-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
-ARG PNPM_VER=9.0.1
+ARG PNPM_VER=9.0.4
 ARG APP_DIR='/app/'
 ARG OUT_DIR='dist'
 
