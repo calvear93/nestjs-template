@@ -1,5 +1,4 @@
 import type { Server } from 'node:http';
-import { ZodValidationPipe, registerDtoOpenApiSchemas } from '#libs/zod';
 import { type INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
@@ -8,6 +7,7 @@ import {
 	type SwaggerCustomOptions,
 	SwaggerModule,
 } from '@nestjs/swagger';
+import { ZodValidationPipe, registerDtoOpenApiSchemas } from '#libs/zod';
 import { AppModule } from './app.module.ts';
 import {
 	APY_KEY_GUARD_NAME,

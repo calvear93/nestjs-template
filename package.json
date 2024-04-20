@@ -46,7 +46,7 @@
 		"@types/luxon": "3.4.2",
 		"@types/node": "20.12.7",
 		"@vitest/coverage-v8": "1.5.0",
-		"eslint": "9.0.0",
+		"eslint": "9.1.0",
 		"eslint-config-prettier": "9.1.0",
 		"eslint-plugin-perfectionist": "2.9.0",
 		"eslint-plugin-prettier": "5.1.3",

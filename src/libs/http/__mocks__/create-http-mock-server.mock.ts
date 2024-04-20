@@ -1,9 +1,9 @@
-import type { AddressInfo } from 'node:net';
 import http, {
 	type IncomingMessage,
 	type Server,
 	type ServerResponse,
 } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { type Mock, vi } from 'vitest';
 
 /**

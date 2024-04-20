@@ -30,6 +30,7 @@ export default [
 			'.rollup.cache/**/*',
 		],
 	},
+
 	// #region ecmascript
 	{
 		files: [SRC_GLOB],
@@ -428,16 +429,21 @@ export default [
 				{
 					groups: [
 						'type',
-						'internal-type',
-						['builtin', 'external'],
-						'internal',
-						['parent-type', 'sibling-type', 'index-type'],
-						['parent', 'sibling', 'index'],
+						['builtin-type', 'builtin'],
+						['external-type', 'external'],
+						['internal-type', 'internal'],
+						['parent-type', 'parent'],
+						['sibling-type', 'sibling'],
+						['internal-type', 'internal'],
+						['index-type', 'index'],
+						'style',
+						'side-effect',
+						'side-effect-style',
 						'object',
 						'unknown',
 					],
 					'ignore-case': false,
-					'internal-pattern': ['~/**'],
+					'internal-pattern': ['#**/**'],
 					'newlines-between': 'ignore',
 					order: 'asc',
 					type: 'natural',

@@ -1,6 +1,6 @@
+import { randomUUID } from 'node:crypto';
 import type { ExecutionContext } from '@nestjs/common';
 import type { HttpArgumentsHost } from '@nestjs/common/interfaces/index.ts';
-import { randomUUID } from 'node:crypto';
 import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { ApiKeyGuard } from './api-key.guard.ts';
