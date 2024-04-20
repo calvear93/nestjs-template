@@ -1,0 +1,444 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
+{
+  "properties": {
+    "any": {
+      "nullable": true,
+    },
+    "array": {
+      "items": {
+        "type": "number",
+      },
+      "type": "array",
+    },
+    "arrayFrom5": {
+      "items": {
+        "type": "number",
+      },
+      "minItems": 5,
+      "type": "array",
+    },
+    "arrayNonEmpty": {
+      "items": {
+        "type": "number",
+      },
+      "minItems": 1,
+      "type": "array",
+    },
+    "arrayOf5": {
+      "items": {
+        "type": "number",
+      },
+      "maxItems": 5,
+      "minItems": 5,
+      "type": "array",
+    },
+    "boolean": {
+      "type": "boolean",
+    },
+    "coerceDate": {
+      "format": "date-time",
+      "nullable": true,
+      "type": "string",
+    },
+    "coerceToBool": {
+      "nullable": true,
+      "type": "boolean",
+    },
+    "coerceToString": {
+      "nullable": true,
+      "type": "string",
+    },
+    "cuid": {
+      "example": "cjld2cjxh0000qzrmn831i7rn",
+      "format": "cuid",
+      "type": "string",
+    },
+    "cuid2": {
+      "example": "tz4a98xxat96iws9zmbrgj3a",
+      "format": "cuid2",
+      "type": "string",
+    },
+    "datetime": {
+      "format": "date-time",
+      "type": "string",
+    },
+    "default": {
+      "default": "hello world",
+      "type": "string",
+    },
+    "discriminated": {
+      "discriminator": {
+        "propertyName": "status",
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "type": "string",
+            },
+            "status": {
+              "enum": [
+                "success",
+              ],
+              "type": "string",
+            },
+          },
+          "required": [
+            "status",
+            "data",
+          ],
+          "type": "object",
+        },
+        {
+          "properties": {
+            "message": {
+              "type": "string",
+            },
+            "status": {
+              "enum": [
+                "failed",
+              ],
+              "type": "string",
+            },
+          },
+          "required": [
+            "status",
+            "message",
+          ],
+          "type": "object",
+        },
+      ],
+    },
+    "email": {
+      "example": "sample@email.com",
+      "format": "email",
+      "type": "string",
+    },
+    "emoji": {
+      "example": "😜",
+      "type": "string",
+    },
+    "endsWith": {
+      "type": "string",
+    },
+    "enum": {
+      "enum": [
+        "Salmon",
+        "Tuna",
+        "Trout",
+      ],
+      "type": "string",
+    },
+    "from": {
+      "format": "date-time",
+      "nullable": true,
+      "type": "string",
+    },
+    "gt": {
+      "exclusiveMinimum": true,
+      "minimum": 5,
+      "type": "number",
+    },
+    "gte": {
+      "minimum": 5,
+      "type": "number",
+    },
+    "includes": {
+      "type": "string",
+    },
+    "int": {
+      "type": "integer",
+    },
+    "intersection": {
+      "allOf": [
+        {
+          "properties": {
+            "name": {
+              "type": "string",
+            },
+          },
+          "required": [
+            "name",
+          ],
+          "type": "object",
+        },
+        {
+          "properties": {
+            "role": {
+              "type": "string",
+            },
+          },
+          "required": [
+            "role",
+          ],
+          "type": "object",
+        },
+      ],
+    },
+    "ipv4": {
+      "format": "ipv4",
+      "type": "string",
+    },
+    "ipv6": {
+      "format": "ipv6",
+      "type": "string",
+    },
+    "length": {
+      "maxLength": 5,
+      "minLength": 5,
+      "type": "string",
+    },
+    "lookup": {
+      "additionalProperties": {
+        "type": "boolean",
+      },
+      "type": "object",
+    },
+    "lt": {
+      "exclusiveMaximum": true,
+      "maximum": 5,
+      "type": "number",
+    },
+    "lte": {
+      "maximum": 5,
+      "type": "number",
+    },
+    "max": {
+      "maxLength": 3,
+      "type": "string",
+    },
+    "min": {
+      "minLength": 10,
+      "type": "string",
+    },
+    "multiple": {
+      "default": "test@test.cl",
+      "example": "sample@email.com",
+      "format": "email",
+      "maxLength": 12,
+      "type": "string",
+    },
+    "multipleOf": {
+      "multipleOf": 5,
+      "type": "number",
+    },
+    "nan": {
+      "default": NaN,
+      "nullable": true,
+      "readOnly": true,
+      "type": "number",
+    },
+    "negative": {
+      "exclusiveMaximum": true,
+      "maximum": 0,
+      "type": "number",
+    },
+    "never": {
+      "readOnly": true,
+    },
+    "nonnegative": {
+      "minimum": 0,
+      "type": "number",
+    },
+    "nonpositive": {
+      "maximum": 0,
+      "type": "number",
+    },
+    "null": {
+      "default": null,
+      "format": "null",
+      "nullable": true,
+      "type": "number",
+    },
+    "nullable": {
+      "nullable": true,
+      "type": "boolean",
+    },
+    "nullish": {
+      "nullable": true,
+      "type": "boolean",
+    },
+    "number": {
+      "type": "number",
+    },
+    "numberOrBool": {
+      "oneOf": [
+        {
+          "type": "number",
+        },
+        {
+          "type": "boolean",
+        },
+      ],
+    },
+    "object": {
+      "properties": {
+        "id": {
+          "exclusiveMinimum": true,
+          "minimum": 0,
+          "type": "number",
+        },
+        "name": {
+          "type": "string",
+        },
+      },
+      "required": [
+        "id",
+        "name",
+      ],
+      "type": "object",
+    },
+    "optional": {
+      "type": "boolean",
+    },
+    "positive": {
+      "exclusiveMinimum": true,
+      "minimum": 0,
+      "type": "number",
+    },
+    "record": {
+      "additionalProperties": {
+        "type": "number",
+      },
+      "type": "object",
+    },
+    "regex": {
+      "pattern": "[a-c]",
+      "type": "string",
+    },
+    "startsWith": {
+      "type": "string",
+    },
+    "string": {
+      "type": "string",
+    },
+    "stringOrNumber": {
+      "oneOf": [
+        {
+          "type": "string",
+        },
+        {
+          "type": "number",
+        },
+      ],
+    },
+    "tru": {
+      "enum": [
+        true,
+      ],
+      "type": "boolean",
+    },
+    "tuna": {
+      "enum": [
+        "tuna",
+      ],
+      "type": "string",
+    },
+    "tuple": {
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+          },
+          {
+            "type": "boolean",
+          },
+        ],
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array",
+    },
+    "twelve": {
+      "enum": [
+        12,
+      ],
+      "type": "number",
+    },
+    "ulid": {
+      "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV",
+      "format": "ulid",
+      "type": "string",
+    },
+    "undefined": {
+      "readOnly": true,
+    },
+    "unknown": {
+      "nullable": true,
+    },
+    "until": {
+      "format": "date-time",
+      "nullable": true,
+      "type": "string",
+    },
+    "url": {
+      "example": "http://www.example.com/",
+      "format": "uri",
+      "type": "string",
+    },
+    "uuid": {
+      "type": "string",
+    },
+    "void": {
+      "readOnly": true,
+    },
+  },
+  "required": [
+    "string",
+    "number",
+    "boolean",
+    "null",
+    "coerceDate",
+    "tuna",
+    "twelve",
+    "tru",
+    "max",
+    "min",
+    "length",
+    "email",
+    "url",
+    "emoji",
+    "uuid",
+    "cuid",
+    "cuid2",
+    "ulid",
+    "regex",
+    "includes",
+    "startsWith",
+    "endsWith",
+    "ipv4",
+    "ipv6",
+    "gt",
+    "gte",
+    "lt",
+    "lte",
+    "int",
+    "positive",
+    "nonnegative",
+    "negative",
+    "nonpositive",
+    "multipleOf",
+    "nan",
+    "datetime",
+    "from",
+    "until",
+    "enum",
+    "nullable",
+    "object",
+    "array",
+    "arrayNonEmpty",
+    "arrayOf5",
+    "arrayFrom5",
+    "tuple",
+    "stringOrNumber",
+    "numberOrBool",
+    "discriminated",
+    "record",
+    "lookup",
+    "intersection",
+  ],
+  "type": "object",
+}
+`;

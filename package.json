@@ -1,82 +1,148 @@
 {
-  "version": "0.0.1",
-  "name": "nestjs-template",
-  "title": "NestJS Template",
-  "description": "NestJS template",
-  "author": "Alvear Candia, Cristopher Alejandro <calvear93@gmail.com>",
-  "license": "MIT",
-  "private": false,
-  "repository": "https://github.com/calvear93/nestjs-template",
-  "keywords": [
-    "nest",
-    "node"
-  ],
-  "scripts": {
-    "start:dev": "env-cmd -e dev,debug -r environment/loader.js nest start --debug --watch",
-    "start:qa": "env-cmd -e qa,debug -r environment/loader.js nest start --debug --watch",
-    "build:dev": "env-cmd -e dev,build -r environment/loader.js npm run _build",
-    "build:qa": "env-cmd -e qa,build -r environment/loader.js npm run _build",
-    "build:prod": "env-cmd -e prod,build -r environment/loader.js npm run _build",
-    "build:start": "node dist/main",
-    "orm:dev": "env-cmd -e dev,build -r environment/loader.js npm run _orm --",
-    "orm:qa": "env-cmd -e qa,build -r environment/loader.js npm run _orm --",
-    "orm:prod": "env-cmd -e prod,build -r environment/loader.js npm run _orm --",
-    "test:local": "env-cmd -e local,test -r environment/loader.js jest --watch",
-    "test:dev": "env-cmd -e dev,test -r environment/loader.js jest",
-    "test:qa": "env-cmd -e qa,test -r environment/loader.js jest",
-    "test:prod": "env-cmd -e prod,test -r environment/loader.js jest",
-    "test:coverage": "jest --coverage",
-    "test:inspect": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "lint:analyze": "eslint {src,test}/**/*.ts",
-    "lint:fix": "eslint --fix {src,test}/**/*.ts",
-    "_build": "nest build && babel dist --out-dir dist",
-    "_orm": "ts-node --transpile-only node_modules/typeorm/cli -f src/database/default.database.config.ts"
-  },
-  "dependencies": {
-    "@nestjs/common": "^8.0.5",
-    "@nestjs/core": "^8.0.5",
-    "@nestjs/platform-express": "^8.0.5",
-    "@nestjs/swagger": "^5.0.9",
-    "@nestjs/typeorm": "^8.0.1",
-    "luxon": "^2.0.1",
-    "pg": "^8.7.1",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
-    "rxjs": "^7.3.0",
-    "swagger-ui-express": "^4.1.6",
-    "typeorm": "^0.2.35"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.14.8",
-    "@babel/core": "^7.14.8",
-    "@nestjs/cli": "^8.1.0",
-    "@nestjs/schematics": "^8.0.2",
-    "@nestjs/testing": "^8.0.5",
-    "@types/express": "^4.17.13",
-    "@types/jest": "^26.0.24",
-    "@types/luxon": "^1.27.1",
-    "@types/node": "^16.4.7",
-    "@types/pg": "^8.6.1",
-    "@typescript-eslint/eslint-plugin": "^4.28.5",
-    "@typescript-eslint/parser": "^4.28.5",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-    "env-cmd": "^10.1.0",
-    "eslint": "^7.31.0",
-    "eslint-config-prettier": "8.3.0",
-    "eslint-plugin-decorator-position": "^2.2.29",
-    "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-jest": "^24.4.0",
-    "eslint-plugin-jest-formatting": "^3.0.0",
-    "eslint-plugin-jsdoc": "^36.0.6",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-radar": "^0.2.1",
-    "jest": "^27.0.6",
-    "nock": "^13.1.1",
-    "ts-jest": "^27.0.4",
-    "ts-loader": "^9.2.4",
-    "ts-node": "^10.1.0",
-    "tsconfig-paths": "^3.10.1",
-    "typescript": "^4.3.5"
-  }
+	"$schema": "https://json.schemastore.org/package.json",
+	"version": "0.0.1",
+	"project": "(((project-name)))",
+	"name": "(((app-name)))",
+	"title": "(((app-title)))",
+	"scripts": {
+		"start:dev": "env -e dev -m debug --log debug : vite-node --watch src/main.ts",
+		"start:release": "env -e release -m debug : vite-node --watch src/main.ts",
+		"build": "wireit",
+		"preview": "wireit",
+		"test:dev": "env -e dev -m test : vitest",
+		"test:release": "env -e release -m test : vitest",
+		"test:bench": "vitest bench",
+		"test:mutation": "env -e dev -m test : stryker run",
+		"env:schema": "wireit",
+		"lint": "wireit",
+		"format": "wireit",
+		"clean": "pnpx del-cli dist .reports **/*.tsbuildinfo .rollup.cache .swc .wireit .node_modules"
+	},
+	"imports": {
+		"#libs/zod": "./src/libs/zod/index.ts",
+		"#libs/http": "./src/libs/http/index.ts",
+		"#testing": "./src/__tests__/index.ts"
+	},
+	"dependencies": {
+		"@fastify/static": "7.0.3",
+		"@nestjs/common": "10.3.8",
+		"@nestjs/core": "10.3.8",
+		"@nestjs/platform-fastify": "10.3.8",
+		"@nestjs/swagger": "7.3.1",
+		"fastify": "4.26.2",
+		"luxon": "3.4.4",
+		"reflect-metadata": "0.2.2",
+		"rxjs": "7.8.1",
+		"tslib": "2.6.2",
+		"zod": "3.22.5"
+	},
+	"devDependencies": {
+		"@calvear/env": "2.10.2",
+		"@nestjs/testing": "10.3.8",
+		"@stryker-mutator/core": "8.2.6",
+		"@stryker-mutator/typescript-checker": "8.2.6",
+		"@stryker-mutator/vitest-runner": "8.2.6",
+		"@types/eslint": "^8.56.10",
+		"@types/luxon": "3.4.2",
+		"@types/node": "20.12.7",
+		"@vitest/coverage-v8": "1.5.0",
+		"eslint": "9.1.0",
+		"eslint-config-prettier": "9.1.0",
+		"eslint-plugin-perfectionist": "2.9.0",
+		"eslint-plugin-prettier": "5.1.3",
+		"eslint-plugin-redos": "4.4.5",
+		"eslint-plugin-regexp": "2.5.0",
+		"eslint-plugin-sonarjs": "0.25.1",
+		"eslint-plugin-unicorn": "52.0.0",
+		"eslint-plugin-vitest": "0.5.3",
+		"globals": "^15.0.0",
+		"prettier": "3.2.5",
+		"terser": "5.30.3",
+		"type-fest": "4.15.0",
+		"typescript": "5.4.5",
+		"typescript-eslint": "^7.7.0",
+		"unplugin-swc": "1.4.5",
+		"vite": "5.2.10",
+		"vite-node": "1.5.0",
+		"vite-plugin-checker": "^0.6.4",
+		"vite-tsconfig-paths": "^4.3.2",
+		"vitest": "1.5.0",
+		"vitest-mock-extended": "1.3.1",
+		"wireit": "0.14.4"
+	},
+	"wireit": {
+		"build": {
+			"command": "env -m build : vite build",
+			"clean": "if-file-deleted",
+			"output": [
+				"dist/**",
+				"*.tsbuildinfo"
+			],
+			"files": [
+				"src/**",
+				"tsconfig.json",
+				"tsconfig.release.json",
+				"vite.config.ts",
+				"env/*.json",
+				"!**/*.{spec,test}.*",
+				"!**/__{tests,mocks,fixtures}__/**/*"
+			]
+		},
+		"preview": {
+			"command": "env -e dev -m build --log debug : node dist/main",
+			"dependencies": [
+				"build"
+			]
+		},
+		"format": {
+			"command": "prettier --cache --write **/*.{ts,cts,mts,json,md,yml,yaml}",
+			"output": [
+				"./node_modules/.cache/prettier/.prettier-cache"
+			],
+			"files": [
+				".prettierrc",
+				".prettierignore",
+				"**/*.{ts,cts,mts,json,md,yml,yaml}"
+			]
+		},
+		"lint": {
+			"command": "eslint --cache --cache-location node_modules/.cache/eslint/",
+			"output": [
+				"./node_modules/.cache/eslint/"
+			],
+			"files": [
+				"eslint.config.js",
+				".prettierrc",
+				".prettierignore",
+				"**/*.{js,mjs,cjs,ts,cts,mts,json}"
+			]
+		},
+		"env:schema": {
+			"command": "env schema -e dev -m build",
+			"output": [
+				"env/settings/schema.json"
+			],
+			"files": [
+				"env/appsettings.json",
+				"env/*.env.json"
+			]
+		}
+	},
+	"type": "module",
+	"engines": {
+		"node": ">=20",
+		"npm": ">=9",
+		"pnpm": ">=8"
+	},
+	"license": "MIT",
+	"repository": "https://github.com/calvear93/nestjs-template",
+	"keywords": [
+		"node",
+		"nest",
+		"fastify",
+		"pnpm",
+		"vite",
+		"vitest",
+		"typescript"
+	]
 }

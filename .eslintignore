@@ -1,4 +1,0 @@
-build/**/*
-dist/**/*
-k8s/**/*
-environment/**/*
