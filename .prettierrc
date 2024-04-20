@@ -15,7 +15,7 @@
 	"useTabs": true,
 	"overrides": [
 		{
-			"files": ["tsconfig.json", ".eslintrc"],
+			"files": ["tsconfig.json"],
 			"options": {
 				"trailingComma": "none"
 			}
