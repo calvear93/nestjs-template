@@ -11,7 +11,11 @@
 			"runtimeExecutable": "pnpm",
 			"runtimeArgs": ["start:${input:environmentName}"],
 			"skipFiles": ["<node_internals>/**", "**/node_modules/**"],
-			"console": "integratedTerminal"
+			"console": "integratedTerminal",
+			"serverReadyAction": {
+				"action": "openExternally",
+				"pattern": "\\bLocal:\\s+(https?://\\S+)"
+			}
 		},
 		{
 			"name": "Test",
