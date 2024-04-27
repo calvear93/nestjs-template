@@ -33,7 +33,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 
 	SwaggerModule.setup(prefix, app, document, {
 		customSiteTitle: process.env.TITLE,
-		jsonDocumentUrl: `${prefix}/openapi`,
+		jsonDocumentUrl: `${prefix}/openapi.json`,
 		swaggerOptions: {
 			displayRequestDuration: true,
 			persistAuthorization: true,
