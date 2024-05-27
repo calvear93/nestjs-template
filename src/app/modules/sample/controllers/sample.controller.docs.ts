@@ -1,4 +1,5 @@
 import {
+	ApiBody,
 	ApiOperation,
 	ApiProduces,
 	ApiQuery,
@@ -16,6 +17,25 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 		dto: [
 			ApiOperation({
 				summary: 'Receives, validate and returns a DTO',
+			}),
+			ApiBody({
+				examples: {
+					example: {
+						description: 'example',
+						value: {
+							id: 1,
+							name: 'a name',
+						},
+					},
+					'coercion-example': {
+						description: 'coercion example',
+						value: {
+							id: '1',
+							name: 'a name',
+						},
+					},
+				},
+				schema: SampleDto.jsonSchema,
 			}),
 			ApiResponse({
 				description: 'DTO',
