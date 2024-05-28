@@ -170,6 +170,17 @@ export class HttpClient {
 	}
 
 	/**
+	 * Sets a header value.
+	 *
+	 * @param key
+	 * @param value
+	 */
+	setHeader(key: string, value: string): void {
+		this._baseConfig.headers ??= {};
+		this._baseConfig.headers[key] = value;
+	}
+
+	/**
 	 * Merges and normalizes request URL.
 	 *
 	 * @param query - query params
@@ -250,7 +261,7 @@ export class HttpClient {
 	/**
 	 * Client base config.
 	 */
-	private readonly _baseConfig?: HttpRequestOptions;
+	private _baseConfig: HttpRequestOptions = {};
 
 	/**
 	 * Client base URL.
@@ -268,6 +279,27 @@ export class HttpClient {
 	private readonly _timeoutReason: TimeoutError;
 
 	/**
+	 * Returns base config.
+	 *
+	 * @returns base config object
+	 */
+	get config(): HttpRequestOptions {
+		return this._baseConfig;
+	}
+
+	/**
+	 * Merges base config object.
+	 *
+	 * @param partialConfig - new config for merge
+	 */
+	set config(partialConfig: Partial<HttpRequestOptions>) {
+		this._baseConfig = {
+			...this._baseConfig,
+			...partialConfig,
+		};
+	}
+
+	/**
 	 * Encodes user and password for basic auth.
 	 *
 	 * @param user - user name
@@ -282,6 +314,7 @@ export class HttpClient {
 
 export interface HttpRequestOptions extends RequestOptions {
 	cancel?: AbortController;
+	headers?: Record<string, string>;
 	query?: Record<string, Primitive>;
 	timeout?: millis;
 }

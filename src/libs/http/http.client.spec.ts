@@ -374,4 +374,38 @@ describe(HttpClient, () => {
 			expect(receivedUrl).toBe(expectedUrl);
 		});
 	});
+
+	test('can get and set config', () => {
+		const initialTimeout = 1;
+		const expectedTimeout = 2;
+		const client = new HttpClient({ timeout: initialTimeout });
+
+		client.config.timeout = expectedTimeout;
+
+		expect(client.config.timeout).not.toBe(initialTimeout);
+		expect(client.config.timeout).toBe(expectedTimeout);
+	});
+
+	test('can set config by object and it merges the config', () => {
+		const expectedHeaders = { a: '1' };
+		const expectedTimeout = 2;
+		const client = new HttpClient({ headers: expectedHeaders });
+
+		client.config = { timeout: expectedTimeout };
+
+		expect(client.config.timeout).toBe(expectedTimeout);
+		expect(client.config.headers).toStrictEqual(expectedHeaders);
+	});
+
+	test('can set a specific header', () => {
+		const expectedHeaderKey = 'key';
+		const expectedHeaderValue = 'value';
+		const client = new HttpClient();
+
+		client.setHeader(expectedHeaderKey, expectedHeaderValue);
+
+		expect(client.config.headers?.[expectedHeaderKey]).toBe(
+			expectedHeaderValue,
+		);
+	});
 });
