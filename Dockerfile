@@ -4,10 +4,10 @@
 
 # global variables
 # https://hub.docker.com/_/node
-ARG NODE=node:20.13.1-alpine
+ARG NODE=node:20.14.0-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
-ARG PNPM_VER=9.1.3
+ARG PNPM_VER=9.1.4
 ARG APP_DIR='/app/'
 ARG OUT_DIR='dist'
 
@@ -37,7 +37,7 @@ COPY . ${APP_DIR}
 RUN pnpm install --frozen-lockfile
 # builds the app
 ENV NODE_ENV production
-RUN pnpm exec vite build
+RUN pnpm build
 
 
 ##

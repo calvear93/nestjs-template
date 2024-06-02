@@ -6,20 +6,23 @@ import { dependencies } from './package.json';
 import { compilerOptions as tsconfig } from './tsconfig.json';
 import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
 
+const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
+
 export default {
 	build: {
-		minify: 'terser',
+		minify: CODE_OPTIMIZE ? 'terser' : false,
 		rollupOptions: {
 			input: {
 				main: 'src/main.ts',
 			},
 			output: {
-				compact: true,
+				compact: CODE_OPTIMIZE,
 				format: 'esm',
 				preserveModules: true,
 				preserveModulesRoot: 'src',
 			},
 			plugins: [packageJson()],
+			treeshake: CODE_OPTIMIZE,
 		},
 		sourcemap: tsconfigRelease.sourceMap,
 		ssr: true,
