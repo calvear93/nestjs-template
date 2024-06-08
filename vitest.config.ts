@@ -1,9 +1,16 @@
+import swc from 'unplugin-swc';
+import { checker } from 'vite-plugin-checker';
 import type { UserConfigExport } from 'vitest/config';
-import vite from './vite.config.ts';
 
 export default {
 	clearScreen: false,
-	plugins: vite.plugins,
+	plugins: [
+		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
+		checker({
+			terminal: true,
+			typescript: true,
+		}),
+	],
 	test: {
 		coverage: {
 			exclude: [
