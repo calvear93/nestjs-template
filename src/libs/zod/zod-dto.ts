@@ -23,6 +23,10 @@ type InferTuple<Tuple extends [...ZodTypeAny[]]> = {
 };
 type InferArray<Arr extends [...ZodTypeAny[]]> = z.infer<Arr[0]>[];
 
+type InputShape<T> = Record<string, any> & {
+	[key in keyof T]?: unknown;
+};
+
 /**
  * Creates a DTO from Zod shape,
  * with schema and jsonSchema
@@ -72,7 +76,7 @@ export const ZodDto = <
 	const schema = z.object(shape, config);
 
 	return class {
-		constructor(fields?: Partial<z.infer<Z>>) {
+		constructor(fields?: InputShape<z.infer<Z>>) {
 			if (fields) {
 				Object.assign(this, schema.parse(fields));
 			}
@@ -100,7 +104,7 @@ export const ZodDto = <
  * ```ts
  *	// sample.dto.ts
  *	import { z } from 'zod';
- *	import { ZodIterableDto } from '@zod';
+ *	import { ZodIterableDto } from '#libs/zod';
  *
  *	export class SampleDtoIterable extends ZodIterableDto([
  *		z.number(),
@@ -141,7 +145,7 @@ export const ZodIterableDto = <
 		items.length === 1 ? z.array(items[0], config) : z.tuple(items, config);
 
 	return class extends Array {
-		constructor(items?: I) {
+		constructor(items?: I | unknown[]) {
 			super();
 			if (items) {
 				this.push(...schema.parse(items));
@@ -165,7 +169,7 @@ export const ZodIterableDto = <
  * @example
  * ```ts
  *	import { ... } from '...';
- *	import { registerDtoSchemas } from '@zod';
+ *	import { registerDtoSchemas } from '#libs/zod';
  *
  *	const app = await NestFactory.create(AppModule);
  *
@@ -202,7 +206,7 @@ export interface ZodDto<Z extends ZodTypeAny = ZodTypeAny> {
  */
 export interface ZodObjectDto<Z extends ZodTypeAny = ZodTypeAny, T = z.infer<Z>>
 	extends ZodDto<Z> {
-	new (fields?: Partial<T>): T;
+	new (fields?: InputShape<T>): T;
 }
 
 /**
@@ -213,5 +217,5 @@ export interface ZodIterableDto<
 	I = InferArray<any> | InferTuple<any>,
 	T = I extends (infer A)[] ? A : I extends [...infer B] ? B : any[],
 > extends ZodDto<Z> {
-	new (items?: I): T[];
+	new (items?: I | unknown[]): T[];
 }
