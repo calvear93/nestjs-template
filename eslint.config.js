@@ -208,7 +208,11 @@ export default [
 				WARN,
 				{
 					args: 'after-used',
+					argsIgnorePattern: '^_.*',
 					caughtErrors: 'all',
+					caughtErrorsIgnorePattern: '^_.*',
+					destructuredArrayIgnorePattern: '^_.*',
+					ignoreRestSiblings: true,
 					vars: 'local',
 					varsIgnorePattern: '^_.*',
 				},
