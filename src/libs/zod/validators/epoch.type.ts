@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const EPOCH_REGEXP = /^(?:\/date\()?(?<epoch>\d+)(?:\)\/)?$/iv;
+const EPOCH_REGEXP = /^(?:\/date\()?(?<epoch>[\d.]+)(?:\)\/)?$/iv;
 
 const addTransformIssue = (context: z.RefinementCtx, value: unknown) => {
 	context.addIssue({
@@ -11,7 +11,7 @@ const addTransformIssue = (context: z.RefinementCtx, value: unknown) => {
 	return false as any;
 };
 
-export const epoch = () =>
+export const epoch = ({ seconds }: { seconds: boolean } = { seconds: false }) =>
 	z
 		.string()
 		.transform<Date>((value, context) => {
@@ -20,8 +20,11 @@ export const epoch = () =>
 			if (!matcher || !matcher.groups)
 				return addTransformIssue(context, value);
 
+			const epoch = seconds
+				? +matcher.groups.epoch * 1000
+				: +matcher.groups.epoch;
 			const date = new Date(0);
-			date.setUTCSeconds(+matcher.groups.epoch);
+			date.setUTCMilliseconds(epoch);
 
 			return date;
 		})
