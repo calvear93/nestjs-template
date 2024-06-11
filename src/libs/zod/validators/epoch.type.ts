@@ -17,8 +17,7 @@ export const epoch = ({ seconds }: { seconds: boolean } = { seconds: false }) =>
 		.transform<Date>((value, context) => {
 			const matcher = EPOCH_REGEXP.exec(value);
 
-			if (!matcher || !matcher.groups)
-				return addTransformIssue(context, value);
+			if (!matcher?.groups) return addTransformIssue(context, value);
 
 			const epoch = seconds
 				? +matcher.groups.epoch * 1000
