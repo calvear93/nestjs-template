@@ -65,7 +65,7 @@ function packageJson(): PluginOption {
  * Loads environment variables for define injector.
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function loadEnvironment() {
+function loadEnv() {
 	if (process.env.NODE_ENV === 'production') {
 		return Object.fromEntries(
 			Object.entries(process.env).map(([key, value]) => [

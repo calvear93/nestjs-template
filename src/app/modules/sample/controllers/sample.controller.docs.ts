@@ -34,6 +34,13 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 							name: 'a name',
 						},
 					},
+					'bad-example': {
+						description: 'bad example',
+						value: {
+							id: 'not a number',
+							name: 123,
+						},
+					},
 				},
 				schema: SampleDto.jsonSchema,
 			}),
