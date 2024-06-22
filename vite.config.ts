@@ -35,6 +35,10 @@ export default {
 		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
 		checker({
 			enableBuild: true,
+			eslint: {
+				lintCommand: 'eslint --cache',
+				useFlatConfig: true,
+			},
 			terminal: true,
 			typescript: true,
 		}),
