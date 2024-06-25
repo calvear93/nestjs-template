@@ -5,7 +5,7 @@
 		"baseUrl": "src",
 		"outDir": "dist",
 
-		"target": "esnext",
+		"target": "es2022",
 		"module": "node16",
 		"moduleResolution": "node16",
 		"resolveJsonModule": true,

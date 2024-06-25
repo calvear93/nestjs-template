@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const EPOCH_REGEXP = /^(?:\/date\()?(?<epoch>[\d.]+)(?:\)\/)?$/iv;
+const EPOCH_REGEXP = /^(?:\/date\()?(?<epoch>[\d.]+)(?:\)\/)?$/iu;
 
 const addTransformIssue = (context: z.RefinementCtx, value: unknown) => {
 	context.addIssue({

@@ -59,7 +59,7 @@ describe(ZodValidationPipe, () => {
 			cuid: z.string().cuid(),
 			cuid2: z.string().cuid2(),
 			ulid: z.string().ulid(),
-			regex: z.string().regex(/[a-c]/v),
+			regex: z.string().regex(/[a-c]/u),
 			includes: z.string().includes('hello'),
 			startsWith: z.string().startsWith('a'),
 			endsWith: z.string().endsWith('z'),

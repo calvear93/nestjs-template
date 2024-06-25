@@ -598,7 +598,6 @@ export default [
 			'regexp/prefer-star-quantifier': ERROR,
 			'regexp/prefer-unicode-codepoint-escapes': ERROR,
 			'regexp/prefer-w': ERROR,
-			'regexp/require-unicode-sets-regexp': ERROR,
 			'regexp/simplify-set-operations': ERROR,
 			'regexp/sort-alternatives': ERROR,
 			'regexp/sort-character-class-elements': ERROR,
