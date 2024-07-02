@@ -7,6 +7,11 @@ export default {
 	plugins: [
 		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
 		checker({
+			eslint: {
+				dev: { logLevel: ['error'] },
+				lintCommand: 'eslint --cache',
+				useFlatConfig: true,
+			},
 			terminal: true,
 			typescript: true,
 		}),
