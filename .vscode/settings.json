@@ -36,6 +36,7 @@
 	"files.exclude": {
 		"**/*.log": true,
 		"**/*.tsbuildinfo": true,
+		"**/.eslintcache": true,
 		"**/.DS_Store": true,
 		"**/.git": true,
 		"**/.history": true,
@@ -46,8 +47,7 @@
 		"**/.wireit": true,
 		"**/desktop.ini": true,
 		"**/node_modules": true,
-		"**/obj": true,
-		".eslintcache": true
+		"**/obj": true
 	},
 	"files.insertFinalNewline": true,
 	"files.trimFinalNewlines": true,
