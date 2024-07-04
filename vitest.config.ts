@@ -24,7 +24,7 @@ export default {
 			exclude: [
 				'**/*.{d,config,mock,fixture,bench}.?(c|m)[jt]s',
 				'**/{index,main,app}.?(c|m)[jt]s',
-				'**/__{tests,mocks,fixtures}__',
+				'**/__{tests,mocks,fixtures}__/**/*',
 			],
 			include: ['src/**/*.?(c|m)[jt]s'],
 			reporter: ['text', 'text-summary', 'lcov', 'cobertura', 'json'],
