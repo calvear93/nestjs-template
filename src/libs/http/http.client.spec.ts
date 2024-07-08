@@ -1,8 +1,4 @@
-import {
-	type IncomingMessage,
-	type Server,
-	type ServerResponse,
-} from 'node:http';
+import { type RequestListener, type Server } from 'node:http';
 import {
 	type Mock,
 	type MockInstance,
@@ -26,11 +22,8 @@ describe(HttpClient, () => {
 
 	let port: number;
 	let _server: Server;
-	let _serverResponse: Mock<[IncomingMessage, ServerResponse]>;
-	let _fetchMock: MockInstance<
-		Parameters<typeof fetch>,
-		ReturnType<typeof fetch>
-	>;
+	let _serverResponse: Mock<RequestListener>;
+	let _fetchMock: MockInstance<typeof fetch>;
 
 	let _URL: string;
 

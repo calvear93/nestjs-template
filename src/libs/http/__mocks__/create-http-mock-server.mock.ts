@@ -1,8 +1,4 @@
-import http, {
-	type IncomingMessage,
-	type Server,
-	type ServerResponse,
-} from 'node:http';
+import http, { type RequestListener, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { type Mock, vi } from 'vitest';
 
@@ -18,8 +14,8 @@ import { type Mock, vi } from 'vitest';
 export const createHttpMockServer = (
 	port = 0,
 	hostname = 'localhost',
-): Promise<[Server, Mock<[IncomingMessage, ServerResponse]>, port: number]> => {
-	const mock = vi.fn<[IncomingMessage, ServerResponse]>();
+): Promise<[Server, Mock<RequestListener>, port: number]> => {
+	const mock = vi.fn<RequestListener>();
 	const server = http.createServer().listen(port, hostname);
 
 	server.on('request', mock);
