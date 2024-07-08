@@ -12,9 +12,11 @@
 	"reporters": ["clear-text", "progress", "dots", "html", "json"],
 	"ignorePatterns": [
 		"dist",
-		"**/*.{d,config,mock,fixture,interface}.{ts,cts,mts}",
-		"**/{index,main}.{ts,cts,mts}",
-		"**/__{tests,mocks,fixtures}__"
+		".vscode",
+		"**/node_modules/**",
+		"**/*.{d,config,mock,fixture,interface,bench}.?(c|m)[jt]s",
+		"**/{index,main}.?(c|m)[jt]s",
+		"**/__{tests,mocks,fixtures}__/**/*"
 	],
 	"tsconfigFile": "tsconfig.release.json",
 	"checkers": ["typescript"],
