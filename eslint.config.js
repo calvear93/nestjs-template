@@ -17,7 +17,7 @@ const ERROR = 'error';
 const WARN = 'warn';
 const OFF = 'off';
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {import('eslint').Linter.Config[]} */
 export default [
 	{
 		ignores: [
@@ -100,6 +100,7 @@ export default [
 			'no-misleading-character-class': ERROR,
 			'no-mixed-spaces-and-tabs': [WARN, 'smart-tabs'],
 			'no-new-native-nonconstructor': ERROR,
+			'no-new-symbol': OFF,
 			'no-new-wrappers': WARN,
 			'no-nonoctal-decimal-escape': ERROR,
 			'no-obj-calls': ERROR,
@@ -133,12 +134,16 @@ export default [
 			'no-useless-computed-key': WARN,
 			'no-useless-escape': ERROR,
 			'no-useless-return': ERROR,
+			'no-var': ERROR,
 			'no-with': ERROR,
 			'object-shorthand': WARN,
 			'prefer-arrow-callback': WARN,
+			'prefer-const': WARN,
 			'prefer-exponentiation-operator': WARN,
 			'prefer-promise-reject-errors': WARN,
 			'prefer-regex-literals': WARN,
+			'prefer-rest-params': WARN,
+			'prefer-spread': WARN,
 			'prefer-template': WARN,
 			'quote-props': [WARN, 'as-needed'],
 			quotes: [
@@ -174,12 +179,6 @@ export default [
 		rules: {
 			...typescript.configs.strict[1].rules,
 			...typescript.configs.strict[2].rules,
-			'@typescript-eslint/ban-types': [
-				ERROR,
-				{
-					types: { Function: false },
-				},
-			],
 			'@typescript-eslint/consistent-type-imports': [
 				WARN,
 				{
@@ -195,6 +194,7 @@ export default [
 				ERROR,
 				{ allowSingleExtends: true },
 			],
+			'@typescript-eslint/no-empty-object-type': OFF,
 			'@typescript-eslint/no-explicit-any': OFF,
 			'@typescript-eslint/no-extraneous-class': OFF,
 			'@typescript-eslint/no-floating-promises': [
@@ -210,6 +210,7 @@ export default [
 			],
 			'@typescript-eslint/no-non-null-assertion': OFF,
 			'@typescript-eslint/no-redundant-type-constituents': ERROR,
+			'@typescript-eslint/no-unsafe-function-type': OFF,
 			'@typescript-eslint/no-unused-vars': [
 				WARN,
 				{
@@ -234,6 +235,7 @@ export default [
 					variables: true,
 				},
 			],
+			'@typescript-eslint/no-wrapper-object-types': WARN,
 			'@typescript-eslint/sort-type-constituents': [
 				WARN,
 				{
