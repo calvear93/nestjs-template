@@ -97,7 +97,7 @@ export class TokenProvider {
 			.digest('base64url');
 	}
 
-	constructor({ algorithm = 'shake256', secret }: DigitalSignProviderConfig) {
+	constructor({ algorithm = 'shake256', secret }: TokenProviderConfig) {
 		this.algorithm = algorithm;
 		this.secret = secret;
 	}
@@ -107,7 +107,7 @@ export class TokenProvider {
 	private readonly secret: string;
 
 	static register(
-		config: DigitalSignProviderConfig,
+		config: TokenProviderConfig,
 	): FactoryProvider<TokenProvider> {
 		return {
 			provide: TokenProvider,
@@ -116,7 +116,7 @@ export class TokenProvider {
 	}
 }
 
-export interface DigitalSignProviderConfig {
+export interface TokenProviderConfig {
 	algorithm: HashAlgorithm;
 	secret: string;
 }
