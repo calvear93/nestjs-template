@@ -1,5 +1,5 @@
-import { type CanActivate } from '@nestjs/common';
 import { afterEach } from 'node:test';
+import { type CanActivate } from '@nestjs/common';
 import {
 	type MockInstance,
 	afterAll,
