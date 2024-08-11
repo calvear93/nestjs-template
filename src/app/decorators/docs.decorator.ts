@@ -2,7 +2,7 @@ import {
 	ApplyToClass,
 	ApplyToProperty,
 	type DecoratorsLookUp,
-} from '../../libs/decorators/apply.decorator.ts';
+} from '#libs/decorators';
 
 /**
  * Decorator factory for apply Swagger

@@ -43,7 +43,7 @@ describe('security-guard.factory', () => {
 
 	// tests
 	test('when not enabled, return void decorators', () => {
-		const [guard, allow] = createSecurityGuard(MockGuard, 'test', false);
+		const [guard, allow] = createSecurityGuard(MockGuard, false);
 
 		const guarDecorate = guard();
 		const allowDecorate = allow();
@@ -58,7 +58,7 @@ describe('security-guard.factory', () => {
 	});
 
 	test('when enabled and is a class instance, return guard and allow decorators', () => {
-		const [guard, allow] = createSecurityGuard(MockGuard, 'test', true);
+		const [guard, allow] = createSecurityGuard(MockGuard, true);
 
 		const guarDecorate = guard();
 		const allowDecorate = allow();
@@ -74,7 +74,7 @@ describe('security-guard.factory', () => {
 	});
 
 	test('when enabled and is a fn, return guard and allow decorators', () => {
-		const [guard] = createSecurityGuard(MockGuard, 'test', true);
+		const [guard] = createSecurityGuard(MockGuard, true);
 
 		const guarDecorate = guard();
 		_mockDecoratedClass.method.prototype = _mockDecoratedClass;

@@ -10,7 +10,7 @@ import {
 import { ZodValidationPipe, registerDtoOpenApiSchemas } from '#libs/zod';
 import { AppModule } from './app.module.ts';
 import {
-	APY_KEY_GUARD_NAME,
+	ApiKeyGuard,
 	SECURITY_API_SCHEMA,
 } from './decorators/api-key.guard.ts';
 
@@ -23,7 +23,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 	const config = new DocumentBuilder()
 		.setTitle(process.env.APP_NAME)
 		.setVersion(process.env.APP_VERSION)
-		.addApiKey(SECURITY_API_SCHEMA, APY_KEY_GUARD_NAME)
+		.addApiKey(SECURITY_API_SCHEMA, ApiKeyGuard.name)
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);

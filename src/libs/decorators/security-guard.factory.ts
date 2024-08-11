@@ -16,9 +16,9 @@ const createSecureDecorator = <G extends Class<any>>(
 	Guard: G,
 	guardName: string,
 	allowSignal: symbol,
-	args: ConstructorParameters<G>,
+	args: ConstructorParameters<G> | never[],
 ) => {
-	const guard = UseGuards(new Guard(...args));
+	const guard = UseGuards(args.length === 0 ? Guard : new Guard(...args));
 	const schema = ApiSecurity(guardName);
 
 	const apply = (descriptor: PropertyDescriptor) =>
@@ -85,18 +85,17 @@ const disabled = () => () => void 0;
  */
 export const createSecurityGuard = <T extends Class<any>>(
 	Guard: T,
-	name: string,
 	enabled = true,
-	...args: ConstructorParameters<T>
+	...args: ConstructorParameters<T> | never[]
 ): [
 	ReturnType<typeof createSecureDecorator>,
 	ReturnType<typeof createAllowDecorator>,
 ] => {
 	if (!enabled) return [disabled, disabled];
 
-	const signal = Symbol(name);
+	const signal = Symbol(Guard.name);
 
-	const Secure = createSecureDecorator(Guard, name, signal, args);
+	const Secure = createSecureDecorator(Guard, Guard.name, signal, args);
 	const Allow = createAllowDecorator(signal);
 
 	return [Secure, Allow];

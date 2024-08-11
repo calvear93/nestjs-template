@@ -21,6 +21,7 @@
 	"imports": {
 		"#libs/zod": "./src/libs/zod/index.ts",
 		"#libs/http": "./src/libs/http/index.ts",
+		"#libs/decorators": "./src/libs/decorators/index.ts",
 		"#testing": "./src/__tests__/index.ts"
 	},
 	"dependencies": {
