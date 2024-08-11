@@ -45,7 +45,7 @@ export const getDecorators = (
  *
  *  export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
  *	  class: [AnyClassDecorator()],
- *	  method: {}
+ *	  method: {
  *		anyMethod: [AnyMethodDecorator()]
  *	  }
  *  };
@@ -99,7 +99,7 @@ export function ApplyToClass({
  *  import { DecoratorsLookUp } from '...';
  *
  *  export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
- *	  properties: {}
+ *	  properties: {
  *		anyProp: [AnyPropertyDecorator()]
  *	  }
  *  };
