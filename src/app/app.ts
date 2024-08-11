@@ -42,12 +42,6 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 	} satisfies SwaggerCustomOptions);
 };
 
-export interface AppStartConfig {
-	port?: number;
-	prefix: string;
-	swagger?: boolean;
-}
-
 /**
  * App initializing.
  *
@@ -77,3 +71,9 @@ export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 
 	return { adapter, app, dispose };
 };
+
+export interface AppStartConfig {
+	port?: number;
+	prefix: string;
+	swagger?: boolean;
+}

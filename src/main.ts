@@ -9,9 +9,6 @@ const SECURITY_ENABLED = process.env.SECURITY_ENABLED === 'true';
 if (import.meta.hot) {
 	const { data } = import.meta.hot;
 	if (data.__pendingCleanup) {
-		console.info(
-			'  \u001B[32m⚙\u001B[0m HMR: \u001B[36mReloading Module ...\u001B[0m\n',
-		);
 		await Promise.allSettled(data.__pendingCleanup);
 	}
 	data.__pendingCleanup = [];
@@ -40,8 +37,9 @@ if (import.meta.env.DEV) {
 		`\n  \u001B[32m➜\u001B[0m Local: \u001B[36mhttp://localhost:${PORT}/${BASE_URL}\u001B[0m\n`,
 	);
 
-	// disposing on hot reload dev
-	import.meta.hot?.on('vite:beforeFullReload', () => {
-		import.meta.hot!.data.__pendingCleanup.push(dispose());
+	// hot module replacement
+	import.meta.hot?.accept();
+	import.meta.hot?.dispose((data) => {
+		data.__pendingCleanup.push(dispose());
 	});
 }
