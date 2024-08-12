@@ -61,7 +61,7 @@
 		"terser": "5.31.5",
 		"type-fest": "4.24.0",
 		"typescript": "5.5.4",
-		"typescript-eslint": "^8.0.1",
+		"typescript-eslint": "^8.1.0",
 		"unplugin-swc": "1.5.1",
 		"vite": "5.4.0",
 		"vite-node": "2.0.5",

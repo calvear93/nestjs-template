@@ -82,6 +82,10 @@ const disabled = () => () => void 0;
 /**
  * Generates a protect and allow
  * decorator for your security guard.
+ *
+ * @param Guard - guard class
+ * @param enabled - if enabled
+ * @param args - guard args, if you use Nest DI, don't pass them
  */
 export const createSecurityGuard = <T extends Class<any>>(
 	Guard: T,
