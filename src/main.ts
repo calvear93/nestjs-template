@@ -5,15 +5,6 @@ const BASE_URL = process.env.BASE_URL;
 const SWAGGER_ENABLED = process.env.SWAGGER_UI === 'true';
 const SECURITY_ENABLED = process.env.SECURITY_ENABLED === 'true';
 
-// resolves pending async cleanup
-if (import.meta.hot) {
-	const { data } = import.meta.hot;
-	if (data.__pendingCleanup) {
-		await Promise.allSettled(data.__pendingCleanup);
-	}
-	data.__pendingCleanup = [];
-}
-
 // application init
 const { dispose } = await start({
 	port: PORT,
@@ -39,7 +30,7 @@ if (import.meta.env.DEV) {
 
 	// hot module replacement
 	import.meta.hot?.accept();
-	import.meta.hot?.dispose((data) => {
-		data.__pendingCleanup.push(dispose());
+	import.meta.hot?.dispose(async () => {
+		await dispose();
 	});
 }

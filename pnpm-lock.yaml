@@ -12,17 +12,17 @@ importers:
         specifier: 7.0.4
         version: 7.0.4
       '@nestjs/common':
-        specifier: 10.3.10
-        version: 10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1)
+        specifier: 10.4.0
+        version: 10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core':
-        specifier: 10.3.10
-        version: 10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
+        specifier: 10.4.0
+        version: 10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/platform-fastify':
-        specifier: 10.3.10
-        version: 10.3.10(@fastify/static@7.0.4)(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))
+        specifier: 10.4.0
+        version: 10.4.0(@fastify/static@7.0.4)(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))
       '@nestjs/swagger':
         specifier: 7.4.0
-        version: 7.4.0(@fastify/static@7.0.4)(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)
+        version: 7.4.0(@fastify/static@7.0.4)(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)
       fastify:
         specifier: 4.28.1
         version: 4.28.1
@@ -46,17 +46,17 @@ importers:
         specifier: 2.10.3
         version: 2.10.3
       '@nestjs/testing':
-        specifier: 10.3.10
-        version: 10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))
+        specifier: 10.4.0
+        version: 10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))
       '@stryker-mutator/core':
-        specifier: 8.4.0
-        version: 8.4.0
+        specifier: 8.5.0
+        version: 8.5.0
       '@stryker-mutator/typescript-checker':
-        specifier: 8.4.0
-        version: 8.4.0(@stryker-mutator/core@8.4.0)(typescript@5.5.4)
+        specifier: 8.5.0
+        version: 8.5.0(@stryker-mutator/core@8.5.0)(typescript@5.5.4)
       '@stryker-mutator/vitest-runner':
-        specifier: 8.4.0
-        version: 8.4.0(@stryker-mutator/core@8.4.0)(vitest@2.0.5(@types/node@22.2.0)(terser@5.31.5))
+        specifier: 8.5.0
+        version: 8.5.0(@stryker-mutator/core@8.5.0)(vitest@2.0.5(@types/node@22.2.0)(terser@5.31.5))
       '@types/eslint':
         specifier: ^9.6.0
         version: 9.6.0
@@ -609,8 +609,8 @@ packages:
   '@microsoft/tsdoc@0.15.0':
     resolution: {integrity: sha512-HZpPoABogPvjeJOdzCOSJsXeL/SMCBgBZMVC3X3d7YYp2gf31MfxhUoYUNwf1ERPJOnQc0wkFn9trqI6ZEdZuA==}
 
-  '@nestjs/common@10.3.10':
-    resolution: {integrity: sha512-H8k0jZtxk1IdtErGDmxFRy0PfcOAUg41Prrqpx76DQusGGJjsaovs1zjXVD1rZWaVYchfT1uczJ6L4Kio10VNg==}
+  '@nestjs/common@10.4.0':
+    resolution: {integrity: sha512-cGQJBMypG1qf0h31dvIYSffr/8+JhFd7qScJ4mqgF5HKT69WveW14zQcxavXzXI/LOE4vUvCu3QBeqcRBIs/9A==}
     peerDependencies:
       class-transformer: '*'
       class-validator: '*'
@@ -622,8 +622,8 @@ packages:
       class-validator:
         optional: true
 
-  '@nestjs/core@10.3.10':
-    resolution: {integrity: sha512-ZbQ4jovQyzHtCGCrzK5NdtW1SYO2fHSsgSY1+/9WdruYCUra+JDkWEXgZ4M3Hv480Dl3OXehAmY1wCOojeMyMQ==}
+  '@nestjs/core@10.4.0':
+    resolution: {integrity: sha512-vNVJ0H8n3FyIxrFibgV2tRbjKsVm90u//kinE0m7s6ygv+KhnGMrQvWGX0kk9wbsZwRMW5JMpnBWDUS4wu4yPg==}
     peerDependencies:
       '@nestjs/common': ^10.0.0
       '@nestjs/microservices': ^10.0.0
@@ -652,8 +652,8 @@ packages:
       class-validator:
         optional: true
 
-  '@nestjs/platform-fastify@10.3.10':
-    resolution: {integrity: sha512-waNyUl4N/sRDPdEgJyhn+k0lS3ZpaDXRPjJVlDhlwOPGN38hMIGRjs+Gwz4pXqA5CP9PLuptMtHAWkb2m8I/nA==}
+  '@nestjs/platform-fastify@10.4.0':
+    resolution: {integrity: sha512-tDHoAqUsAEwbbSbuAoysiIJeCxn4llV0LZ9tx2W0FBblnKoKiduVKEmucuD/NAS4Exh0nToZ7SlDbLMRDTa+sQ==}
     peerDependencies:
       '@fastify/static': ^6.0.0 || ^7.0.0
       '@fastify/view': ^7.0.0 || ^8.0.0
@@ -682,8 +682,8 @@ packages:
       class-validator:
         optional: true
 
-  '@nestjs/testing@10.3.10':
-    resolution: {integrity: sha512-i3HAtVQJijxNxJq1k39aelyJlyEIBRONys7IipH/4r8W0J+M1V+y5EKDOyi4j1SdNSb/vmNyWpZ2/ewZjl3kRA==}
+  '@nestjs/testing@10.4.0':
+    resolution: {integrity: sha512-oAQe3Yb4/JlHtsBcKmueEvPZDoONp7LsNwGnMAeyhoBLuPBXDhZnNgMY2UtT4FfNmudBQBKR/vq/fOQRax/4Hg==}
     peerDependencies:
       '@nestjs/common': ^10.0.0
       '@nestjs/core': ^10.0.0
@@ -816,34 +816,34 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
-  '@stryker-mutator/api@8.4.0':
-    resolution: {integrity: sha512-VccQ0s4WOxVkIN0slBNM4CIo5jMf46Mc6gazwIWyyng/MvjuEaXO/yYl3ihL9wFww41FDKXiTy3alOc4WWyIVQ==}
+  '@stryker-mutator/api@8.5.0':
+    resolution: {integrity: sha512-dhz6BAbNr6LW96UjJFyxVnGOvJqo+7GdIBJl3Cckg3/Bakn0jL61xZ0ca9pcrbVHivy9vlzMs+dCv2pr9QV9rg==}
     engines: {node: '>=18.0.0'}
 
-  '@stryker-mutator/core@8.4.0':
-    resolution: {integrity: sha512-vqdggnLFpr6uG/JOwiRYmk62xDJmTrj42gx7Kvth1AAj8txIVeCxcmh0o6gMG31vS22NGkkSzW8uYIxT/gfyKg==}
+  '@stryker-mutator/core@8.5.0':
+    resolution: {integrity: sha512-1bmX0+BImAWK+w9kPl83VchsYgYBMXHngD5i8Se2AEFMP5jj4J4uPOya45fAEVJcY4ooIIuwY3zkFwX6T1Crsw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@stryker-mutator/instrumenter@8.4.0':
-    resolution: {integrity: sha512-thLblaLuH+hIWk53bVxFJ9gfpnlOY+zNSxGV09986QoztYXejSSqRUWe8cxPc7PKF5xVewEh4yMTJaewX7Nzfw==}
+  '@stryker-mutator/instrumenter@8.5.0':
+    resolution: {integrity: sha512-sA+jXiGxeFuWJjAAJm8XvwpI1z2lxh2+CzpLyTR2d089fnEUoiqFsVHy2NsYxR9xZ5uqDu5FlnBlafXgLui1bw==}
     engines: {node: '>=18.0.0'}
 
-  '@stryker-mutator/typescript-checker@8.4.0':
-    resolution: {integrity: sha512-UJ2Fwg3ENuOQf9aQPUNiG5mI10hZ4fo1yf0aTtaJzm8f/8FsooTCEzGlxr5hNzPtkZZYwMUHgbc7rOYytANCWA==}
+  '@stryker-mutator/typescript-checker@8.5.0':
+    resolution: {integrity: sha512-GvJDltWbqalcKIctlo0fBTILa7zqqKZPFRCmWCa68Ea31rDqNs4pB5h99m7+mExVuklsCPddPLcq2KYM1qmCYQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@stryker-mutator/core': ~8.4.0
+      '@stryker-mutator/core': ~8.5.0
       typescript: '>=3.6'
 
-  '@stryker-mutator/util@8.4.0':
-    resolution: {integrity: sha512-dvDBmIrKpkqICO/7kcmfTzs+dsS1dA61q6XbbF+uB+WSsNLUHMfft0XKQg6BwLY+NLlis4pFN5CJz6gI7bfwxA==}
+  '@stryker-mutator/util@8.5.0':
+    resolution: {integrity: sha512-T1ElpGUDqESKcwuRnfEuroE7N2pEMLTqieWRLIJZsP2ubEfnoHp4aGVL6IjPRdiZr4jetZOLfjlTzddrqrbsvg==}
 
-  '@stryker-mutator/vitest-runner@8.4.0':
-    resolution: {integrity: sha512-giOBUueBjkHidH8Ihmlxb3ISqyrevzn31ub+EYKbm0Fg9kZqMVW57ASemjNxq4KRY0VG1nsXwTIVDro3nFVixA==}
+  '@stryker-mutator/vitest-runner@8.5.0':
+    resolution: {integrity: sha512-zOF/UWlHav7z5qU8IfJpWMz3t5I8y8QqMXrs91ArmtCn9vIf20MXby0wRv+HM4+GaRVHhyZdWK1s/xjgeQu5zg==}
     engines: {node: '>=14.18.0'}
     peerDependencies:
-      '@stryker-mutator/core': ~8.4.0
+      '@stryker-mutator/core': ~8.5.0
       vitest: '>=0.31.2'
 
   '@swc/core-darwin-arm64@1.7.10':
@@ -1578,9 +1578,6 @@ packages:
   fastify-plugin@4.5.1:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
 
-  fastify@4.28.0:
-    resolution: {integrity: sha512-HhW7UHW07YlqH5qpS0af8d2Gl/o98DhJ8ZDQWHRNDnzeOhZvtreWsX8xanjGgXmkYerGbo8ax/n40Dpwqkot8Q==}
-
   fastify@4.28.1:
     resolution: {integrity: sha512-kFWUtpNr4i7t5vY2EJPCN2KgMVpuqfU4NjnJNCgiNB900oiDeYqaNDRcAfeBbOF5hGixixxcKnOU4KN9z6QncQ==}
 
@@ -1773,8 +1770,8 @@ packages:
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
-  ignore@5.3.1:
-    resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
+  ignore@5.3.2:
+    resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
 
   import-fresh@3.3.0:
@@ -2096,11 +2093,11 @@ packages:
   ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
 
-  mutation-testing-elements@3.1.1:
-    resolution: {integrity: sha512-pYkrxZJh2zqA8XRSjtkoDFuIbezY1/4kIYjxw+DM6h6WL5wntLVKP5y3vQT8miRz/ek/3MP0qm2tuvgPn1rjOQ==}
+  mutation-testing-elements@3.2.0:
+    resolution: {integrity: sha512-zOwr/DGzEv9WW03Sj5IROgsGpOGbKz1ktx0tbCtJArE0VKhPXDtYKi/uKUv8AIUjHHXWGkGvU5WMfyZ/ckRglw==}
 
-  mutation-testing-metrics@3.1.1:
-    resolution: {integrity: sha512-AgXM0TAnwD4G5ml0pA4u4qZu6+EuKnFwDHKjwdipgxy6nZRvZzqj2JUOGfFvbTPyjFLeVbAxYMsedPQskxXyxw==}
+  mutation-testing-metrics@3.2.0:
+    resolution: {integrity: sha512-PheogUIwu8g4jN6uF9PM5sskBWcZlTSYnANxxYBFvZi3n+2lcd3hLOj+JdHqNEAY1uTsgkmR9Vkh4RtVp8QwSw==}
 
   mutation-testing-report-schema@3.1.1:
     resolution: {integrity: sha512-lWIbgUEnMEdsY2yymC7SZRBO+6dbZa5tY/Bmw+xjXYPdBxTVlnd2mjKRPZ6FUxgHJ9vMQmQnktMNAKCWZp1H0A==}
@@ -3325,7 +3322,7 @@ snapshots:
       debug: 4.3.6
       espree: 10.1.0
       globals: 14.0.0
-      ignore: 5.3.1
+      ignore: 5.3.2
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       minimatch: 3.1.2
@@ -3529,7 +3526,7 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.0': {}
 
-  '@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+  '@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1)':
     dependencies:
       iterare: 1.2.1
       reflect-metadata: 0.2.2
@@ -3537,9 +3534,9 @@ snapshots:
       tslib: 2.6.3
       uid: 2.0.2
 
-  '@nestjs/core@10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+  '@nestjs/core@10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)':
     dependencies:
-      '@nestjs/common': 10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/common': 10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nuxtjs/opencollective': 0.3.2
       fast-safe-stringify: 2.1.1
       iterare: 1.2.1
@@ -3551,31 +3548,31 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@nestjs/mapped-types@2.0.5(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)':
+  '@nestjs/mapped-types@2.0.5(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)':
     dependencies:
-      '@nestjs/common': 10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/common': 10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1)
       reflect-metadata: 0.2.2
 
-  '@nestjs/platform-fastify@10.3.10(@fastify/static@7.0.4)(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))':
+  '@nestjs/platform-fastify@10.4.0(@fastify/static@7.0.4)(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))':
     dependencies:
       '@fastify/cors': 9.0.1
       '@fastify/formbody': 7.4.0
       '@fastify/middie': 8.3.1
-      '@nestjs/common': 10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/core': 10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      fastify: 4.28.0
+      '@nestjs/common': 10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      fastify: 4.28.1
       light-my-request: 5.13.0
       path-to-regexp: 3.2.0
       tslib: 2.6.3
     optionalDependencies:
       '@fastify/static': 7.0.4
 
-  '@nestjs/swagger@7.4.0(@fastify/static@7.0.4)(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)':
+  '@nestjs/swagger@7.4.0(@fastify/static@7.0.4)(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)':
     dependencies:
       '@microsoft/tsdoc': 0.15.0
-      '@nestjs/common': 10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/core': 10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/mapped-types': 2.0.5(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)
+      '@nestjs/common': 10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/mapped-types': 2.0.5(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)
       js-yaml: 4.1.0
       lodash: 4.17.21
       path-to-regexp: 3.2.0
@@ -3584,10 +3581,10 @@ snapshots:
     optionalDependencies:
       '@fastify/static': 7.0.4
 
-  '@nestjs/testing@10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))':
+  '@nestjs/testing@10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1))':
     dependencies:
-      '@nestjs/common': 10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@nestjs/core': 10.3.10(@nestjs/common@10.3.10(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/common': 10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 10.4.0(@nestjs/common@10.4.0(reflect-metadata@0.2.2)(rxjs@7.8.1))(reflect-metadata@0.2.2)(rxjs@7.8.1)
       tslib: 2.6.3
 
   '@nodelib/fs.scandir@2.1.5':
@@ -3675,19 +3672,19 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@stryker-mutator/api@8.4.0':
+  '@stryker-mutator/api@8.5.0':
     dependencies:
-      mutation-testing-metrics: 3.1.1
+      mutation-testing-metrics: 3.2.0
       mutation-testing-report-schema: 3.1.1
       tslib: 2.6.3
       typed-inject: 4.0.0
 
-  '@stryker-mutator/core@8.4.0':
+  '@stryker-mutator/core@8.5.0':
     dependencies:
       '@inquirer/prompts': 5.3.8
-      '@stryker-mutator/api': 8.4.0
-      '@stryker-mutator/instrumenter': 8.4.0
-      '@stryker-mutator/util': 8.4.0
+      '@stryker-mutator/api': 8.5.0
+      '@stryker-mutator/instrumenter': 8.5.0
+      '@stryker-mutator/util': 8.5.0
       ajv: 8.17.1
       chalk: 5.3.0
       commander: 12.1.0
@@ -3699,8 +3696,8 @@ snapshots:
       lodash.groupby: 4.6.0
       log4js: 6.9.1
       minimatch: 9.0.5
-      mutation-testing-elements: 3.1.1
-      mutation-testing-metrics: 3.1.1
+      mutation-testing-elements: 3.2.0
+      mutation-testing-metrics: 3.2.0
       mutation-testing-report-schema: 3.1.1
       npm-run-path: 5.3.0
       progress: 2.0.3
@@ -3714,7 +3711,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@stryker-mutator/instrumenter@8.4.0':
+  '@stryker-mutator/instrumenter@8.5.0':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/generator': 7.25.0
@@ -3722,29 +3719,29 @@ snapshots:
       '@babel/plugin-proposal-decorators': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-proposal-explicit-resource-management': 7.24.7(@babel/core@7.25.2)
       '@babel/preset-typescript': 7.24.7(@babel/core@7.25.2)
-      '@stryker-mutator/api': 8.4.0
-      '@stryker-mutator/util': 8.4.0
+      '@stryker-mutator/api': 8.5.0
+      '@stryker-mutator/util': 8.5.0
       angular-html-parser: 6.0.2
       semver: 7.6.3
       weapon-regex: 1.3.2
     transitivePeerDependencies:
       - supports-color
 
-  '@stryker-mutator/typescript-checker@8.4.0(@stryker-mutator/core@8.4.0)(typescript@5.5.4)':
+  '@stryker-mutator/typescript-checker@8.5.0(@stryker-mutator/core@8.5.0)(typescript@5.5.4)':
     dependencies:
-      '@stryker-mutator/api': 8.4.0
-      '@stryker-mutator/core': 8.4.0
-      '@stryker-mutator/util': 8.4.0
+      '@stryker-mutator/api': 8.5.0
+      '@stryker-mutator/core': 8.5.0
+      '@stryker-mutator/util': 8.5.0
       semver: 7.6.3
       typescript: 5.5.4
 
-  '@stryker-mutator/util@8.4.0': {}
+  '@stryker-mutator/util@8.5.0': {}
 
-  '@stryker-mutator/vitest-runner@8.4.0(@stryker-mutator/core@8.4.0)(vitest@2.0.5(@types/node@22.2.0)(terser@5.31.5))':
+  '@stryker-mutator/vitest-runner@8.5.0(@stryker-mutator/core@8.5.0)(vitest@2.0.5(@types/node@22.2.0)(terser@5.31.5))':
     dependencies:
-      '@stryker-mutator/api': 8.4.0
-      '@stryker-mutator/core': 8.4.0
-      '@stryker-mutator/util': 8.4.0
+      '@stryker-mutator/api': 8.5.0
+      '@stryker-mutator/core': 8.5.0
+      '@stryker-mutator/util': 8.5.0
       tslib: 2.6.3
       vitest: 2.0.5(@types/node@22.2.0)(terser@5.31.5)
 
@@ -3833,7 +3830,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.0.1
       eslint: 9.9.0
       graphemer: 1.4.0
-      ignore: 5.3.1
+      ignore: 5.3.2
       natural-compare: 1.4.0
       ts-api-utils: 1.3.0(typescript@5.5.4)
     optionalDependencies:
@@ -4418,7 +4415,7 @@ snapshots:
       file-entry-cache: 8.0.0
       find-up: 5.0.0
       glob-parent: 6.0.2
-      ignore: 5.3.1
+      ignore: 5.3.2
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       is-path-inside: 3.0.3
@@ -4537,25 +4534,6 @@ snapshots:
   fast-uri@3.0.1: {}
 
   fastify-plugin@4.5.1: {}
-
-  fastify@4.28.0:
-    dependencies:
-      '@fastify/ajv-compiler': 3.6.0
-      '@fastify/error': 3.4.1
-      '@fastify/fast-json-stringify-compiler': 4.3.0
-      abstract-logging: 2.0.1
-      avvio: 8.4.0
-      fast-content-type-parse: 1.1.0
-      fast-json-stringify: 5.16.1
-      find-my-way: 8.2.0
-      light-my-request: 5.13.0
-      pino: 9.3.2
-      process-warning: 3.0.0
-      proxy-addr: 2.0.7
-      rfdc: 1.4.1
-      secure-json-parse: 2.7.0
-      semver: 7.6.3
-      toad-cache: 3.7.0
 
   fastify@4.28.1:
     dependencies:
@@ -4700,7 +4678,7 @@ snapshots:
       array-union: 2.1.0
       dir-glob: 3.0.1
       fast-glob: 3.3.2
-      ignore: 5.3.1
+      ignore: 5.3.2
       merge2: 1.4.1
       slash: 3.0.0
 
@@ -4752,7 +4730,7 @@ snapshots:
 
   ieee754@1.2.1: {}
 
-  ignore@5.3.1: {}
+  ignore@5.3.2: {}
 
   import-fresh@3.3.0:
     dependencies:
@@ -5025,9 +5003,9 @@ snapshots:
 
   ms@2.1.2: {}
 
-  mutation-testing-elements@3.1.1: {}
+  mutation-testing-elements@3.2.0: {}
 
-  mutation-testing-metrics@3.1.1:
+  mutation-testing-metrics@3.2.0:
     dependencies:
       mutation-testing-report-schema: 3.1.1
 
