@@ -141,7 +141,7 @@ export class HttpClient {
 			config.cancel ??= new AbortController();
 
 			clrFn = setTimeout(() => {
-				config.cancel!.abort(this._timeoutReason);
+				config.cancel!.abort(this.#timeoutReason);
 			}, timeout);
 		}
 
@@ -255,8 +255,13 @@ export class HttpClient {
 			};
 		}
 
-		this._timeoutReason = new TimeoutError();
+		this.#timeoutReason = new TimeoutError();
 	}
+
+	/**
+	 * Reason for timeout
+	 */
+	readonly #timeoutReason: TimeoutError;
 
 	/**
 	 * Client base config.
@@ -272,11 +277,6 @@ export class HttpClient {
 	 * When true, throws HttpError if a client error occurs (4XX).
 	 */
 	private readonly _throwOnClientError?: boolean;
-
-	/**
-	 * Reason for timeout
-	 */
-	private readonly _timeoutReason: TimeoutError;
 
 	/**
 	 * Returns base config.

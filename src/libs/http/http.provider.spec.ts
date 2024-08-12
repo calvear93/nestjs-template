@@ -13,7 +13,7 @@ describe(HttpProvider, () => {
 		_module = await Test.createTestingModule({
 			providers: [
 				HttpProvider.register(),
-				HttpProvider.register({ token: _altToken }),
+				HttpProvider.register({ useToken: _altToken }),
 			],
 		}).compile();
 
