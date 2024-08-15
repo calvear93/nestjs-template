@@ -1,5 +1,3 @@
-/* eslint-disable perfectionist/sort-enums */
-
 /**
  * @see https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Status

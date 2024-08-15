@@ -36,6 +36,7 @@ export default {
 		checker({
 			enableBuild: true,
 			eslint: {
+				dev: { logLevel: ['error'] },
 				lintCommand: 'eslint --cache',
 				useFlatConfig: true,
 			},
