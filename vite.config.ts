@@ -27,7 +27,7 @@ export default {
 		sourcemap: tsconfigRelease.sourceMap,
 		ssr: true,
 		target: tsconfig.target,
-		terserOptions: { keep_classnames: true },
+		terserOptions: { compress: false, keep_classnames: true },
 	},
 	clearScreen: false,
 	// define: loadEnv(),
