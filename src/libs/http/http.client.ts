@@ -141,7 +141,7 @@ export class HttpClient {
 			config.cancel ??= new AbortController();
 
 			clrFn = setTimeout(() => {
-				config.cancel!.abort(this.#timeoutReason);
+				config.cancel!.abort(new TimeoutError());
 			}, timeout);
 		}
 
@@ -254,14 +254,7 @@ export class HttpClient {
 				...cfg,
 			};
 		}
-
-		this.#timeoutReason = new TimeoutError();
 	}
-
-	/**
-	 * Reason for timeout
-	 */
-	readonly #timeoutReason: TimeoutError;
 
 	/**
 	 * Client base config.
