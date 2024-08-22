@@ -14,7 +14,11 @@ import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.t
 import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { HttpError } from './errors/http.error.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
-import { HttpClient } from './http.client.ts';
+import {
+	HttpClient,
+	type RequestInterceptor,
+	type ResponseInterceptor,
+} from './http.client.ts';
 
 describe(HttpClient, () => {
 	let _httpClient: HttpClient;
@@ -59,14 +63,6 @@ describe(HttpClient, () => {
 	});
 
 	// tests
-	test('common http client should be defined', () => {
-		expect(_httpClient).toBeDefined();
-	});
-
-	test('alternative http client should be defined and configured', () => {
-		expect(_altHttpClient).toBeDefined();
-	});
-
 	test('failed request does not throw on throwOnError false', async () => {
 		// mocking phase
 		_serverResponse.mockImplementationOnce((_, response) => {
@@ -368,6 +364,18 @@ describe(HttpClient, () => {
 		});
 	});
 
+	test('base URL is not required in initial config', async () => {
+		const client = new HttpClient({});
+
+		// request phase
+		await client.request(_URL);
+
+		// assertion data
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+
+		expect(receivedUrl).toBe(_URL);
+	});
+
 	test('can get and set config', () => {
 		const initialTimeout = 1;
 		const expectedTimeout = 2;
@@ -400,5 +408,42 @@ describe(HttpClient, () => {
 		expect(client.config.headers?.[expectedHeaderKey]).toBe(
 			expectedHeaderValue,
 		);
+	});
+
+	test('can intercept request config', async () => {
+		const expectedHeaders = { anyHeader: 'anyValue' };
+		const mockRequestInterceptor = vi.fn<RequestInterceptor>((config) => {
+			config.headers = expectedHeaders;
+		});
+		const client = new HttpClient({
+			interceptors: { request: mockRequestInterceptor },
+		});
+
+		// request phase
+		await client.request(_URL);
+
+		// assertion data
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+		const receivedConfig = _fetchMock.mock.calls[0][1];
+
+		expect(receivedUrl).toBe(_URL);
+		expect(mockRequestInterceptor).toHaveBeenCalledOnce();
+		expect(receivedConfig?.headers).toStrictEqual(expectedHeaders);
+	});
+
+	test('can intercept response', async () => {
+		const mockResponeInterceptor = vi.fn<ResponseInterceptor>();
+		const client = new HttpClient({
+			interceptors: { response: mockResponeInterceptor },
+		});
+
+		// request phase
+		await client.request(_URL);
+
+		// assertion data
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+
+		expect(receivedUrl).toBe(_URL);
+		expect(mockResponeInterceptor).toHaveBeenCalledOnce();
 	});
 });
