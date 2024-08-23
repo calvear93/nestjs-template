@@ -5,7 +5,9 @@ import { TimeoutError } from './errors/timeout.error.ts';
 
 type Primitive = bigint | boolean | number | string | null | undefined;
 
-export type OnRequestInterceptor = (options: HttpRequestOptions) => void;
+export type OnRequestInterceptor = (
+	options: HttpRequestOptions,
+) => Promise<void> | void;
 
 export type RequestURL = URL | string;
 
@@ -137,7 +139,7 @@ export class HttpClient {
 			},
 		};
 
-		mergedConfig.onRequest?.(mergedConfig);
+		await mergedConfig.onRequest?.(mergedConfig);
 
 		const { query, timeout, ...config } = mergedConfig;
 
