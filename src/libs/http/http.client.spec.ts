@@ -14,11 +14,7 @@ import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.t
 import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { HttpError } from './errors/http.error.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
-import {
-	HttpClient,
-	type RequestInterceptor,
-	type ResponseInterceptor,
-} from './http.client.ts';
+import { HttpClient, type OnRequestInterceptor } from './http.client.ts';
 
 describe(HttpClient, () => {
 	let _httpClient: HttpClient;
@@ -412,11 +408,11 @@ describe(HttpClient, () => {
 
 	test('can intercept request config', async () => {
 		const expectedHeaders = { anyHeader: 'anyValue' };
-		const mockRequestInterceptor = vi.fn<RequestInterceptor>((config) => {
+		const mockRequestInterceptor = vi.fn<OnRequestInterceptor>((config) => {
 			config.headers = expectedHeaders;
 		});
 		const client = new HttpClient({
-			interceptors: { request: mockRequestInterceptor },
+			onRequest: mockRequestInterceptor,
 		});
 
 		// request phase
@@ -429,21 +425,5 @@ describe(HttpClient, () => {
 		expect(receivedUrl).toBe(_URL);
 		expect(mockRequestInterceptor).toHaveBeenCalledOnce();
 		expect(receivedConfig?.headers).toStrictEqual(expectedHeaders);
-	});
-
-	test('can intercept response', async () => {
-		const mockResponeInterceptor = vi.fn<ResponseInterceptor>();
-		const client = new HttpClient({
-			interceptors: { response: mockResponeInterceptor },
-		});
-
-		// request phase
-		await client.request(_URL);
-
-		// assertion data
-		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
-
-		expect(receivedUrl).toBe(_URL);
-		expect(mockResponeInterceptor).toHaveBeenCalledOnce();
 	});
 });

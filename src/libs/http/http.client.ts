@@ -5,9 +5,7 @@ import { TimeoutError } from './errors/timeout.error.ts';
 
 type Primitive = bigint | boolean | number | string | null | undefined;
 
-export type RequestInterceptor = (options: HttpRequestOptions) => void;
-
-export type ResponseInterceptor = (response: Response) => void;
+export type OnRequestInterceptor = (options: HttpRequestOptions) => void;
 
 export type RequestURL = URL | string;
 
@@ -139,7 +137,7 @@ export class HttpClient {
 			},
 		};
 
-		mergedConfig.interceptors?.request?.(mergedConfig);
+		mergedConfig.onRequest?.(mergedConfig);
 
 		const { query, timeout, ...config } = mergedConfig;
 
@@ -168,8 +166,6 @@ export class HttpClient {
 
 			throw error;
 		});
-
-		mergedConfig.interceptors?.response?.(response);
 
 		if (clrFn) clearTimeout(clrFn);
 		if (this.#throwOnClientError && !response.ok)
@@ -318,10 +314,7 @@ export interface HttpRequestOptions
 	extends Omit<RequestInit, 'signal' | 'window'> {
 	cancel?: AbortController;
 	headers?: Record<string, string>;
-	interceptors?: {
-		request?: RequestInterceptor;
-		response?: ResponseInterceptor;
-	};
+	onRequest?: OnRequestInterceptor;
 	query?: Record<string, Primitive>;
 	timeout?: millis;
 }
