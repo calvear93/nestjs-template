@@ -1,6 +1,3 @@
 {
-	"recommendations": [
-		"dbaeumer.vscode-eslint",
-		"svipas.prettier-plus"
-	]
+	"recommendations": ["dbaeumer.vscode-eslint", "svipas.prettier-plus"]
 }
