@@ -36,7 +36,7 @@ WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
 RUN pnpm install --frozen-lockfile
 # builds the app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN pnpm build
 
 
@@ -80,14 +80,14 @@ COPY --from=bundler ${APP_DIR} ${APP_DIR}
 # alpine security updates
 RUN apk --no-cache -U upgrade
 # localization
-ENV TZ ${TIME_ZONE}
-ENV LANG ${LANG}
+ENV TZ=${TIME_ZONE}
+ENV LANG=${LANG}
 # non root user mode
 RUN chown -R node:node ${APP_DIR}
 USER node
 
 # exec command
-ENV NODE_ENV production
+ENV NODE_ENV=production
 ENTRYPOINT ["node"]
 CMD ["main"]
 

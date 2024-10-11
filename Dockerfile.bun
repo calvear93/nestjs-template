@@ -38,7 +38,7 @@ WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
 RUN pnpm install --frozen-lockfile
 # builds the app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN pnpm build
 COPY 'package.json' 'pnpm-lock.yaml' ${OUT_DIR}/
 
@@ -81,11 +81,11 @@ WORKDIR ${APP_DIR}
 # build artifacts
 COPY --from=bundler ${APP_DIR} ${APP_DIR}
 # localization
-ENV TZ ${TIME_ZONE}
-ENV LANG ${LANG}
+ENV TZ=${TIME_ZONE}
+ENV LANG=${LANG}
 
 # exec command
-ENV NODE_ENV production
+ENV NODE_ENV=production
 ENTRYPOINT ["bun"]
 CMD ["main.js"]
 
