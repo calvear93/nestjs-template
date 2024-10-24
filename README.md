@@ -50,7 +50,7 @@ it environment may be 'dev' or 'release'.
 
 | Command                      | Action                       |
 | ---------------------------- | ---------------------------- |
-| pnpm start:`<env>`           | executes the app             |
+| node start:`<env>`           | executes the app             |
 | pnpm build:`<env>`           | build the app                |
 | pnpm preview                 | builds and serves the app    |
 | pnpm test:`<env>`            | executes tests               |

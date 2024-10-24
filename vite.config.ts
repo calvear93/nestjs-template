@@ -66,10 +66,11 @@ function packageJson(): PluginOption {
 	};
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /**
  * Loads environment variables for define injector.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function loadEnv() {
 	if (process.env.NODE_ENV === 'production') {
 		return Object.fromEntries(
@@ -95,7 +96,6 @@ function loadEnv() {
  * await writeFile('dist/.npmrc', npmrc);
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function toKeyPairContent(data: Record<string, boolean | number | string>) {
 	let content = '';
 
