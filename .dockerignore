@@ -14,9 +14,6 @@ jspm_packages
 .rollup.cache
 vite.config.ts.*
 
-# Wireit cache
-.wireit
-
 # test reports and coverage directory
 .reports
 __reports__
