@@ -1,6 +1,7 @@
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
+import { FastifyRequest } from 'fastify';
 import { createSecurityGuard } from '#libs/decorators';
 
 /**
@@ -62,7 +63,7 @@ export class ApiKeyGuard implements CanActivate {
 	 * @returns can be executed
 	 */
 	canActivate(context: ExecutionContext): boolean {
-		const { headers } = context.switchToHttp().getRequest();
+		const { headers } = context.switchToHttp().getRequest<FastifyRequest>();
 		const apiKey = headers[this._headerName];
 
 		return apiKey === this._apiKey;
