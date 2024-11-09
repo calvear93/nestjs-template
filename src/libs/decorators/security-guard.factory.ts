@@ -21,12 +21,13 @@ const createSecureDecorator = <G extends Class<any>>(
 	const guard = UseGuards(args.length === 0 ? Guard : new Guard(...args));
 	const schema = ApiSecurity(guardName);
 
-	const apply = (descriptor: PropertyDescriptor) =>
+	const apply = (descriptor: PropertyDescriptor) => {
 		applyDecorators(guard, schema)(
 			descriptor.value,
 			descriptor.value.name,
 			descriptor,
 		);
+	};
 
 	return (): ClassDecorator & MethodDecorator => {
 		return <T extends Function>(

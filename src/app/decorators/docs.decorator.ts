@@ -4,6 +4,8 @@ import {
 	type DecoratorsLookUp,
 } from '#libs/decorators';
 
+const SWAGGER_UI = process.env.SWAGGER_UI;
+
 /**
  * Decorator factory for apply Swagger
  * docs to Controller and its methods.
@@ -15,9 +17,7 @@ import {
 export function ApplyControllerDocs(
 	decorators: DecoratorsLookUp,
 ): ClassDecorator {
-	return process.env.SWAGGER_UI === 'true'
-		? ApplyToClass(decorators)
-		: () => void 0;
+	return SWAGGER_UI === 'true' ? ApplyToClass(decorators) : () => void 0;
 }
 
 /**
@@ -29,7 +29,5 @@ export function ApplyControllerDocs(
  * @returns property decorator if swagger is enabled
  */
 export function ApplyDtoDocs(decorators: DecoratorsLookUp): PropertyDecorator {
-	return process.env.SWAGGER_UI === 'true'
-		? ApplyToProperty(decorators)
-		: () => void 0;
+	return SWAGGER_UI === 'true' ? ApplyToProperty(decorators) : () => void 0;
 }
