@@ -13,6 +13,14 @@ import { type SampleController } from './sample.controller.ts';
 
 export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 	class: [ApiTags('Sample')],
+	common: {
+		method: [
+			ApiResponse({
+				description: 'Internal error',
+				status: 500,
+			}),
+		],
+	},
 	method: {
 		dto: [
 			ApiOperation({
@@ -60,10 +68,6 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				status: 200,
 				type: String,
 			}),
-			ApiResponse({
-				description: 'Internal error',
-				status: 500,
-			}),
 		],
 		sum: [
 			ApiOperation({
@@ -82,10 +86,6 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				description: 'Sum result',
 				status: 200,
 				type: Number,
-			}),
-			ApiResponse({
-				description: 'Internal error',
-				status: 500,
 			}),
 		],
 	},

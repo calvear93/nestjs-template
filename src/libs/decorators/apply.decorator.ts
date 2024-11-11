@@ -8,8 +8,12 @@ type ExtractMembersMatching<T, V, R> = {
  */
 export interface DecoratorsLookUp<T extends object = any> {
 	class?: ClassDecorator[];
+	common?: {
+		method?: MethodDecorator[];
+		property?: MethodDecorator[];
+	};
 	method?: ExtractMembersMatching<T, Function, MethodDecorator[]>;
-	properties?: ExtractMembersMatching<T, PropertyKey, MethodDecorator[]>;
+	property?: ExtractMembersMatching<T, PropertyKey, MethodDecorator[]>;
 }
 
 export type DecoratorsLookUpFn<T extends object = any> =
@@ -64,6 +68,7 @@ export const getDecorators = (
  */
 export function ApplyToClass({
 	class: __class__ = [],
+	common,
 	method,
 }: DecoratorsLookUp): ClassDecorator {
 	return <T extends Function>(target: T) => {
@@ -74,7 +79,7 @@ export function ApplyToClass({
 
 		// apply method decorators
 		for (const key of Object.keys(method)) {
-			const decorators = method[key];
+			const decorators = method[key]?.concat(common?.method ?? []);
 
 			const property = Object.getOwnPropertyDescriptor(
 				target.prototype,
@@ -119,16 +124,17 @@ export function ApplyToClass({
  * @returns property decorator
  */
 export function ApplyToProperty({
-	properties,
+	common,
+	property,
 }: DecoratorsLookUp): PropertyDecorator {
-	if (!properties) return () => void 0;
+	if (!property) return () => void 0;
 
 	return <T extends object, Y>(
 		target: T,
 		key: PropertyKey,
 		descriptor?: TypedPropertyDescriptor<Y>,
 	) => {
-		const decorators = properties[key as any];
+		const decorators = property[key as any]?.concat(common?.property ?? []);
 
 		if (!decorators) return;
 
