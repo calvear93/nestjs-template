@@ -7,6 +7,7 @@ type Primitive = bigint | boolean | number | string | null | undefined;
 
 export type OnRequestInterceptor = (
 	options: HttpRequestOptions,
+	url: RequestURL,
 ) => Promise<void> | void;
 
 export type RequestURL = URL | string;
@@ -139,7 +140,7 @@ export class HttpClient {
 			},
 		};
 
-		await mergedConfig.onRequest?.(mergedConfig);
+		await mergedConfig.onRequest?.(mergedConfig, url);
 
 		const { query, timeout, ...config } = mergedConfig;
 
