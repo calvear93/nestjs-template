@@ -1,5 +1,6 @@
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
+import promise from 'eslint-plugin-promise';
 import redos from 'eslint-plugin-redos';
 import regexp from 'eslint-plugin-regexp';
 import sonarjs from 'eslint-plugin-sonarjs';
@@ -289,6 +290,28 @@ export default [
 			'sonarjs/prefer-object-literal': ERROR,
 			'sonarjs/prefer-single-boolean-return': ERROR,
 			'sonarjs/prefer-while': ERROR,
+		},
+	},
+	// #endregion
+
+	// #region promise
+	{
+		files: [SRC_GLOB],
+		plugins: { promise },
+		rules: {
+			'promise/always-return': OFF,
+			'promise/avoid-new': OFF,
+			'promise/catch-or-return': ERROR,
+			'promise/no-callback-in-promise': OFF,
+			'promise/no-multiple-resolved': ERROR,
+			'promise/no-nesting': WARN,
+			'promise/no-new-statics': ERROR,
+			'promise/no-promise-in-callback': WARN,
+			'promise/no-return-in-finally': WARN,
+			'promise/no-return-wrap': WARN,
+			'promise/param-names': WARN,
+			'promise/prefer-await-to-then': WARN,
+			'promise/valid-params': WARN,
 		},
 	},
 	// #endregion
