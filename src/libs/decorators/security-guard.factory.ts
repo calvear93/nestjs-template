@@ -7,6 +7,21 @@ const isString = (key: PropertyKey): key is string => typeof key === 'string';
 const isFn = (value: Function | object): value is Function =>
 	value instanceof Function;
 
+const setSignal = (
+	signal: symbol,
+	value: any,
+	target: object,
+	key?: PropertyKey,
+) => {
+	if (!key) return;
+	Reflect.defineMetadata(signal, value, target, key.toString());
+};
+
+const getSignal = (signal: symbol, target: object, key?: string) => {
+	if (!key) return null;
+	return Reflect.getMetadata(signal, target, key);
+};
+
 /**
  * Decorates your controller or method
  * with a security guard, and applies
@@ -21,6 +36,8 @@ const createSecureDecorator = <G extends Class<any>>(
 	const guard = UseGuards(args.length === 0 ? Guard : new Guard(...args));
 	const schema = ApiSecurity(guardName);
 
+	const lockSignal = Symbol(guardName);
+
 	const apply = (descriptor: PropertyDescriptor) => {
 		applyDecorators(guard, schema)(
 			descriptor.value,
@@ -32,15 +49,17 @@ const createSecureDecorator = <G extends Class<any>>(
 	return (): ClassDecorator & MethodDecorator => {
 		return <T extends Function>(
 			target: T | object,
-			_?: PropertyKey,
+			propertyKey?: PropertyKey,
 			descriptor?: PropertyDescriptor,
 		) => {
-			// class decoration
+			// method decoration
 			if (!isFn(target)) {
+				// enables lock for avoid re-apply guard in class decoration
+				setSignal(lockSignal, true, target, propertyKey);
 				return descriptor && apply(descriptor);
 			}
 
-			// method decoration
+			// class decoration
 			const descriptors = Object.getOwnPropertyDescriptors(
 				target.prototype,
 			);
@@ -49,13 +68,10 @@ const createSecureDecorator = <G extends Class<any>>(
 
 			// apply to class methods
 			for (const key of keys) {
-				const ignore = Reflect.getMetadata(
-					allowSignal,
-					target.prototype,
-					key,
-				);
+				const locked = getSignal(lockSignal, target.prototype, key);
+				const ignored = getSignal(allowSignal, target.prototype, key);
 
-				if (ignore || key === 'constructor') continue;
+				if (ignored || locked || key === 'constructor') continue;
 
 				apply(descriptors[key]);
 			}
