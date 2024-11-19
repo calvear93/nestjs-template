@@ -1,5 +1,5 @@
-import { BadRequestException } from '@nestjs/common';
 import type { ZodError } from 'zod';
+import { BadRequestException } from '@nestjs/common';
 
 /**
  * ZOD schema validation error.

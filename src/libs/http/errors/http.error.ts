@@ -1,5 +1,5 @@
-import { HttpStatusCode } from '../enums/http-status.enum.ts';
 import { type HttpResponse } from '../http.client.ts';
+import { HttpStatusCode } from '../enums/http-status.enum.ts';
 
 /**
  * Http Error.

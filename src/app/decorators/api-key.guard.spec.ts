@@ -1,8 +1,8 @@
-import { randomUUID } from 'node:crypto';
-import type { ExecutionContext } from '@nestjs/common';
-import type { HttpArgumentsHost } from '@nestjs/common/interfaces/index.ts';
-import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
+import { beforeAll, describe, expect, test, vi } from 'vitest';
+import { randomUUID } from 'node:crypto';
+import type { HttpArgumentsHost } from '@nestjs/common/interfaces/index.ts';
+import type { ExecutionContext } from '@nestjs/common';
 import { ApiKeyGuard } from './api-key.guard.ts';
 
 describe(ApiKeyGuard, () => {
@@ -19,7 +19,7 @@ describe(ApiKeyGuard, () => {
 
 	// hooks
 	beforeAll(() => {
-		_guard = new ApiKeyGuard(_headerName, _apiKey);
+		_guard = new ApiKeyGuard();
 	});
 
 	// tests
@@ -28,7 +28,7 @@ describe(ApiKeyGuard, () => {
 			headers: { [_headerName]: _apiKey },
 		});
 
-		const result = _guard.canActivate(_mockCtx);
+		const result = _guard.canActivate(_mockCtx, _headerName, _apiKey);
 
 		expect(result).toBe(true);
 	});
@@ -38,7 +38,7 @@ describe(ApiKeyGuard, () => {
 			headers: { [_headerName]: 'bad_api_key' },
 		});
 
-		const result = _guard.canActivate(_mockCtx);
+		const result = _guard.canActivate(_mockCtx, _headerName, _apiKey);
 
 		expect(result).toBe(false);
 	});

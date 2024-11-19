@@ -1,13 +1,13 @@
 /* eslint-disable perfectionist/sort-objects */
-import { BadRequestException } from '@nestjs/common';
-import { type OpenAPIObject } from '@nestjs/swagger';
-import { describe, expect, test } from 'vitest';
 import { z } from 'zod';
+import { describe, expect, test } from 'vitest';
+import { type OpenAPIObject } from '@nestjs/swagger';
+import { BadRequestException } from '@nestjs/common';
 import { ZodValidationPipe } from './zod.pipe.ts';
 import {
+	registerDtoOpenApiSchemas,
 	ZodDto,
 	ZodIterableDto,
-	registerDtoOpenApiSchemas,
 } from './zod-dto.ts';
 
 describe(ZodValidationPipe, () => {

@@ -1,10 +1,10 @@
-import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 import {
 	type AnyZodObject,
+	z,
 	type ZodOptionalType,
 	type ZodTypeAny,
-	z,
 } from 'zod';
+import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 
 interface ParsingArgs<T> {
 	schema: SchemaObject;
@@ -329,6 +329,7 @@ const catchAll = ({ schema }: ParsingArgs<ZodTypeAny>): SchemaObject => {
 };
 
 const PARSERS_LOOKUP = {
+	ZodVoid: toVoidOrNever,
 	ZodAny: catchAll,
 	ZodArray: toArray,
 	ZodBigInt: toBigInt,
@@ -359,7 +360,6 @@ const PARSERS_LOOKUP = {
 	ZodUndefined: toVoidOrNever,
 	ZodUnion: toUnion,
 	ZodUnknown: catchAll,
-	ZodVoid: toVoidOrNever,
 };
 
 const hasLookupParser = (key: string): key is keyof typeof PARSERS_LOOKUP => {

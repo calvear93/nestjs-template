@@ -1,6 +1,6 @@
-import swc from 'unplugin-swc';
-import { checker } from 'vite-plugin-checker';
 import type { UserConfigExport } from 'vitest/config';
+import { checker } from 'vite-plugin-checker';
+import swc from 'unplugin-swc';
 
 export default {
 	clearScreen: false,

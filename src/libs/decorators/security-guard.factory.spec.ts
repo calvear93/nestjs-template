@@ -1,15 +1,15 @@
-import { afterEach } from 'node:test';
-import { type CanActivate } from '@nestjs/common';
+import { mock } from 'vitest-mock-extended';
 import {
-	type MockInstance,
 	afterAll,
 	beforeAll,
 	describe,
 	expect,
+	type MockInstance,
 	test,
 	vi,
 } from 'vitest';
-import { mock } from 'vitest-mock-extended';
+import { afterEach } from 'node:test';
+import { type CanActivate } from '@nestjs/common';
 import { createSecurityGuard } from './security-guard.factory.ts';
 
 class MockDecoratedClass {
@@ -24,7 +24,7 @@ class MockGuard implements CanActivate {
 	}
 }
 
-describe('security-guard.factory', () => {
+describe('Security Guard Factory', () => {
 	const _mockDecoratedClass = new MockDecoratedClass();
 	let _spyReflectDefineMetadata: MockInstance;
 
@@ -35,6 +35,7 @@ describe('security-guard.factory', () => {
 
 	afterEach(() => {
 		vi.resetAllMocks();
+		vi.clearAllMocks();
 	});
 
 	afterAll(() => {
@@ -70,7 +71,7 @@ describe('security-guard.factory', () => {
 		);
 		allowDecorate(_mockDecoratedClass, 'key', {} as any);
 
-		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(3);
+		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(4);
 	});
 
 	test('when enabled and is a fn, return guard and allow decorators', () => {
@@ -86,5 +87,31 @@ describe('security-guard.factory', () => {
 		);
 
 		expect(_spyReflectDefineMetadata).toBeDefined();
+	});
+
+	test('asdasd', () => {
+		const [guard, allow] = createSecurityGuard(MockGuard, true);
+		const _mockCanActivate = vi.fn();
+		const _mockClass = class {
+			canActivate = _mockCanActivate;
+		};
+
+		const guarDecorate = guard();
+		const allowDecorate = allow();
+
+		guarDecorate(
+			class {
+				canActivate = _mockCanActivate;
+			},
+			'',
+			mock<PropertyDescriptor>({ value: { name: '' } }),
+		);
+		allowDecorate(_mockDecoratedClass, 'key', {} as any);
+
+		const instance = new _mockClass();
+		instance.canActivate();
+
+		expect(_mockCanActivate).toHaveBeenCalled();
+		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(6);
 	});
 });

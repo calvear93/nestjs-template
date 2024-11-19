@@ -11,9 +11,9 @@ export const phone = () =>
 		.superRefine((value, context) => {
 			if (!PHONE_REGEX.test(value)) {
 				context.addIssue({
+					validation: 'phone' as StringValidation,
 					code: z.ZodIssueCode.invalid_string,
 					message: `Expected a valid phone, received '${value}'`,
-					validation: 'phone' as StringValidation,
 				});
 
 				return z.INVALID;

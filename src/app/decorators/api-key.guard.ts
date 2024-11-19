@@ -1,8 +1,8 @@
-import type { CanActivate, ExecutionContext } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
-import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 import { FastifyRequest } from 'fastify';
-import { createSecurityGuard } from '#libs/decorators';
+import { createSecurityGuard, type SecurityGuard } from '#libs/decorators';
+import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
+import type { ExecutionContext } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 /**
  * ApiKey guard.
@@ -26,16 +26,16 @@ import { createSecurityGuard } from '#libs/decorators';
  *	  .build();
  *
  *  // api-key.guard.ts
- *	import { SecurityGuardFactory } from '...';
+ *	import { createSecurityGuard } from '...';
  *	import { ApiKeyGuard } from '...';
  *
- *	export [ApiKey, AllowAnonymous] = SecurityGuardFactory(
+ *	export [ApiKey, AllowAnonymous] = createSecurityGuard(
  *		ApiKeyGuard,
  *		...,
  *	);
  *
  *  // any.controller.ts
- *	import { ApiKey, AllowAnonymous } from '.../api-key.guard';
+ *	import { ApiKey, AllowAnonymous } from '.../api-key.guard.ts';
  *
  *	@Controller('sample')
  *	@ApiKey()
@@ -54,7 +54,7 @@ import { createSecurityGuard } from '#libs/decorators';
  * ```
  */
 @Injectable()
-export class ApiKeyGuard implements CanActivate {
+export class ApiKeyGuard implements SecurityGuard {
 	/**
 	 * Protects api with api-key
 	 *
@@ -62,17 +62,15 @@ export class ApiKeyGuard implements CanActivate {
 	 *
 	 * @returns can be executed
 	 */
-	canActivate(context: ExecutionContext): boolean {
+	canActivate(
+		context: ExecutionContext,
+		headerName: string,
+		apiKey: string,
+	): boolean {
 		const { headers } = context.switchToHttp().getRequest<FastifyRequest>();
-		const apiKey = headers[this._headerName];
 
-		return apiKey === this._apiKey;
+		return headers[headerName] === apiKey;
 	}
-
-	constructor(
-		private readonly _headerName: string,
-		private readonly _apiKey: string,
-	) {}
 }
 
 const HEADER_NAME = process.env.SECURITY_HEADER_NAME;

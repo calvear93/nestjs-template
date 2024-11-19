@@ -1,18 +1,18 @@
 import type { Server } from 'node:http';
-import { type INestApplication } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { FastifyAdapter } from '@nestjs/platform-fastify';
+import { registerDtoOpenApiSchemas, ZodValidationPipe } from '#libs/zod';
 import {
 	DocumentBuilder,
 	type SwaggerCustomOptions,
 	SwaggerModule,
 } from '@nestjs/swagger';
-import { ZodValidationPipe, registerDtoOpenApiSchemas } from '#libs/zod';
-import { AppModule } from './app.module.ts';
+import { FastifyAdapter } from '@nestjs/platform-fastify';
+import { NestFactory } from '@nestjs/core';
+import { type INestApplication } from '@nestjs/common';
 import {
 	ApiKeyGuard,
 	SECURITY_API_SCHEMA,
 } from './decorators/api-key.guard.ts';
+import { AppModule } from './app.module.ts';
 
 /**
  * Swagger base configuration.

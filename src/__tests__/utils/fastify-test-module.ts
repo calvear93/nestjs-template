@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
+import { type TestingModule } from '@nestjs/testing';
 import {
 	FastifyAdapter,
 	type NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { type TestingModule } from '@nestjs/testing';
 
 export const createFastifyApplication = async (
 	module: TestingModule,

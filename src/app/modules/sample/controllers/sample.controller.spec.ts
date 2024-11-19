@@ -1,5 +1,5 @@
-import { Test } from '@nestjs/testing';
 import { beforeAll, describe, expect, test } from 'vitest';
+import { Test } from '@nestjs/testing';
 import { SampleService } from '../services/sample.service.ts';
 import { SampleController } from './sample.controller.ts';
 
@@ -9,8 +9,8 @@ describe(SampleController, () => {
 	// hooks
 	beforeAll(async () => {
 		const module = await Test.createTestingModule({
-			controllers: [SampleController],
 			providers: [SampleService],
+			controllers: [SampleController],
 		}).compile();
 
 		_controller = module.get(SampleController);

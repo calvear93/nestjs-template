@@ -1,7 +1,7 @@
-import { HttpMethod } from './enums/http-method.enum.ts';
-import { HttpStatusCode } from './enums/http-status.enum.ts';
-import { HttpError } from './errors/http.error.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
+import { HttpError } from './errors/http.error.ts';
+import { HttpStatusCode } from './enums/http-status.enum.ts';
+import { HttpMethod } from './enums/http-method.enum.ts';
 
 type Primitive = bigint | boolean | number | string | null | undefined;
 

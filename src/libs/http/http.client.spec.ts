@@ -1,20 +1,20 @@
-import { type RequestListener, type Server } from 'node:http';
 import {
-	type Mock,
-	type MockInstance,
 	afterAll,
 	afterEach,
 	beforeAll,
 	describe,
 	expect,
+	type Mock,
+	type MockInstance,
 	test,
 	vi,
 } from 'vitest';
-import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
-import { HttpStatusCode } from './enums/http-status.enum.ts';
-import { HttpError } from './errors/http.error.ts';
-import { TimeoutError } from './errors/timeout.error.ts';
+import { type RequestListener, type Server } from 'node:http';
 import { HttpClient, type OnRequestInterceptor } from './http.client.ts';
+import { TimeoutError } from './errors/timeout.error.ts';
+import { HttpError } from './errors/http.error.ts';
+import { HttpStatusCode } from './enums/http-status.enum.ts';
+import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
 
 describe(HttpClient, () => {
 	let _httpClient: HttpClient;
