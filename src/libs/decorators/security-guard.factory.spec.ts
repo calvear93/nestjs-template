@@ -89,7 +89,7 @@ describe('Security Guard Factory', () => {
 		expect(_spyReflectDefineMetadata).toBeDefined();
 	});
 
-	test('asdasd', () => {
+	test('calls canActivate when enabled', () => {
 		const [guard, allow] = createSecurityGuard(MockGuard, true);
 		const _mockCanActivate = vi.fn();
 		const _mockClass = class {

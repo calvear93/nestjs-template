@@ -113,7 +113,7 @@ const createSecureDecorator = <G extends SecurityGuard, A extends any[]>(
 		);
 	};
 
-	return (...args: A | never[]): ClassDecorator & MethodDecorator => {
+	return (...args: A): ClassDecorator & MethodDecorator => {
 		args = [...sharedArgs, ...args] as any;
 		return <T extends Function>(
 			target: T | object,
