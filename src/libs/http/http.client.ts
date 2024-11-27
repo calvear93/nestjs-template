@@ -172,9 +172,9 @@ export class HttpClient {
 
 		if (clrFn) clearTimeout(clrFn);
 		if (this.#throwOnClientError && !response.ok)
-			throw new HttpError(response);
+			throw new HttpError(response as HttpResponse);
 
-		return response;
+		return response as HttpResponse;
 	}
 
 	/**
@@ -257,10 +257,7 @@ export class HttpClient {
 
 			if (url) this.#baseUrl = url?.endsWith('/') ? url : `${url}/`;
 			this.#throwOnClientError = throwOnClientError;
-			this.#baseConfig = {
-				cache: 'no-cache',
-				...cfg,
-			};
+			this.#baseConfig = cfg;
 		}
 	}
 

@@ -109,7 +109,7 @@ export default [
 			'no-prototype-builtins': ERROR,
 			'no-redeclare': ERROR,
 			'no-regex-spaces': ERROR,
-			'no-return-await': WARN,
+			'no-return-await': OFF,
 			'no-self-assign': ERROR,
 			'no-self-compare': WARN,
 			'no-setter-return': ERROR,
@@ -237,6 +237,7 @@ export default [
 				},
 			],
 			'@typescript-eslint/no-wrapper-object-types': WARN,
+			'@typescript-eslint/return-await': [ERROR, 'in-try-catch'],
 			'@typescript-eslint/sort-type-constituents': [
 				WARN,
 				{
