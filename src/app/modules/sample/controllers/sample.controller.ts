@@ -6,10 +6,10 @@ import {
 	Post,
 	Query,
 } from '@nestjs/common';
-import { SampleService } from '../services/sample.service.ts';
-import { SampleDto } from '../schemas/sample.dto.ts';
-import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
 import { AllowAnonymous, ApiKey } from '../../../decorators/api-key.guard.ts';
+import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
+import { SampleDto } from '../schemas/sample.dto.ts';
+import { SampleService } from '../services/sample.service.ts';
 import { SampleControllerDocs } from './sample.controller.docs.ts';
 
 @ApiKey()

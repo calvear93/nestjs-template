@@ -1,10 +1,10 @@
-import type { Class } from 'type-fest';
-import { ApiSecurity } from '@nestjs/swagger';
 import {
 	applyDecorators,
 	type ExecutionContext,
 	UseGuards,
 } from '@nestjs/common';
+import { ApiSecurity } from '@nestjs/swagger';
+import type { Class } from 'type-fest';
 import {
 	type CanActivateArgs,
 	isFn,

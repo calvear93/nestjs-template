@@ -1,7 +1,7 @@
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { Test, type TestingModule } from '@nestjs/testing';
-import { HttpModule } from './http.module.ts';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { HttpClient } from './http.client.ts';
+import { HttpModule } from './http.module.ts';
 
 describe(HttpModule, () => {
 	let _module: TestingModule;

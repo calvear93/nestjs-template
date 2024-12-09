@@ -1,10 +1,10 @@
-import { checker } from 'vite-plugin-checker';
-import type { PluginOption, UserConfigExport } from 'vite';
-import swc from 'unplugin-swc';
 import { writeFile } from 'node:fs/promises';
-import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
-import { compilerOptions as tsconfig } from './tsconfig.json';
+import swc from 'unplugin-swc';
+import type { PluginOption, UserConfigExport } from 'vite';
+import { checker } from 'vite-plugin-checker';
 import { dependencies } from './package.json';
+import { compilerOptions as tsconfig } from './tsconfig.json';
+import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
 
 const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
 

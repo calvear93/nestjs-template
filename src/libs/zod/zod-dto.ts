@@ -1,4 +1,9 @@
 import {
+	type OpenAPIObject,
+	type ReferenceObject,
+	type SchemaObject,
+} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
+import {
 	type AnyZodObject,
 	type AnyZodTuple,
 	type RawCreateParams,
@@ -8,11 +13,6 @@ import {
 	type ZodRawShape,
 	type ZodTypeAny,
 } from 'zod';
-import {
-	type OpenAPIObject,
-	type ReferenceObject,
-	type SchemaObject,
-} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 import { zodToJsonSchema } from './json-schema.factory.ts';
 
 const registered: [name: string, jsonSchema: ReferenceObject | SchemaObject][] =

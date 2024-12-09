@@ -1,10 +1,10 @@
+import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 import {
 	type AnyZodObject,
 	z,
 	type ZodOptionalType,
 	type ZodTypeAny,
 } from 'zod';
-import { type SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 
 interface ParsingArgs<T> {
 	schema: SchemaObject;

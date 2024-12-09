@@ -1,3 +1,4 @@
+import { type RequestListener, type Server } from 'node:http';
 import {
 	afterAll,
 	afterEach,
@@ -9,12 +10,11 @@ import {
 	test,
 	vi,
 } from 'vitest';
-import { type RequestListener, type Server } from 'node:http';
-import { HttpClient, type OnRequestInterceptor } from './http.client.ts';
-import { TimeoutError } from './errors/timeout.error.ts';
-import { HttpError } from './errors/http.error.ts';
-import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
+import { HttpStatusCode } from './enums/http-status.enum.ts';
+import { HttpError } from './errors/http.error.ts';
+import { TimeoutError } from './errors/timeout.error.ts';
+import { HttpClient, type OnRequestInterceptor } from './http.client.ts';
 
 describe(HttpClient, () => {
 	let _httpClient: HttpClient;

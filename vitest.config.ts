@@ -1,6 +1,6 @@
-import type { UserConfigExport } from 'vitest/config';
-import { checker } from 'vite-plugin-checker';
 import swc from 'unplugin-swc';
+import { checker } from 'vite-plugin-checker';
+import type { UserConfigExport } from 'vitest/config';
 
 export default {
 	clearScreen: false,
@@ -15,7 +15,7 @@ export default {
 			terminal: true,
 			typescript: true,
 		}),
-	],
+	] as any,
 	test: {
 		benchmark: {
 			include: ['src/**/*.{bench,benchmark}.?(c|m)[jt]s'],

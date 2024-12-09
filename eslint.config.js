@@ -1,13 +1,13 @@
-import typescript from 'typescript-eslint';
-import globals from 'globals';
-import vitest from 'eslint-plugin-vitest';
-import unicorn from 'eslint-plugin-unicorn';
-import sonarjs from 'eslint-plugin-sonarjs';
-import regexp from 'eslint-plugin-regexp';
-import redos from 'eslint-plugin-redos';
-import promise from 'eslint-plugin-promise';
-import prettier from 'eslint-plugin-prettier/recommended';
 import perfectionist from 'eslint-plugin-perfectionist';
+import prettier from 'eslint-plugin-prettier/recommended';
+import promise from 'eslint-plugin-promise';
+import redos from 'eslint-plugin-redos';
+import regexp from 'eslint-plugin-regexp';
+import sonarjs from 'eslint-plugin-sonarjs';
+import unicorn from 'eslint-plugin-unicorn';
+import vitest from 'eslint-plugin-vitest';
+import globals from 'globals';
+import typescript from 'typescript-eslint';
 
 const SRC_GLOB = '**/*.{js,cjs,mjs,ts,cts,mts}';
 const TYPESCRIPT_GLOB = '**/*.{ts,cts,mts}';
@@ -502,7 +502,7 @@ export default [
 		settings: {
 			perfectionist: {
 				ignoreCase: false,
-				order: 'desc',
+				order: 'asc',
 				partitionByNewLine: true,
 				type: 'natural',
 			},

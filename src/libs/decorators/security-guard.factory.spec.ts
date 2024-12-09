@@ -1,4 +1,5 @@
-import { mock } from 'vitest-mock-extended';
+import { type CanActivate } from '@nestjs/common';
+import { afterEach } from 'node:test';
 import {
 	afterAll,
 	beforeAll,
@@ -8,8 +9,7 @@ import {
 	test,
 	vi,
 } from 'vitest';
-import { afterEach } from 'node:test';
-import { type CanActivate } from '@nestjs/common';
+import { mock } from 'vitest-mock-extended';
 import { createSecurityGuard } from './security-guard.factory.ts';
 
 class MockDecoratedClass {

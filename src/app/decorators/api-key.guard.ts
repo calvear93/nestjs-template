@@ -1,8 +1,8 @@
-import { FastifyRequest } from 'fastify';
-import { createSecurityGuard, type SecurityGuard } from '#libs/decorators';
-import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
 import type { ExecutionContext } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
+import { type SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
+import { createSecurityGuard, type SecurityGuard } from '#libs/decorators';
+import { FastifyRequest } from 'fastify';
 
 /**
  * ApiKey guard.

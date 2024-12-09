@@ -1,5 +1,5 @@
-import { beforeAll, describe, expect, test } from 'vitest';
 import { Test } from '@nestjs/testing';
+import { beforeAll, describe, expect, test } from 'vitest';
 import { SampleService } from '../services/sample.service.ts';
 import { SampleController } from './sample.controller.ts';
 
