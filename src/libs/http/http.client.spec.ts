@@ -29,7 +29,7 @@ describe(HttpClient, () => {
 
 	// hooks
 	beforeAll(async () => {
-		vi.useFakeTimers();
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 
 		// mock server
 		[_server, _serverResponse, port] = await createHttpMockServer();

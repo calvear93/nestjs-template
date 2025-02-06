@@ -29,8 +29,6 @@
 				"run",
 				"test:${input:environmentName}",
 				"${relativeFile}",
-				"--inspect",
-				"--no-threads",
 				"--test-timeout=0"
 			],
 			"outFiles": ["${workspaceFolder}/src/**/*.ts"],
@@ -49,8 +47,6 @@
 			"runtimeArgs": [
 				"run",
 				"test:${input:environmentName}",
-				"--inspect",
-				"--no-threads",
 				"--test-timeout=0"
 			],
 			"outFiles": ["${workspaceFolder}/src/**/*.ts"],

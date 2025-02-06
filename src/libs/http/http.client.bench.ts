@@ -12,7 +12,7 @@ describe(HttpClient, async () => {
 	const _url = `http://localhost:${PORT}`;
 	const _responseBody = { message: 'Ok' };
 
-	const [_, _serverMock] = await createHttpMockServer(PORT);
+	const [, _serverMock] = await createHttpMockServer(PORT);
 	const _provider = new HttpClient({ url: _url });
 
 	_serverMock.mockImplementation((_, response) => {
