@@ -17,30 +17,30 @@
 
 ## 📥 **Getting Started**
 
--   Replace globally these terms:
+- Replace globally these terms:
 
-    -   `(((base-path)))` api base path, i.e. sample (for get /api/sample/v*/*)
-    -   `(((app-name)))` app name, i.e. sample-api
-    -   `(((app-title)))` app title, i.e. Sample API
-    -   `(((project-name)))` project name, i.e. my-project
+    - `(((base-path)))` api base path, i.e. sample (for get /api/sample/v*/*)
+    - `(((app-name)))` app name, i.e. sample-api
+    - `(((app-title)))` app title, i.e. Sample API
+    - `(((project-name)))` project name, i.e. my-project
 
--   Install [NodeJS](https://nodejs.org/es/).
--   Install [PNPM](https://pnpm.io/installation)
--   Execute `pnpm install` command.
--   Run either `pnpm start:dev` or `pnpm test:dev` commands.
+- Install [NodeJS](https://nodejs.org/es/).
+- Install [PNPM](https://pnpm.io/installation)
+- Execute `pnpm install` command.
+- Run either `pnpm start:dev` or `pnpm test:dev` commands.
 
--   Using Docker.
-    -   Exec `pnpm exec env export -p ".env" -e dev -m build`
-    -   Exec `docker build --no-cache -f Dockerfile --tag image_name .`
-    -   Exec `docker run --env-file .env -d -it -p 8080:8080/tcp --name container_name image_name`
-    -   Open `http://localhost:8080/api/(((base-path)))` in browser
+- Using Docker.
+    - Exec `pnpm exec env export -p ".env" -e dev -m build`
+    - Exec `docker build --no-cache -f Dockerfile --tag image_name .`
+    - Exec `docker run --env-file .env -d -it -p 8080:8080/tcp --name container_name image_name`
+    - Open `http://localhost:8080/api/(((base-path)))` in browser
 
 ## 📋 **Branches and Environments**
 
 Project has 2 environments (infrastructure) base for project building.
 
--   **dev (development)**: environment with breaking changes and new features.
--   **release (production)**: release environment.
+- **dev (development)**: environment with breaking changes and new features.
+- **release (production)**: release environment.
 
 ## 🧪 **Executing**
 
@@ -58,3 +58,9 @@ it environment may be 'dev' or 'release'.
 | pnpm env:schema              | updates env JSON schema      |
 | pnpm format                  | code format                  |
 | pnpm lint                    | code style review            |
+
+## 🔥 **Helping Commands**
+
+| Command                     | Action                    |
+| --------------------------- | ------------------------- |
+| (get-command node.exe).Path | get current node exe path |
