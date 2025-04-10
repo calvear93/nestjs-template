@@ -4,13 +4,12 @@
 		"rootDir": ".",
 		"outDir": "dist",
 
-		"target": "es2022",
+		"target": "es2024",
 		"module": "preserve",
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 
 		"types": ["vite/client"],
-		"lib": ["es2024"],
 
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
