@@ -7,8 +7,8 @@ export declare global {
 		// numbers or booleans are loaded as string
 		interface ProcessEnv {
 			readonly APP_ENV: ENV;
-			readonly DEBUG?: string;
 			readonly NODE_ENV: MODE;
+			readonly DEBUG?: string;
 
 			// SECTION: project info from package.json
 			readonly APP_NAME: string;
@@ -25,8 +25,8 @@ export declare global {
 
 			// SECTION: api security
 			readonly SECURITY_API_KEY: string; // value of the api key header
-			readonly SECURITY_ENABLED?: 'false' | 'true';
 			readonly SECURITY_HEADER_NAME: string; // name of the api key header
+			readonly SECURITY_ENABLED?: 'false' | 'true';
 		}
 	}
 }

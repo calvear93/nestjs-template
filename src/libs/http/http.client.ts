@@ -160,10 +160,10 @@ export class HttpClient {
 		).catch((error) => {
 			if (error instanceof TypeError) {
 				throw new HttpError({
-					json: () => Promise.resolve(error.message),
 					ok: false,
 					status: HttpStatusCode.BAD_GATEWAY,
 					url,
+					json: () => Promise.resolve(error.message),
 				} as HttpResponse);
 			}
 

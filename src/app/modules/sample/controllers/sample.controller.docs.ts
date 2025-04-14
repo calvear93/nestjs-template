@@ -27,6 +27,7 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				summary: 'Receives, validate and returns a DTO',
 			}),
 			ApiBody({
+				schema: SampleDto.jsonSchema,
 				examples: {
 					example: {
 						description: 'example',
@@ -50,7 +51,6 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 						},
 					},
 				},
-				schema: SampleDto.jsonSchema,
 			}),
 			ApiResponse({
 				description: 'DTO',

@@ -50,11 +50,11 @@ describe(AppModule, () => {
 
 		const { body, statusCode } = await _app.inject({
 			method: HttpMethod.GET,
+			url: '/v1/basic/sum',
 			query: {
 				num1: num1.toString(),
 				num2: num2.toString(),
 			},
-			url: '/v1/basic/sum',
 		});
 
 		expect(statusCode).toBe(HttpStatusCode.OK);

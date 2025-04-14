@@ -73,7 +73,7 @@ export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 };
 
 export interface AppStartConfig {
-	port?: number;
 	prefix: string;
+	port?: number;
 	swagger?: boolean;
 }

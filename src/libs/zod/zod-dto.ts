@@ -197,8 +197,8 @@ export const registerDtoOpenApiSchemas = (
  */
 export interface ZodDto<Z extends ZodTypeAny = ZodTypeAny> {
 	readonly jsonSchema: SchemaObject;
-	registerOpenApi: () => void;
 	readonly schema: Z;
+	registerOpenApi: () => void;
 }
 
 /**

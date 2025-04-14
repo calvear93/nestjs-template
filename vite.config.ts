@@ -9,9 +9,16 @@ import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
 const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
 
 export default {
+	clearScreen: false,
 	build: {
 		minify: CODE_OPTIMIZE ? 'terser' : false,
+		sourcemap: tsconfigRelease.sourceMap,
+		ssr: true,
+		target: tsconfig.target,
+		terserOptions: { compress: false, keep_classnames: true },
 		rollupOptions: {
+			plugins: [packageJson()],
+			treeshake: CODE_OPTIMIZE,
 			input: {
 				main: 'src/main.ts',
 			},
@@ -21,27 +28,20 @@ export default {
 				preserveModules: true,
 				preserveModulesRoot: 'src',
 			},
-			plugins: [packageJson()],
-			treeshake: CODE_OPTIMIZE,
 		},
-		sourcemap: tsconfigRelease.sourceMap,
-		ssr: true,
-		target: tsconfig.target,
-		terserOptions: { compress: false, keep_classnames: true },
 	},
-	clearScreen: false,
 	// define: loadEnv(),
 	plugins: [
 		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
 		checker({
 			enableBuild: true,
+			terminal: true,
+			typescript: true,
 			eslint: {
 				dev: { logLevel: ['error'] },
 				lintCommand: 'eslint --cache',
 				useFlatConfig: true,
 			},
-			terminal: true,
-			typescript: true,
 		}),
 	],
 } satisfies UserConfigExport;

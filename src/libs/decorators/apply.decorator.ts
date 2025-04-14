@@ -7,11 +7,11 @@ type ExtractMembersMatching<T, V, R> = {
  * or properties for apply to class.
  */
 export interface DecoratorsLookUp<T extends object = any> {
-	class?: ClassDecorator[];
 	common?: {
 		method?: MethodDecorator[];
 		property?: MethodDecorator[];
 	};
+	class?: ClassDecorator[];
 	method?: ExtractMembersMatching<T, Function, MethodDecorator[]>;
 	property?: ExtractMembersMatching<T, PropertyKey, MethodDecorator[]>;
 }
