@@ -1,7 +1,6 @@
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
-import redos from 'eslint-plugin-redos';
 import regexp from 'eslint-plugin-regexp';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unicorn from 'eslint-plugin-unicorn';
@@ -460,6 +459,7 @@ export default [
 					newlinesBetween: 'ignore',
 					type: 'alphabetical',
 					groups: [
+						'tsconfig-path',
 						['builtin-type', 'builtin'],
 						['external-type', 'external'],
 						['internal-type', 'internal'],
@@ -471,6 +471,7 @@ export default [
 						'side-effect',
 						'side-effect-style',
 						'object',
+						'import',
 						'unknown',
 					],
 				},
@@ -630,14 +631,6 @@ export default [
 			'regexp/unicode-property': ERROR,
 			'regexp/use-ignore-case': ERROR,
 		},
-	},
-	// #endregion
-
-	// #region redos
-	{
-		files: [SRC_GLOB],
-		plugins: { redos },
-		rules: { 'redos/no-vulnerable': ERROR },
 	},
 	// #endregion
 
