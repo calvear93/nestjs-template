@@ -425,9 +425,12 @@ export default [
 			'perfectionist/sort-array-includes': WARN,
 			'perfectionist/sort-enums': [WARN, { sortByValue: true }],
 			'perfectionist/sort-exports': WARN,
+			'perfectionist/sort-heritage-clauses': WARN,
 			'perfectionist/sort-maps': WARN,
 			'perfectionist/sort-named-exports': WARN,
 			'perfectionist/sort-named-imports': WARN,
+			'perfectionist/sort-sets': WARN,
+			'perfectionist/sort-variable-declarations': WARN,
 			'perfectionist/sort-classes': [
 				WARN,
 				{
