@@ -471,8 +471,6 @@ export default [
 						['index-type', 'index'],
 						'type',
 						'style',
-						'side-effect',
-						'side-effect-style',
 						'object',
 						'import',
 						'unknown',
