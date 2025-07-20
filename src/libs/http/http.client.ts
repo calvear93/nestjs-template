@@ -189,22 +189,24 @@ export class HttpClient {
 	}
 
 	/**
-	 * Merges and normalizes request URL.
+	 * Merges and normalizes request URL
+	 * removing empty string, null and undefined values.
 	 *
 	 * @param query - query params
 	 */
 	#buildQuery(query?: Record<string, Primitive>) {
 		if (!query) return '';
 
-		return `?${Object.keys(query)
-			.map((key) => {
-				const value = query[key];
+		const params = new URLSearchParams();
 
-				if (!value) return '';
+		for (const key in query) {
+			const value = query[key];
+			if (value !== null && value !== undefined && value !== '') {
+				params.append(key, value.toString());
+			}
+		}
 
-				return `${key}=${query[key]}`;
-			})
-			.join('&')}`;
+		return params.size > 0 ? `?${params}` : '';
 	}
 
 	/**
