@@ -3,7 +3,9 @@ import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { HttpError } from './errors/http.error.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
 
-type Primitive = bigint | boolean | number | string | null | undefined;
+type Primitive = Date | bigint | boolean | number | string | null | undefined;
+interface QueryParams
+	extends Record<string, Primitive | Primitive[] | QueryParams> {}
 
 export type OnRequestInterceptor = (
 	options: HttpRequestOptions,
@@ -11,6 +13,14 @@ export type OnRequestInterceptor = (
 ) => Promise<void> | void;
 
 export type RequestURL = URL | string;
+
+const isNullish = (value: unknown): value is '' | null | undefined => {
+	return value === null || value === undefined || value === '';
+};
+
+const isNotNullish = (value: unknown): boolean => {
+	return !isNullish(value);
+};
 
 /**
  * Http client using fetch.
@@ -193,20 +203,45 @@ export class HttpClient {
 	 * removing empty string, null and undefined values.
 	 *
 	 * @param query - query params
+	 * @param prefix - for nesting, key prefix
+	 * @param querySign - '?' if root, empty on sub levels
 	 */
-	#buildQuery(query?: Record<string, Primitive>) {
-		if (!query) return '';
+	#buildQuery(
+		params?: QueryParams | URLSearchParams,
+		prefix = '',
+		querySign = '?',
+	): string {
+		if (!params) return '';
+		if (params instanceof URLSearchParams) return `?${params}`;
+		const queryParams = [];
 
-		const params = new URLSearchParams();
+		for (const key of Object.keys(params)) {
+			let value = params[key];
+			if (isNullish(value)) continue;
 
-		for (const key in query) {
-			const value = query[key];
-			if (value !== null && value !== undefined && value !== '') {
-				params.append(key, value.toString());
+			// complex primitive types
+			if (value instanceof Date) value = value.toISOString();
+			if (typeof value === 'bigint') value = value.toString();
+
+			// nested object is a recursive case with prop prefix
+			if (typeof value === 'object') {
+				if (Array.isArray(value)) {
+					queryParams.push(
+						`${prefix + key}=${encodeURIComponent(value.filter(isNotNullish).join(','))}`,
+					);
+					continue;
+				}
+
+				queryParams.push(
+					this.#buildQuery(value, `${prefix}${key}.`, ''),
+				);
+				continue;
 			}
+
+			queryParams.push(`${prefix + key}=${encodeURIComponent(value)}`);
 		}
 
-		return params.size > 0 ? `?${params}` : '';
+		return queryParams.length > 0 ? querySign + queryParams.join('&') : '';
 	}
 
 	/**
@@ -215,7 +250,7 @@ export class HttpClient {
 	 * @param path - request path
 	 * @param query - query params
 	 */
-	#getFullUrl(path: string, query?: Record<string, Primitive>) {
+	#getFullUrl(path: string, query?: QueryParams | URLSearchParams) {
 		if (path.startsWith('/')) {
 			path = path.slice(1);
 		}
@@ -317,7 +352,7 @@ export interface HttpRequestOptions
 	cancel?: AbortController;
 	headers?: Record<string, string>;
 	onRequest?: OnRequestInterceptor;
-	query?: Record<string, Primitive>;
+	query?: QueryParams | URLSearchParams;
 	timeout?: millis;
 }
 

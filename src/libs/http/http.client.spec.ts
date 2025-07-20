@@ -128,7 +128,7 @@ describe(HttpClient, () => {
 		expect(data).toStrictEqual(expectedData);
 	});
 
-	test('request with params is success', async () => {
+	test('request with query params is success', async () => {
 		// mocking phase
 		const query = { id: '1', name: 'test' };
 		const expectedUrl = `/?${new URLSearchParams(query)}`;
@@ -139,6 +139,65 @@ describe(HttpClient, () => {
 		// request phase
 		const { status } = await _httpClient.request('/', {
 			query,
+		});
+
+		// assertion data
+		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+
+		expect(status).toBe(HttpStatusCode.OK);
+		expect(receivedUrl).toBe(expectedUrl);
+	});
+
+	test('request with complex query params is success', async () => {
+		// mocking phase
+		const now = new Date();
+		const query = {
+			array: ['hola', 'mundo'],
+			bigint: 9_007_199_254_740_991n,
+			date: now,
+			empty: '',
+			nested: { prop1: 'hola', prop2: 'mundo' },
+			null: null,
+			undef: undefined,
+		};
+		const queryExpected = {
+			array: query.array.join(','),
+			bigint: query.bigint.toString(),
+			date: query.date.toISOString(),
+		};
+		const expectedUrl = `/?${new URLSearchParams(queryExpected)}&nested.prop1=hola&nested.prop2=mundo`;
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
+		});
+
+		// request phase
+		const { status } = await _httpClient.request('/', {
+			query,
+		});
+
+		// assertion data
+		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+
+		expect(status).toBe(HttpStatusCode.OK);
+		expect(receivedUrl).toBe(expectedUrl);
+	});
+
+	test('request with query params as URLSearchParams is success', async () => {
+		// mocking phase
+		const query = { id: '1', name: 'test' };
+		const params = new URLSearchParams(query);
+		// allows a list
+		params.append('list', '1');
+		params.append('list', '2');
+
+		const expectedUrl = `/?${params}`;
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
+		});
+
+		// request phase
+		const { status } = await _httpClient.request('/', {
+			query: params,
 		});
 
 		// assertion data
