@@ -82,7 +82,7 @@ importers:
         specifier: 5.5.3
         version: 5.5.3(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.31.0))(eslint@9.31.0)(prettier@3.6.2)
       eslint-plugin-promise:
-        specifier: ^7.2.1
+        specifier: 7.2.1
         version: 7.2.1(eslint@9.31.0)
       eslint-plugin-regexp:
         specifier: 2.9.0
