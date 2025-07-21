@@ -1,10 +1,6 @@
 import { type ArgumentMetadata, type PipeTransform } from '@nestjs/common';
 import { ZodSchemaException } from './exceptions/zod-schema.exception.ts';
-import { type ZodDto } from './zod-dto.ts';
-
-const isZodDto = (dto: any): dto is ZodDto => {
-	return !!dto.schema;
-};
+import { isZodDto } from './zod-dto.ts';
 
 /**
  * Validates Zod DTO schemas

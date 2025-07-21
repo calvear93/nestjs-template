@@ -6,7 +6,7 @@ import type { ZodError } from 'zod';
  */
 export class ZodSchemaException extends BadRequestException {
 	constructor(error: ZodError) {
-		const errorMessage = error.errors.map(
+		const errorMessage = error.issues.map(
 			({ message, path }) => `${path.join('.')}: ${message}`,
 		);
 

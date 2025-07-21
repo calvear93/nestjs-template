@@ -1,7 +1,9 @@
-export { zodToJsonSchema } from './json-schema.factory.ts';
+export { epoch } from './validators/epoch.type.ts';
+export { phone } from './validators/phone.type.ts';
 export {
 	registerDtoOpenApiSchemas,
-	ZodDto,
+	type ZodDto,
 	ZodIterableDto,
+	ZodObjectDto,
 } from './zod-dto.ts';
 export { ZodValidationPipe } from './zod.pipe.ts';

@@ -1,39 +1,47 @@
+import type {
+	OpenAPIObject,
+	SchemaObject,
+} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import {
-	type OpenAPIObject,
-	type ReferenceObject,
-	type SchemaObject,
-} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts';
-import {
-	type AnyZodObject,
-	type AnyZodTuple,
-	type RawCreateParams,
 	z,
 	type ZodArray,
+	type ZodMap,
 	type ZodObject,
-	type ZodRawShape,
-	type ZodTypeAny,
+	type ZodRecord,
+	type ZodSet,
+	type ZodTuple,
+	type ZodType,
 } from 'zod';
-import { zodToJsonSchema } from './json-schema.factory.ts';
+import { applyJsonSchemaCustomizations } from './json-schema-customizations.ts';
 
-const registered: [name: string, jsonSchema: ReferenceObject | SchemaObject][] =
-	[];
+type ZodIterable = ZodArray | ZodSet | ZodTuple;
+type ZodShape = ZodMap | ZodObject | ZodRecord;
 
-type InferTuple<Tuple extends [...ZodTypeAny[]]> = {
-	[Index in keyof Tuple]: z.infer<Tuple[Index]>;
+export interface ZodDto<
+	Z extends ZodType = ZodType,
+	I = z.input<Z>,
+	O = z.output<Z>,
+> {
+	new (input?: I): O;
+	readonly _: any;
+	readonly jsonSchema: SchemaObject;
+	readonly schema: Z;
+	readonly registerOpenApi: (name?: string) => void;
+}
+
+export const isZodDto = (dto: any): dto is ZodDto => {
+	return !!dto.schema;
 };
-type InferArray<Arr extends [...ZodTypeAny[]]> = z.infer<Arr[0]>[];
 
-type InputShape<T> = Record<string, any> & {
-	[key in keyof T]?: unknown;
-};
+// global JSON schema registry for OpenAPI
+const registered: [name: string, jsonSchema: SchemaObject][] = [];
 
 /**
  * Creates a DTO from Zod shape,
  * with schema and jsonSchema
  * static properties.
  *
- * @param shape - zod shape
- * @param config - zod type config
+ * @param input - zod shape
  *
  * @example
  * ```ts
@@ -41,10 +49,12 @@ type InputShape<T> = Record<string, any> & {
  *	import { z } from 'zod';
  *	import { ZodDto } from #libs/zod';
  *
- *	export class SampleDto extends ZodDto({
+ *	const SampleSchema = z.object({
  *		id: z.number(),
  *		name: z.string()
- *	}) {}
+ *	});
+ *
+ *	export class SampleDto extends ZodDto(SampleSchema) {}
  *
  *	SampleDto.registerOpenApi();
  *
@@ -66,39 +76,28 @@ type InputShape<T> = Record<string, any> & {
  *	}
  * ```
  */
-export const ZodDto = <
-	S extends ZodRawShape,
-	Z extends AnyZodObject = ZodObject<S>,
->(
-	shape: S,
-	config?: RawCreateParams,
-): ZodObjectDto<Z> => {
-	const schema = z.object(shape, config);
-
+export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(schema: Z) => {
 	return class {
-		constructor(fields?: InputShape<z.infer<Z>>) {
-			if (fields) {
-				Object.assign(this, schema.parse(fields));
-			}
+		constructor(input?: I) {
+			if (input) Object.assign(this, schema.parse(input));
 		}
-
-		static registerOpenApi() {
-			registered.push([this.name, this.jsonSchema]);
+		static registerOpenApi(name?: string) {
+			registered.push([name ?? this.name, this.jsonSchema]);
 		}
-
-		static readonly jsonSchema = zodToJsonSchema(schema);
-
-		static readonly schema = schema as unknown as Z;
-	};
+		static readonly jsonSchema = z.toJSONSchema(
+			schema.meta({ openid: true }),
+			applyJsonSchemaCustomizations(),
+		) as SchemaObject;
+		static readonly schema = schema;
+	} as ZodDto<Z, I>;
 };
 
 /**
- * Creates a DTO from Zod array or tuple,
+ * Creates a DTO from Zod array, set or tuple,
  * with schema and jsonSchema
  * static properties.
  *
- * @param items - zod types list
- * @param config - zod type config
+ * @param input - zod types list
  *
  * @example
  * ```ts
@@ -106,10 +105,12 @@ export const ZodDto = <
  *	import { z } from 'zod';
  *	import { ZodIterableDto } from '#libs/zod';
  *
- *	export class SampleDtoIterable extends ZodIterableDto([
+ *	const SampleIterableSchema = z.array([
  *		z.number(),
  *		z.string()
- *	]) {}
+ *	]);
+ *
+ *	export class SampleDtoIterable extends ZodIterableDto(SampleIterableSchema) {}
  *
  *	SampleDtoIterable.registerOpenApi();
  *
@@ -131,35 +132,23 @@ export const ZodDto = <
  *	}
  * ```
  */
-export const ZodIterableDto = <
-	T extends [ZodTypeAny, ...ZodTypeAny[]],
-	Z extends AnyZodTuple | ZodArray<ZodTypeAny> = T['length'] extends 1
-		? ZodArray<z.ZodTypeAny>
-		: AnyZodTuple,
-	I = T['length'] extends 1 ? InferArray<T> : InferTuple<T>,
->(
-	items: T,
-	config?: RawCreateParams,
-): ZodIterableDto<Z, I> => {
-	const schema =
-		items.length === 1 ? z.array(items[0], config) : z.tuple(items, config);
-
+export const ZodIterableDto = <Z extends ZodIterable, I = z.input<Z>>(
+	schema: Z,
+) => {
 	return class extends Array {
-		constructor(items?: I | unknown[]) {
+		constructor(input?: I) {
 			super();
-			if (items) {
-				this.push(...schema.parse(items));
-			}
+			if (input) this.push(...schema.parse(input));
 		}
-
-		static registerOpenApi() {
-			registered.push([this.name, this.jsonSchema]);
+		static registerOpenApi(name?: string) {
+			registered.push([name ?? this.name, this.jsonSchema]);
 		}
-
-		static readonly jsonSchema = zodToJsonSchema(schema);
-
-		static readonly schema = schema as unknown as Z;
-	};
+		static readonly jsonSchema = z.toJSONSchema(
+			schema,
+			applyJsonSchemaCustomizations(),
+		) as SchemaObject;
+		static readonly schema = schema;
+	} as unknown as ZodDto<Z, I>;
 };
 
 /**
@@ -191,31 +180,3 @@ export const registerDtoOpenApiSchemas = (
 
 	return openApi;
 };
-
-/**
- * Zod DTO base.
- */
-export interface ZodDto<Z extends ZodTypeAny = ZodTypeAny> {
-	readonly jsonSchema: SchemaObject;
-	readonly schema: Z;
-	registerOpenApi: () => void;
-}
-
-/**
- * Zod DTO from object/shape.
- */
-export interface ZodObjectDto<Z extends ZodTypeAny = ZodTypeAny, T = z.infer<Z>>
-	extends ZodDto<Z> {
-	new (fields?: InputShape<T>): T;
-}
-
-/**
- * Zod DTO from array/tuple.
- */
-export interface ZodIterableDto<
-	Z extends ZodTypeAny = ZodTypeAny,
-	I = InferArray<any> | InferTuple<any>,
-	T = I extends (infer A)[] ? A : I extends [...infer B] ? B : any[],
-> extends ZodDto<Z> {
-	new (items?: I | unknown[]): T[];
-}
