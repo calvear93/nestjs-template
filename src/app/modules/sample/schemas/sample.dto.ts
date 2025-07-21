@@ -6,7 +6,4 @@ const SampleSchema = z.object({
 	name: z.string(),
 });
 
-export class SampleDto extends ZodObjectDto(SampleSchema) {}
-
-// register DTO OpenApi schema to Swagger
-SampleDto.registerOpenApi();
+export class SampleDto extends ZodObjectDto('Sample', SampleSchema) {}

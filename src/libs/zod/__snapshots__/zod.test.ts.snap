@@ -1,0 +1,463 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "openapi": true,
+  "properties": {
+    "any": {
+      "nullable": true,
+    },
+    "array": {
+      "items": {
+        "type": "number",
+      },
+      "type": "array",
+    },
+    "arrayFrom5": {
+      "items": {
+        "type": "number",
+      },
+      "minItems": 5,
+      "type": "array",
+    },
+    "arrayNonEmpty": {
+      "items": {
+        "type": "number",
+      },
+      "minItems": 1,
+      "type": "array",
+    },
+    "arrayOf5": {
+      "items": {
+        "type": "number",
+      },
+      "maxItems": 5,
+      "minItems": 5,
+      "type": "array",
+    },
+    "boolean": {
+      "type": "boolean",
+    },
+    "coerceDate": {
+      "format": "date-time",
+      "type": "string",
+    },
+    "coerceToBool": {
+      "type": "boolean",
+    },
+    "coerceToString": {
+      "type": "string",
+    },
+    "cuid": {
+      "format": "cuid",
+      "pattern": "^[cC][^\\s-]{8,}$",
+      "type": "string",
+    },
+    "cuid2": {
+      "format": "cuid2",
+      "pattern": "^[0-9a-z]+$",
+      "type": "string",
+    },
+    "datetime": {
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+      "type": "string",
+    },
+    "default": {
+      "default": "hello world",
+      "type": "string",
+    },
+    "discriminated": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "data": {
+              "type": "string",
+            },
+            "status": {
+              "const": "success",
+              "type": "string",
+            },
+          },
+          "required": [
+            "status",
+            "data",
+          ],
+          "type": "object",
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "message": {
+              "type": "string",
+            },
+            "status": {
+              "const": "failed",
+              "type": "string",
+            },
+          },
+          "required": [
+            "status",
+            "message",
+          ],
+          "type": "object",
+        },
+      ],
+    },
+    "email": {
+      "format": "email",
+      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+      "type": "string",
+    },
+    "emoji": {
+      "format": "emoji",
+      "pattern": "^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$",
+      "type": "string",
+    },
+    "endsWith": {
+      "pattern": ".*z$",
+      "type": "string",
+    },
+    "enum": {
+      "enum": [
+        "Salmon",
+        "Tuna",
+        "Trout",
+      ],
+      "type": "string",
+    },
+    "from": {
+      "format": "date-time",
+      "type": "string",
+    },
+    "gt": {
+      "exclusiveMinimum": 5,
+      "type": "number",
+    },
+    "gte": {
+      "minimum": 5,
+      "type": "number",
+    },
+    "includes": {
+      "pattern": "hello",
+      "type": "string",
+    },
+    "int": {
+      "maximum": 9007199254740991,
+      "minimum": -9007199254740991,
+      "type": "integer",
+    },
+    "intersection": {
+      "allOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+            },
+          },
+          "required": [
+            "name",
+          ],
+          "type": "object",
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "role": {
+              "type": "string",
+            },
+          },
+          "required": [
+            "role",
+          ],
+          "type": "object",
+        },
+      ],
+    },
+    "ipv4": {
+      "format": "ipv4",
+      "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$",
+      "type": "string",
+    },
+    "ipv6": {
+      "format": "ipv6",
+      "pattern": "^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::|([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:?){0,6})$",
+      "type": "string",
+    },
+    "length": {
+      "maxLength": 5,
+      "minLength": 5,
+      "type": "string",
+    },
+    "lookup": {
+      "additionalProperties": {
+        "type": "boolean",
+      },
+      "propertyNames": {
+        "maxLength": 3,
+        "type": "string",
+      },
+      "type": "object",
+    },
+    "lt": {
+      "exclusiveMaximum": 5,
+      "type": "number",
+    },
+    "lte": {
+      "maximum": 5,
+      "type": "number",
+    },
+    "max": {
+      "maxLength": 3,
+      "type": "string",
+    },
+    "min": {
+      "minLength": 10,
+      "type": "string",
+    },
+    "multiple": {
+      "default": "test@test.cl",
+      "format": "email",
+      "maxLength": 12,
+      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+      "type": "string",
+    },
+    "multipleOf": {
+      "multipleOf": 5,
+      "type": "number",
+    },
+    "nan": {
+      "nullable": true,
+      "type": "number",
+    },
+    "negative": {
+      "exclusiveMaximum": 0,
+      "type": "number",
+    },
+    "never": {
+      "not": {},
+      "readOnly": true,
+    },
+    "nonnegative": {
+      "minimum": 0,
+      "type": "number",
+    },
+    "nonpositive": {
+      "maximum": 0,
+      "type": "number",
+    },
+    "null": {
+      "type": "null",
+    },
+    "nullable": {
+      "anyOf": [
+        {
+          "type": "boolean",
+        },
+        {
+          "type": "null",
+        },
+      ],
+      "nullable": true,
+    },
+    "nullish": {
+      "anyOf": [
+        {
+          "type": "boolean",
+        },
+        {
+          "type": "null",
+        },
+      ],
+      "nullable": true,
+    },
+    "number": {
+      "type": "number",
+    },
+    "numberOrBool": {
+      "anyOf": [
+        {
+          "type": "number",
+        },
+        {
+          "type": "boolean",
+        },
+      ],
+    },
+    "object": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "exclusiveMinimum": 0,
+          "type": "number",
+        },
+        "name": {
+          "type": "string",
+        },
+      },
+      "required": [
+        "id",
+        "name",
+      ],
+      "type": "object",
+    },
+    "optional": {
+      "type": "boolean",
+    },
+    "positive": {
+      "exclusiveMinimum": 0,
+      "type": "number",
+    },
+    "record": {
+      "additionalProperties": {
+        "type": "number",
+      },
+      "propertyNames": {
+        "type": "string",
+      },
+      "type": "object",
+    },
+    "regex": {
+      "pattern": "[a-c]",
+      "type": "string",
+    },
+    "startsWith": {
+      "pattern": "^a.*",
+      "type": "string",
+    },
+    "string": {
+      "type": "string",
+    },
+    "stringOrNumber": {
+      "anyOf": [
+        {
+          "type": "string",
+        },
+        {
+          "type": "number",
+        },
+      ],
+    },
+    "tru": {
+      "const": true,
+      "type": "boolean",
+    },
+    "tuna": {
+      "const": "tuna",
+      "type": "string",
+    },
+    "tuple": {
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [
+        {
+          "type": "string",
+        },
+        {
+          "type": "boolean",
+        },
+      ],
+      "type": "array",
+    },
+    "twelve": {
+      "const": 12,
+      "type": "number",
+    },
+    "ulid": {
+      "format": "ulid",
+      "pattern": "^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$",
+      "type": "string",
+    },
+    "undefined": {
+      "readOnly": true,
+    },
+    "unknown": {},
+    "until": {
+      "format": "date-time",
+      "type": "string",
+    },
+    "url": {
+      "format": "uri",
+      "type": "string",
+    },
+    "uuid": {
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
+      "type": "string",
+    },
+    "void": {
+      "default": null,
+      "nullable": true,
+      "readOnly": true,
+      "type": "null",
+    },
+  },
+  "required": [
+    "string",
+    "number",
+    "boolean",
+    "null",
+    "void",
+    "any",
+    "unknown",
+    "never",
+    "coerceDate",
+    "coerceToString",
+    "coerceToBool",
+    "tuna",
+    "twelve",
+    "tru",
+    "max",
+    "min",
+    "length",
+    "email",
+    "url",
+    "emoji",
+    "uuid",
+    "cuid",
+    "cuid2",
+    "ulid",
+    "regex",
+    "includes",
+    "startsWith",
+    "endsWith",
+    "ipv4",
+    "ipv6",
+    "multiple",
+    "gt",
+    "gte",
+    "lt",
+    "lte",
+    "int",
+    "positive",
+    "nonnegative",
+    "negative",
+    "nonpositive",
+    "multipleOf",
+    "nan",
+    "datetime",
+    "from",
+    "until",
+    "enum",
+    "default",
+    "nullable",
+    "object",
+    "array",
+    "arrayNonEmpty",
+    "arrayOf5",
+    "arrayFrom5",
+    "tuple",
+    "stringOrNumber",
+    "numberOrBool",
+    "discriminated",
+    "record",
+    "lookup",
+    "intersection",
+  ],
+  "type": "object",
+}
+`;

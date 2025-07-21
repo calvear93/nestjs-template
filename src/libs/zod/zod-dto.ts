@@ -1,7 +1,4 @@
-import type {
-	OpenAPIObject,
-	SchemaObject,
-} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+import type { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import {
 	z,
 	type ZodArray,
@@ -29,12 +26,14 @@ export interface ZodDto<
 	readonly registerOpenApi: (name?: string) => void;
 }
 
+/**
+ * Validates if the object is a Zod DTO.
+ *
+ * @param dto - object to validate.
+ */
 export const isZodDto = (dto: any): dto is ZodDto => {
 	return !!dto.schema;
 };
-
-// global JSON schema registry for OpenAPI
-const registered: [name: string, jsonSchema: SchemaObject][] = [];
 
 /**
  * Creates a DTO from Zod shape,
@@ -47,14 +46,14 @@ const registered: [name: string, jsonSchema: SchemaObject][] = [];
  * ```ts
  *	// sample.dto.ts
  *	import { z } from 'zod';
- *	import { ZodDto } from #libs/zod';
+ *	import { ZodObjectDto } from #libs/zod';
  *
  *	const SampleSchema = z.object({
  *		id: z.number(),
  *		name: z.string()
  *	});
  *
- *	export class SampleDto extends ZodDto(SampleSchema) {}
+ *	export class SampleDto extends ZodObjectDto("Sample", SampleSchema) {}
  *
  *	SampleDto.registerOpenApi();
  *
@@ -76,17 +75,17 @@ const registered: [name: string, jsonSchema: SchemaObject][] = [];
  *	}
  * ```
  */
-export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(schema: Z) => {
+export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(
+	schemaName: string,
+	schema: Z,
+) => {
 	return class {
 		constructor(input?: I) {
 			if (input) Object.assign(this, schema.parse(input));
 		}
-		static registerOpenApi(name?: string) {
-			registered.push([name ?? this.name, this.jsonSchema]);
-		}
 		static readonly jsonSchema = z.toJSONSchema(
-			schema.meta({ openid: true }),
-			applyJsonSchemaCustomizations(),
+			schema.meta({ openapi: true }),
+			applyJsonSchemaCustomizations(schemaName),
 		) as SchemaObject;
 		static readonly schema = schema;
 	} as ZodDto<Z, I>;
@@ -110,7 +109,10 @@ export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(schema: Z) => {
  *		z.string()
  *	]);
  *
- *	export class SampleDtoIterable extends ZodIterableDto(SampleIterableSchema) {}
+ *	export class SampleDtoIterable extends ZodIterableDto(
+ *		"Sample Array",
+ *		SampleIterableSchema
+ *	) {}
  *
  *	SampleDtoIterable.registerOpenApi();
  *
@@ -133,6 +135,7 @@ export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(schema: Z) => {
  * ```
  */
 export const ZodIterableDto = <Z extends ZodIterable, I = z.input<Z>>(
+	schemaName: string,
 	schema: Z,
 ) => {
 	return class extends Array {
@@ -140,43 +143,10 @@ export const ZodIterableDto = <Z extends ZodIterable, I = z.input<Z>>(
 			super();
 			if (input) this.push(...schema.parse(input));
 		}
-		static registerOpenApi(name?: string) {
-			registered.push([name ?? this.name, this.jsonSchema]);
-		}
 		static readonly jsonSchema = z.toJSONSchema(
-			schema,
-			applyJsonSchemaCustomizations(),
+			schema.meta({ openapi: true }),
+			applyJsonSchemaCustomizations(schemaName),
 		) as SchemaObject;
 		static readonly schema = schema;
 	} as unknown as ZodDto<Z, I>;
-};
-
-/**
- * Register Zod DTOs schemas to
- * OpenApi Swagger document.
- *
- * @example
- * ```ts
- *	import { ... } from '...';
- *	import { registerDtoSchemas } from '#libs/zod';
- *
- *	const app = await NestFactory.create(AppModule);
- *
- *	const config = new DocumentBuilder().build();
- *	const document = SwaggerModule.createDocument(app, config);
- *
- *	registerDtoSchemas(document);
- * ```
- */
-export const registerDtoOpenApiSchemas = (
-	openApi: OpenAPIObject,
-): OpenAPIObject => {
-	openApi.components ??= {};
-	openApi.components.schemas ??= {};
-
-	for (const [name, schema] of registered) {
-		openApi.components.schemas[name] = schema;
-	}
-
-	return openApi;
 };

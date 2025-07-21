@@ -1,3 +1,7 @@
+import type {
+	OpenAPIObject,
+	SchemaObject,
+} from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import type z from 'zod';
 
 type JsonSchemaCustomization =
@@ -7,6 +11,9 @@ type JsonSchemaCustomization =
 			zodSchema: Z,
 	  ) => z.core.JSONSchemaMeta);
 type JsonSchemaCustomizations = Record<string, JsonSchemaCustomization>;
+
+// global JSON schema registry for OpenAPI
+const registered: [name: string, jsonSchema: SchemaObject][] = [];
 
 export const JsonSchemaCustomizations: {
 	formats: JsonSchemaCustomizations;
@@ -86,7 +93,9 @@ const getOrCall = (
 	return customization;
 };
 
-export const applyJsonSchemaCustomizations = (): ToJSONSchemaParams => {
+export const applyJsonSchemaCustomizations = (
+	schemaName: string,
+): ToJSONSchemaParams => {
 	return {
 		override: (context) => {
 			const { format, type } = context.zodSchema._zod.def as any;
@@ -106,7 +115,45 @@ export const applyJsonSchemaCustomizations = (): ToJSONSchemaParams => {
 				context.zodSchema,
 			);
 			if (customFormat) Object.assign(context.jsonSchema, customFormat);
+
+			// registers global JSON schema for OpenAPI
+			if (context.jsonSchema.openapi) {
+				registered.push([
+					schemaName,
+					context.jsonSchema as SchemaObject,
+				]);
+			}
 		},
 		unrepresentable: 'any',
 	};
+};
+
+/**
+ * Register Zod DTOs schemas to
+ * OpenApi Swagger document.
+ *
+ * @example
+ * ```ts
+ *	import { ... } from '...';
+ *	import { registerDtoSchemas } from '#libs/zod';
+ *
+ *	const app = await NestFactory.create(AppModule);
+ *
+ *	const config = new DocumentBuilder().build();
+ *	const document = SwaggerModule.createDocument(app, config);
+ *
+ *	registerDtoSchemas(document);
+ * ```
+ */
+export const registerDtoOpenApiSchemas = (
+	openApi: OpenAPIObject,
+): OpenAPIObject => {
+	openApi.components ??= {};
+	openApi.components.schemas ??= {};
+
+	for (const [name, schema] of registered) {
+		openApi.components.schemas[name] = schema;
+	}
+
+	return openApi;
 };
