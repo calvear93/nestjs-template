@@ -42,28 +42,40 @@ describe(ZodValidationPipe, () => {
 				coerceDate: z.coerce.date(),
 				coerceToString: z.coerce.string(),
 				coerceToBool: z.coerce.boolean(),
+				coerceToBigint: z.coerce.bigint(),
 				// literal
 				tuna: z.literal('tuna'),
 				twelve: z.literal(12),
 				tru: z.literal(true),
+				colors: z.literal(['red', 'green', 'blue']),
+				// template literal
+				templateLiteral: z.templateLiteral([
+					'hello, ',
+					z.string(),
+					'!',
+				]),
 				// strings
 				max: z.string().max(3),
 				min: z.string().min(10),
 				length: z.string().length(5),
-				email: z.string().email(),
-				url: z.string().url(),
-				emoji: z.string().emoji(),
-				uuid: z.string().uuid(),
-				cuid: z.string().cuid(),
-				cuid2: z.string().cuid2(),
-				ulid: z.string().ulid(),
+				uppercase: z.string().uppercase(),
+				lowercase: z.string().lowercase(),
+				trim: z.string().trim(),
+				email: z.email(),
+				emailHtml5: z.email({ pattern: z.regexes.html5Email }),
+				url: z.url(),
+				emoji: z.emoji(),
+				uuid: z.uuid(),
+				cuid: z.cuid(),
+				cuid2: z.cuid2(),
+				ulid: z.ulid(),
 				regex: z.string().regex(/[a-c]/u),
 				includes: z.string().includes('hello'),
 				startsWith: z.string().startsWith('a'),
 				endsWith: z.string().endsWith('z'),
 				ipv4: z.ipv4(), // ipv4
 				ipv6: z.ipv6(), // ipv6
-				multiple: z.string().email().max(12).default('test@test.cl'),
+				multiple: z.email().max(12).default('test@test.cl'),
 				// numbers
 				gt: z.number().gt(5),
 				gte: z.number().gte(5), // alias .min(5)
@@ -77,8 +89,14 @@ describe(ZodValidationPipe, () => {
 				multipleOf: z.number().multipleOf(5),
 				// nan
 				nan: z.nan(),
+				// nan
+				sym: z.symbol('symbol'),
 				// dates
-				datetime: z.string().datetime(), // iso 8601
+				datetime: z.date(),
+				date: z.iso.date(),
+				time: z.iso.time(),
+				isoDatetime: z.iso.datetime({ offset: true }),
+				duration: z.iso.duration(),
 				from: z.coerce.date().min(new Date('1900-01-01')),
 				until: z.coerce.date().max(new Date()),
 				// enum
@@ -126,6 +144,7 @@ describe(ZodValidationPipe, () => {
 						role: z.string(),
 					}),
 				),
+				file: z.file().max(1_000_000).mime(['image/png', 'image/jpeg']),
 			}),
 		);
 

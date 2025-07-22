@@ -44,10 +44,22 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "format": "date-time",
       "type": "string",
     },
+    "coerceToBigint": {
+      "format": "int64",
+      "type": "integer",
+    },
     "coerceToBool": {
       "type": "boolean",
     },
     "coerceToString": {
+      "type": "string",
+    },
+    "colors": {
+      "enum": [
+        "red",
+        "green",
+        "blue",
+      ],
       "type": "string",
     },
     "cuid": {
@@ -60,9 +72,13 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "pattern": "^[0-9a-z]+$",
       "type": "string",
     },
+    "date": {
+      "format": "date",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+      "type": "string",
+    },
     "datetime": {
       "format": "date-time",
-      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
       "type": "string",
     },
     "default": {
@@ -107,9 +123,19 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
         },
       ],
     },
+    "duration": {
+      "format": "duration",
+      "pattern": "^P(?:(\\d+W)|(?!.*W)(?=\\d|T\\d)(\\d+Y)?(\\d+M)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+([.,]\\d+)?S)?)?)$",
+      "type": "string",
+    },
     "email": {
       "format": "email",
       "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+      "type": "string",
+    },
+    "emailHtml5": {
+      "format": "email",
+      "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_\`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
       "type": "string",
     },
     "emoji": {
@@ -128,6 +154,24 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
         "Trout",
       ],
       "type": "string",
+    },
+    "file": {
+      "anyOf": [
+        {
+          "contentEncoding": "binary",
+          "contentMediaType": "image/png",
+          "format": "binary",
+          "maxLength": 1000000,
+          "type": "string",
+        },
+        {
+          "contentEncoding": "binary",
+          "contentMediaType": "image/jpeg",
+          "format": "binary",
+          "maxLength": 1000000,
+          "type": "string",
+        },
+      ],
     },
     "from": {
       "format": "date-time",
@@ -188,6 +232,11 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "pattern": "^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::|([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:?){0,6})$",
       "type": "string",
     },
+    "isoDatetime": {
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-]\\d{2}:\\d{2})))$",
+      "type": "string",
+    },
     "length": {
       "maxLength": 5,
       "minLength": 5,
@@ -202,6 +251,11 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
         "type": "string",
       },
       "type": "object",
+    },
+    "lowercase": {
+      "format": "lowercase",
+      "pattern": "^[^A-Z]*$",
+      "type": "string",
     },
     "lt": {
       "exclusiveMaximum": 5,
@@ -342,6 +396,22 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
         },
       ],
     },
+    "sym": {
+      "default": null,
+      "type": "string",
+    },
+    "templateLiteral": {
+      "pattern": "^hello, [\\s\\S]{0,}!$",
+      "type": "string",
+    },
+    "time": {
+      "format": "time",
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?$",
+      "type": "string",
+    },
+    "trim": {
+      "type": "string",
+    },
     "tru": {
       "const": true,
       "type": "boolean",
@@ -380,6 +450,11 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "format": "date-time",
       "type": "string",
     },
+    "uppercase": {
+      "format": "uppercase",
+      "pattern": "^[^a-z]*$",
+      "type": "string",
+    },
     "url": {
       "format": "uri",
       "type": "string",
@@ -408,13 +483,20 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "coerceDate",
     "coerceToString",
     "coerceToBool",
+    "coerceToBigint",
     "tuna",
     "twelve",
     "tru",
+    "colors",
+    "templateLiteral",
     "max",
     "min",
     "length",
+    "uppercase",
+    "lowercase",
+    "trim",
     "email",
+    "emailHtml5",
     "url",
     "emoji",
     "uuid",
@@ -439,7 +521,12 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "nonpositive",
     "multipleOf",
     "nan",
+    "sym",
     "datetime",
+    "date",
+    "time",
+    "isoDatetime",
+    "duration",
     "from",
     "until",
     "enum",
@@ -457,6 +544,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "record",
     "lookup",
     "intersection",
+    "file",
   ],
   "type": "object",
 }
