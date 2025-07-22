@@ -223,8 +223,8 @@ export class HttpClient {
 			if (value instanceof Date) value = value.toISOString();
 			if (typeof value === 'bigint') value = value.toString();
 
-			// nested object is a recursive case with prop prefix
 			if (typeof value === 'object') {
+				// arrays values are not recursive, instead separated by commas
 				if (Array.isArray(value)) {
 					queryParams.push(
 						`${prefix + key}=${encodeURIComponent(value.filter(isNotNullish).join(','))}`,
@@ -232,6 +232,7 @@ export class HttpClient {
 					continue;
 				}
 
+				// nested object is a recursive case with prop prefix
 				queryParams.push(
 					this.#buildQuery(value, `${prefix}${key}.`, ''),
 				);
