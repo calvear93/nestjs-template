@@ -40,7 +40,8 @@ export const isZodDto = (dto: any): dto is ZodDto => {
  * with schema and jsonSchema
  * static properties.
  *
- * @param input - zod shape
+ * @param schema - zod shape
+ * @param schemaName - optional name for OpenAPI registration
  *
  * @example
  * ```ts
@@ -53,7 +54,7 @@ export const isZodDto = (dto: any): dto is ZodDto => {
  *		name: z.string()
  *	});
  *
- *	export class SampleDto extends ZodObjectDto("Sample", SampleSchema) {}
+ *	export class SampleDto extends ZodObjectDto(SampleSchema, "Sample") {}
  *
  *	SampleDto.registerOpenApi();
  *
@@ -76,8 +77,8 @@ export const isZodDto = (dto: any): dto is ZodDto => {
  * ```
  */
 export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(
-	schemaName: string,
 	schema: Z,
+	schemaName?: string,
 ) => {
 	return class {
 		constructor(input?: I) {
@@ -96,7 +97,8 @@ export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(
  * with schema and jsonSchema
  * static properties.
  *
- * @param input - zod types list
+ * @param schema - zod types list
+ * @param schemaName - optional name for OpenAPI registration
  *
  * @example
  * ```ts
@@ -110,8 +112,8 @@ export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(
  *	]);
  *
  *	export class SampleDtoIterable extends ZodIterableDto(
- *		"Sample Array",
- *		SampleIterableSchema
+ *		SampleIterableSchema,
+ *		"Sample Array"
  *	) {}
  *
  *	SampleDtoIterable.registerOpenApi();
@@ -135,8 +137,8 @@ export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(
  * ```
  */
 export const ZodIterableDto = <Z extends ZodIterable, I = z.input<Z>>(
-	schemaName: string,
 	schema: Z,
+	schemaName?: string,
 ) => {
 	return class extends Array {
 		constructor(input?: I) {

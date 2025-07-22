@@ -12,7 +12,7 @@ describe(ZodValidationPipe, () => {
 	test('register DTO schemas', () => {
 		const openApi = {} as OpenAPIObject;
 
-		class Dto extends ZodObjectDto('Dto', z.object({ id: z.number() })) {}
+		class Dto extends ZodObjectDto(z.object({ id: z.number() }), 'Dto') {}
 		registerDtoOpenApiSchemas(openApi);
 
 		const { components } = openApi;
@@ -23,7 +23,6 @@ describe(ZodValidationPipe, () => {
 
 	test('DTO generates JSON schema', () => {
 		const dto = ZodObjectDto(
-			'sample',
 			z.object({
 				// primitive values
 				string: z.string(),
@@ -153,7 +152,7 @@ describe(ZodValidationPipe, () => {
 	});
 
 	test('object DTO parses values on instantiation', () => {
-		class Dto extends ZodObjectDto('Dto', z.object({ id: z.number() })) {}
+		class Dto extends ZodObjectDto(z.object({ id: z.number() }), 'Dto') {}
 
 		const dto = new Dto({ id: 1 });
 
@@ -162,8 +161,8 @@ describe(ZodValidationPipe, () => {
 
 	test('iterable (array) DTO parses values on instantiation', () => {
 		class DtoIterable extends ZodIterableDto(
-			'DtoIterable',
 			z.array(z.number()),
+			'DtoIterable',
 		) {}
 
 		const dto = new DtoIterable([1]);
@@ -173,8 +172,8 @@ describe(ZodValidationPipe, () => {
 
 	test('iterable (tuple) DTO parses values on instantiation', () => {
 		class DtoIterable extends ZodIterableDto(
-			'DtoIterable',
 			z.tuple([z.number(), z.boolean()]),
+			'DtoIterable',
 		) {}
 
 		const dto = new DtoIterable([1, true]);
@@ -186,7 +185,6 @@ describe(ZodValidationPipe, () => {
 	describe('validation pipe', () => {
 		const _pipe = new ZodValidationPipe();
 		const _dto = ZodObjectDto(
-			'sample',
 			z.object({
 				number: z.number(),
 				string: z.string(),

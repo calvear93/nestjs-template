@@ -16,8 +16,8 @@ type JsonSchemaCustomizations = Record<string, JsonSchemaCustomization>;
 const registered: [name: string, jsonSchema: SchemaObject][] = [];
 
 export const JsonSchemaCustomizations: {
-	formats: JsonSchemaCustomizations;
-	types: JsonSchemaCustomizations;
+	readonly formats: JsonSchemaCustomizations;
+	readonly types: JsonSchemaCustomizations;
 } = {
 	formats: {
 		regex: (_, { _zod: { def } }: any) => ({
@@ -94,7 +94,7 @@ const getOrCall = (
 };
 
 export const applyJsonSchemaCustomizations = (
-	schemaName: string,
+	schemaName?: string,
 ): ToJSONSchemaParams => {
 	return {
 		override: (context) => {
@@ -116,8 +116,8 @@ export const applyJsonSchemaCustomizations = (
 			);
 			if (customFormat) Object.assign(context.jsonSchema, customFormat);
 
-			// registers global JSON schema for OpenAPI
-			if (context.jsonSchema.openapi) {
+			// registers global JSON schema for OpenAPI only if schemaName is provided
+			if (schemaName && context.jsonSchema.openapi) {
 				registered.push([
 					schemaName,
 					context.jsonSchema as SchemaObject,
