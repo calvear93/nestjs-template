@@ -2,7 +2,7 @@ import type {
 	OpenAPIObject,
 	SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-import type z from 'zod';
+import z from 'zod';
 
 type JsonSchemaCustomization =
 	| z.core.JSONSchemaMeta
@@ -115,17 +115,21 @@ export const applyJsonSchemaCustomizations = (
 				context.zodSchema,
 			);
 			if (customFormat) Object.assign(context.jsonSchema, customFormat);
-
-			// registers global JSON schema for OpenAPI only if schemaName is provided
-			if (schemaName && context.jsonSchema.openapi) {
-				registered.push([
-					schemaName,
-					context.jsonSchema as SchemaObject,
-				]);
-			}
 		},
 		unrepresentable: 'any',
 	};
+};
+
+export const toJSONSchema = (schema: z.ZodTypeAny, schemaName?: string) => {
+	const jsonSchema = z.toJSONSchema(
+		schema,
+		applyJsonSchemaCustomizations(schemaName),
+	) as SchemaObject;
+
+	// registers global JSON schema for OpenAPI only if schemaName is provided
+	if (schemaName) registered.push([schemaName, jsonSchema]);
+
+	return jsonSchema;
 };
 
 /**

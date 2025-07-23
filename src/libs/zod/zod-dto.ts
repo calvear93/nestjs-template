@@ -1,6 +1,6 @@
 import type { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import {
-	z,
+	type z,
 	type ZodArray,
 	type ZodMap,
 	type ZodObject,
@@ -9,7 +9,7 @@ import {
 	type ZodTuple,
 	type ZodType,
 } from 'zod';
-import { applyJsonSchemaCustomizations } from './json-schema-customizations.ts';
+import { toJSONSchema } from './json-schema-customizations.ts';
 
 type ZodIterable = ZodArray | ZodSet | ZodTuple;
 type ZodShape = ZodMap | ZodObject | ZodRecord;
@@ -84,10 +84,7 @@ export const ZodObjectDto = <Z extends ZodShape, I = z.input<Z>>(
 		constructor(input?: I) {
 			if (input) Object.assign(this, schema.parse(input));
 		}
-		static readonly jsonSchema = z.toJSONSchema(
-			schema.meta({ openapi: true }),
-			applyJsonSchemaCustomizations(schemaName),
-		) as SchemaObject;
+		static readonly jsonSchema = toJSONSchema(schema, schemaName);
 		static readonly schema = schema;
 	} as ZodDto<Z, I>;
 };
@@ -145,10 +142,7 @@ export const ZodIterableDto = <Z extends ZodIterable, I = z.input<Z>>(
 			super();
 			if (input) this.push(...schema.parse(input));
 		}
-		static readonly jsonSchema = z.toJSONSchema(
-			schema.meta({ openapi: true }),
-			applyJsonSchemaCustomizations(schemaName),
-		) as SchemaObject;
+		static readonly jsonSchema = toJSONSchema(schema, schemaName);
 		static readonly schema = schema;
 	} as unknown as ZodDto<Z, I>;
 };
