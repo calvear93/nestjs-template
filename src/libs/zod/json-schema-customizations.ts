@@ -93,9 +93,7 @@ const getOrCall = (
 	return customization;
 };
 
-export const applyJsonSchemaCustomizations = (
-	schemaName?: string,
-): ToJSONSchemaParams => {
+export const applyJsonSchemaCustomizations = (): ToJSONSchemaParams => {
 	return {
 		override: (context) => {
 			const { format, type } = context.zodSchema._zod.def as any;
@@ -123,7 +121,7 @@ export const applyJsonSchemaCustomizations = (
 export const toJSONSchema = (schema: z.ZodTypeAny, schemaName?: string) => {
 	const jsonSchema = z.toJSONSchema(
 		schema,
-		applyJsonSchemaCustomizations(schemaName),
+		applyJsonSchemaCustomizations(),
 	) as SchemaObject;
 
 	// registers global JSON schema for OpenAPI only if schemaName is provided
