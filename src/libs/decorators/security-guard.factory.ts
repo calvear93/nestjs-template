@@ -170,41 +170,158 @@ const voided = () => void 0;
 const disabled = () => voided;
 
 /**
- * Generates a protect and allow
- * decorator for your security guard.
+ * Factory function that creates a pair of security decorators for NestJS applications.
  *
- * @param Guard - guard class
- * @param enabled - if enabled
- * @param args - shared args, defined from left to right in "canActivate"
+ * This function generates two decorators:
+ * 	1. **Security Decorator**: Applies the guard to protect endpoints
+ * 	2. **Allow Anonymous Decorator**: Bypasses the guard for specific endpoints
+ *
+ * The factory supports dependency injection for guard arguments, allowing you to
+ * pre-configure some parameters while leaving others to be provided at decoration time.
+ * This enables flexible and reusable security configurations across your application.
+ *
+ * **Key Features:**
+ * 	- Type-safe argument injection based on your guard's `canActivate` signature
+ * 	- Conditional enabling/disabling of security based on environment or configuration
+ * 	- Automatic symbol-based metadata management for allow/deny patterns
+ * 	- Full compatibility with NestJS guard ecosystem
+ *
+ * **Argument Injection Logic:**
+ * 	Arguments are injected from left to right based on the `canActivate` method signature.
+ * 	Parameters provided to `createSecurityGuard` are injected first, followed by
+ * 	parameters provided when using the resulting decorator.
+ *
+ * @param Guard - The guard class that implements SecurityGuard interface
+ * @param enabled - Whether the security guard is active (default: true). When false, both decorators become no-ops
+ * @param args - Pre-configured arguments to inject into the guard's canActivate method (from left to right)
+ * @returns A tuple containing [SecurityDecorator, AllowAnonymousDecorator]
  *
  * @example
+ * Basic API Key Guard:
  * ```ts
- *	// define your authorization logic
- *	import { createSecurityGuard } from '#libs/decorators';
+ * import { createSecurityGuard } from '#libs/decorators';
+ * import { ExecutionContext, Injectable } from '@nestjs/common';
  *
- *	export class AnyGuard implements SecurityGuard {
- *		canActivate(
- *			context: ExecutionContext,
- *			... // any custom argument
- *		): boolean | Promise<boolean> {
- *			// validation logic here
- *		}
- *	};
+ * \@Injectable()
+ * export class ApiKeyGuard implements SecurityGuard {
+ *	canActivate(context: ExecutionContext): boolean {
+ *		const request = context.switchToHttp().getRequest();
+ *		const apiKey = request.headers['x-api-key'];
+ *		return apiKey === process.env.API_KEY;
+ *	}
+ * }
  *
- *	// create your SecurityGuard
- *	export const [AnySecurity, AllowAnonymous] = createSecurityGuard(
- *		AnyGuard,
- *		true, // if enabled or disabled
- *		... // any parameter defined after context in "canActivate", optional
- *	);
+ * // Create the decorators
+ * export const [ApiKeySecurity, AllowAnonymous] = createSecurityGuard(ApiKeyGuard);
  *
- *	[i] method injection works for every parameter defined after ExecutionContext
- *		in "canActivate" method, for inject values in "createSecurityGuard" but,
- *		any argument not defined here, must be provided in decorator created.
- *		i.e.
- *		1. canActivate(ctx: ExecutionContext, arg1: string, arg2: number, arg3: boolean)
- *		2. const { MySecurity } = createSecurityGuard(Guard, true, "string") // arg1 used here
- *		3. \@MySecurity(10, false) // rest or args (arg2 and arg3) must be passed here
+ * // Usage in controllers
+ * \@Controller('protected')
+ * \@ApiKeySecurity()
+ * export class ProtectedController {
+ *	\@Get('secure')
+ *	secureEndpoint() {
+ *		return { message: 'This endpoint requires API key' };
+ *	}
+ *
+ *	\@Get('public')
+ *	\@AllowAnonymous()
+ *	publicEndpoint() {
+ *		return { message: 'This endpoint is public' };
+ *	}
+ * }
+ * ```
+ *
+ * @example
+ * Role-based Guard with Argument Injection:
+ * ```ts
+ * \@Injectable()
+ * export class RoleGuard implements SecurityGuard {
+ *	canActivate(
+ *		context: ExecutionContext,
+ *		requiredRole: string,
+ *		allowSuperAdmin: boolean = false
+ *	): boolean {
+ *		const request = context.switchToHttp().getRequest();
+ *		const userRole = request.user?.role;
+ *
+ *		if (allowSuperAdmin && userRole === 'super-admin') return true;
+ *		return userRole === requiredRole;
+ *	}
+ * }
+ *
+ * // Pre-configure the allowSuperAdmin parameter
+ * export const [RequireRole, AllowAnonymous] = createSecurityGuard(
+ *	RoleGuard,
+ *	true,
+ *	true // allowSuperAdmin = true
+ * );
+ *
+ * // Usage - only need to provide the requiredRole parameter
+ * \@Controller('admin')
+ * export class AdminController {
+ *	\@Get('dashboard')
+ *	\@RequireRole('admin') // requiredRole parameter
+ *	dashboard() {
+ *		return { message: 'Admin dashboard' };
+ *	}
+ *
+ *	\@Get('users')
+ *	\@RequireRole('user') // requiredRole parameter
+ *	users() {
+ *		return { message: 'User list' };
+ *	}
+ * }
+ * ```
+ *
+ * @example
+ * Conditional Security (Environment-based):
+ * ```ts
+ * // Disable security in development
+ * const isProduction = process.env.NODE_ENV === 'production';
+ *
+ * export const [JwtSecurity, AllowAnonymous] = createSecurityGuard(
+ *	JwtAuthGuard,
+ *	isProduction // Only enable in production
+ * );
+ *
+ * // In development, all endpoints behave as if they have \@AllowAnonymous()
+ * // In production, normal JWT validation applies
+ * ```
+ *
+ * @example
+ * Complex Argument Injection:
+ * ```ts
+ * \@Injectable()
+ * export class PermissionGuard implements SecurityGuard {
+ *	canActivate(
+ *		context: ExecutionContext,
+ *		resource: string,
+ *		action: string,
+ *		requireOwnership: boolean,
+ *		allowedRoles: string[]
+ *	): boolean {
+ *		// Implementation here...
+ *		return true;
+ *	}
+ * }
+ *
+ * // Pre-configure resource and action
+ * export const [PostPermission, AllowAnonymous] = createSecurityGuard(
+ *	PermissionGuard,
+ *	true,
+ *	'posts',  // resource parameter
+ *	'read'    // action parameter
+ * );
+ *
+ * // Usage - provide remaining parameters (requireOwnership, allowedRoles)
+ * \@Controller('posts')
+ * export class PostController {
+ *	\@Get(':id')
+ *	\@PostPermission(false, ['user', 'admin']) // requireOwnership, allowedRoles
+ *	getPost() {
+ *		return { message: 'Post content' };
+ *	}
+ * }
  * ```
  */
 export const createSecurityGuard = <
