@@ -23,7 +23,6 @@ export interface ZodDto<
 	readonly _: any;
 	readonly jsonSchema: SchemaObject;
 	readonly schema: Z;
-	readonly registerOpenApi: (name?: string) => void;
 }
 
 /**
