@@ -1,0 +1,184 @@
+# GitHub Copilot ignore patterns
+
+# generated and build files
+*.generated.ts
+*.min.js
+*.bundle.js
+*.compiled.*
+*.transpiled.*
+dist/
+build/
+
+# dependencies
+node_modules/
+.pnp/
+.pnp.js
+.pnp.cjs
+
+# TypeScript and build cache
+*.tsbuildinfo
+.swc/
+.rollup.cache/
+vite.config.ts.*
+vitest.config.ts.*
+vite.config.js.timestamp-*
+
+# Stryker mutation testing
+.stryker-tmp/
+
+# environment and configuration
+.env*
+*.local
+
+# logs and debug files
+*.log
+logs/
+debug/
+debug.json
+.debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# diagnostic reports (node.js)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# test coverage and reports
+.reports/
+.coverage/
+__reports__/
+coverage/
+*.lcov
+.nyc_output
+test-results/
+playwright-report/
+test-report/
+
+# temporary files
+.tmp/
+temp/
+.temp/
+*.tmp
+*.temp
+
+# cache directories
+.cache/
+.parcel-cache/
+.vite/
+.nuxt/
+.output/
+
+# IDE and editor files
+.vscode/launch.json
+.vscode/tasks.json
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# package manager files
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# lock files (may contain sensitive info)
+*.lock
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# database files
+*.db
+*.sqlite
+*.sqlite3
+
+# security and sensitive files
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+private/
+
+# documentation that may contain sensitive info
+CHANGELOG.md
+SECURITY.md
+private-docs/
+
+# backup files
+*.backup
+*.bak
+*.old
+
+# compressed files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# media files (usually not relevant for code context)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.webp
+*.mp4
+*.mp3
+*.wav
+
+# large data files
+*.csv
+*.json.large
+*.xml.large
+data/
+fixtures/large/
+
+# storybook
+.storybook/
+storybook-static/
+
+# linting and formatting cache
+.eslintcache
+.prettiercache
+
+# runtime files
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# optional npm cache directory
+.npm
+
+# optional REPL history
+.node_repl_history
+
+# output of 'npm pack'
+*.tgz
+
+# yarn integrity file
+.yarn-integrity
+
+# stores vscode versions used for testing vscode extensions
+.vscode-test
