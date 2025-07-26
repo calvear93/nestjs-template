@@ -1,4 +1,4 @@
-import { ZodObjectDto } from '#libs/zod';
+import { ZodDto } from '#libs/zod';
 import { z } from 'zod';
 
 const SampleSchema = z
@@ -8,4 +8,4 @@ const SampleSchema = z
 	})
 	.meta({ description: 'Sample DTO schema' });
 
-export class SampleDto extends ZodObjectDto(SampleSchema, 'Sample') {}
+export class SampleDto extends ZodDto(SampleSchema, 'Sample') {}

@@ -57,9 +57,7 @@ import { FastifyRequest } from 'fastify';
 export class ApiKeyGuard implements SecurityGuard {
 	/**
 	 * Protects api with api-key
-	 *
 	 * @param context - current request context
-	 *
 	 * @returns can be executed
 	 */
 	canActivate(

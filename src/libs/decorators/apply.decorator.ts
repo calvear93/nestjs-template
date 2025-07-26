@@ -41,6 +41,8 @@ export const getDecorators = (
 /**
  * Decorator factory for apply many decorators
  * to class and its methods in a clean way.
+ * @param decorators - lookup with an array of decorators
+ * @returns class decorator
  *
  * @example
  * ```ts
@@ -61,10 +63,6 @@ export const getDecorators = (
  *  @ApplyToClass(AnyClassDecorators)
  *  export class AnyClass { ... }
  * ```
- *
- * @param decorators - lookup with an array of decorators
- *
- * @returns class decorator
  */
 export function ApplyToClass({
 	class: __class__ = [],
@@ -97,6 +95,8 @@ export function ApplyToClass({
 /**
  * Decorator factory for apply many decorators
  * to class properties in a clean way.
+ * @param decorators - lookup with an array of decorators
+ * @returns property decorator
  *
  * @example
  * ```ts
@@ -118,10 +118,6 @@ export function ApplyToClass({
  *		anyProp: string;
  *  }
  * ```
- *
- * @param decorators - lookup with an array of decorators
- *
- * @returns property decorator
  */
 export function ApplyToProperty({
 	common,

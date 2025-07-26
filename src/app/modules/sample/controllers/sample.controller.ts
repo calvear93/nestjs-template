@@ -21,7 +21,6 @@ import { SampleControllerDocs } from './sample.controller.docs.ts';
 export class SampleController {
 	/**
 	 * Receives, validate and returns a DTO
-	 *
 	 * @returns dto
 	 */
 	@Post('/dto')
@@ -31,7 +30,6 @@ export class SampleController {
 
 	/**
 	 * Returns a hello world.
-	 *
 	 * @returns sample string
 	 */
 	@Get()
@@ -42,7 +40,6 @@ export class SampleController {
 
 	/**
 	 * Sums two numbers.
-	 *
 	 * @returns sum result
 	 */
 	@Get('/sum')

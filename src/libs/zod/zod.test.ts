@@ -4,7 +4,7 @@ import { type OpenAPIObject } from '@nestjs/swagger';
 import { describe, expect, test } from 'vitest';
 import { z } from 'zod';
 import { registerDtoOpenApiSchemas } from './json-schema-customizations.ts';
-import { ZodIterableDto, ZodObjectDto } from './zod-dto.ts';
+import { ZodDto, ZodIterableDto } from './zod-dto.ts';
 import { ZodValidationPipe } from './zod.pipe.ts';
 
 describe(ZodValidationPipe, () => {
@@ -12,7 +12,7 @@ describe(ZodValidationPipe, () => {
 	test('register DTO schemas', () => {
 		const openApi = {} as OpenAPIObject;
 
-		class Dto extends ZodObjectDto(z.object({ id: z.number() }), 'Dto') {}
+		class Dto extends ZodDto(z.object({ id: z.number() }), 'Dto') {}
 		registerDtoOpenApiSchemas(openApi);
 
 		const { components } = openApi;
@@ -22,7 +22,7 @@ describe(ZodValidationPipe, () => {
 	});
 
 	test('DTO generates JSON schema', () => {
-		const dto = ZodObjectDto(
+		const dto = ZodDto(
 			z.object({
 				// primitive values
 				string: z.string(),
@@ -152,7 +152,7 @@ describe(ZodValidationPipe, () => {
 	});
 
 	test('object DTO parses values on instantiation', () => {
-		class Dto extends ZodObjectDto(z.object({ id: z.number() }), 'Dto') {}
+		class Dto extends ZodDto(z.object({ id: z.number() }), 'Dto') {}
 
 		const dto = new Dto({ id: 1 });
 
@@ -184,20 +184,21 @@ describe(ZodValidationPipe, () => {
 
 	describe('validation pipe', () => {
 		const _pipe = new ZodValidationPipe();
-		const _dto = ZodObjectDto(
+		const Dto = ZodDto(
 			z.object({
 				number: z.number(),
 				string: z.string(),
 			}),
 		);
-		const metadata = { metatype: _dto } as any;
+		const metadata = { metatype: Dto } as any;
 
 		test('parses correct input', () => {
 			const input = { number: 1, string: 'str' };
+			const dto = new Dto(input);
 
 			const result = _pipe.transform(input, metadata);
 
-			expect(result).toStrictEqual(input);
+			expect(result).toStrictEqual(dto);
 		});
 
 		test('throws BadRequestException on bad input', () => {
