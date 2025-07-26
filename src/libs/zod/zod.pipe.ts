@@ -50,7 +50,7 @@ export class ZodValidationPipe implements PipeTransform {
 		if (isZodDto(ZodTypeDto)) {
 			const dto = new ZodTypeDto();
 
-			const error = dto.safeFrom(value);
+			const error = dto.safeFrom!(value);
 			if (error) throw new ZodSchemaException(error);
 
 			return dto;

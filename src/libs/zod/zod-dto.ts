@@ -16,7 +16,7 @@ type ZodIterable = ZodArray | ZodSet | ZodTuple;
 type ZodShape = ZodMap | ZodObject | ZodRecord;
 
 type ZodTypeDtoOutput<Z extends ZodType = ZodType> = z.output<Z> & {
-	safeFrom(input: z.input<Z>): ZodError<unknown> | undefined;
+	safeFrom?(input: z.input<Z>): ZodError<unknown> | undefined;
 };
 
 export interface ZodTypeDto<
