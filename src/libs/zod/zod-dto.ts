@@ -20,7 +20,6 @@ export interface ZodDto<
 	O = z.output<Z>,
 > {
 	new (input?: I): O;
-	readonly _: any;
 	readonly jsonSchema: SchemaObject;
 	readonly schema: Z;
 }
