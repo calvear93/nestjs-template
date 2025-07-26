@@ -9,6 +9,7 @@ const SWAGGER_UI = process.env.SWAGGER_UI;
 /**
  * Decorator factory for apply Swagger
  * docs to Controller and its methods.
+ *
  * @param decorators - lookup with an array of decorators
  * @returns class decorator if swagger is enabled
  */
@@ -21,6 +22,7 @@ export function ApplyControllerDocs(
 /**
  * Decorator factory for apply Swagger
  * docs to DTOs properties.
+ *
  * @param decorators - lookup with an array of decorators
  * @returns property decorator if swagger is enabled
  */

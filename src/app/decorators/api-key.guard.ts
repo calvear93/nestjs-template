@@ -11,21 +11,21 @@ import { FastifyRequest } from 'fastify';
  *
  * @example
  * ```ts
- *  // swagger.config.ts
- *  const config = new DocumentBuilder()
- *	  ...
- *	  .addApiKey(
- *		  {
- *			  name: process.env.SECURITY_HEADER_NAME,
- *			  type: 'apiKey',
- *			  description: 'Security Api Key',
- *			  in: 'header'
- *		  },
- *		  ApiKeyGuard.name
- *	  )
- *	  .build();
+ *	// swagger.config.ts
+ *	const config = new DocumentBuilder()
+ *		...
+ *		.addApiKey(
+ *			{
+ *				name: process.env.SECURITY_HEADER_NAME,
+ *				type: 'apiKey',
+ *				description: 'Security Api Key',
+ *				in: 'header'
+ *			},
+ *			ApiKeyGuard.name
+ *		)
+ *		.build();
  *
- *  // api-key.guard.ts
+ *	// api-key.guard.ts
  *	import { createSecurityGuard } from '...';
  *	import { ApiKeyGuard } from '...';
  *
@@ -34,7 +34,7 @@ import { FastifyRequest } from 'fastify';
  *		...,
  *	);
  *
- *  // any.controller.ts
+ *	// any.controller.ts
  *	import { ApiKey, AllowAnonymous } from '.../api-key.guard.ts';
  *
  *	@Controller('sample')

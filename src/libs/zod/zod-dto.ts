@@ -33,6 +33,7 @@ export interface ZodTypeDto<
  * Validates if the object is a Zod DTO.
  * Checks if the provided object has a static `schema` property,
  * which indicates it was created using ZodDto or ZodIterableDto.
+ *
  * @param dto - object to validate
  * @returns true if the object is a Zod DTO, false otherwise
  *
@@ -51,11 +52,6 @@ export const isZodDto = (dto: any): dto is ZodTypeDto => {
 /**
  * Creates a DTO class from a Zod schema for objects, maps, or records.
  *
- * The generated class includes:
- * - Constructor that validates and assigns input data
- * - `safeFrom()` method for safe validation without throwing
- * - Static `schema` property with the original Zod schema
- * - Static `jsonSchema` property for OpenAPI integration
  * @param schema - Zod schema (ZodObject, ZodMap, or ZodRecord)
  * @param schemaName - Optional name for OpenAPI schema registration
  * @returns DTO class constructor with validation capabilities
@@ -67,9 +63,9 @@ export const isZodDto = (dto: any): dto is ZodTypeDto => {
  * import { ZodDto } from '#libs/zod';
  *
  * const UserSchema = z.object({
- *   id: z.number().positive(),
- *   name: z.string().min(1),
- *   email: z.string().email()
+ *	id: z.number().positive(),
+ *	name: z.string().min(1),
+ *	email: z.string().email()
  * });
  *
  * export class UserDto extends ZodDto(UserSchema, "User") {}
@@ -77,12 +73,12 @@ export const isZodDto = (dto: any): dto is ZodTypeDto => {
  * // Usage in controller
  * \@Controller('users')
  * export class UserController {
- *   \@Post()
- *   \@ApiBody({ schema: UserDto.jsonSchema })
- *   create(\@Body() userData: UserDto) {
- *     // userData is automatically validated and typed
- *     return { message: `Created user ${userData.name}` };
- *   }
+ *	\@Post()
+ *	\@ApiBody({ schema: UserDto.jsonSchema })
+ *	create(\@Body() userData: UserDto) {
+ *		// userData is automatically validated and typed
+ *		return { message: `Created user ${userData.name}` };
+ *	}
  * }
  * ```
  *
@@ -93,9 +89,9 @@ export const isZodDto = (dto: any): dto is ZodTypeDto => {
  * const error = user.safeFrom({ id: "invalid", name: "" });
  *
  * if (error) {
- *   console.log("Validation errors:", error.issues);
+ *	console.log("Validation errors:", error.issues);
  * } else {
- *   console.log("User created successfully:", user);
+ *	console.log("User created successfully:", user);
  * }
  * ```
  */
@@ -122,12 +118,6 @@ export const ZodDto = <Z extends ZodShape, I = z.input<Z>>(
 /**
  * Creates a DTO class from a Zod schema for iterable types (arrays, sets, tuples).
  *
- * The generated class extends Array and includes:
- * - Constructor that validates input and populates the array
- * - `safeFrom()` method for safe validation without throwing
- * - Static `schema` property with the original Zod schema
- * - Static `jsonSchema` property for OpenAPI integration
- * - All Array methods and properties
  * @param schema - Zod iterable schema (ZodArray, ZodSet, or ZodTuple)
  * @param schemaName - Optional name for OpenAPI schema registration
  * @returns DTO class that extends Array with validation capabilities
@@ -156,12 +146,12 @@ export const ZodDto = <Z extends ZodShape, I = z.input<Z>>(
  * // Usage in controller
  * \@Controller('locations')
  * export class LocationController {
- *   \@Post('coordinates')
- *   \@ApiBody({ schema: CoordinateDto.jsonSchema })
- *   addCoordinate(\@Body() coord: CoordinateDto) {
- *     const [lat, lng, label] = coord;
- *     return { lat, lng, label };
- *   }
+ *	\@Post('coordinates')
+ *	\@ApiBody({ schema: CoordinateDto.jsonSchema })
+ *	addCoordinate(\@Body() coord: CoordinateDto) {
+ *		const [lat, lng, label] = coord;
+ *		return { lat, lng, label };
+ *	}
  * }
  * ```
  */

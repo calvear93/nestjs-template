@@ -15,6 +15,7 @@ import { HttpClient, type HttpClientConfig } from './http.client.ts';
 export class HttpModule {
 	/**
 	 * Registers the module with configuration.
+	 *
 	 * @param config - provider config
 	 * @returns module registration
 	 */

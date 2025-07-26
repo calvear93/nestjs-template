@@ -41,27 +41,28 @@ export const getDecorators = (
 /**
  * Decorator factory for apply many decorators
  * to class and its methods in a clean way.
+ *
  * @param decorators - lookup with an array of decorators
  * @returns class decorator
  *
  * @example
  * ```ts
- *  // any.class.decorators.ts
- *  import { DecoratorsLookUp } from '...';
+ *	// any.class.decorators.ts
+ *	import { DecoratorsLookUp } from '...';
  *
- *  export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
- *	  class: [AnyClassDecorator()],
- *	  method: {
- *		anyMethod: [AnyMethodDecorator()]
- *	  }
- *  };
+ *	export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
+ *		class: [AnyClassDecorator()],
+ *		method: {
+ *			anyMethod: [AnyMethodDecorator()]
+ *		}
+ *	};
  *
- *  // any.class.ts
- *  import { ApplyToClass } from '...';
- *  import { AnyClassDecorators } from '...';
+ *	// any.class.ts
+ *	import { ApplyToClass } from '...';
+ *	import { AnyClassDecorators } from '...';
  *
- *  @ApplyToClass(AnyClassDecorators)
- *  export class AnyClass { ... }
+ *	@ApplyToClass(AnyClassDecorators)
+ *	export class AnyClass { ... }
  * ```
  */
 export function ApplyToClass({
@@ -95,28 +96,29 @@ export function ApplyToClass({
 /**
  * Decorator factory for apply many decorators
  * to class properties in a clean way.
+ *
  * @param decorators - lookup with an array of decorators
  * @returns property decorator
  *
  * @example
  * ```ts
- *  // any.class.decorators.ts
- *  import { DecoratorsLookUp } from '...';
+ *	// any.class.decorators.ts
+ *	import { DecoratorsLookUp } from '...';
  *
- *  export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
- *	  properties: {
- *		anyProp: [AnyPropertyDecorator()]
- *	  }
- *  };
+ *	export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
+ *		properties: {
+ *			anyProp: [AnyPropertyDecorator()]
+ *		}
+ *	};
  *
- *  // any.class.ts
- *  import { ApplyToProperty } from '...';
- *  import { AnyClassDecorators } from '...';
+ *	// any.class.ts
+ *	import { ApplyToProperty } from '...';
+ *	import { AnyClassDecorators } from '...';
  *
- *  export class AnyClass {
- * 		@ApplyToProperty(AnyClassDecorators)
+ *	export class AnyClass {
+ *		@ApplyToProperty(AnyClassDecorators)
  *		anyProp: string;
- *  }
+ *	}
  * ```
  */
 export function ApplyToProperty({

@@ -8,7 +8,7 @@ import { isZodDto } from './zod-dto.ts';
  * when the parameter type is a ZodDto or ZodIterableDto class.
  *
  * @example
- * - Global usage:
+ * Global usage:
  * ```ts
  * // main.ts
  * import { ZodValidationPipe } from '#libs/zod';
@@ -18,27 +18,27 @@ import { isZodDto } from './zod-dto.ts';
  * ```
  *
  * @example
- * - Controller-level usage:
+ * Controller-level usage:
  * ```ts
  * import { ZodValidationPipe } from '#libs/zod';
  *
  * \@Controller('users')
  * \@UsePipes(ZodValidationPipe)
  * export class UserController {
- *   \@Post()
- *   create(\@Body() userData: UserDto) {
- *     // userData is automatically validated
- *   }
+ *	\@Post()
+ *	create(\@Body() userData: UserDto) {
+ *		// userData is automatically validated
+ *	}
  * }
  * ```
  *
  * @example
- * - Method-level usage:
+ * Method-level usage:
  * ```ts
  * \@Post()
  * \@UsePipes(ZodValidationPipe)
  * create(\@Body() userData: UserDto) {
- *   // Only this method uses Zod validation
+ *	// Only this method uses Zod validation
  * }
  * ```
  */

@@ -173,6 +173,10 @@ const disabled = () => voided;
  * Generates a protect and allow
  * decorator for your security guard.
  *
+ * @param Guard - guard class
+ * @param enabled - if enabled
+ * @param args - shared args, defined from left to right in "canActivate"
+ *
  * @example
  * ```ts
  *	// define your authorization logic
@@ -202,10 +206,6 @@ const disabled = () => voided;
  *		2. const { MySecurity } = createSecurityGuard(Guard, true, "string") // arg1 used here
  *		3. \@MySecurity(10, false) // rest or args (arg2 and arg3) must be passed here
  * ```
- *
- * @param Guard - guard class
- * @param enabled - if enabled
- * @param args - shared args, defined from left to right in "canActivate"
  */
 export const createSecurityGuard = <
 	G extends SecurityGuard,

@@ -5,6 +5,7 @@ import { type Mock, vi } from 'vitest';
 /**
  * Creates a basic HTTP server
  * for tests requests.
+ *
  * @param port - localhost port
  * @param hostname - localhost
  * @returns HTTP server and request handler mocker

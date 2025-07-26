@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class SampleService {
 	/**
 	 * Returns Hello World.
+	 *
 	 * @returns sample string
 	 */
 	sample(): string {

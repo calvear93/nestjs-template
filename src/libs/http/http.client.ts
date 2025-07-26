@@ -31,6 +31,7 @@ const isNotNullish = (value: unknown): boolean => {
 export class HttpClient {
 	/**
 	 * Makes a DELETE request.
+	 *
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
@@ -48,6 +49,7 @@ export class HttpClient {
 
 	/**
 	 * Makes a GET request.
+	 *
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
@@ -65,6 +67,7 @@ export class HttpClient {
 
 	/**
 	 * Makes a PATCH request.
+	 *
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
@@ -83,6 +86,7 @@ export class HttpClient {
 
 	/**
 	 * Makes a POST request.
+	 *
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
@@ -101,6 +105,7 @@ export class HttpClient {
 
 	/**
 	 * Makes a PUT request.
+	 *
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
@@ -119,6 +124,7 @@ export class HttpClient {
 
 	/**
 	 * Makes a request.
+	 *
 	 * @typeParam R - response data
 	 * @param config - config object
 	 * @throws HttpError on http status code greater than 2.x.x
@@ -304,6 +310,7 @@ export class HttpClient {
 
 	/**
 	 * Returns base config.
+	 *
 	 * @returns base config object
 	 */
 	get config(): HttpRequestOptions {
@@ -324,6 +331,7 @@ export class HttpClient {
 
 	/**
 	 * Encodes user and password for basic auth.
+	 *
 	 * @param user - user name
 	 * @param password - user password
 	 * @returns base64 encoded basic auth

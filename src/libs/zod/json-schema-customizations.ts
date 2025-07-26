@@ -131,8 +131,7 @@ export const toJSONSchema = (schema: z.ZodTypeAny, schemaName?: string) => {
 };
 
 /**
- * Register Zod DTOs schemas to
- * OpenApi Swagger document.
+ * Register Zod DTOs schemas to OpenApi Swagger document.
  *
  * @example
  * ```ts
