@@ -7,6 +7,7 @@
 3. [Schema](#schema)
 4. [Load Priority](#load-priority)
 5. [Usage Example](#usage-example)
+6. [CLI Options](#cli-options)
 
 ---
 
@@ -146,5 +147,42 @@ const apiKey = process.env.API_KEY;
 - Keep sensitive variables only in `.env.json` files and never in version control.
 - Use local files for machine-specific variables.
 - Update the schema to keep validation and documentation up to date.
+
+---
+
+## 6. CLI Options
+
+The `env` command supports a wide range of options to customize environment loading and management:
+
+| Option                  | Alias            | Type    | Default                      | Description                                                       |
+| ----------------------- | ---------------- | ------- | ---------------------------- | ----------------------------------------------------------------- |
+| `--env`                 | `-e`             | string  |                              | Selects the environment to load (`dev`, `qa`, `prod`, etc.)       |
+| `--mode`                | `-m`             | array   |                              | Sets the execution mode(s) (`build`, `debug`, `test`, etc.)       |
+| `--configFile`          | `-c`             | string  | `env/settings/settings.json` | Path to a custom config file                                      |
+| `--schemaFile`          | `-s`, `--schema` | string  | `env/settings/schema.json`   | Path to the environment schema file                               |
+| `--packageJson`         | `--pkg`          | string  |                              | Path to a custom `package.json`                                   |
+| `--root`                |                  | string  | `env`                        | Default environment folder path                                   |
+| `--local`               | `-l`             | boolean |                              | Forces loading of local variables for the selected environment    |
+| `--ci`                  | `--ci`           | boolean | auto-detect                  | Enables CI mode (continuous integration)                          |
+| `--nestingDelimiter`    | `-nd`            | string  | `__`                         | Delimiter for nested keys (e.g. `l1__l2`)                         |
+| `--arrayDescomposition` | `--arrDesc`      | boolean | `false`                      | Whether to serialize or break down arrays                         |
+| `--expand`              | `-x`             | boolean | `false`                      | Interpolates environment variables using themselves               |
+| `--resolve`             | `-r`             | string  | `merge`                      | Schema update mode: `merge` or `override`                         |
+| `--nullable`            | `--null`         | boolean | `true`                       | Whether variables are nullable in schema                          |
+| `--detectFormat`        | `-df`            | boolean | `true`                       | Whether to include string format in schema                        |
+| `--logLevel`            | `--log`          | string  | `info`                       | Logging level: `silly`, `trace`, `debug`, `info`, `warn`, `error` |
+| `--logMaskAnyRegEx`     | `--mrx`          | array   | `[]`                         | (Advanced) Mask values matching regex in logs                     |
+| `--logMaskValuesOfKeys` | `--mvk`          | array   | `[]`                         | (Advanced) Mask values of specific keys in logs                   |
+| `--exportIgnoreKeys`    | `--iek`          | array   | `[]`                         | (Advanced) Ignore specific keys when exporting                    |
+| `--help`                | `-h`             |         |                              | Shows help information for the CLI                                |
+| `--version`             | `-v`             |         |                              | Displays the current version of the CLI                           |
+
+### Usage Notes
+
+- You can combine options as needed. The command after the colon (`:`) will run with the loaded environment variables.
+- For advanced usage, refer to the official documentation or run `env -h` for all available options.
+- Most options have sensible defaults; override them only for custom workflows or advanced scenarios.
+- Logging and masking options are useful for CI/CD and security-sensitive environments.
+- Schema options (`resolve`, `nullable`, `detectFormat`, etc.) help maintain strict validation and documentation.
 
 ---
