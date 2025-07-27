@@ -2,10 +2,11 @@ import type { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec
 import {
 	type z,
 	type ZodArray,
-	type ZodError,
 	type ZodMap,
 	type ZodObject,
 	type ZodRecord,
+	type ZodSafeParseError,
+	type ZodSafeParseSuccess,
 	type ZodSet,
 	type ZodTuple,
 	type ZodType,
@@ -15,18 +16,15 @@ import { toJSONSchema } from './json-schema-customizations.ts';
 type ZodIterable = ZodArray | ZodSet | ZodTuple;
 type ZodShape = ZodMap | ZodObject | ZodRecord;
 
-type ZodTypeDtoOutput<Z extends ZodType = ZodType> = z.output<Z> & {
-	safeFrom?(input: z.input<Z>): ZodError<unknown> | undefined;
-};
-
 export interface ZodTypeDto<
 	Z extends ZodType = ZodType,
 	I = z.input<Z>,
-	O = ZodTypeDtoOutput<Z>,
+	O = z.output<Z>,
 > {
 	new (input?: I): O;
 	readonly jsonSchema: SchemaObject;
 	readonly schema: Z;
+	safeFrom(input: z.input<Z>): ZodSafeParseError<Z> | ZodSafeParseSuccess<O>;
 }
 
 /**
@@ -104,10 +102,12 @@ export const ZodDto = <Z extends ZodShape, I = z.input<Z>>(
 			if (input) Object.assign(this, schema.parse(input));
 		}
 
-		safeFrom(input: I) {
+		static safeFrom(input: I) {
 			const { data, error, success } = schema.safeParse(input);
-			if (!success) return error;
-			Object.assign(this, data);
+			if (!success) return { error, success: false };
+
+			const instance = Object.assign(new this(), data);
+			return { data: instance, success: true };
 		}
 
 		static readonly jsonSchema = toJSONSchema(schema, schemaName);
@@ -165,10 +165,13 @@ export const ZodIterableDto = <Z extends ZodIterable, I = z.input<Z>>(
 			if (input) this.push(...schema.parse(input));
 		}
 
-		safeFrom(input: I) {
+		static safeFrom(input: I) {
 			const { data, error, success } = schema.safeParse(input);
-			if (!success) return error;
-			this.push(...data);
+			if (!success) return { error, success: false };
+
+			const instance = new this();
+			instance.push(...data);
+			return { data: instance, success: true };
 		}
 
 		static readonly jsonSchema = toJSONSchema(schema, schemaName);

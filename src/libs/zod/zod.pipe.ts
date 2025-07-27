@@ -48,12 +48,11 @@ export class ZodValidationPipe implements PipeTransform {
 		{ metatype: ZodTypeDto }: ArgumentMetadata,
 	): unknown {
 		if (isZodDto(ZodTypeDto)) {
-			const dto = new ZodTypeDto();
+			const { data, error, success } = ZodTypeDto.safeFrom(value);
 
-			const error = dto.safeFrom!(value);
-			if (error) throw new ZodSchemaException(error);
+			if (!success) throw new ZodSchemaException(error);
 
-			return dto;
+			return data;
 		}
 
 		// if no ZodDto, bypasses

@@ -5,6 +5,7 @@ import { createFastifyApplication } from '#testing';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { AppModule } from '../app/app.module.ts';
+import type { SampleDto } from '../app/modules/sample/schemas/sample.dto.ts';
 import { SampleService } from '../app/modules/sample/services/sample.service.ts';
 
 describe(AppModule, () => {
@@ -59,5 +60,22 @@ describe(AppModule, () => {
 
 		expect(statusCode).toBe(HttpStatusCode.OK);
 		expect(body).toBe(expected);
+	});
+
+	test('get /v1/basic/dto return same body sent', async () => {
+		const expected: SampleDto = {
+			id: 1,
+			name: 'name',
+		};
+
+		const { json, statusCode } = await _app.inject({
+			body: expected,
+			method: HttpMethod.POST,
+			url: '/v1/basic/dto',
+		});
+		const body = await json();
+
+		expect(statusCode).toBe(HttpStatusCode.CREATED);
+		expect(body).toStrictEqual(expected);
 	});
 });
