@@ -1,25 +1,61 @@
 import { type ArgumentMetadata, type PipeTransform } from '@nestjs/common';
 import { ZodSchemaException } from './exceptions/zod-schema.exception.ts';
-import { type ZodDto } from './zod-dto.ts';
-
-const isZodDto = (dto: any): dto is ZodDto => {
-	return !!dto.schema;
-};
+import { isZodDto } from './zod-dto.ts';
 
 /**
- * Validates Zod DTO schemas
- * on controller input.
+ * NestJS validation pipe for Zod DTOs.
+ * Automatically validates and transforms incoming data using Zod schemas
+ * when the parameter type is a ZodDto or ZodIterableDto class.
+ *
+ * @example
+ * Global usage:
+ * ```ts
+ * // main.ts
+ * import { ZodValidationPipe } from '#libs/zod';
+ *
+ * const app = await NestFactory.create(AppModule);
+ * app.useGlobalPipes(new ZodValidationPipe());
+ * ```
+ *
+ * @example
+ * Controller-level usage:
+ * ```ts
+ * import { ZodValidationPipe } from '#libs/zod';
+ *
+ * \@Controller('users')
+ * \@UsePipes(ZodValidationPipe)
+ * export class UserController {
+ *	\@Post()
+ *	create(\@Body() userData: UserDto) {
+ *		// userData is automatically validated
+ *	}
+ * }
+ * ```
+ *
+ * @example
+ * Method-level usage:
+ * ```ts
+ * \@Post()
+ * \@UsePipes(ZodValidationPipe)
+ * create(\@Body() userData: UserDto) {
+ *	// Only this method uses Zod validation
+ * }
+ * ```
  */
 export class ZodValidationPipe implements PipeTransform {
-	transform(value: unknown, { metatype }: ArgumentMetadata): unknown {
-		if (isZodDto(metatype)) {
-			const result = metatype.schema.safeParse(value);
+	transform(
+		value: unknown,
+		{ metatype: ZodTypeDto }: ArgumentMetadata,
+	): unknown {
+		if (isZodDto(ZodTypeDto)) {
+			const { data, error, success } = ZodTypeDto.safeFrom(value);
 
-			if (result.success) return result.data;
+			if (!success) throw new ZodSchemaException(error);
 
-			throw new ZodSchemaException(result.error);
+			return data;
 		}
 
+		// if no ZodDto, bypasses
 		return value;
 	}
 }

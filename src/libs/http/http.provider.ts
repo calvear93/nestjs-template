@@ -9,11 +9,15 @@ import { HttpClient, type HttpClientConfig } from './http.client.ts';
  */
 export class HttpProvider extends HttpClient {
 	static register(
-		config?: HttpClientConfig & { token?: InjectionToken },
+		config?: HttpProviderConfig,
 	): FactoryProvider<HttpProvider> {
 		return {
-			provide: config?.token ?? HttpProvider,
+			provide: config?.useToken ?? HttpProvider,
 			useFactory: () => new HttpProvider(config),
 		};
 	}
+}
+
+export interface HttpProviderConfig extends HttpClientConfig {
+	useToken?: InjectionToken;
 }

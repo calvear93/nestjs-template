@@ -1,23 +1,24 @@
 import { Test, type TestingModule } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import { HttpProvider } from './http.provider.ts';
+import { HttpClient } from './http.client.ts';
+import { HttpModule } from './http.module.ts';
 
-describe(HttpProvider, () => {
+describe(HttpModule, () => {
 	let _module: TestingModule;
-	let _provider: HttpProvider;
+	let _client: HttpClient;
 
 	const _altToken = 'otherHttpClient';
 
 	// hooks
 	beforeAll(async () => {
 		_module = await Test.createTestingModule({
-			providers: [
-				HttpProvider.register(),
-				HttpProvider.register({ useToken: _altToken }),
+			imports: [
+				HttpModule.register(),
+				HttpModule.register({ useToken: _altToken }),
 			],
 		}).compile();
 
-		_provider = _module.get<HttpProvider>(HttpProvider);
+		_client = _module.get<HttpClient>(HttpClient);
 	});
 
 	afterAll(async () => {
@@ -26,11 +27,11 @@ describe(HttpProvider, () => {
 
 	// tests
 	test('common http provider should be defined', () => {
-		expect(_provider).toBeDefined();
+		expect(_client).toBeDefined();
 	});
 
 	test('alternative http provider should be defined and configured', () => {
-		const altProvider = _module.get<HttpProvider>(_altToken);
+		const altProvider = _module.get<HttpClient>(_altToken);
 
 		expect(altProvider).toBeDefined();
 	});

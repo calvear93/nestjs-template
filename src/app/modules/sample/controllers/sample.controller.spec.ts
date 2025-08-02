@@ -9,8 +9,8 @@ describe(SampleController, () => {
 	// hooks
 	beforeAll(async () => {
 		const module = await Test.createTestingModule({
-			controllers: [SampleController],
 			providers: [SampleService],
+			controllers: [SampleController],
 		}).compile();
 
 		_controller = module.get(SampleController);

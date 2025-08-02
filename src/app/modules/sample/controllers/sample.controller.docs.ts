@@ -1,4 +1,5 @@
 import {
+	ApiBody,
 	ApiOperation,
 	ApiProduces,
 	ApiQuery,
@@ -12,10 +13,44 @@ import { type SampleController } from './sample.controller.ts';
 
 export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 	class: [ApiTags('Sample')],
+	common: {
+		method: [
+			ApiResponse({
+				description: 'Internal error',
+				status: 500,
+			}),
+		],
+	},
 	method: {
 		dto: [
 			ApiOperation({
 				summary: 'Receives, validate and returns a DTO',
+			}),
+			ApiBody({
+				schema: SampleDto.jsonSchema,
+				examples: {
+					example: {
+						description: 'example',
+						value: {
+							id: 1,
+							name: 'a name',
+						},
+					},
+					'coercion-example': {
+						description: 'coercion example',
+						value: {
+							id: '1',
+							name: 'a name',
+						},
+					},
+					'bad-example': {
+						description: 'bad example',
+						value: {
+							id: 'not a number',
+							name: 123,
+						},
+					},
+				},
 			}),
 			ApiResponse({
 				description: 'DTO',
@@ -32,10 +67,6 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				description: 'Sample string',
 				status: 200,
 				type: String,
-			}),
-			ApiResponse({
-				description: 'Internal error',
-				status: 500,
 			}),
 		],
 		sum: [
@@ -55,10 +86,6 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				description: 'Sum result',
 				status: 200,
 				type: Number,
-			}),
-			ApiResponse({
-				description: 'Internal error',
-				status: 500,
 			}),
 		],
 	},

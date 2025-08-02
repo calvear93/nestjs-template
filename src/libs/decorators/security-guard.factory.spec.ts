@@ -1,11 +1,11 @@
 import { type CanActivate } from '@nestjs/common';
 import { afterEach } from 'node:test';
 import {
-	type MockInstance,
 	afterAll,
 	beforeAll,
 	describe,
 	expect,
+	type MockInstance,
 	test,
 	vi,
 } from 'vitest';
@@ -24,7 +24,7 @@ class MockGuard implements CanActivate {
 	}
 }
 
-describe('security-guard.factory', () => {
+describe('Security Guard Factory', () => {
 	const _mockDecoratedClass = new MockDecoratedClass();
 	let _spyReflectDefineMetadata: MockInstance;
 
@@ -35,6 +35,7 @@ describe('security-guard.factory', () => {
 
 	afterEach(() => {
 		vi.resetAllMocks();
+		vi.clearAllMocks();
 	});
 
 	afterAll(() => {
@@ -43,7 +44,7 @@ describe('security-guard.factory', () => {
 
 	// tests
 	test('when not enabled, return void decorators', () => {
-		const [guard, allow] = createSecurityGuard(MockGuard, 'test', false);
+		const [guard, allow] = createSecurityGuard(MockGuard, false);
 
 		const guarDecorate = guard();
 		const allowDecorate = allow();
@@ -58,7 +59,7 @@ describe('security-guard.factory', () => {
 	});
 
 	test('when enabled and is a class instance, return guard and allow decorators', () => {
-		const [guard, allow] = createSecurityGuard(MockGuard, 'test', true);
+		const [guard, allow] = createSecurityGuard(MockGuard, true);
 
 		const guarDecorate = guard();
 		const allowDecorate = allow();
@@ -70,11 +71,11 @@ describe('security-guard.factory', () => {
 		);
 		allowDecorate(_mockDecoratedClass, 'key', {} as any);
 
-		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(3);
+		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(4);
 	});
 
 	test('when enabled and is a fn, return guard and allow decorators', () => {
-		const [guard] = createSecurityGuard(MockGuard, 'test', true);
+		const [guard] = createSecurityGuard(MockGuard, true);
 
 		const guarDecorate = guard();
 		_mockDecoratedClass.method.prototype = _mockDecoratedClass;
@@ -86,5 +87,31 @@ describe('security-guard.factory', () => {
 		);
 
 		expect(_spyReflectDefineMetadata).toBeDefined();
+	});
+
+	test('calls canActivate when enabled', () => {
+		const [guard, allow] = createSecurityGuard(MockGuard, true);
+		const _mockCanActivate = vi.fn();
+		const _mockClass = class {
+			canActivate = _mockCanActivate;
+		};
+
+		const guarDecorate = guard();
+		const allowDecorate = allow();
+
+		guarDecorate(
+			class {
+				canActivate = _mockCanActivate;
+			},
+			'',
+			mock<PropertyDescriptor>({ value: { name: '' } }),
+		);
+		allowDecorate(_mockDecoratedClass, 'key', {} as any);
+
+		const instance = new _mockClass();
+		instance.canActivate();
+
+		expect(_mockCanActivate).toHaveBeenCalled();
+		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(6);
 	});
 });

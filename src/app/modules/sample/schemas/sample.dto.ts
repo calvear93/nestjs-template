@@ -1,10 +1,11 @@
-import { z } from 'zod';
 import { ZodDto } from '#libs/zod';
+import { z } from 'zod';
 
-export class SampleDto extends ZodDto({
-	id: z.coerce.number(),
-	name: z.string(),
-}) {}
+const SampleSchema = z
+	.object({
+		id: z.coerce.number(),
+		name: z.string().meta({ description: 'Sample name' }),
+	})
+	.meta({ description: 'Sample DTO schema' });
 
-// register DTO OpenApi schema to Swagger
-SampleDto.registerOpenApi();
+export class SampleDto extends ZodDto(SampleSchema, 'Sample') {}

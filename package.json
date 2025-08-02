@@ -4,140 +4,89 @@
 	"project": "(((project-name)))",
 	"name": "(((app-name)))",
 	"title": "(((app-title)))",
+	"description": "(((app-description)))",
 	"scripts": {
 		"start:dev": "env -e dev -m debug --log debug : vite-node --watch src/main.ts",
 		"start:release": "env -e release -m debug : vite-node --watch src/main.ts",
-		"build": "wireit",
-		"preview": "wireit",
+		"build": "env -m build : vite build",
+		"preview": "pnpm build & env -e dev -m build : node dist/main",
 		"test:dev": "env -e dev -m test : vitest",
 		"test:release": "env -e release -m test : vitest",
 		"test:bench": "vitest bench",
 		"test:mutation": "env -e dev -m test : stryker run",
-		"env:schema": "wireit",
-		"lint": "wireit",
-		"format": "wireit",
-		"clean": "pnpx del-cli dist .reports **/*.tsbuildinfo .rollup.cache .swc .wireit .node_modules"
+		"env:schema": "env schema -e dev -m build",
+		"lint": "eslint --cache --cache-location node_modules/.cache/eslint/",
+		"format": "prettier --cache --write **/*.{ts,cts,mts,json,md,yml,yaml}",
+		"clean": "pnpx del-cli dist .reports **/*.tsbuildinfo .rollup.cache .swc .node_modules"
 	},
 	"imports": {
 		"#libs/zod": "./src/libs/zod/index.ts",
 		"#libs/http": "./src/libs/http/index.ts",
+		"#libs/decorators": "./src/libs/decorators/index.ts",
 		"#testing": "./src/__tests__/index.ts"
 	},
 	"dependencies": {
-		"@fastify/static": "7.0.3",
-		"@nestjs/common": "10.3.8",
-		"@nestjs/core": "10.3.8",
-		"@nestjs/platform-fastify": "10.3.8",
-		"@nestjs/swagger": "7.3.1",
-		"fastify": "4.26.2",
-		"luxon": "3.4.4",
+		"@fastify/static": "8.2.0",
+		"@nestjs/common": "11.1.5",
+		"@nestjs/core": "11.1.5",
+		"@nestjs/platform-fastify": "11.1.5",
+		"@nestjs/swagger": "11.2.0",
+		"fastify": "5.4.0",
+		"luxon": "3.7.1",
 		"reflect-metadata": "0.2.2",
-		"rxjs": "7.8.1",
-		"tslib": "2.6.2",
-		"zod": "3.22.5"
+		"rxjs": "7.8.2",
+		"tslib": "2.8.1",
+		"zod": "4.0.14"
 	},
 	"devDependencies": {
-		"@calvear/env": "2.10.2",
-		"@nestjs/testing": "10.3.8",
-		"@stryker-mutator/core": "8.2.6",
-		"@stryker-mutator/typescript-checker": "8.2.6",
-		"@stryker-mutator/vitest-runner": "8.2.6",
-		"@types/eslint": "^8.56.10",
-		"@types/luxon": "3.4.2",
-		"@types/node": "20.12.7",
-		"@vitest/coverage-v8": "1.5.0",
-		"eslint": "9.1.0",
-		"eslint-config-prettier": "9.1.0",
-		"eslint-plugin-perfectionist": "2.9.0",
-		"eslint-plugin-prettier": "5.1.3",
-		"eslint-plugin-redos": "4.4.5",
-		"eslint-plugin-regexp": "2.5.0",
-		"eslint-plugin-sonarjs": "0.25.1",
-		"eslint-plugin-unicorn": "52.0.0",
-		"eslint-plugin-vitest": "0.5.3",
-		"globals": "^15.0.0",
-		"prettier": "3.2.5",
-		"terser": "5.30.3",
-		"type-fest": "4.15.0",
-		"typescript": "5.4.5",
-		"typescript-eslint": "^7.7.0",
-		"unplugin-swc": "1.4.5",
-		"vite": "5.2.10",
-		"vite-node": "1.5.0",
-		"vite-plugin-checker": "^0.6.4",
-		"vite-tsconfig-paths": "^4.3.2",
-		"vitest": "1.5.0",
-		"vitest-mock-extended": "1.3.1",
-		"wireit": "0.14.4"
+		"@calvear/env": "2.10.3",
+		"@nestjs/testing": "11.1.5",
+		"@stryker-mutator/core": "9.0.1",
+		"@stryker-mutator/typescript-checker": "9.0.1",
+		"@stryker-mutator/vitest-runner": "9.0.1",
+		"@types/eslint": "9.6.1",
+		"@types/luxon": "3.7.1",
+		"@types/node": "24.1.0",
+		"@vitest/coverage-v8": "3.2.4",
+		"eslint": "9.32.0",
+		"eslint-config-prettier": "10.1.8",
+		"eslint-plugin-perfectionist": "4.15.0",
+		"eslint-plugin-prettier": "5.5.3",
+		"eslint-plugin-promise": "7.2.1",
+		"eslint-plugin-regexp": "2.9.0",
+		"eslint-plugin-sonarjs": "3.0.4",
+		"eslint-plugin-unicorn": "60.0.0",
+		"eslint-plugin-vitest": "0.5.4",
+		"globals": "16.3.0",
+		"prettier": "3.6.2",
+		"terser": "5.43.1",
+		"type-fest": "4.41.0",
+		"typescript": "5.9.2",
+		"typescript-eslint": "8.38.0",
+		"unplugin-swc": "1.5.5",
+		"vite": "7.0.6",
+		"vite-node": "3.2.4",
+		"vite-plugin-checker": "0.10.2",
+		"vitest": "3.2.4",
+		"vitest-mock-extended": "3.1.0"
 	},
-	"wireit": {
-		"build": {
-			"command": "env -m build : vite build",
-			"clean": "if-file-deleted",
-			"output": [
-				"dist/**",
-				"*.tsbuildinfo"
-			],
-			"files": [
-				"src/**",
-				"tsconfig.json",
-				"tsconfig.release.json",
-				"vite.config.ts",
-				"env/*.json",
-				"!**/*.{spec,test}.*",
-				"!**/__{tests,mocks,fixtures}__/**/*"
-			]
-		},
-		"preview": {
-			"command": "env -e dev -m build --log debug : node dist/main",
-			"dependencies": [
-				"build"
-			]
-		},
-		"format": {
-			"command": "prettier --cache --write **/*.{ts,cts,mts,json,md,yml,yaml}",
-			"output": [
-				"./node_modules/.cache/prettier/.prettier-cache"
-			],
-			"files": [
-				".prettierrc",
-				".prettierignore",
-				"**/*.{ts,cts,mts,json,md,yml,yaml}"
-			]
-		},
-		"lint": {
-			"command": "eslint --cache --cache-location node_modules/.cache/eslint/",
-			"output": [
-				"./node_modules/.cache/eslint/"
-			],
-			"files": [
-				"eslint.config.js",
-				".prettierrc",
-				".prettierignore",
-				"**/*.{js,mjs,cjs,ts,cts,mts,json}"
-			]
-		},
-		"env:schema": {
-			"command": "env schema -e dev -m build",
-			"output": [
-				"env/settings/schema.json"
-			],
-			"files": [
-				"env/appsettings.json",
-				"env/*.env.json"
-			]
-		}
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@nestjs/core",
+			"@scarf/scarf",
+			"@swc/core",
+			"esbuild"
+		]
 	},
 	"type": "module",
 	"engines": {
-		"node": ">=20",
-		"npm": ">=9",
-		"pnpm": ">=8"
+		"node": ">=22",
+		"npm": ">=10",
+		"pnpm": ">=10"
 	},
 	"license": "MIT",
 	"repository": "https://github.com/calvear93/nestjs-template",
 	"keywords": [
-		"node",
 		"nest",
 		"fastify",
 		"pnpm",

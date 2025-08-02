@@ -7,9 +7,13 @@ type ExtractMembersMatching<T, V, R> = {
  * or properties for apply to class.
  */
 export interface DecoratorsLookUp<T extends object = any> {
+	common?: {
+		method?: MethodDecorator[];
+		property?: MethodDecorator[];
+	};
 	class?: ClassDecorator[];
 	method?: ExtractMembersMatching<T, Function, MethodDecorator[]>;
-	properties?: ExtractMembersMatching<T, PropertyKey, MethodDecorator[]>;
+	property?: ExtractMembersMatching<T, PropertyKey, MethodDecorator[]>;
 }
 
 export type DecoratorsLookUpFn<T extends object = any> =
@@ -38,32 +42,32 @@ export const getDecorators = (
  * Decorator factory for apply many decorators
  * to class and its methods in a clean way.
  *
+ * @param decorators - lookup with an array of decorators
+ * @returns class decorator
+ *
  * @example
  * ```ts
- *  // any.class.decorators.ts
- *  import { DecoratorsLookUp } from '...';
+ *	// any.class.decorators.ts
+ *	import { DecoratorsLookUp } from '...';
  *
- *  export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
- *	  class: [AnyClassDecorator()],
- *	  method: {}
- *		anyMethod: [AnyMethodDecorator()]
- *	  }
- *  };
+ *	export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
+ *		class: [AnyClassDecorator()],
+ *		method: {
+ *			anyMethod: [AnyMethodDecorator()]
+ *		}
+ *	};
  *
- *  // any.class.ts
- *  import { ApplyToClass } from '...';
- *  import { AnyClassDecorators } from '...';
+ *	// any.class.ts
+ *	import { ApplyToClass } from '...';
+ *	import { AnyClassDecorators } from '...';
  *
- *  @ApplyToClass(AnyClassDecorators)
- *  export class AnyClass { ... }
+ *	@ApplyToClass(AnyClassDecorators)
+ *	export class AnyClass { ... }
  * ```
- *
- * @param decorators - lookup with an array of decorators
- *
- * @returns class decorator
  */
 export function ApplyToClass({
 	class: __class__ = [],
+	common,
 	method,
 }: DecoratorsLookUp): ClassDecorator {
 	return <T extends Function>(target: T) => {
@@ -74,7 +78,7 @@ export function ApplyToClass({
 
 		// apply method decorators
 		for (const key of Object.keys(method)) {
-			const decorators = method[key];
+			const decorators = method[key]?.concat(common?.method ?? []);
 
 			const property = Object.getOwnPropertyDescriptor(
 				target.prototype,
@@ -93,42 +97,42 @@ export function ApplyToClass({
  * Decorator factory for apply many decorators
  * to class properties in a clean way.
  *
+ * @param decorators - lookup with an array of decorators
+ * @returns property decorator
+ *
  * @example
  * ```ts
- *  // any.class.decorators.ts
- *  import { DecoratorsLookUp } from '...';
+ *	// any.class.decorators.ts
+ *	import { DecoratorsLookUp } from '...';
  *
- *  export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
- *	  properties: {}
- *		anyProp: [AnyPropertyDecorator()]
- *	  }
- *  };
+ *	export const AnyClassDecorators: DecoratorsLookUp<AnyClass> = {
+ *		properties: {
+ *			anyProp: [AnyPropertyDecorator()]
+ *		}
+ *	};
  *
- *  // any.class.ts
- *  import { ApplyToProperty } from '...';
- *  import { AnyClassDecorators } from '...';
+ *	// any.class.ts
+ *	import { ApplyToProperty } from '...';
+ *	import { AnyClassDecorators } from '...';
  *
- *  export class AnyClass {
- * 		@ApplyToProperty(AnyClassDecorators)
+ *	export class AnyClass {
+ *		@ApplyToProperty(AnyClassDecorators)
  *		anyProp: string;
- *  }
+ *	}
  * ```
- *
- * @param decorators - lookup with an array of decorators
- *
- * @returns property decorator
  */
 export function ApplyToProperty({
-	properties,
+	common,
+	property,
 }: DecoratorsLookUp): PropertyDecorator {
-	if (!properties) return () => void 0;
+	if (!property) return () => void 0;
 
 	return <T extends object, Y>(
 		target: T,
 		key: PropertyKey,
 		descriptor?: TypedPropertyDescriptor<Y>,
 	) => {
-		const decorators = properties[key as any];
+		const decorators = property[key as any]?.concat(common?.property ?? []);
 
 		if (!decorators) return;
 

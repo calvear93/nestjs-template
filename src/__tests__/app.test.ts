@@ -1,10 +1,11 @@
-import { createFastifyApplication } from '#testing';
 import { type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { HttpMethod, HttpStatusCode } from '#libs/http';
+import { createFastifyApplication } from '#testing';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
-import { HttpMethod, HttpStatusCode } from '#libs/http';
 import { AppModule } from '../app/app.module.ts';
+import type { SampleDto } from '../app/modules/sample/schemas/sample.dto.ts';
 import { SampleService } from '../app/modules/sample/services/sample.service.ts';
 
 describe(AppModule, () => {
@@ -50,14 +51,31 @@ describe(AppModule, () => {
 
 		const { body, statusCode } = await _app.inject({
 			method: HttpMethod.GET,
+			url: '/v1/basic/sum',
 			query: {
 				num1: num1.toString(),
 				num2: num2.toString(),
 			},
-			url: '/v1/basic/sum',
 		});
 
 		expect(statusCode).toBe(HttpStatusCode.OK);
 		expect(body).toBe(expected);
+	});
+
+	test('get /v1/basic/dto return same body sent', async () => {
+		const expected: SampleDto = {
+			id: 1,
+			name: 'name',
+		};
+
+		const { json, statusCode } = await _app.inject({
+			body: expected,
+			method: HttpMethod.POST,
+			url: '/v1/basic/dto',
+		});
+		const body = await json();
+
+		expect(statusCode).toBe(HttpStatusCode.CREATED);
+		expect(body).toStrictEqual(expected);
 	});
 });

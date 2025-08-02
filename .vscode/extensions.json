@@ -1,6 +1,7 @@
 {
 	"recommendations": [
 		"dbaeumer.vscode-eslint",
-		"svipas.prettier-plus"
+		"svipas.prettier-plus",
+		"vitest.explorer"
 	]
 }

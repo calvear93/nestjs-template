@@ -1,33 +1,58 @@
-#### Environment variables loader.
+# Environment Variables Configuration Guide
+
+## Table of Contents
+
+1. [Requirements](#requirements)
+2. [File Structure](#file-structure)
+3. [Schema](#schema)
+4. [Load Priority](#load-priority)
+5. [Usage Example](#usage-example)
+6. [CLI Options](#cli-options)
+
+---
 
 ## 1. Requirements
 
-#### 1.1. Dependencies
+### 1.1. Dependencies
 
--   Install **env** library with `npm i -D @calvear/env`.
+Install the **env** library:
 
-#### 1.2. NPM Scripts
+```bash
+npm i -D @calvear/env
+```
 
-For load desired environment, add you npm script like **`env -e <env> -m <mode>[ <mode2>] : <your-command>`**.
+### 1.2. NPM Scripts
 
--   **mode**: (build|debug|test) execution mode base variables (can be many).
--   **env**: (dev|qa|prod) environment variables.
+To load the desired environment, use the following format in your scripts:
 
-_In example: `env -e dev -m debug : npm start`_
+```bash
+env -e <env> -m <mode>[ <mode2>] : <your-command>
+```
 
-## 2. Structure
+- **env**: dev | qa | prod
+- **mode**: build | debug | test (you can use multiple)
 
-#### 2.1. Non secrets (appsettings.json)
+Example:
 
-Your `appsettings.json` could contains an structure like below:
+```bash
+env -e dev -m debug : npm start
+```
+
+---
+
+## 2. File Structure
+
+### 2.1. Non-secret Variables (`appsettings.json`)
+
+Recommended structure:
 
 ```json
 {
-	// (optional) base default variables
+	// base default variables
 	"|DEFAULT|": {
 		...
 	},
-	// (optional) execution modes
+	// execution modes
 	"|MODE|": {
 		// on build
 		"build": {
@@ -44,8 +69,15 @@ Your `appsettings.json` could contains an structure like below:
 		// any custom mode
 		...
 	},
-	// (optional) execution environments
+	// execution variables per environment
 	"|ENV|": {
+		"<env-name>": {
+			...
+		},
+		...
+	},
+	// (optional) local execution variables per environment
+	"|LOCAL|": {
 		"<env-name>": {
 			...
 		},
@@ -54,87 +86,103 @@ Your `appsettings.json` could contains an structure like below:
 }
 ```
 
-_This folder contains every base environment variables files a.k.a. environment execution modes._
+### 2.2. Secret and Local Variables
 
-#### 2.2. Environments
+- `dev.env.json`, `qa.env.json`, `prod.env.json`: secret variables per environment.
+- `dev.local.env.json`, `qa.local.env.json`, `prod.local.env.json`: local variables (highest priority).
 
--   2.2.1. Secrets
-
-Your `env` folder will contain files below that store secrets:
-
--   **dev.env.json**: development environment.
--   **qa.env.json**: quality assurance environment.
--   **prod.env.json**: production environment.
-
-_This folder contains secrets variables files for system environments._
-
--   2.2.2. Local Environment
-
-Your `env` folder will contain files below that store local development variables per environment:
-
--   **dev.local.env.json**: local development environment.
--   **qa.local.env.json**: local qa environment.
--   **prod.local.env.json**: local production environment.
-
-_This folder should local environment variables files for system environments, taking precedence over any other._
+---
 
 ## 3. Schema
 
-`settings/schema.json` is the file that contains current structure for
-your environment secrets files (dev|qa|prod).
+The `settings/schema.json` file defines the structure and validation for environment files. It uses the JSON Schema v4 standard.
 
-Schema uses JSON schema v4 standard, so you can add custom validations.
-Updating the schema model will merge changes by default.
+- When you add a new variable, use `env:schema` for update the schema.
+- To ignore a variable, remove it from the schema.
+- Variables can be retrieved from Azure Key Vault if configured.
 
-For each property in the file, loader will retrieve the value from Azure Key
-Vault.
+---
 
-When you push a new variable from any of your environment secrets
-file, `schema.json` will be updated automatically.
+## 4. Load Priority
 
-If you want to ignore to load some variable without delete it, you can remove
-the variable from `schema.json`.
+From lowest to highest:
 
-## 5. Nested Keys
+1. `appsettings.json` (default)
+2. `appsettings.json` (dev|qa|prod)
+3. `appsettings.json` (debug|build|test)
+4. `<env>.env.json`
+5. `<env>.local.env.json` (highest priority)
 
-You can organize your keys in nested objects.
+---
+
+## 5. Usage Example & Best Practices
+
+### 5.1. Nested Variables
+
+You can organize variables in nested objects. The default delimiter is `_`.
+
+Example file:
 
 ```json
 {
-	// .dev.env.json
-	"GROUP1": {
-		"VAR": "anyValue1",
-		...
+	"DATABASE": {
+		"HOST": "localhost",
+		"PORT": 5432
 	},
-	"GROUP2": {
-		"VAR": "anyValue2",
-		"SUBGROUP1": {
-			"VAR": "anyValue1",
-			...
-		},
-		...
-	},
-	"VAR3": "anyValue3",
-	...
+	"API": {
+		"KEY": "my-api-key"
+	}
 }
 ```
 
-Default nesting delimiter is `__`:
-So, in your application you can use the variables as shown below:
+Access in code:
 
-```javascript
-const myVar1 = process.env.GROUP1__VAR;
-const myVar2 = process.env.GROUP2__VAR;
-const myVar2 = process.env.GROUP2__SUBGROUP1_VAR;
-const myVar3 = process.env.VAR3;
+```js
+const dbHost = process.env.DATABASE_HOST;
+const apiKey = process.env.API_KEY;
 ```
 
-## 6. Priority
+### 5.2. Tips
 
-### From lowest to highest.
+- Keep sensitive variables only in `.env.json` files and never in version control.
+- Use local files for machine-specific variables.
+- Update the schema to keep validation and documentation up to date.
 
--   `appsettings.json` -> default
--   `appsettings.json` -> dev|qa|prod
--   `appsettings.json` -> debug|build|test
--   `(dev|qa|prod).env.json`
--   `(dev|qa|prod).local.env.json` (takes precedence over previous)
+---
+
+## 6. CLI Options
+
+The `env` command supports a wide range of options to customize environment loading and management:
+
+| Option                  | Alias            | Type    | Default                      | Description                                                       |
+| ----------------------- | ---------------- | ------- | ---------------------------- | ----------------------------------------------------------------- |
+| `--env`                 | `-e`             | string  |                              | Selects the environment to load (`dev`, `qa`, `prod`, etc.)       |
+| `--mode`                | `-m`             | array   |                              | Sets the execution mode(s) (`build`, `debug`, `test`, etc.)       |
+| `--configFile`          | `-c`             | string  | `env/settings/settings.json` | Path to a custom config file                                      |
+| `--schemaFile`          | `-s`, `--schema` | string  | `env/settings/schema.json`   | Path to the environment schema file                               |
+| `--packageJson`         | `--pkg`          | string  |                              | Path to a custom `package.json`                                   |
+| `--root`                |                  | string  | `env`                        | Default environment folder path                                   |
+| `--local`               | `-l`             | boolean |                              | Forces loading of local variables for the selected environment    |
+| `--ci`                  | `--ci`           | boolean | auto-detect                  | Enables CI mode (continuous integration)                          |
+| `--nestingDelimiter`    | `-nd`            | string  | `__`                         | Delimiter for nested keys (e.g. `l1__l2`)                         |
+| `--arrayDescomposition` | `--arrDesc`      | boolean | `false`                      | Whether to serialize or break down arrays                         |
+| `--expand`              | `-x`             | boolean | `false`                      | Interpolates environment variables using themselves               |
+| `--resolve`             | `-r`             | string  | `merge`                      | Schema update mode: `merge` or `override`                         |
+| `--nullable`            | `--null`         | boolean | `true`                       | Whether variables are nullable in schema                          |
+| `--detectFormat`        | `-df`            | boolean | `true`                       | Whether to include string format in schema                        |
+| `--logLevel`            | `--log`          | string  | `info`                       | Logging level: `silly`, `trace`, `debug`, `info`, `warn`, `error` |
+| `--logMaskAnyRegEx`     | `--mrx`          | array   | `[]`                         | (Advanced) Mask values matching regex in logs                     |
+| `--logMaskValuesOfKeys` | `--mvk`          | array   | `[]`                         | (Advanced) Mask values of specific keys in logs                   |
+| `--exportIgnoreKeys`    | `--iek`          | array   | `[]`                         | (Advanced) Ignore specific keys when exporting                    |
+| `--help`                | `-h`             |         |                              | Shows help information for the CLI                                |
+| `--version`             | `-v`             |         |                              | Displays the current version of the CLI                           |
+
+### Usage Notes
+
+- You can combine options as needed. The command after the colon (`:`) will run with the loaded environment variables.
+- For advanced usage, refer to the official documentation or run `env -h` for all available options.
+- Most options have sensible defaults; override them only for custom workflows or advanced scenarios.
+- Logging and masking options are useful for CI/CD and security-sensitive environments.
+- Schema options (`resolve`, `nullable`, `detectFormat`, etc.) help maintain strict validation and documentation.
+
+---

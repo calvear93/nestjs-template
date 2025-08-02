@@ -1,16 +1,12 @@
+import { type RequestListener, type Server } from 'node:http';
 import {
-	type IncomingMessage,
-	type Server,
-	type ServerResponse,
-} from 'node:http';
-import {
-	type Mock,
-	type MockInstance,
 	afterAll,
 	afterEach,
 	beforeAll,
 	describe,
 	expect,
+	type Mock,
+	type MockInstance,
 	test,
 	vi,
 } from 'vitest';
@@ -18,7 +14,7 @@ import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.t
 import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { HttpError } from './errors/http.error.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
-import { HttpClient } from './http.client.ts';
+import { HttpClient, type OnRequestInterceptor } from './http.client.ts';
 
 describe(HttpClient, () => {
 	let _httpClient: HttpClient;
@@ -26,17 +22,14 @@ describe(HttpClient, () => {
 
 	let port: number;
 	let _server: Server;
-	let _serverResponse: Mock<[IncomingMessage, ServerResponse]>;
-	let _fetchMock: MockInstance<
-		Parameters<typeof fetch>,
-		ReturnType<typeof fetch>
-	>;
+	let _serverResponse: Mock<RequestListener>;
+	let _fetchMock: MockInstance<typeof fetch>;
 
 	let _URL: string;
 
 	// hooks
 	beforeAll(async () => {
-		vi.useFakeTimers();
+		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 
 		// mock server
 		[_server, _serverResponse, port] = await createHttpMockServer();
@@ -66,14 +59,6 @@ describe(HttpClient, () => {
 	});
 
 	// tests
-	test('common http client should be defined', () => {
-		expect(_httpClient).toBeDefined();
-	});
-
-	test('alternative http client should be defined and configured', () => {
-		expect(_altHttpClient).toBeDefined();
-	});
-
 	test('failed request does not throw on throwOnError false', async () => {
 		// mocking phase
 		_serverResponse.mockImplementationOnce((_, response) => {
@@ -143,7 +128,7 @@ describe(HttpClient, () => {
 		expect(data).toStrictEqual(expectedData);
 	});
 
-	test('request with params is success', async () => {
+	test('request with query params is success', async () => {
 		// mocking phase
 		const query = { id: '1', name: 'test' };
 		const expectedUrl = `/?${new URLSearchParams(query)}`;
@@ -154,6 +139,65 @@ describe(HttpClient, () => {
 		// request phase
 		const { status } = await _httpClient.request('/', {
 			query,
+		});
+
+		// assertion data
+		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+
+		expect(status).toBe(HttpStatusCode.OK);
+		expect(receivedUrl).toBe(expectedUrl);
+	});
+
+	test('request with complex query params is success', async () => {
+		// mocking phase
+		const now = new Date();
+		const query = {
+			array: ['hola', 'mundo'],
+			bigint: 9_007_199_254_740_991n,
+			date: now,
+			empty: '',
+			nested: { prop1: 'hola', prop2: 'mundo' },
+			null: null,
+			undef: undefined,
+		};
+		const queryExpected = {
+			array: query.array.join(','),
+			bigint: query.bigint.toString(),
+			date: query.date.toISOString(),
+		};
+		const expectedUrl = `/?${new URLSearchParams(queryExpected)}&nested.prop1=hola&nested.prop2=mundo`;
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
+		});
+
+		// request phase
+		const { status } = await _httpClient.request('/', {
+			query,
+		});
+
+		// assertion data
+		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+
+		expect(status).toBe(HttpStatusCode.OK);
+		expect(receivedUrl).toBe(expectedUrl);
+	});
+
+	test('request with query params as URLSearchParams is success', async () => {
+		// mocking phase
+		const query = { id: '1', name: 'test' };
+		const params = new URLSearchParams(query);
+		// allows a list
+		params.append('list', '1');
+		params.append('list', '2');
+
+		const expectedUrl = `/?${params}`;
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
+		});
+
+		// request phase
+		const { status } = await _httpClient.request('/', {
+			query: params,
 		});
 
 		// assertion data
@@ -373,5 +417,72 @@ describe(HttpClient, () => {
 
 			expect(receivedUrl).toBe(expectedUrl);
 		});
+	});
+
+	test('base URL is not required in initial config', async () => {
+		const client = new HttpClient({});
+
+		// request phase
+		await client.request(_URL);
+
+		// assertion data
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+
+		expect(receivedUrl).toBe(_URL);
+	});
+
+	test('can get and set config', () => {
+		const initialTimeout = 1;
+		const expectedTimeout = 2;
+		const client = new HttpClient({ timeout: initialTimeout });
+
+		client.config.timeout = expectedTimeout;
+
+		expect(client.config.timeout).not.toBe(initialTimeout);
+		expect(client.config.timeout).toBe(expectedTimeout);
+	});
+
+	test('can set config by object and it merges the config', () => {
+		const expectedHeaders = { a: '1' };
+		const expectedTimeout = 2;
+		const client = new HttpClient({ headers: expectedHeaders });
+
+		client.config = { timeout: expectedTimeout };
+
+		expect(client.config.timeout).toBe(expectedTimeout);
+		expect(client.config.headers).toStrictEqual(expectedHeaders);
+	});
+
+	test('can set a specific header', () => {
+		const expectedHeaderKey = 'key';
+		const expectedHeaderValue = 'value';
+		const client = new HttpClient();
+
+		client.setHeader(expectedHeaderKey, expectedHeaderValue);
+
+		expect(client.config.headers?.[expectedHeaderKey]).toBe(
+			expectedHeaderValue,
+		);
+	});
+
+	test('can intercept request config', async () => {
+		const expectedHeaders = { anyHeader: 'anyValue' };
+		const mockRequestInterceptor = vi.fn<OnRequestInterceptor>((config) => {
+			config.headers = expectedHeaders;
+		});
+		const client = new HttpClient({
+			onRequest: mockRequestInterceptor,
+		});
+
+		// request phase
+		await client.request(_URL);
+
+		// assertion data
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+		const receivedConfig = _fetchMock.mock.calls[0][1];
+
+		expect(receivedUrl).toBe(_URL);
+		expect(mockRequestInterceptor).toHaveBeenCalledOnce();
+		expect(receivedConfig?.headers).toStrictEqual(expectedHeaders);
 	});
 });

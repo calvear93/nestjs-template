@@ -11,7 +11,11 @@
 			"runtimeExecutable": "pnpm",
 			"runtimeArgs": ["start:${input:environmentName}"],
 			"skipFiles": ["<node_internals>/**", "**/node_modules/**"],
-			"console": "integratedTerminal"
+			"console": "integratedTerminal",
+			"serverReadyAction": {
+				"action": "openExternally",
+				"pattern": "\\bLocal:\\s+(https?://\\S+)"
+			}
 		},
 		{
 			"name": "Test",
@@ -25,8 +29,6 @@
 				"run",
 				"test:${input:environmentName}",
 				"${relativeFile}",
-				"--inspect",
-				"--no-threads",
 				"--test-timeout=0"
 			],
 			"outFiles": ["${workspaceFolder}/src/**/*.ts"],
@@ -45,8 +47,6 @@
 			"runtimeArgs": [
 				"run",
 				"test:${input:environmentName}",
-				"--inspect",
-				"--no-threads",
 				"--test-timeout=0"
 			],
 			"outFiles": ["${workspaceFolder}/src/**/*.ts"],

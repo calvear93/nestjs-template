@@ -3,11 +3,24 @@ import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { HttpError } from './errors/http.error.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
 
-type Primitive = bigint | boolean | number | string | null | undefined;
+type Primitive = Date | bigint | boolean | number | string | null | undefined;
+interface QueryParams
+	extends Record<string, Primitive | Primitive[] | QueryParams> {}
 
-type RequestOptions = Omit<RequestInit, 'signal' | 'window'>;
+export type OnRequestInterceptor = (
+	options: HttpRequestOptions,
+	url: RequestURL,
+) => Promise<void> | void;
 
 export type RequestURL = URL | string;
+
+const isNullish = (value: unknown): value is '' | null | undefined => {
+	return value === null || value === undefined || value === '';
+};
+
+const isNotNullish = (value: unknown): boolean => {
+	return !isNullish(value);
+};
 
 /**
  * Http client using fetch.
@@ -22,7 +35,6 @@ export class HttpClient {
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
-	 *
 	 * @throws HttpError on http status code greater than 2.x.x
 	 * @returns async response
 	 */
@@ -41,7 +53,6 @@ export class HttpClient {
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
-	 *
 	 * @throws HttpError on http status code greater than 2.x.x
 	 * @returns async response
 	 */
@@ -60,7 +71,6 @@ export class HttpClient {
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
-	 *
 	 * @throws HttpError on http status code greater than 2.x.x
 	 * @returns async response
 	 */
@@ -68,7 +78,7 @@ export class HttpClient {
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
 	): Promise<HttpResponse<R>> | never {
-		this._serializeBody(config);
+		this.#serializeBody(config);
 		config.method = HttpMethod.PATCH;
 
 		return this.request(url, config);
@@ -80,7 +90,6 @@ export class HttpClient {
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
-	 *
 	 * @throws HttpError on http status code greater than 2.x.x
 	 * @returns async response
 	 */
@@ -88,7 +97,7 @@ export class HttpClient {
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
 	): Promise<HttpResponse<R>> | never {
-		this._serializeBody(config);
+		this.#serializeBody(config);
 		config.method = HttpMethod.POST;
 
 		return this.request(url, config);
@@ -100,7 +109,6 @@ export class HttpClient {
 	 * @typeParam R - response data
 	 * @param url - request url
 	 * @param config - fetch config
-	 *
 	 * @throws HttpError on http status code greater than 2.x.x
 	 * @returns async response
 	 */
@@ -108,7 +116,7 @@ export class HttpClient {
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
 	): Promise<HttpResponse<R>> | never {
-		this._serializeBody(config);
+		this.#serializeBody(config);
 		config.method = HttpMethod.PUT;
 
 		return this.request(url, config);
@@ -119,7 +127,6 @@ export class HttpClient {
 	 *
 	 * @typeParam R - response data
 	 * @param config - config object
-	 *
 	 * @throws HttpError on http status code greater than 2.x.x
 	 * @returns async response
 	 */
@@ -128,34 +135,39 @@ export class HttpClient {
 		options?: HttpRequestOptions,
 	): Promise<HttpResponse<R>> | never {
 		let clrFn: NodeJS.Timeout | null = null;
-		const { query, timeout, ...config } = {
-			...this._baseConfig,
+		const mergedConfig = {
+			...this.#baseConfig,
 			...options,
 			headers: {
-				...this._baseConfig?.headers,
+				...this.#baseConfig?.headers,
 				...options?.headers,
 			},
 		};
+
+		await mergedConfig.onRequest?.(mergedConfig, url);
+
+		const { query, timeout, ...config } = mergedConfig;
 
 		if (timeout) {
 			config.cancel ??= new AbortController();
 
 			clrFn = setTimeout(() => {
-				config.cancel!.abort(this._timeoutReason);
+				config.cancel!.abort(new TimeoutError());
 			}, timeout);
 		}
-
 		// sets fetch cancel signal from abort controller
 		(config as RequestInit).signal ??= config.cancel?.signal;
 
-		const fullUrl = this._getFullUrl(url.toString(), query);
-		const response = await fetch(fullUrl, config).catch((error) => {
+		const response = await fetch(
+			this.#getFullUrl(url.toString(), query),
+			config,
+		).catch((error) => {
 			if (error instanceof TypeError) {
 				throw new HttpError({
-					json: () => Promise.resolve(error.message),
 					ok: false,
 					status: HttpStatusCode.BAD_GATEWAY,
 					url,
+					json: () => Promise.resolve(error.message),
 				} as HttpResponse);
 			}
 
@@ -163,29 +175,68 @@ export class HttpClient {
 		});
 
 		if (clrFn) clearTimeout(clrFn);
-		if (this._throwOnClientError && !response.ok)
-			throw new HttpError(response);
+		if (this.#throwOnClientError && !response.ok)
+			throw new HttpError(response as HttpResponse);
 
-		return response;
+		return response as HttpResponse;
 	}
 
 	/**
-	 * Merges and normalizes request URL.
+	 * Sets a header value.
+	 *
+	 * @param key
+	 * @param value
+	 */
+	setHeader(key: string, value: string): void {
+		this.#baseConfig.headers ??= {};
+		this.#baseConfig.headers[key] = value;
+	}
+
+	/**
+	 * Merges and normalizes request URL
+	 * removing empty string, null and undefined values.
 	 *
 	 * @param query - query params
+	 * @param prefix - for nesting, key prefix
+	 * @param querySign - '?' if root, empty on sub levels
 	 */
-	private _buildQuery(query?: Record<string, Primitive>) {
-		if (!query) return '';
+	#buildQuery(
+		params?: QueryParams | URLSearchParams,
+		prefix = '',
+		querySign = '?',
+	): string {
+		if (!params) return '';
+		if (params instanceof URLSearchParams) return `?${params}`;
+		const queryParams = [];
 
-		return `?${Object.keys(query)
-			.map((key) => {
-				const value = query[key];
+		for (const key of Object.keys(params)) {
+			let value = params[key];
+			if (isNullish(value)) continue;
 
-				if (!value) return '';
+			// complex primitive types
+			if (value instanceof Date) value = value.toISOString();
+			if (typeof value === 'bigint') value = value.toString();
 
-				return `${key}=${query[key]}`;
-			})
-			.join('&')}`;
+			if (typeof value === 'object') {
+				// arrays values are not recursive, instead separated by commas
+				if (Array.isArray(value)) {
+					queryParams.push(
+						`${prefix + key}=${encodeURIComponent(value.filter(isNotNullish).join(','))}`,
+					);
+					continue;
+				}
+
+				// nested object is a recursive case with prop prefix
+				queryParams.push(
+					this.#buildQuery(value, `${prefix}${key}.`, ''),
+				);
+				continue;
+			}
+
+			queryParams.push(`${prefix + key}=${encodeURIComponent(value)}`);
+		}
+
+		return queryParams.length > 0 ? querySign + queryParams.join('&') : '';
 	}
 
 	/**
@@ -194,14 +245,14 @@ export class HttpClient {
 	 * @param path - request path
 	 * @param query - query params
 	 */
-	private _getFullUrl(path: string, query?: Record<string, Primitive>) {
+	#getFullUrl(path: string, query?: QueryParams | URLSearchParams) {
 		if (path.startsWith('/')) {
 			path = path.slice(1);
 		}
 
-		path = `${path}${this._buildQuery(query)}`;
+		path = `${path}${this.#buildQuery(query)}`;
 
-		return new URL(path, this._baseUrl);
+		return new URL(path, this.#baseUrl);
 	}
 
 	/**
@@ -210,7 +261,7 @@ export class HttpClient {
 	 *
 	 * @param config - fetch config
 	 */
-	private _serializeBody(config: HttpRequestBodyOptions = {}) {
+	#serializeBody(config: HttpRequestBodyOptions = {}) {
 		if (config.data instanceof URLSearchParams) {
 			config.body = config.data;
 			config.headers = {
@@ -236,43 +287,53 @@ export class HttpClient {
 		if (config) {
 			const { throwOnClientError = true, url, ...cfg } = config;
 
-			this._baseUrl = url?.endsWith('/') ? url : `${url}/`;
-			this._throwOnClientError = throwOnClientError;
-			this._baseConfig = {
-				cache: 'no-cache',
-				...cfg,
-			};
+			if (url) this.#baseUrl = url?.endsWith('/') ? url : `${url}/`;
+			this.#throwOnClientError = throwOnClientError;
+			this.#baseConfig = cfg;
 		}
-
-		this._timeoutReason = new TimeoutError();
 	}
 
 	/**
 	 * Client base config.
 	 */
-	private readonly _baseConfig?: HttpRequestOptions;
+	#baseConfig: HttpRequestOptions = {};
 
 	/**
 	 * Client base URL.
 	 */
-	private readonly _baseUrl?: RequestURL;
+	readonly #baseUrl?: RequestURL;
 
 	/**
 	 * When true, throws HttpError if a client error occurs (4XX).
 	 */
-	private readonly _throwOnClientError?: boolean;
+	readonly #throwOnClientError?: boolean;
 
 	/**
-	 * Reason for timeout
+	 * Returns base config.
+	 *
+	 * @returns base config object
 	 */
-	private readonly _timeoutReason: TimeoutError;
+	get config(): HttpRequestOptions {
+		return this.#baseConfig;
+	}
+
+	/**
+	 * Merges base config object.
+	 *
+	 * @param partialConfig - new config for merge
+	 */
+	set config(partialConfig: Partial<HttpRequestOptions>) {
+		this.#baseConfig = {
+			...this.#baseConfig,
+			...partialConfig,
+		};
+	}
 
 	/**
 	 * Encodes user and password for basic auth.
 	 *
 	 * @param user - user name
 	 * @param password - user password
-	 *
 	 * @returns base64 encoded basic auth
 	 */
 	static basicAuth(user: string, password: string) {
@@ -280,9 +341,12 @@ export class HttpClient {
 	}
 }
 
-export interface HttpRequestOptions extends RequestOptions {
+export interface HttpRequestOptions
+	extends Omit<RequestInit, 'signal' | 'window'> {
 	cancel?: AbortController;
-	query?: Record<string, Primitive>;
+	headers?: Record<string, string>;
+	onRequest?: OnRequestInterceptor;
+	query?: QueryParams | URLSearchParams;
 	timeout?: millis;
 }
 

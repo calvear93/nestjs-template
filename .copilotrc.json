@@ -1,0 +1,169 @@
+{
+	"instructions": [
+		"This is a modern NestJS TypeScript API template with custom libraries for scalable applications",
+		"Programming language is ENGLISH - variables, functions, classes, comments, and documentation",
+		"Exception: preserve business entities in original language when explicitly defined by user",
+		"Always use explicit TypeScript types and avoid 'any'",
+		"Use tabs for indentation (tabWidth: 4), not spaces",
+		"Use single quotes, trailing commas, and semicolons (prettier config)",
+		"Include proper error handling with try-catch blocks",
+		"Follow NestJS patterns with decorators and dependency injection",
+		"Use Zod schemas for validation with ZodDto pattern",
+		"Apply security decorators (@ApiKey, @AllowAnonymous) to controllers",
+		"Import with .ts extensions and use path aliases (#libs/*)",
+		"Create comprehensive unit tests with .spec.ts files using Vitest",
+		"Add JSDoc comments for public methods (main descriptions uppercase, params lowercase)",
+		"Use async/await instead of Promises",
+		"Follow kebab-case for file names, PascalCase for classes",
+		"Use '_' prefix for private/internal variables and methods",
+		"CRITICAL: NEVER hardcode URLs, API keys, or configuration in code",
+		"ALL configuration must be injectable through dynamic providers/modules",
+		"Define configuration as far out as possible (in modules)",
+		"Non-secret configs in env/appsettings.json, secrets in env/dev.env.json",
+		"For non-existent HTTP APIs, use MSW mock server in src/__msw__/handlers.ts",
+		"ALWAYS create OpenAPI documentation using .controller.docs.ts pattern",
+		"Keep business logic clean and testable by injecting all dependencies",
+		"Maintain at least 80% test coverage with comprehensive unit and integration tests"
+	],
+	"context": {
+		"framework": "NestJS v11+",
+		"runtime": "Node.js 22+ with TypeScript v5+",
+		"server": "Fastify",
+		"language": "TypeScript",
+		"validation": "Zod v4+",
+		"httpClient": "Custom Fetch-based HttpClient",
+		"testing": "Vitest",
+		"coverage": "Vitest Coverage V8",
+		"mutationTesting": "Stryker Mutator",
+		"documentation": "OpenAPI/Swagger",
+		"buildTool": "Vite",
+		"formatting": "Prettier with tabs, single quotes, trailing commas",
+		"codeQuality": "ESLint + Prettier",
+		"mocking": "MSW (Mock Service Worker)",
+		"packageManager": "pnpm"
+	},
+	"scripts": {
+		"development": {
+			"start": "pnpm start:dev",
+			"description": "Start development with hot reload and debug logging"
+		},
+		"testing": {
+			"test": "pnpm test:dev --coverage --run",
+			"description": "Run tests with coverage (for CI/validation)",
+			"testWatch": "pnpm test:dev",
+			"description_watch": "Run tests in watch mode (for development)",
+			"testMutation": "pnpm test:mutation",
+			"description_mutation": "Run Stryker mutation testing for test quality"
+		},
+		"codeQuality": {
+			"lint": "pnpm lint",
+			"description": "Check and fix code style issues, warnings and errors",
+			"format": "pnpm format",
+			"description_format": "Format code using Prettier"
+		},
+		"build": {
+			"build": "pnpm build",
+			"description": "Build project for production",
+			"preview": "pnpm preview",
+			"description_preview": "Preview production build locally"
+		}
+	},
+	"patterns": {
+		"controller": {
+			"decorator": "@Controller({ path: 'resource', version: '1' })",
+			"security": "@ApiKey() for protected, @AllowAnonymous() for public endpoints",
+			"documentation": "@ApplyDocs(ResourceControllerDocs) for OpenAPI"
+		},
+		"validation": {
+			"body": "@Body(ZodValidationPipe)",
+			"dto": "ZodDto(schema, 'ModelName')",
+			"pipe": "Use ZodValidationPipe for all input validation"
+		},
+		"service": {
+			"decorator": "@Injectable()",
+			"injection": "Constructor injection for all dependencies",
+			"pattern": "Keep business logic in services, not controllers"
+		},
+		"module": {
+			"structure": "Register providers, controllers, imports, exports in @Module",
+			"configuration": "Use dynamic providers for configuration injection",
+			"organization": "Feature-based modules under src/app/modules/"
+		},
+		"configuration": {
+			"principle": "NEVER hardcode - always inject configuration",
+			"appsettings": "Non-secret config in env/appsettings.json",
+			"secrets": "Secrets in env/dev.env.json, env/qa.env.json, etc.",
+			"injection": "Define in modules, inject into services/controllers",
+			"example": "ConfigService.get('API_URL') vs hardcoded 'https://api.example.com'",
+			"factory": "Use useFactory for complex configuration objects"
+		},
+		"swagger_docs": {
+			"file": "Always create .controller.docs.ts files",
+			"pattern": "export const ControllerNameDocs: DecoratorsLookUp<ControllerName>",
+			"decorators": [
+				"@ApiTags",
+				"@ApiOperation",
+				"@ApiBody",
+				"@ApiResponse",
+				"@ApiQuery",
+				"@ApiParam"
+			],
+			"structure": "class, common, and method sections",
+			"examples": "Include request/response examples for better documentation"
+		},
+		"mock_server": {
+			"tool": "MSW (Mock Service Worker)",
+			"location": "src/__msw__/handlers.ts",
+			"pattern": "http.get('url', () => HttpResponse.json(data))",
+			"usage": "For non-existent HTTP APIs during development"
+		},
+		"testing": {
+			"framework": "Vitest",
+			"structure": "describe, beforeAll, afterAll, test patterns",
+			"organization": "// hooks section, // tests section",
+			"variables": "_variable for private/internal test variables",
+			"coverage": "Maintain at least 80% coverage",
+			"patterns": "arrange/act/assert structure in test cases"
+		},
+		"comments": {
+			"jsdoc": {
+				"main_description": "Main description paragraphs start with uppercase",
+				"parameters_returns": "Parameters, returns, and tags start with lowercase",
+				"example": "/**\n * Creates a Zod validator for phone numbers.\n *\n * @param options - configuration options\n * @returns zod transformer that validates phones\n */"
+			},
+			"inline": "// lowercase comment",
+			"section": "// SECTION: description"
+		}
+	},
+	"libraries": {
+		"zod": "#libs/zod - ZodDto, ZodIterableDto, ZodValidationPipe, phone(), epoch()",
+		"http": "#libs/http - HttpClient, HttpModule, HttpError, TimeoutError",
+		"decorators": "#libs/decorators - createSecurityGuard, SecurityGuard, ApplyDocs"
+	},
+	"codeStyle": {
+		"indentation": "tabs (4 spaces width)",
+		"quotes": "single quotes",
+		"semicolons": "always",
+		"trailingCommas": "all",
+		"printWidth": 80,
+		"bracketSpacing": true,
+		"arrowParens": "always"
+	},
+	"avoid": [
+		"Using 'any' type - always provide explicit TypeScript types",
+		"Hardcoded values - use environment variables and configuration injection",
+		"Using process.env directly in services/controllers",
+		"Missing error handling - wrap async operations in try-catch",
+		"Skipping validation - use ZodValidationPipe for all inputs",
+		"Forgetting security decorators - apply @ApiKey() to protected controllers",
+		"Missing unit tests - create comprehensive .spec.ts files",
+		"Inconsistent file naming - use kebab-case for files, PascalCase for classes",
+		"Incorrect JSDoc capitalization - main descriptions uppercase, params lowercase",
+		"Spaces instead of tabs - use tab indentation",
+		"Double quotes - use single quotes consistently",
+		"Missing OpenAPI documentation - create .controller.docs.ts files",
+		"Mixing business logic in controllers - keep logic in services",
+		"Circular dependencies between modules",
+		"Non-English naming - use English for all technical naming"
+	]
+}

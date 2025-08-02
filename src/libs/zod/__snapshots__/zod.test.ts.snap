@@ -2,6 +2,8 @@
 
 exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
   "properties": {
     "any": {
       "nullable": true,
@@ -39,25 +41,39 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     },
     "coerceDate": {
       "format": "date-time",
-      "nullable": true,
       "type": "string",
     },
+    "coerceToBigint": {
+      "format": "int64",
+      "type": "integer",
+    },
     "coerceToBool": {
-      "nullable": true,
       "type": "boolean",
     },
     "coerceToString": {
-      "nullable": true,
+      "type": "string",
+    },
+    "colors": {
+      "enum": [
+        "red",
+        "green",
+        "blue",
+      ],
       "type": "string",
     },
     "cuid": {
-      "example": "cjld2cjxh0000qzrmn831i7rn",
       "format": "cuid",
+      "pattern": "^[cC][^\\s-]{8,}$",
       "type": "string",
     },
     "cuid2": {
-      "example": "tz4a98xxat96iws9zmbrgj3a",
       "format": "cuid2",
+      "pattern": "^[0-9a-z]+$",
+      "type": "string",
+    },
+    "date": {
+      "format": "date",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
       "type": "string",
     },
     "datetime": {
@@ -69,19 +85,15 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "string",
     },
     "discriminated": {
-      "discriminator": {
-        "propertyName": "status",
-      },
-      "oneOf": [
+      "anyOf": [
         {
+          "additionalProperties": false,
           "properties": {
             "data": {
               "type": "string",
             },
             "status": {
-              "enum": [
-                "success",
-              ],
+              "const": "success",
               "type": "string",
             },
           },
@@ -92,14 +104,13 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
           "type": "object",
         },
         {
+          "additionalProperties": false,
           "properties": {
             "message": {
               "type": "string",
             },
             "status": {
-              "enum": [
-                "failed",
-              ],
+              "const": "failed",
               "type": "string",
             },
           },
@@ -111,16 +122,28 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
         },
       ],
     },
+    "duration": {
+      "format": "duration",
+      "pattern": "^P(?:(\\d+W)|(?!.*W)(?=\\d|T\\d)(\\d+Y)?(\\d+M)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+([.,]\\d+)?S)?)?)$",
+      "type": "string",
+    },
     "email": {
-      "example": "sample@email.com",
       "format": "email",
+      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+      "type": "string",
+    },
+    "emailHtml5": {
+      "format": "email",
+      "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_\`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
       "type": "string",
     },
     "emoji": {
-      "example": "😜",
+      "format": "emoji",
+      "pattern": "^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$",
       "type": "string",
     },
     "endsWith": {
+      "pattern": ".*z$",
       "type": "string",
     },
     "enum": {
@@ -131,14 +154,30 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       ],
       "type": "string",
     },
+    "file": {
+      "anyOf": [
+        {
+          "contentEncoding": "binary",
+          "contentMediaType": "image/png",
+          "format": "binary",
+          "maxLength": 1000000,
+          "type": "string",
+        },
+        {
+          "contentEncoding": "binary",
+          "contentMediaType": "image/jpeg",
+          "format": "binary",
+          "maxLength": 1000000,
+          "type": "string",
+        },
+      ],
+    },
     "from": {
       "format": "date-time",
-      "nullable": true,
       "type": "string",
     },
     "gt": {
-      "exclusiveMinimum": true,
-      "minimum": 5,
+      "exclusiveMinimum": 5,
       "type": "number",
     },
     "gte": {
@@ -146,14 +185,18 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "number",
     },
     "includes": {
+      "pattern": "hello",
       "type": "string",
     },
     "int": {
+      "maximum": 9007199254740991,
+      "minimum": -9007199254740991,
       "type": "integer",
     },
     "intersection": {
       "allOf": [
         {
+          "additionalProperties": false,
           "properties": {
             "name": {
               "type": "string",
@@ -165,6 +208,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
           "type": "object",
         },
         {
+          "additionalProperties": false,
           "properties": {
             "role": {
               "type": "string",
@@ -179,10 +223,17 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     },
     "ipv4": {
       "format": "ipv4",
+      "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$",
       "type": "string",
     },
     "ipv6": {
       "format": "ipv6",
+      "pattern": "^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::|([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:?){0,6})$",
+      "type": "string",
+    },
+    "isoDatetime": {
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
       "type": "string",
     },
     "length": {
@@ -194,11 +245,19 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "additionalProperties": {
         "type": "boolean",
       },
+      "propertyNames": {
+        "maxLength": 3,
+        "type": "string",
+      },
       "type": "object",
     },
+    "lowercase": {
+      "format": "lowercase",
+      "pattern": "^[^A-Z]*$",
+      "type": "string",
+    },
     "lt": {
-      "exclusiveMaximum": true,
-      "maximum": 5,
+      "exclusiveMaximum": 5,
       "type": "number",
     },
     "lte": {
@@ -215,9 +274,9 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     },
     "multiple": {
       "default": "test@test.cl",
-      "example": "sample@email.com",
       "format": "email",
       "maxLength": 12,
+      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
       "type": "string",
     },
     "multipleOf": {
@@ -225,17 +284,15 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "number",
     },
     "nan": {
-      "default": NaN,
       "nullable": true,
-      "readOnly": true,
       "type": "number",
     },
     "negative": {
-      "exclusiveMaximum": true,
-      "maximum": 0,
+      "exclusiveMaximum": 0,
       "type": "number",
     },
     "never": {
+      "not": {},
       "readOnly": true,
     },
     "nonnegative": {
@@ -247,24 +304,35 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "number",
     },
     "null": {
-      "default": null,
-      "format": "null",
-      "nullable": true,
-      "type": "number",
+      "type": "null",
     },
     "nullable": {
+      "anyOf": [
+        {
+          "type": "boolean",
+        },
+        {
+          "type": "null",
+        },
+      ],
       "nullable": true,
-      "type": "boolean",
     },
     "nullish": {
+      "anyOf": [
+        {
+          "type": "boolean",
+        },
+        {
+          "type": "null",
+        },
+      ],
       "nullable": true,
-      "type": "boolean",
     },
     "number": {
       "type": "number",
     },
     "numberOrBool": {
-      "oneOf": [
+      "anyOf": [
         {
           "type": "number",
         },
@@ -274,10 +342,10 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       ],
     },
     "object": {
+      "additionalProperties": false,
       "properties": {
         "id": {
-          "exclusiveMinimum": true,
-          "minimum": 0,
+          "exclusiveMinimum": 0,
           "type": "number",
         },
         "name": {
@@ -294,13 +362,15 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "boolean",
     },
     "positive": {
-      "exclusiveMinimum": true,
-      "minimum": 0,
+      "exclusiveMinimum": 0,
       "type": "number",
     },
     "record": {
       "additionalProperties": {
         "type": "number",
+      },
+      "propertyNames": {
+        "type": "string",
       },
       "type": "object",
     },
@@ -309,13 +379,14 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "string",
     },
     "startsWith": {
+      "pattern": "^a.*",
       "type": "string",
     },
     "string": {
       "type": "string",
     },
     "stringOrNumber": {
-      "oneOf": [
+      "anyOf": [
         {
           "type": "string",
         },
@@ -324,65 +395,79 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
         },
       ],
     },
+    "sym": {
+      "default": null,
+      "type": "string",
+    },
+    "templateLiteral": {
+      "pattern": "^hello, [\\s\\S]{0,}!$",
+      "type": "string",
+    },
+    "time": {
+      "format": "time",
+      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?$",
+      "type": "string",
+    },
+    "trim": {
+      "type": "string",
+    },
     "tru": {
-      "enum": [
-        true,
-      ],
+      "const": true,
       "type": "boolean",
     },
     "tuna": {
-      "enum": [
-        "tuna",
-      ],
+      "const": "tuna",
       "type": "string",
     },
     "tuple": {
-      "items": {
-        "oneOf": [
-          {
-            "type": "string",
-          },
-          {
-            "type": "boolean",
-          },
-        ],
-      },
       "maxItems": 2,
       "minItems": 2,
+      "prefixItems": [
+        {
+          "type": "string",
+        },
+        {
+          "type": "boolean",
+        },
+      ],
       "type": "array",
     },
     "twelve": {
-      "enum": [
-        12,
-      ],
+      "const": 12,
       "type": "number",
     },
     "ulid": {
-      "example": "01ARZ3NDEKTSV4RRFFQ69G5FAV",
       "format": "ulid",
+      "pattern": "^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$",
       "type": "string",
     },
     "undefined": {
       "readOnly": true,
     },
-    "unknown": {
-      "nullable": true,
-    },
+    "unknown": {},
     "until": {
       "format": "date-time",
-      "nullable": true,
+      "type": "string",
+    },
+    "uppercase": {
+      "format": "uppercase",
+      "pattern": "^[^a-z]*$",
       "type": "string",
     },
     "url": {
-      "example": "http://www.example.com/",
       "format": "uri",
       "type": "string",
     },
     "uuid": {
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000)$",
       "type": "string",
     },
     "void": {
+      "default": null,
+      "nullable": true,
       "readOnly": true,
+      "type": "null",
     },
   },
   "required": [
@@ -390,14 +475,27 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "number",
     "boolean",
     "null",
+    "void",
+    "any",
+    "unknown",
+    "never",
     "coerceDate",
+    "coerceToString",
+    "coerceToBool",
+    "coerceToBigint",
     "tuna",
     "twelve",
     "tru",
+    "colors",
+    "templateLiteral",
     "max",
     "min",
     "length",
+    "uppercase",
+    "lowercase",
+    "trim",
     "email",
+    "emailHtml5",
     "url",
     "emoji",
     "uuid",
@@ -410,6 +508,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "endsWith",
     "ipv4",
     "ipv6",
+    "multiple",
     "gt",
     "gte",
     "lt",
@@ -421,10 +520,16 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "nonpositive",
     "multipleOf",
     "nan",
+    "sym",
     "datetime",
+    "date",
+    "time",
+    "isoDatetime",
+    "duration",
     "from",
     "until",
     "enum",
+    "default",
     "nullable",
     "object",
     "array",
@@ -438,6 +543,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "record",
     "lookup",
     "intersection",
+    "file",
   ],
   "type": "object",
 }

@@ -1,21 +1,36 @@
+import swc from 'unplugin-swc';
+import { checker } from 'vite-plugin-checker';
 import type { UserConfigExport } from 'vitest/config';
-import vite from './vite.config.ts';
 
 export default {
 	clearScreen: false,
-	plugins: vite.plugins,
+	plugins: [
+		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
+		checker({
+			terminal: true,
+			typescript: true,
+			eslint: {
+				dev: { logLevel: ['error'] },
+				lintCommand: 'eslint --cache',
+				useFlatConfig: true,
+			},
+		}),
+	],
 	test: {
+		include: ['src/**/*.{spec,test}.?(c|m)[jt]s'],
+		reporters: ['verbose'],
+		benchmark: {
+			include: ['src/**/*.{bench,benchmark}.?(c|m)[jt]s'],
+		},
 		coverage: {
-			exclude: [
-				'**/*.{d,config,mock,fixture,bench}.{ts,cts,mts}',
-				'**/{index,main,app}.{ts,cts,mts}',
-				'**/__{tests,mocks,fixtures}__',
-			],
-			include: ['src/**/*.{ts,cts,mts}'],
+			include: ['src/**/*.?(c|m)[jt]s'],
 			reporter: ['text', 'text-summary', 'lcov', 'cobertura', 'json'],
 			reportsDirectory: '.reports/coverage',
+			exclude: [
+				'**/*.{d,config,mock,fixture,bench}.?(c|m)[jt]s',
+				'**/{index,main,app}.?(c|m)[jt]s',
+				'**/__{tests,mocks,fixtures}__/**/*',
+			],
 		},
-		include: ['src/**/*.{spec,test}.{ts,cts,mts}'],
-		reporters: ['verbose'],
 	},
 } satisfies UserConfigExport;

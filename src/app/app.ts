@@ -1,4 +1,3 @@
-import type { Server } from 'node:http';
 import { type INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
@@ -7,10 +6,11 @@ import {
 	type SwaggerCustomOptions,
 	SwaggerModule,
 } from '@nestjs/swagger';
-import { ZodValidationPipe, registerDtoOpenApiSchemas } from '#libs/zod';
+import { registerDtoOpenApiSchemas, ZodValidationPipe } from '#libs/zod';
+import type { Server } from 'node:http';
 import { AppModule } from './app.module.ts';
 import {
-	APY_KEY_GUARD_NAME,
+	ApiKeyGuard,
 	SECURITY_API_SCHEMA,
 } from './decorators/api-key.guard.ts';
 
@@ -23,7 +23,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 	const config = new DocumentBuilder()
 		.setTitle(process.env.APP_NAME)
 		.setVersion(process.env.APP_VERSION)
-		.addApiKey(SECURITY_API_SCHEMA, APY_KEY_GUARD_NAME)
+		.addApiKey(SECURITY_API_SCHEMA, ApiKeyGuard.name)
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
@@ -33,7 +33,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 
 	SwaggerModule.setup(prefix, app, document, {
 		customSiteTitle: process.env.TITLE,
-		jsonDocumentUrl: `${prefix}/openapi`,
+		jsonDocumentUrl: `${prefix}/openapi.json`,
 		swaggerOptions: {
 			displayRequestDuration: true,
 			persistAuthorization: true,
@@ -41,12 +41,6 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 		},
 	} satisfies SwaggerCustomOptions);
 };
-
-export interface AppStartConfig {
-	port?: number;
-	prefix: string;
-	swagger?: boolean;
-}
 
 /**
  * App initializing.
@@ -77,3 +71,9 @@ export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 
 	return { adapter, app, dispose };
 };
+
+export interface AppStartConfig {
+	prefix: string;
+	port?: number;
+	swagger?: boolean;
+}

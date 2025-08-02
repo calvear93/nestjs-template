@@ -6,27 +6,30 @@ import { dependencies } from './package.json';
 import { compilerOptions as tsconfig } from './tsconfig.json';
 import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
 
+const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
+
 export default {
+	clearScreen: false,
 	build: {
-		minify: 'terser',
+		minify: CODE_OPTIMIZE ? 'terser' : false,
+		sourcemap: tsconfigRelease.sourceMap,
+		ssr: true,
+		target: tsconfig.target,
+		terserOptions: { compress: false, keep_classnames: true },
 		rollupOptions: {
+			plugins: [packageJson()],
+			treeshake: CODE_OPTIMIZE,
 			input: {
 				main: 'src/main.ts',
 			},
 			output: {
-				compact: true,
+				compact: CODE_OPTIMIZE,
 				format: 'esm',
 				preserveModules: true,
 				preserveModulesRoot: 'src',
 			},
-			plugins: [packageJson()],
 		},
-		sourcemap: tsconfigRelease.sourceMap,
-		ssr: true,
-		target: tsconfig.target,
-		terserOptions: { keep_classnames: true },
 	},
-	clearScreen: false,
 	// define: loadEnv(),
 	plugins: [
 		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
@@ -34,6 +37,11 @@ export default {
 			enableBuild: true,
 			terminal: true,
 			typescript: true,
+			eslint: {
+				dev: { logLevel: ['error'] },
+				lintCommand: 'eslint --cache',
+				useFlatConfig: true,
+			},
 		}),
 	],
 } satisfies UserConfigExport;
@@ -58,11 +66,12 @@ function packageJson(): PluginOption {
 	};
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /**
  * Loads environment variables for define injector.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function loadEnvironment() {
+function loadEnv() {
 	if (process.env.NODE_ENV === 'production') {
 		return Object.fromEntries(
 			Object.entries(process.env).map(([key, value]) => [
@@ -87,7 +96,6 @@ function loadEnvironment() {
  * await writeFile('dist/.npmrc', npmrc);
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function toKeyPairContent(data: Record<string, boolean | number | string>) {
 	let content = '';
 

@@ -25,6 +25,8 @@
 		"*.tsx": "${capture}.*",
 		"dockerfile": ".dockerignore, docker-compose.*, dockerfile*",
 		"eslint.config.js": ".prettierrc*, .prettierignore",
+		".copilotrc.json": ".copilotignore",
+		".gitignore": ".gitattributes",
 		"main.ts": "*.config.ts, *.d.ts",
 		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, pnpm-workspace.yaml, package.*.json, .npmrc, .pnp.cjs",
 		"readme*": "changelog*, license*, code_of_conduct*, contributing*",
@@ -36,6 +38,7 @@
 	"files.exclude": {
 		"**/*.log": true,
 		"**/*.tsbuildinfo": true,
+		"**/.eslintcache": true,
 		"**/.DS_Store": true,
 		"**/.git": true,
 		"**/.history": true,
@@ -46,8 +49,7 @@
 		"**/.wireit": true,
 		"**/desktop.ini": true,
 		"**/node_modules": true,
-		"**/obj": true,
-		".eslintcache": true
+		"**/obj": true
 	},
 	"files.insertFinalNewline": true,
 	"files.trimFinalNewlines": true,
@@ -75,9 +77,5 @@
 	"typescript.suggest.autoImports": true,
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"typescript.validate.enable": true,
-	"workbench.editor.customLabels.patterns": {
-		"env/*.env.json": "🔑 ${filename}.${extname}",
-		"env/appsettings.json": "⚙️ ${filename}.${extname}"
-	},
 	"yaml.format.singleQuote": true
 }
