@@ -1,15 +1,102 @@
 ---
 applyTo: '**'
-description: 'Main project instructions and development guidelines'
+description: 'Main project instructions and development guidelines for GitHub Copilot'
 ---
 
-# NestJS Template Project Overview
+# NestJS Template Project - GitHub Copilot Instructions
 
-This is a modern, production-ready NestJS template that provides a robust foundation for building scalable API applications with TypeScript. The template emphasizes developer experience, type safety, and comprehensive testing.
+This is a modern, production-ready NestJS template providing a robust foundation for building scalable API applications with TypeScript. The template emphasizes developer experience, type safety, and comprehensive testing.
 
-## 🎯 Project Purpose
+## 🚀 Essential Development Commands
 
-This template serves as a starting point for creating enterprise-grade REST APIs with:
+**ALWAYS use these pnpm scripts for development workflow:**
+
+```bash
+# Development (use this for daily development)
+pnpm start:dev                    # Start application with hot reload and debug logging
+
+# Testing (critical for quality assurance)
+pnpm test:dev --coverage --run   # Run all tests with coverage (recommended for CI)
+pnpm test:dev                    # Run tests in watch mode during development
+pnpm test:mutation               # Mutation testing for advanced quality assurance
+
+# Code Quality (ALWAYS run before committing)
+pnpm lint                        # Check and fix code style, warnings, and errors
+pnpm format                      # Format code using Prettier
+
+# Build & Preview
+pnpm build                       # Build for production
+pnpm preview                     # Preview built application
+
+# Database & ORM (when using Prisma)
+pnpm orm:local                   # Prisma commands for local development
+pnpm orm:dev                     # Prisma commands for dev environment
+```
+
+## 📝 Commit Guidelines
+
+**ALWAYS use Conventional Commits with Gitmojis for all commit messages:**
+
+### Commit Message Format
+
+```
+<type>[optional scope] <gitmoji>: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Examples
+
+```bash
+feat(auth) ✨: add JWT authentication middleware
+fix(api) 🐛: resolve validation error in user creation endpoint
+docs(readme) 📚: update installation instructions
+style(components) 🎨: improve code formatting and structure
+refactor(services) ♻️: extract common database operations
+test(users) ✅: add integration tests for user CRUD operations
+chore(deps) 🔧: update dependencies to latest versions
+perf(database) ⚡: optimize query performance with indexes
+feat ✨: v2025.1
+```
+
+### Common Gitmoji Types
+
+- **✨ `:sparkles:`** - New features
+- **🐛 `:bug:`** - Bug fixes
+- **📚 `:books:`** - Documentation
+- **🎨 `:art:`** - Code structure/format improvements
+- **⚡ `:zap:`** - Performance improvements
+- **✅ `:white_check_mark:`** - Tests
+- **🔧 `:wrench:`** - Configuration changes
+- **♻️ `:recycle:`** - Refactoring
+- **🚀 `:rocket:`** - Deployment/releases
+- **🔒 `:lock:`** - Security improvements
+- **💄 `:lipstick:`** - UI/UX improvements
+- **🚚 `:truck:`** - Moving/renaming files
+- **🗑️ `:wastebasket:`** - Removing code/files
+- **🩹 `:adhesive_bandage:`** - Simple fixes
+- **📦 `:package:`** - Package/dependency updates
+
+### Conventional Commit Types
+
+- **feat**: New feature for the user
+- **fix**: Bug fix for the user
+- **docs**: Documentation changes
+- **style**: Formatting, missing semicolons, etc.
+- **refactor**: Code change that neither fixes a bug nor adds a feature
+- **perf**: Performance improvements
+- **test**: Adding missing tests or correcting existing tests
+- **chore**: Build process or auxiliary tool changes
+- **ci**: Changes to CI configuration files and scripts
+- **build**: Changes that affect the build system or external dependencies
+
+## 🎯 Project Architecture & Purpose
+
+### Core Purpose
+
+Starting point for creating enterprise-grade REST APIs with:
 
 - **Type-safe development** using TypeScript and Zod validation
 - **Modern tooling** with Vite, Vitest, and pnpm for fast development cycles
@@ -17,7 +104,7 @@ This template serves as a starting point for creating enterprise-grade REST APIs
 - **Comprehensive testing** setup with unit tests, integration tests, and mutation testing
 - **Production-ready** configuration with Docker support and environment management
 
-## 🏗️ Architecture Overview
+### Architecture Overview
 
 The project follows a modular architecture with:
 
@@ -73,6 +160,55 @@ export class UserController {
 - **Build Tool**: Vite (fast build and dev server)
 - **Code Quality**: ESLint + Prettier
 - **Mocking**: MSW (Mock Service Worker)
+
+## 🚨 Configuration Management Rules - CRITICAL
+
+### ❌ NEVER DO:
+
+- Hardcode URLs, API keys, or any configuration directly in code
+- Use `process.env` directly in services or controllers
+- Define configuration values inside business logic
+
+### ✅ ALWAYS DO:
+
+- Define non-secret config in `env/appsettings.json`
+- Define secrets in `env/dev.env.json`, `env/qa.env.json`, etc.
+- Create configuration interfaces and inject them via dynamic providers
+- Define configuration as far out as possible (in modules)
+- Use dependency injection for all configuration
+
+## 📂 Path Aliases and Import Conventions
+
+- Use **package.json path aliases**: `#libs/zod`, `#libs/http`, `#libs/decorators`
+- Always include **.ts extension** in relative imports
+- Group imports: external packages first, then internal modules
+- Use **named imports** and avoid default exports where possible
+
+```typescript
+// ✅ CORRECT import order and style
+import { Injectable, Logger } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { ZodDto } from '#libs/zod';
+import { HttpClient } from '#libs/http';
+import { UserService } from '../services/user.service.ts';
+import { CreateUserDto } from './create-user.dto.ts';
+
+// ❌ WRONG - missing extensions, wrong order
+import { CreateUserDto } from './create-user.dto';
+import { UserService } from '../services/user.service';
+import { Injectable } from '@nestjs/common';
+```
+
+## 🚨 Common Pitfalls to Avoid
+
+1. **Don't use `any` type** - Always provide explicit types
+2. **Don't forget error handling** - Wrap async operations in try-catch
+3. **Don't skip validation** - Use ZodValidationPipe for all inputs
+4. **Don't hardcode values** - Use environment variables and configuration
+5. **Don't forget security** - Apply appropriate guards to controllers
+6. **Don't skip tests** - Create comprehensive unit and integration tests
+7. **Don't ignore documentation** - Provide OpenAPI docs for all endpoints
+8. **Don't mix concerns** - Keep controllers thin, put logic in services
 
 # Essential Commands
 
@@ -210,4 +346,6 @@ For comprehensive command documentation, see `patterns.md` quick reference secti
 5. **Don't forget security** - Apply appropriate guards to controllers
 6. **Don't skip tests** - Create comprehensive unit and integration tests
 7. **Don't ignore documentation** - Provide OpenAPI docs for all endpoints
-8. **Don't mix concerns** - Keep controllers thin, put logic in services
+8. **Don't use plain commit messages** - Always use conventional commits with gitmojis
+9. **Don't mix concerns** - Keep controllers thin, put logic in services
+10. **Don't mix concerns** - Keep controllers thin, put logic in services
