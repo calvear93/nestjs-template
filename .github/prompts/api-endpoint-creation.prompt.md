@@ -75,22 +75,22 @@ import { [ResourceName]ControllerDocs } from './[resource].controller.docs.ts';
 
 @ApiKey()
 @Controller({
-  path: '[resource]',
-  version: '1',
+	path: '[resource]',
+	version: '1',
 })
 @ApplyControllerDocs([ResourceName]ControllerDocs)
 export class [ResourceName]Controller {
-  constructor(private readonly [resource]Service: [ResourceName]Service) {}
+	constructor(private readonly [resource]Service: [ResourceName]Service) {}
 
-  @Get()
-  async findAll(): Promise<[ResourceName]Dto[]> {
-    return this.[resource]Service.findAll();
-  }
+	@Get()
+	async findAll(): Promise<[ResourceName]Dto[]> {
+		return this.[resource]Service.findAll();
+	}
 
-  @Post()
-  async create(@Body() create[ResourceName]Dto: Create[ResourceName]Dto): Promise<[ResourceName]Dto> {
-    return this.[resource]Service.create(create[ResourceName]Dto);
-  }
+	@Post()
+	async create(@Body() create[ResourceName]Dto: Create[ResourceName]Dto): Promise<[ResourceName]Dto> {
+		return this.[resource]Service.create(create[ResourceName]Dto);
+	}
 }
 ```
 
@@ -101,20 +101,20 @@ import { z } from 'zod';
 import { ZodDto, phone, epoch } from '#libs/zod';
 
 const [ResourceName]Schema = z.object({
-  id: z.coerce.number().positive(),
-  name: z.string().min(1).max(100),
-  email: z.email(),
-  phone: phone().optional(),
-  createdAt: epoch(),
-  updatedAt: epoch(),
+	id: z.coerce.number().positive(),
+	name: z.string().min(1).max(100),
+	email: z.email(),
+	phone: phone().optional(),
+	createdAt: epoch(),
+	updatedAt: epoch(),
 }).describe('[ResourceName] entity schema');
 
 export class [ResourceName]Dto extends ZodDto([ResourceName]Schema, '[ResourceName]') {}
 
 const Create[ResourceName]Schema = [ResourceName]Schema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true
+	id: true,
+	createdAt: true,
+	updatedAt: true
 });
 
 export class Create[ResourceName]Dto extends ZodDto(Create[ResourceName]Schema, 'Create[ResourceName]') {}
@@ -128,46 +128,46 @@ import { HttpStatusCode } from '#libs/http';
 import { [ResourceName]Dto, Create[ResourceName]Dto } from '../schemas/[resource].dto.ts';
 
 export const [ResourceName]ControllerDocs = {
-  findAll: [
-    ApiOperation({
-      summary: 'Get all [resource]s',
-      description: 'Retrieves a list of all [resource]s with pagination support',
-    }),
-    ApiResponse({
-      status: HttpStatusCode.OK,
-      description: 'List of [resource]s retrieved successfully',
-      type: [ResourceName]Dto,
-      isArray: true,
-    }),
-  ],
-  create: [
-    ApiOperation({
-      summary: 'Create a new [resource]',
-      description: 'Creates a new [resource] with the provided data',
-    }),
-    ApiBody({
-      type: Create[ResourceName]Dto,
-      description: '[ResourceName] creation data',
-      examples: {
-        'valid-example': {
-          description: 'Valid [resource] data',
-          value: {
-            name: 'Example [Resource]',
-            email: 'example@domain.com',
-          },
-        },
-      },
-    }),
-    ApiResponse({
-      status: HttpStatusCode.CREATED,
-      description: '[ResourceName] created successfully',
-      type: [ResourceName]Dto,
-    }),
-    ApiResponse({
-      status: HttpStatusCode.BAD_REQUEST,
-      description: 'Invalid input data',
-    }),
-  ],
+	findAll: [
+		ApiOperation({
+			summary: 'Get all [resource]s',
+			description: 'Retrieves a list of all [resource]s with pagination support',
+		}),
+		ApiResponse({
+			status: HttpStatusCode.OK,
+			description: 'List of [resource]s retrieved successfully',
+			type: [ResourceName]Dto,
+			isArray: true,
+		}),
+	],
+	create: [
+		ApiOperation({
+			summary: 'Create a new [resource]',
+			description: 'Creates a new [resource] with the provided data',
+		}),
+		ApiBody({
+			type: Create[ResourceName]Dto,
+			description: '[ResourceName] creation data',
+			examples: {
+				'valid-example': {
+					description: 'Valid [resource] data',
+					value: {
+						name: 'Example [Resource]',
+						email: 'example@domain.com',
+					},
+				},
+			},
+		}),
+		ApiResponse({
+			status: HttpStatusCode.CREATED,
+			description: '[ResourceName] created successfully',
+			type: [ResourceName]Dto,
+		}),
+		ApiResponse({
+			status: HttpStatusCode.BAD_REQUEST,
+			description: 'Invalid input data',
+		}),
+	],
 };
 ```
 

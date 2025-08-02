@@ -89,9 +89,9 @@ import { [ModuleName]Controller } from './controllers/[module-name].controller.t
 import { [ModuleName]Service } from './services/[module-name].service.ts';
 
 @Module({
-  controllers: [[ModuleName]Controller],
-  providers: [[ModuleName]Service],
-  exports: [[ModuleName]Service], // Export if other modules need it
+	controllers: [[ModuleName]Controller],
+	providers: [[ModuleName]Service],
+	exports: [[ModuleName]Service], // Export if other modules need it
 })
 export class [ModuleName]Module {}
 ```
@@ -104,15 +104,15 @@ import { ZodDto, phone, epoch } from '#libs/zod';
 
 // Base entity schema
 const [ModuleName]Schema = z.object({
-  id: z.coerce.number().positive(),
-  name: z.string().min(1).max(100),
-  description: z.string().max(500).optional(),
-  status: z.enum(['active', 'inactive', 'pending']).default('pending'),
-  email: z.email().optional(),
-  phone: phone().optional(),
-  metadata: z.record(z.unknown()).optional(),
-  createdAt: epoch(),
-  updatedAt: epoch(),
+	id: z.coerce.number().positive(),
+	name: z.string().min(1).max(100),
+	description: z.string().max(500).optional(),
+	status: z.enum(['active', 'inactive', 'pending']).default('pending'),
+	email: z.email().optional(),
+	phone: phone().optional(),
+	metadata: z.record(z.unknown()).optional(),
+	createdAt: epoch(),
+	updatedAt: epoch(),
 }).describe('[ModuleName] entity');
 
 // Response DTO
@@ -120,30 +120,30 @@ export class [ModuleName]Dto extends ZodDto([ModuleName]Schema, '[ModuleName]') 
 
 // Create DTO (omit generated fields)
 const Create[ModuleName]Schema = [ModuleName]Schema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+	id: true,
+	createdAt: true,
+	updatedAt: true,
 });
 
 export class Create[ModuleName]Dto extends ZodDto(Create[ModuleName]Schema, 'Create[ModuleName]') {}
 
 // Update DTO (partial with omitted fields)
 const Update[ModuleName]Schema = [ModuleName]Schema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+	id: true,
+	createdAt: true,
+	updatedAt: true,
 }).partial();
 
 export class Update[ModuleName]Dto extends ZodDto(Update[ModuleName]Schema, 'Update[ModuleName]') {}
 
 // Query DTO for filtering
 const [ModuleName]QuerySchema = z.object({
-  page: z.coerce.number().min(1).default(1),
-  limit: z.coerce.number().min(1).max(100).default(10),
-  status: z.enum(['active', 'inactive', 'pending']).optional(),
-  search: z.string().min(1).optional(),
-  sortBy: z.enum(['name', 'createdAt', 'updatedAt']).default('createdAt'),
-  sortOrder: z.enum(['asc', 'desc']).default('desc'),
+	page: z.coerce.number().min(1).default(1),
+	limit: z.coerce.number().min(1).max(100).default(10),
+	status: z.enum(['active', 'inactive', 'pending']).optional(),
+	search: z.string().min(1).optional(),
+	sortBy: z.enum(['name', 'createdAt', 'updatedAt']).default('createdAt'),
+	sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
 export class [ModuleName]QueryDto extends ZodDto([ModuleName]QuerySchema, '[ModuleName]Query') {}
@@ -157,17 +157,17 @@ import { [ModuleName]Dto, Create[ModuleName]Dto, Update[ModuleName]Dto, [ModuleN
 
 @Injectable()
 export class [ModuleName]Service {
-  private readonly logger = new Logger([ModuleName]Service.name);
+	private readonly logger = new Logger([ModuleName]Service.name);
 
-  constructor(
-    // Inject repositories or external services here
-    // @Inject('CONFIG') private readonly config: [ModuleName]Config,
-  ) {}
+	constructor(
+		// Inject repositories or external services here
+		// @Inject('CONFIG') private readonly config: [ModuleName]Config,
+	) {}
 
-  /**
-   * Retrieves all [module-name]s with optional filtering and pagination.
-   *
-   * @param query - query parameters for filtering and pagination
+	/**
+	 * Retrieves all [module-name]s with optional filtering and pagination.
+	 *
+	 * @param query - query parameters for filtering and pagination
    * @returns promise resolving to array of [module-name]s
    */
   async findAll(query: [ModuleName]QueryDto): Promise<[ModuleName]Dto[]> {

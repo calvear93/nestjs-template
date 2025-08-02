@@ -225,29 +225,29 @@ import { [Resource]Dto, [Resource]QueryDto } from '../schemas/[resource].dto.ts'
 
 @Injectable()
 export class [Resource]Service {
-  private readonly logger = new Logger([Resource]Service.name);
+	private readonly logger = new Logger([Resource]Service.name);
 
-  constructor(
-    private readonly cacheService: CacheService,
-    // other dependencies
-  ) {}
+	constructor(
+		private readonly cacheService: CacheService,
+		// other dependencies
+	) {}
 
-  /**
-   * Finds all [resource]s with caching support.
-   *
-   * @param query - query parameters
-   * @returns promise resolving to cached or fresh data
-   */
-  async findAll(query: [Resource]QueryDto): Promise<[Resource]Dto[]> {
-    // Create cache key based on query parameters
-    const cacheKey = `[resource]:all:${JSON.stringify(query)}`;
+	/**
+	 * Finds all [resource]s with caching support.
+	 *
+	 * @param query - query parameters
+	 * @returns promise resolving to cached or fresh data
+	 */
+	async findAll(query: [Resource]QueryDto): Promise<[Resource]Dto[]> {
+		// Create cache key based on query parameters
+		const cacheKey = `[resource]:all:${JSON.stringify(query)}`;
 
-    return this.cacheService.getOrSet(
-      cacheKey,
-      async () => {
-        this.logger.log(`Fetching [resource]s from database with query: ${JSON.stringify(query)}`);
+		return this.cacheService.getOrSet(
+			cacheKey,
+			async () => {
+				this.logger.log(`Fetching [resource]s from database with query: ${JSON.stringify(query)}`);
 
-        // TODO: Implement actual database call
+				// TODO: Implement actual database call
         // return this.repository.findAll(query);
 
         return []; // Mock return
