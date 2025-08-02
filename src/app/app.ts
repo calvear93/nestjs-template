@@ -18,6 +18,7 @@ import {
  * Swagger base configuration.
  *
  * @param app - app bootstrap
+ * @param prefix - base prefix for Swagger UI
  */
 export const addSwagger = (app: INestApplication, prefix: string) => {
 	const config = new DocumentBuilder()
