@@ -291,3 +291,13 @@ export class AppModule {}
 | **Documentation**          | Always create `.docs.ts` files for OpenAPI                  |
 | **Testing**                | Create `.spec.ts` files for unit tests                      |
 | **Security**               | Apply appropriate guards (`@ApiKey()`, `@AllowAnonymous()`) |
+
+## 🧰 Configuring fnm (Fast Node Manager)
+
+fnm (Fast Node Manager) is a lightweight Node.js version manager used by this template to run multiple Node versions easily.
+
+- Install fnm following the official instructions: https://github.com/Schniz/fnm
+- On Windows, fnm stores the default Node alias file at:
+  `C:\Users\{username}\AppData\Roaming\fnm\aliases\default`
+
+Important: Add `C:\Users\{username}\AppData\Roaming\fnm\aliases\default` to your Windows System PATH so Node MCP servers can find the fnm-managed Node; then restart your terminals.
