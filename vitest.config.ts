@@ -27,8 +27,9 @@ export default {
 			reporter: ['text', 'text-summary', 'lcov', 'cobertura', 'json'],
 			reportsDirectory: '.reports/coverage',
 			exclude: [
+				'src/app/app*.?(c|m)[jt]s',
 				'**/*.{d,config,mock,fixture,bench}.?(c|m)[jt]s',
-				'**/{index,main,app}.?(c|m)[jt]s',
+				'**/{index,main}.?(c|m)[jt]s',
 				'**/__{tests,mocks,fixtures}__/**/*',
 			],
 		},
