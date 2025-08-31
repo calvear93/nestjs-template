@@ -18,7 +18,7 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.expand": false,
 	"explorer.fileNesting.patterns": {
-		".copilotrc.json": ".copilotignore",
+		".copilotrc.json": ".copilotignore, llms.txt",
 		".gitignore": ".gitattributes",
 		"*.cts": "${capture}.cts.*",
 		"*.env.json": "${capture}.*.env.json",
@@ -30,12 +30,17 @@
 		"eslint.config.js": ".prettierrc*, .prettierignore",
 		"main.ts": "*.config.ts, *.d.ts",
 		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, pnpm-workspace.yaml, package.*.json, .npmrc, .pnp.cjs",
-		"readme*": "changelog*, license*, code_of_conduct*, contributing*",
+		"readme*": "changelog.md, license.md, code_of_conduct.md, contributing.md, architecture.md, exemplars.md",
 		"tsconfig.json": "tsconfig.*.json",
 		"vite.config.ts": "vitest.config.ts, stryker.conf.*"
 	},
 	"explorer.incrementalNaming": "smart",
 	"explorer.sortOrder": "type",
+	"files.associations": {
+		"*.md": "markdown",
+		"tsconfig.*.json": "jsonc",
+		"tsconfig.json": "jsonc"
+	},
 	"files.exclude": {
 		"**/.DS_Store": true,
 		"**/.eslintcache": true,

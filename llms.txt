@@ -1,0 +1,48 @@
+# NestJS Template
+
+> A modern, production-ready NestJS template providing a robust foundation for building scalable API applications with TypeScript. The template emphasizes developer experience, type safety, and comprehensive testing.
+
+This template includes built-in libraries for Zod validation, HTTP client integration, and custom decorators to accelerate development of scalable REST APIs.
+
+## Documentation
+
+- [Main README](README.md): Primary project documentation, getting started guide, and available commands
+- [Changelog](CHANGELOG.md): Version history and release notes
+- [Code Exemplars](exemplars.md): High-quality code examples demonstrating architectural patterns and best practices
+- [Copilot Instructions](.github/instructions/copilot-instructions.md): Development guidelines, best practices, and project conventions
+- [Architecture Guide](.github/instructions/architecture-guide.md): Architectural principles, module structure, and design patterns
+- [Coding Standards](.github/instructions/coding-standards.md): TypeScript code style guidelines and formatting rules
+- [Patterns Guide](.github/instructions/patterns.md): Implementation patterns, best practices, and reusable solutions
+- [Instructions README](.github/instructions/README.md): Overview of development instructions and guidelines
+
+## Libraries
+
+- [Zod Integration](src/libs/zod/README.md): Type-safe validation library with automatic OpenAPI documentation generation
+- [HTTP Client](src/libs/http/README.md): Built-in HTTP client library for external API calls with interceptors
+- [Decorators](src/libs/decorators/README.md): Custom decorators for security guards, API documentation, and metadata
+
+## Configuration
+
+- [Environment Setup](env/README.md): Environment variables configuration and schema validation guide
+- [Package Configuration](package.json): Project dependencies, scripts, and metadata with pnpm workspaces
+- [TypeScript Config](tsconfig.json): TypeScript compiler configuration for ES2024 and module resolution
+- [Vite Config](vite.config.ts): Build tool configuration for development and production with SWC
+- [Vitest Config](vitest.config.ts): Testing framework configuration with coverage and benchmarking
+
+## Examples
+
+- [Sample Module](src/app/modules/sample/): Complete example module with controller, service, DTOs, and comprehensive tests
+
+## Development Tools
+
+- [ESLint Config](eslint.config.js): Code quality and linting rules with TypeScript and performance plugins
+- [Prettier Config](.prettierrc): Code formatting configuration for consistent style
+- [Stryker Config](stryker.conf.json): Mutation testing configuration for test quality assurance
+- [Docker Setup](Dockerfile): Multi-stage containerization for production deployment
+- [Docker Bun](Dockerfile.bun): Alternative container setup using Bun runtime for faster builds
+- [Docker Distroless](Dockerfile.distroless): Minimal security-focused container image for production
+
+## Optional
+
+- [TypeScript Release Config](tsconfig.release.json): Production-optimized TypeScript compilation settings
+- [TypeScript Test Config](tsconfig.test.json): Testing-specific TypeScript configuration with source maps
