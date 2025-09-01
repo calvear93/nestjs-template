@@ -18,14 +18,14 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.expand": false,
 	"explorer.fileNesting.patterns": {
-		".copilotrc.json": ".copilotignore, llms.txt",
-		".gitignore": ".gitattributes",
 		"*.cts": "${capture}.cts.*",
 		"*.env.json": "${capture}.*.env.json",
 		"*.json": "${capture}.json",
 		"*.mts": "${capture}.mts.*",
 		"*.ts": "${capture}.*",
 		"*.tsx": "${capture}.*",
+		".copilotrc.json": ".copilotignore, llms.txt",
+		".gitignore": ".gitattributes",
 		"dockerfile": ".dockerignore, docker-compose.*, dockerfile*",
 		"eslint.config.js": ".prettierrc*, .prettierignore",
 		"main.ts": "*.config.ts, *.d.ts",
@@ -42,6 +42,8 @@
 		"tsconfig.json": "jsonc"
 	},
 	"files.exclude": {
+		"**/*.log": true,
+		"**/*.tsbuildinfo": true,
 		"**/.DS_Store": true,
 		"**/.eslintcache": true,
 		"**/.git": true,
@@ -51,8 +53,6 @@
 		"**/.svn": true,
 		"**/.swc": true,
 		"**/.wireit": true,
-		"**/*.log": true,
-		"**/*.tsbuildinfo": true,
 		"**/desktop.ini": true,
 		"**/node_modules": true,
 		"**/obj": true
@@ -60,6 +60,22 @@
 	"files.insertFinalNewline": true,
 	"files.trimFinalNewlines": true,
 	"files.trimTrailingWhitespace": true,
+	"files.watcherExclude": {
+		"**/*.log": true,
+		"**/.DS_Store": true,
+		"**/.git/objects/**": true,
+		"**/.rollup.cache": true,
+		"**/.stryker-tmp": true,
+		"**/.swc": true,
+		"**/.vscode": true,
+		"**/build": true,
+		"**/coverage": true,
+		"**/desktop.ini": true,
+		"**/dist": true,
+		"**/node_modules/**": true,
+		"**/package-lock.json": true,
+		"**/pnpm-lock.yaml": true
+	},
 	"javascript.preferences.quoteStyle": "single",
 	"prettier.useTabs": true,
 	"search.exclude": {
