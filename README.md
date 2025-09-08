@@ -203,7 +203,7 @@ export class UserDto extends ZodDto(UserSchema, 'User') {}
 ```typescript
 // services/user.service.ts
 import { Injectable } from '@nestjs/common';
-import { UserDto } from '../schemas/user.dto';
+import { UserDto } from '../schemas/user.dto.ts';
 
 @Injectable()
 export class UserService {
@@ -224,11 +224,11 @@ export class UserService {
 ```typescript
 // controllers/user.controller.ts
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiKey, AllowAnonymous } from '../../../decorators/api-key.guard';
-import { ApplyControllerDocs } from '../../../decorators/docs.decorator';
-import { UserDto } from '../schemas/user.dto';
-import { UserService } from '../services/user.service';
-import { UserControllerDocs } from './user.controller.docs';
+import { ApiKey, AllowAnonymous } from '../../../decorators/api-key.guard.ts';
+import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
+import { UserDto } from '../schemas/user.dto.ts';
+import { UserService } from '../services/user.service.ts';
+import { UserControllerDocs } from './user.controller.docs.ts';
 
 @ApiKey()
 @Controller({ path: 'users', version: '1' })
@@ -253,8 +253,8 @@ export class UserController {
 ```typescript
 // user.module.ts
 import { Module } from '@nestjs/common';
-import { UserController } from './controllers/user.controller';
-import { UserService } from './services/user.service';
+import { UserController } from './controllers/user.controller.ts';
+import { UserService } from './services/user.service.ts';
 
 @Module({
 	providers: [UserService],
@@ -273,7 +273,7 @@ export { UserModule } from './user/user.module'; // Add your module
 
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { SampleModule, UserModule } from './modules';
+import { SampleModule, UserModule } from './modules/index.ts';
 
 @Module({
 	imports: [SampleModule, UserModule], // Import your module

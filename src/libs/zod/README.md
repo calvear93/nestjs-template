@@ -62,7 +62,7 @@ export class UserDto extends ZodDto(UserSchema, 'User') {}
 import { Controller, Post, Body, UsePipes } from '@nestjs/common';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { ZodValidationPipe } from '#libs/zod';
-import { UserDto } from './user.dto';
+import { UserDto } from './user.dto.ts';
 
 @Controller('users')
 export class UserController {
