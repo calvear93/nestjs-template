@@ -9,7 +9,7 @@ ARG RUNNER=oven/bun:1.2.23-alpine
 ARG NODE=node:22.20.0-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
-ARG PNPM_VER=10.18.0
+ARG PNPM_VER=10.18.1
 ARG APP_DIR='/app/'
 ARG OUT_DIR='dist'
 
