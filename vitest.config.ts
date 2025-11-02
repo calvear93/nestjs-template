@@ -1,6 +1,6 @@
 import swc from 'unplugin-swc';
 import { checker } from 'vite-plugin-checker';
-import type { UserConfigExport } from 'vitest/config';
+import type { ViteUserConfig } from 'vitest/config';
 
 export default {
 	clearScreen: false,
@@ -34,4 +34,4 @@ export default {
 			],
 		},
 	},
-} satisfies UserConfigExport;
+} satisfies ViteUserConfig;
