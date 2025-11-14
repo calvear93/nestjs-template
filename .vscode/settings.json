@@ -7,7 +7,6 @@
 	},
 	"editor.detectIndentation": true,
 	"editor.insertSpaces": false,
-	"editor.rulers": [80, 100],
 	"editor.tabSize": 4,
 	"eslint.format.enable": true,
 	"eslint.lintTask.enable": false,
@@ -101,5 +100,8 @@
 	"typescript.suggest.autoImports": true,
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"typescript.validate.enable": true,
+	"vitest.debugExclude": ["<node_internals>/**", "**/node_modules/**"],
+	"vitest.experimentalStaticAstCollect": false,
+	"vitest.filesWatcherInclude": "src/**/*.{spec,test}.?(c|m)[jt]s",
 	"yaml.format.singleQuote": true
 }
