@@ -14,8 +14,8 @@ export default {
 				lintCommand: 'eslint --cache',
 				useFlatConfig: true,
 			},
-		}),
-	] as any[],
+		}) as any,
+	],
 	test: {
 		include: ['src/**/*.{spec,test}.?(c|m)[jt]s'],
 		reporters: ['verbose'],
