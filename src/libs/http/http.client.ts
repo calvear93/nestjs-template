@@ -4,8 +4,10 @@ import { HttpError } from './errors/http.error.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
 
 type Primitive = Date | bigint | boolean | number | string | null | undefined;
-interface QueryParams
-	extends Record<string, Primitive | Primitive[] | QueryParams> {}
+interface QueryParams extends Record<
+	string,
+	Primitive | Primitive[] | QueryParams
+> {}
 
 export type OnRequestInterceptor = (
 	options: HttpRequestOptions,
@@ -341,8 +343,10 @@ export class HttpClient {
 	}
 }
 
-export interface HttpRequestOptions
-	extends Omit<RequestInit, 'signal' | 'window'> {
+export interface HttpRequestOptions extends Omit<
+	RequestInit,
+	'signal' | 'window'
+> {
 	cancel?: AbortController;
 	headers?: Record<string, string>;
 	onRequest?: OnRequestInterceptor;

@@ -23,15 +23,15 @@ export class HttpModule {
 		const injectionToken = config?.useToken ?? HttpClient;
 
 		return {
+			exports: [injectionToken],
+			global: config?.global,
+			module: HttpModule,
 			providers: [
 				{
 					provide: injectionToken,
 					useValue: new HttpClient(config),
 				},
 			],
-			exports: [injectionToken],
-			global: config?.global,
-			module: HttpModule,
 		};
 	}
 }

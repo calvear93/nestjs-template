@@ -85,7 +85,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "string",
     },
     "discriminated": {
-      "anyOf": [
+      "oneOf": [
         {
           "additionalProperties": false,
           "properties": {

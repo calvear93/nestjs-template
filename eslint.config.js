@@ -40,8 +40,6 @@ export default [
 			sourceType: 'module',
 		},
 		rules: {
-			'no-invalid-regexp': ERROR,
-			'valid-typeof': ERROR,
 			'array-callback-return': ERROR,
 			complexity: [WARN, 15],
 			'constructor-super': ERROR,
@@ -83,6 +81,7 @@ export default [
 			'no-func-assign': ERROR,
 			'no-global-assign': ERROR,
 			'no-import-assign': ERROR,
+			'no-invalid-regexp': ERROR,
 			'no-irregular-whitespace': ERROR,
 			'no-lonely-if': WARN,
 			'no-loss-of-precision': ERROR,
@@ -141,6 +140,7 @@ export default [
 			'require-unicode-regexp': WARN,
 			'require-yield': ERROR,
 			'use-isnan': ERROR,
+			'valid-typeof': ERROR,
 			yoda: WARN,
 			'capitalized-comments': [
 				WARN,
@@ -157,8 +157,8 @@ export default [
 				WARN,
 				'single',
 				{
-					avoidEscape: true,
 					allowTemplateLiterals: false,
+					avoidEscape: true,
 				},
 			],
 		},
@@ -267,9 +267,6 @@ export default [
 		files: [SRC_GLOB],
 		plugins: { sonarjs },
 		rules: {
-			'sonarjs/no-identical-conditions': ERROR,
-			'sonarjs/no-identical-expressions': ERROR,
-			'sonarjs/no-identical-functions': ERROR,
 			'sonarjs/cognitive-complexity': [WARN, 16],
 			'sonarjs/max-switch-cases': [WARN, 12],
 			'sonarjs/no-all-duplicated-branches': ERROR,
@@ -278,6 +275,9 @@ export default [
 			'sonarjs/no-duplicate-string': [WARN, { threshold: 5 }],
 			'sonarjs/no-duplicated-branches': ERROR,
 			'sonarjs/no-element-overwrite': ERROR,
+			'sonarjs/no-identical-conditions': ERROR,
+			'sonarjs/no-identical-expressions': ERROR,
+			'sonarjs/no-identical-functions': ERROR,
 			'sonarjs/no-ignored-return': ERROR,
 			'sonarjs/no-inverted-boolean-check': ERROR,
 			'sonarjs/no-nested-switch': ERROR,
@@ -299,9 +299,8 @@ export default [
 		files: [SRC_GLOB],
 		plugins: { promise },
 		rules: {
-			'promise/avoid-new': OFF,
-			'promise/valid-params': WARN,
 			'promise/always-return': OFF,
+			'promise/avoid-new': OFF,
 			'promise/catch-or-return': ERROR,
 			'promise/no-callback-in-promise': OFF,
 			'promise/no-multiple-resolved': ERROR,
@@ -312,6 +311,7 @@ export default [
 			'promise/no-return-wrap': WARN,
 			'promise/param-names': WARN,
 			'promise/prefer-await-to-then': WARN,
+			'promise/valid-params': WARN,
 		},
 	},
 	// #endregion
@@ -321,8 +321,6 @@ export default [
 		files: [SRC_GLOB],
 		plugins: { unicorn },
 		rules: {
-			'unicorn/no-invalid-fetch-options': ERROR,
-			'unicorn/text-encoding-identifier-case': WARN,
 			'no-negated-condition': OFF,
 			'no-nested-ternary': OFF,
 			'unicorn/better-regex': WARN,
@@ -344,6 +342,7 @@ export default [
 			'unicorn/no-empty-file': ERROR,
 			'unicorn/no-hex-escape': WARN,
 			'unicorn/no-instanceof-array': WARN,
+			'unicorn/no-invalid-fetch-options': ERROR,
 			'unicorn/no-lonely-if': WARN,
 			'unicorn/no-magic-array-flat-depth': WARN,
 			'unicorn/no-negated-condition': ERROR,
@@ -410,6 +409,7 @@ export default [
 			'unicorn/require-number-to-fixed-digits-argument': ERROR,
 			'unicorn/string-content': WARN,
 			'unicorn/template-indent': WARN,
+			'unicorn/text-encoding-identifier-case': WARN,
 			'unicorn/throw-new-error': ERROR,
 			'unicorn/filename-case': [
 				ERROR,
@@ -427,7 +427,6 @@ export default [
 		plugins: { perfectionist },
 		rules: {
 			'perfectionist/sort-array-includes': WARN,
-			'perfectionist/sort-enums': [WARN, { sortByValue: true }],
 			'perfectionist/sort-exports': WARN,
 			'perfectionist/sort-heritage-clauses': WARN,
 			'perfectionist/sort-maps': WARN,
@@ -459,6 +458,10 @@ export default [
 					],
 				},
 			],
+			'perfectionist/sort-enums': [
+				WARN,
+				{ sortByValue: 'ifNumericEnum' },
+			],
 			'perfectionist/sort-imports': [
 				WARN,
 				{
@@ -466,17 +469,15 @@ export default [
 					newlinesBetween: 'ignore',
 					type: 'alphabetical',
 					groups: [
-						'tsconfig-path',
-						['builtin-type', 'builtin'],
-						['external-type', 'external'],
-						['internal-type', 'internal'],
-						['parent-type', 'parent'],
-						['sibling-type', 'sibling'],
-						['index-type', 'index'],
-						'type',
+						['type-builtin', 'builtin'],
+						['type-subpath', 'subpath'],
+						['type-external', 'external'],
+						['type-internal', 'internal'],
+						['type-parent', 'parent'],
+						['type-sibling', 'sibling'],
+						['type-index', 'index'],
+						['type-import', 'import'],
 						'style',
-						'object',
-						'import',
 						'unknown',
 					],
 				},
@@ -484,7 +485,9 @@ export default [
 			'perfectionist/sort-interfaces': [
 				WARN,
 				{
-					customGroups: { top: 'id' },
+					customGroups: [
+						{ elementNamePattern: '.*([iI]d)$', groupName: 'top' },
+					],
 					groups: [
 						'top',
 						'member',
@@ -502,7 +505,9 @@ export default [
 			'perfectionist/sort-object-types': [
 				WARN,
 				{
-					customGroups: { top: 'id' },
+					customGroups: [
+						{ elementNamePattern: '.*([iI]d)$', groupName: 'top' },
+					],
 					groups: [
 						'top',
 						'member',
@@ -520,9 +525,16 @@ export default [
 			'perfectionist/sort-objects': [
 				WARN,
 				{
-					customGroups: { top: 'id' },
-					ignorePattern: ['examples', 'manualChunks'],
+					type: 'unsorted',
+					useConfigurationIf: {
+						declarationMatchesPattern: '^(?:examples)$',
+					},
+				},
+				{
 					partitionByComment: '#region*',
+					customGroups: [
+						{ elementNamePattern: '.*([iI]d)$', groupName: 'top' },
+					],
 					groups: [
 						'top',
 						'member',
@@ -550,10 +562,9 @@ export default [
 		files: [SRC_GLOB],
 		plugins: { regexp },
 		rules: {
-			'no-invalid-regexp': OFF,
-			'regexp/no-invalid-regexp': ERROR,
 			'no-control-regex': ERROR,
 			'no-empty-character-class': OFF,
+			'no-invalid-regexp': OFF,
 			'no-misleading-character-class': ERROR,
 			'no-regex-spaces': ERROR,
 			'no-useless-backreference': OFF,
@@ -576,6 +587,7 @@ export default [
 			'regexp/no-empty-string-literal': ERROR,
 			'regexp/no-escape-backspace': ERROR,
 			'regexp/no-extra-lookaround-assertions': ERROR,
+			'regexp/no-invalid-regexp': ERROR,
 			'regexp/no-invisible-character': ERROR,
 			'regexp/no-lazy-ends': WARN,
 			'regexp/no-legacy-features': ERROR,
@@ -652,7 +664,6 @@ export default [
 		files: [TEST_GLOB],
 		plugins: { vitest },
 		rules: {
-			'vitest/valid-title': OFF,
 			'max-classes-per-file': OFF,
 			'unicorn/consistent-function-scoping': OFF,
 			'unicorn/no-unsafe-regex': OFF,
@@ -691,6 +702,7 @@ export default [
 			'vitest/prefer-to-contain': WARN,
 			'vitest/prefer-to-have-length': WARN,
 			'vitest/prefer-todo': WARN,
+			'vitest/valid-title': OFF,
 		},
 	},
 	// #endregion

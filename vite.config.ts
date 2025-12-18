@@ -16,14 +16,13 @@ export default {
 		ssr: true,
 		target: tsconfig.target,
 		terserOptions: { compress: false, keep_classnames: true },
-		rollupOptions: {
+		rolldownOptions: {
 			plugins: [packageJson()],
 			treeshake: CODE_OPTIMIZE,
 			input: {
 				main: 'src/main.ts',
 			},
 			output: {
-				compact: CODE_OPTIMIZE,
 				format: 'esm',
 				preserveModules: true,
 				preserveModulesRoot: 'src',

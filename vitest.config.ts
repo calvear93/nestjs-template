@@ -15,7 +15,7 @@ export default {
 				useFlatConfig: true,
 			},
 		}),
-	],
+	] as any[],
 	test: {
 		include: ['src/**/*.{spec,test}.?(c|m)[jt]s'],
 		reporters: ['verbose'],

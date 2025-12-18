@@ -95,6 +95,7 @@ const getOrCall = (
 
 export const applyJsonSchemaCustomizations = (): ToJSONSchemaParams => {
 	return {
+		unrepresentable: 'any',
 		override: (context) => {
 			const { format, type } = context.zodSchema._zod.def as any;
 
@@ -114,7 +115,6 @@ export const applyJsonSchemaCustomizations = (): ToJSONSchemaParams => {
 			);
 			if (customFormat) Object.assign(context.jsonSchema, customFormat);
 		},
-		unrepresentable: 'any',
 	};
 };
 

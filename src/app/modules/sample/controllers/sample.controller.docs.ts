@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '#libs/http';
 import {
 	ApiBody,
 	ApiOperation,
@@ -6,7 +7,6 @@ import {
 	ApiResponse,
 	ApiTags,
 } from '@nestjs/swagger';
-import { HttpStatusCode } from '#libs/http';
 import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
 import { SampleDto } from '../schemas/sample.dto.ts';
 import { type SampleController } from './sample.controller.ts';

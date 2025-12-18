@@ -1,7 +1,7 @@
-import { type NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Test, type TestingModule } from '@nestjs/testing';
 import { HttpMethod, HttpStatusCode } from '#libs/http';
 import { createFastifyApplication } from '#testing';
+import { type NestFastifyApplication } from '@nestjs/platform-fastify';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { AppModule } from '../app/app.module.ts';
