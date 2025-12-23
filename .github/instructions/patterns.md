@@ -737,149 +737,72 @@ export class ErrorResponseDto extends ZodDto(
 
 ## 🎭 Mock Server Patterns
 
-### MSW (Mock Service Worker) Configuration
+### Built-in Node HTTP Mock Server (Vitest)
 
-MSW provides seamless API mocking for both development and testing environments.
+For tests that must exercise real HTTP behavior (status codes, headers, body parsing) without calling the network, use the built-in helper:
 
-#### Complete Handler Examples
+- `src/libs/http/__mocks__/create-http-mock-server.mock.ts`
 
-```typescript
-// src/__msw__/handlers.ts
-import { http, HttpResponse } from 'msw';
-import { faker } from '@faker-js/faker';
+This approach keeps tests fast and dependency-free.
 
-export const handlers = [
-	// payment API mock with dynamic responses
-	http.post(
-		'https://api.payment-provider.com/payments',
-		async ({ request }) => {
-			const { amount } = await request.json();
-
-			return HttpResponse.json({
-				id: faker.string.uuid(),
-				amount,
-				status: 'completed',
-				transactionId: faker.finance.accountNumber(),
-				createdAt: new Date().toISOString(),
-			});
-		},
-	),
-
-	// user management API with parameter handling
-	http.get('https://api.user-service.com/users/:id', ({ params }) => {
-		return HttpResponse.json({
-			id: params.id,
-			name: faker.person.fullName(),
-			email: faker.internet.email(),
-			avatar: faker.image.avatar(),
-			createdAt: faker.date.past().toISOString(),
-		});
-	}),
-
-	// notification service with request body validation
-	http.post('https://api.notifications.com/send', async ({ request }) => {
-		const notification = await request.json();
-
-		return HttpResponse.json({
-			id: faker.string.uuid(),
-			status: 'sent',
-			messageId: faker.string.alphanumeric(10),
-			sentAt: new Date().toISOString(),
-		});
-	}),
-
-	// error scenario simulation
-	http.get('https://api.external.com/flaky-endpoint', () => {
-		// simulate 30% error rate for testing resilience
-		if (Math.random() < 0.3) {
-			return new HttpResponse(null, { status: 500 });
-		}
-
-		return HttpResponse.json({ data: 'success' });
-	}),
-
-	// authentication mock with token validation
-	http.post('https://api.auth.com/login', async ({ request }) => {
-		const { username, password } = await request.json();
-
-		if (username === 'admin' && password === 'password') {
-			return HttpResponse.json({
-				token: faker.string.alphanumeric(32),
-				expiresIn: 3600,
-				user: {
-					id: faker.string.uuid(),
-					username,
-					role: 'admin',
-				},
-			});
-		}
-
-		return new HttpResponse(null, { status: 401 });
-	}),
-];
-```
-
-#### Test-Specific Mock Overrides
+#### Example: Mock an external API for HttpClient
 
 ```typescript
-// user.service.spec.ts
-import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
-import { handlers } from '../__msw__/handlers.ts';
+import type { RequestListener, Server } from 'node:http';
+import type { Mock } from 'vitest';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { HttpClient } from '#libs/http';
+import { createHttpMockServer } from '#libs/http/__mocks__/create-http-mock-server.mock.ts';
 
-const server = setupServer(...handlers);
+describe('HttpClient + mock server', () => {
+	let _server: Server;
+	let _handler: Mock<RequestListener>;
+	let _port: number;
+	let _client: HttpClient;
 
-describe('UserService with External API', () => {
-	let _userService: UserService;
+	beforeAll(async () => {
+		const [server, handler, port] = await createHttpMockServer();
+		_server = server;
+		_handler = handler;
+		_port = port;
 
-	beforeAll(() => {
-		server.listen();
+		_client = new HttpClient({
+			url: `http://localhost:${_port}`,
+			timeout: 2_000,
+		});
 	});
 
-	afterEach(() => {
-		server.resetHandlers();
+	afterAll(async () => {
+		await new Promise<void>((resolve) => {
+			_server.close(() => resolve());
+		});
 	});
 
-	afterAll(() => {
-		server.close();
-	});
+	test('should return JSON from mocked endpoint', async () => {
+		// arrange
+		_handler.mockImplementation((req, res) => {
+			if (req.url === '/users/1' && req.method === 'GET') {
+				res.writeHead(200, { 'content-type': 'application/json' });
+				res.end(JSON.stringify({ id: 1, name: 'Test' }));
+				return;
+			}
 
-	test('should handle external API timeout', async () => {
-		// arrange - override handler for this specific test
-		server.use(
-			http.get('https://api.external.com/users/:id', () => {
-				return new HttpResponse(null, { status: 408 });
-			}),
-		);
-
-		// act & assert
-		await expect(_userService.fetchExternalUser('123')).rejects.toThrow(
-			'External API timeout',
-		);
-	});
-
-	test('should handle external API success', async () => {
-		// arrange - use custom response for this test
-		const _mockUser = {
-			id: '123',
-			name: 'Test User',
-			email: 'test@example.com',
-		};
-
-		server.use(
-			http.get('https://api.external.com/users/:id', () => {
-				return HttpResponse.json(_mockUser);
-			}),
-		);
+			res.writeHead(404);
+			res.end();
+		});
 
 		// act
-		const _result = await _userService.fetchExternalUser('123');
+		const response = await _client.get<{ id: number; name: string }>(
+			'/users/1',
+		);
 
 		// assert
-		expect(_result).toEqual(_mockUser);
+		await expect(response.json()).resolves.toEqual({ id: 1, name: 'Test' });
 	});
 });
 ```
+
+For pure unit tests (no HTTP involved), prefer `vi.fn()` / `vi.spyOn()` and inject a mocked dependency instead of running a server.
 
 ## 🧪 Testing Patterns
 
@@ -891,87 +814,96 @@ import { UserService } from './user.service.ts';
 import { CreateUserDto } from '../schemas/user.dto.ts';
 
 describe('UserService', () => {
-  let _userService: UserService;
-  let _mockRepository: any;
-  let _mockEmailService: any;
+	interface UserRepository {
+		findById(id: number): Promise<unknown>;
+		findByEmail(email: string): Promise<unknown>;
+		create(data: CreateUserDto): Promise<unknown>;
+		update(id: number, data: Partial<CreateUserDto>): Promise<unknown>;
+		delete(id: number): Promise<void>;
+	}
 
-  // hooks section
-  beforeAll(async () => {
-    // mocks setup
-    _mockRepository = {
-      findById: vi.fn(),
-      findByEmail: vi.fn(),
-      create: vi.fn(),
-      update: vi.fn(),
-      delete: vi.fn(),
-    };
+	interface EmailService {
+		sendWelcomeEmail(email: string): Promise<boolean>;
+	}
 
-    _mockEmailService = {
-      sendWelcomeEmail: vi.fn(),
-    };
+	let _userService: UserService;
+	let _mockRepository: import('vitest-mock-extended').MockProxy<UserRepository>;
+	let _mockEmailService: import('vitest-mock-extended').MockProxy<EmailService>;
 
-    _userService = new UserService(_mockRepository, _mockEmailService);
-  });
+	// hooks section
+	beforeAll(async () => {
+		const { mock } = await import('vitest-mock-extended');
 
-  afterAll(async () => {
-    vi.clearAllMocks();
-  });
+		// mocks setup
+		_mockRepository = mock<UserRepository>();
+		_mockEmailService = mock<EmailService>();
 
-  // tests section
-  test('should create user successfully', async () => {
-    // arrange
-    const _userData: CreateUserDto = {
-      name: 'John Doe',
-      email: 'john@example.com',
-      age: 30,
-    };
+		_userService = new UserService(_mockRepository, _mockEmailService);
+	});
 
-    const _expectedUser = {
-      id: 'user-123',
-      ...._userData,
-      createdAt: new Date(),
-    };
+	afterAll(async () => {
+		vi.clearAllMocks();
+	});
 
-    _mockRepository.findByEmail.mockResolvedValue(null);
-    _mockRepository.create.mockResolvedValue(_expectedUser);
-    _mockEmailService.sendWelcomeEmail.mockResolvedValue(true);
+	// tests section
+	test('should create user successfully', async () => {
+		// arrange
+		const _userData: CreateUserDto = {
+			name: 'John Doe',
+			email: 'john@example.com',
+			age: 30,
+		};
 
-    // act
-    const _result = await _userService.create(_userData);
+		const _expectedUser = {
+			id: 'user-123',
+			..._userData,
+			createdAt: new Date(),
+		};
 
-    // assert
-    expect(_result).toEqual(
-      expect.objectContaining({
-        id: expect.any(String),
-        name: _userData.name,
-        email: _userData.email,
-        age: _userData.age,
-      })
-    );
+		_mockRepository.findByEmail.mockResolvedValue(null);
+		_mockRepository.create.mockResolvedValue(_expectedUser);
+		_mockEmailService.sendWelcomeEmail.mockResolvedValue(true);
 
-    expect(_mockRepository.findByEmail).toHaveBeenCalledWith(_userData.email);
-    expect(_mockRepository.create).toHaveBeenCalledWith(_userData);
-    expect(_mockEmailService.sendWelcomeEmail).toHaveBeenCalledWith(_userData.email);
-  });
+		// act
+		const _result = await _userService.create(_userData);
 
-  test('should throw error when email already exists', async () => {
-    // arrange
-    const _userData: CreateUserDto = {
-      name: 'John Doe',
-      email: 'existing@example.com',
-      age: 30,
-    };
+		// assert
+		expect(_result).toEqual(
+			expect.objectContaining({
+				id: expect.any(String),
+				name: _userData.name,
+				email: _userData.email,
+				age: _userData.age,
+			}),
+		);
 
-    _mockRepository.findByEmail.mockResolvedValue({ id: 'existing-user' });
+		expect(_mockRepository.findByEmail).toHaveBeenCalledWith(
+			_userData.email,
+		);
+		expect(_mockRepository.create).toHaveBeenCalledWith(_userData);
+		expect(_mockEmailService.sendWelcomeEmail).toHaveBeenCalledWith(
+			_userData.email,
+		);
+	});
 
-    // act & assert
-    await expect(_userService.create(_userData)).rejects.toThrow(
-      'Email already exists'
-    );
+	test('should throw error when email already exists', async () => {
+		// arrange
+		const _userData: CreateUserDto = {
+			name: 'John Doe',
+			email: 'existing@example.com',
+			age: 30,
+		};
 
-    expect(_mockRepository.create).not.toHaveBeenCalled();
-    expect(_mockEmailService.sendWelcomeEmail).not.toHaveBeenCalled();
-  });
+		_mockRepository.findByEmail.mockResolvedValue({ id: 'existing-user' });
+
+		// act & assert
+		await expect(_userService.create(_userData)).rejects.toThrow(
+			'Email already exists',
+		);
+
+		expect(_mockRepository.create).not.toHaveBeenCalled();
+		expect(_mockEmailService.sendWelcomeEmail).not.toHaveBeenCalled();
+	});
 });
 ```
 
@@ -1029,7 +961,7 @@ describe('UserController', () => {
 			createdAt: new Date(),
 		};
 
-		(_userService.create as any).mockResolvedValue(_expectedResult);
+		vi.mocked(_userService.create).mockResolvedValue(_expectedResult);
 
 		// act
 		const _result = await _controller.createUser(_createUserDto);
@@ -1046,7 +978,7 @@ describe('UserController', () => {
 			email: 'invalid-email',
 		} as CreateUserDto;
 
-		(_userService.create as any).mockRejectedValue(
+		vi.mocked(_userService.create).mockRejectedValue(
 			new Error('Validation failed'),
 		);
 
@@ -1063,12 +995,12 @@ describe('UserController', () => {
 ```typescript
 import { MockedObject } from 'vitest';
 
-export const createMockFactory = <T extends Record<string, any>>(
+export const createMockFactory = <T extends Record<string, unknown>>(
 	methods: (keyof T)[],
 ): MockedObject<T> => {
 	const mock = {} as MockedObject<T>;
 	methods.forEach((method) => {
-		mock[method] = vi.fn() as any;
+		mock[method] = vi.fn() as unknown as MockedObject<T>[typeof method];
 	});
 	return mock;
 };
@@ -1173,73 +1105,30 @@ describe('UserService with Test Builders', () => {
 
 ## 📊 Repository Patterns
 
-### Generic Repository Pattern
+### ORM-Agnostic Repository Pattern
+
+This template does not ship with a database/ORM by default. Keep repositories ORM-agnostic so you can plug in Prisma, TypeORM, SQL clients, HTTP backends, etc.
 
 ```typescript
-export abstract class BaseRepository<T, ID = number> {
-	constructor(protected readonly prisma: PrismaService) {}
-
-	abstract create(data: Partial<T>): Promise<T>;
-	abstract findById(id: ID): Promise<T | null>;
-	abstract findMany(options?: FindManyOptions): Promise<T[]>;
-	abstract update(id: ID, data: Partial<T>): Promise<T>;
-	abstract delete(id: ID): Promise<void>;
-	abstract count(where?: any): Promise<number>;
-}
-
-interface FindManyOptions {
+export interface FindManyOptions<Where = unknown, OrderBy = unknown> {
 	offset?: number;
 	limit?: number;
-	where?: any;
-	orderBy?: any;
+	where?: Where;
+	orderBy?: OrderBy;
 }
 
-@Injectable()
-export class UserRepository extends BaseRepository<User, number> {
-	async create(data: Partial<User>): Promise<User> {
-		return this.prisma.user.create({ data: data as any });
-	}
-
-	async findById(id: number): Promise<User | null> {
-		return this.prisma.user.findUnique({ where: { id } });
-	}
-
-	async findByEmail(email: string): Promise<User | null> {
-		return this.prisma.user.findUnique({ where: { email } });
-	}
-
-	async findMany(options: FindManyOptions = {}): Promise<User[]> {
-		const { offset, limit, where, orderBy } = options;
-
-		return this.prisma.user.findMany({
-			where,
-			orderBy,
-			skip: offset,
-			take: limit,
-		});
-	}
-
-	async update(id: number, data: Partial<User>): Promise<User> {
-		return this.prisma.user.update({
-			where: { id },
-			data: data as any,
-		});
-	}
-
-	async delete(id: number): Promise<void> {
-		await this.prisma.user.delete({ where: { id } });
-	}
-
-	async count(where?: any): Promise<number> {
-		return this.prisma.user.count({ where });
-	}
-
-	async findActiveUsers(): Promise<User[]> {
-		return this.findMany({
-			where: { isActive: true },
-			orderBy: { createdAt: 'desc' },
-		});
-	}
+export interface BaseRepository<
+	T,
+	ID = number,
+	Where = unknown,
+	OrderBy = unknown,
+> {
+	create(data: Partial<T>): Promise<T>;
+	findById(id: ID): Promise<T | null>;
+	findMany(options?: FindManyOptions<Where, OrderBy>): Promise<T[]>;
+	update(id: ID, data: Partial<T>): Promise<T>;
+	delete(id: ID): Promise<void>;
+	count(where?: Where): Promise<number>;
 }
 ```
 
@@ -1250,9 +1139,12 @@ export class UserRepository extends BaseRepository<User, number> {
 ```typescript
 @Injectable()
 export class CacheService {
-	private readonly cache = new Map<string, { data: any; expiry: number }>();
+	private readonly cache = new Map<
+		string,
+		{ data: unknown; expiry: number }
+	>();
 
-	set(key: string, value: any, ttlMs: number = 300000): void {
+	set(key: string, value: unknown, ttlMs: number = 300000): void {
 		const expiry = Date.now() + ttlMs;
 		this.cache.set(key, { data: value, expiry });
 	}
@@ -1285,13 +1177,13 @@ export class CacheService {
 // cache decorator
 export function Cacheable(ttlMs: number = 300000) {
 	return function (
-		target: any,
+		target: unknown,
 		propertyName: string,
 		descriptor: PropertyDescriptor,
 	) {
 		const method = descriptor.value;
 
-		descriptor.value = async function (...args: any[]) {
+		descriptor.value = async function (...args: unknown[]) {
 			const cacheKey = `${target.constructor.name}:${propertyName}:${JSON.stringify(args)}`;
 			const cacheService: CacheService = this.cacheService;
 
@@ -1319,7 +1211,7 @@ export class UserService {
 	) {}
 
 	@Cacheable(600000) // cache for 10 minutes
-	async getExpensiveUserData(userId: number): Promise<any> {
+	async getExpensiveUserData(userId: number): Promise<unknown> {
 		// expensive operation
 		return this.userRepository.findUserWithComplexData(userId);
 	}

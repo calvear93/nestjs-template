@@ -4,6 +4,13 @@
 
 This template includes built-in libraries for Zod validation, HTTP client integration, and custom decorators to accelerate development of scalable REST APIs.
 
+Key facts:
+
+- **Node.js**: requires `>=24` (see `package.json#engines`)
+- **Env loading**: uses `@calvear/env` (`env/` folder) to load variables before running scripts
+- **Server**: NestJS + Fastify
+- **Validation**: Zod v4 (with template-provided helpers like `z.email()` and `z.iso.*`)
+
 ## Documentation
 
 - [Main README](README.md): Primary project documentation, getting started guide, and available commands
@@ -24,7 +31,7 @@ This template includes built-in libraries for Zod validation, HTTP client integr
 ## Configuration
 
 - [Environment Setup](env/README.md): Environment variables configuration and schema validation guide
-- [Package Configuration](package.json): Project dependencies, scripts, and metadata with pnpm workspaces
+- [Package Configuration](package.json): Project dependencies, scripts, and metadata
 - [TypeScript Config](tsconfig.json): TypeScript compiler configuration for ES2024 and module resolution
 - [Vite Config](vite.config.ts): Build tool configuration for development and production with SWC
 - [Vitest Config](vitest.config.ts): Testing framework configuration with coverage and benchmarking

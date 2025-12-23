@@ -43,17 +43,31 @@ import { SecurityGuard } from '#libs/decorators';
 
 @Injectable()
 export class ApiKeyGuard implements SecurityGuard {
-	canActivate(context: ExecutionContext): boolean {
+	canActivate(
+		context: ExecutionContext,
+		headerName: string,
+		expectedApiKey: string,
+	): boolean {
 		const request = context.switchToHttp().getRequest();
-		const apiKey = request.headers['x-api-key'];
-		return apiKey === process.env.API_KEY;
+		const providedApiKey = request.headers[headerName];
+		return providedApiKey === expectedApiKey;
 	}
 }
 
 // Create the decorators
-export const [ApiKeySecurity, AllowAnonymous] =
-	createSecurityGuard(ApiKeyGuard);
+const HEADER_NAME = process.env.SECURITY_HEADER_NAME;
+const API_KEY = process.env.SECURITY_API_KEY;
+const ENABLED = process.env.SECURITY_ENABLED === 'true' && !!API_KEY;
+
+export const [ApiKeySecurity, AllowAnonymous] = createSecurityGuard(
+	ApiKeyGuard,
+	ENABLED,
+	HEADER_NAME,
+	API_KEY,
+);
 ```
+
+Note: keep configuration (API keys, header names, enable flags) out of business logic. If you must read environment variables, do it once at the application boundary and pass values into the guard via arguments.
 
 ### Use in controllers
 
@@ -190,8 +204,17 @@ export const [JwtSecurity, AllowAnonymous] = createSecurityGuard(
 export const [JwtAuth, JwtAllowAnonymous] = createSecurityGuard(JwtAuthGuard);
 export const [AdminRole, AdminAllowAnonymous] =
 	createSecurityGuard(AdminRoleGuard);
-export const [ApiKeyAuth, ApiKeyAllowAnonymous] =
-	createSecurityGuard(ApiKeyGuard);
+
+const HEADER_NAME = process.env.SECURITY_HEADER_NAME;
+const API_KEY = process.env.SECURITY_API_KEY;
+const ENABLED = process.env.SECURITY_ENABLED === 'true' && !!API_KEY;
+
+export const [ApiKeyAuth, ApiKeyAllowAnonymous] = createSecurityGuard(
+	ApiKeyGuard,
+	ENABLED,
+	HEADER_NAME,
+	API_KEY,
+);
 
 @Controller('secure')
 @JwtAuth()

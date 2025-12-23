@@ -27,10 +27,6 @@ pnpm format                      # Format code using Prettier
 # Build & Preview
 pnpm build                       # Build for production
 pnpm preview                     # Preview built application
-
-# Database & ORM (when using Prisma)
-pnpm orm:local                   # Prisma commands for local development
-pnpm orm:dev                     # Prisma commands for dev environment
 ```
 
 ## 📝 Commit Guidelines
@@ -149,7 +145,7 @@ export class UserController {
 # Project Technology Stack
 
 - **Framework**: NestJS v11+ (Node.js framework)
-- **Runtime**: Node.js 22+ with TypeScript v5+
+- **Runtime**: Node.js >=24 with TypeScript v5+
 - **HTTP Server**: Fastify (high-performance web framework)
 - **Validation**: Zod v4+ (TypeScript-first schema validation)
 - **Testing**: Vitest (fast unit testing framework)
@@ -159,7 +155,7 @@ export class UserController {
 - **Package Manager**: pnpm (fast, disk space efficient)
 - **Build Tool**: Vite (fast build and dev server)
 - **Code Quality**: ESLint + Prettier
-- **Mocking**: MSW (Mock Service Worker)
+- **Mocking**: Vitest mocks/spies (optionally add MSW if you need API-level mocks)
 
 ## 🚨 Configuration Management Rules - CRITICAL
 
@@ -281,7 +277,7 @@ For comprehensive command documentation, see `patterns.md` quick reference secti
 
 - **Unit Tests**: Test individual functions and methods in isolation
 - **Integration Tests**: Test module interactions and API endpoints
-- **Mock External Dependencies**: Use MSW for HTTP mocking and vitest-mock-extended for service mocking
+- **Mock External Dependencies**: Use Vitest mocks/spies and `vitest-mock-extended` for service mocking
 - **Coverage Goals**: Maintain at least 80% code coverage across the project
 - **Mutation Testing**: Run periodic mutation tests to verify test quality
 

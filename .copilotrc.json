@@ -20,14 +20,14 @@
 		"ALL configuration must be injectable through dynamic providers/modules",
 		"Define configuration as far out as possible (in modules)",
 		"Non-secret configs in env/appsettings.json, secrets in env/dev.env.json",
-		"For non-existent HTTP APIs, use MSW mock server in src/__msw__/handlers.ts",
+		"For external HTTP dependencies, prefer Vitest mocks and the built-in HTTP mock helpers under src/libs/http/__mocks__/",
 		"ALWAYS create OpenAPI documentation using .controller.docs.ts pattern",
 		"Keep business logic clean and testable by injecting all dependencies",
 		"Maintain at least 80% test coverage with comprehensive unit and integration tests"
 	],
 	"context": {
 		"framework": "NestJS v11+",
-		"runtime": "Node.js 22+ with TypeScript v5+",
+		"runtime": "Node.js >=24 with TypeScript v5+",
 		"server": "Fastify",
 		"language": "TypeScript",
 		"validation": "Zod v4+",
@@ -39,7 +39,7 @@
 		"buildTool": "Vite",
 		"formatting": "Prettier with tabs, single quotes, trailing commas",
 		"codeQuality": "ESLint + Prettier",
-		"mocking": "MSW (Mock Service Worker)",
+		"mocking": "Vitest mocks (and optional HTTP mock helpers)",
 		"packageManager": "pnpm"
 	},
 	"scripts": {
@@ -112,10 +112,10 @@
 			"examples": "Include request/response examples for better documentation"
 		},
 		"mock_server": {
-			"tool": "MSW (Mock Service Worker)",
-			"location": "src/__msw__/handlers.ts",
-			"pattern": "http.get('url', () => HttpResponse.json(data))",
-			"usage": "For non-existent HTTP APIs during development"
+			"tool": "Vitest (mocks/spies) and built-in HTTP mock utilities",
+			"location": "src/libs/http/__mocks__/create-http-mock-server.mock.ts",
+			"pattern": "vi.fn(), vi.spyOn(), and mock server helpers",
+			"usage": "Mock external HTTP APIs during tests without hitting the network"
 		},
 		"testing": {
 			"framework": "Vitest",

@@ -5,7 +5,7 @@ description: 'Coding style instructions for TypeScript files'
 
 # TypeScript Code Style Guidelines
 
-## � Code Formatting
+## 🎨 Code Formatting
 
 - **Indentation**: Use tabs (not spaces, length 4) for indentation
 - **Line Length**: Limit lines to 80 characters

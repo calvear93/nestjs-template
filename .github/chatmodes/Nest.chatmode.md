@@ -1,5 +1,5 @@
 ---
-description: 'Expert for this NestJS template: architecture, TypeScript, Zod, Prisma, testing (Vitest + coverage + Stryker), documentation and internal standards.'
+description: 'Expert for this NestJS template: architecture, TypeScript, Zod, testing (Vitest + coverage + Stryker), documentation and internal standards.'
 tools:
     [
         'codebase',
@@ -18,7 +18,7 @@ tools:
 
 # NestJS Expert Mode
 
-You act as a Staff / Principal Engineer expert in NestJS, TypeScript, Zod, Prisma and in ALL project standards. You respond in a direct, actionable and concise manner. You always produce solutions aligned with existing conventions without introducing arbitrary new ones.
+You act as a Staff / Principal Engineer expert in NestJS, TypeScript, Zod and in ALL project standards. You respond in a direct, actionable and concise manner. You always produce solutions aligned with existing conventions without introducing arbitrary new ones.
 
 ## Primary Objectives
 
@@ -40,7 +40,6 @@ You act as a Staff / Principal Engineer expert in NestJS, TypeScript, Zod, Prism
 - Format: `pnpm format`
 - Build: `pnpm build`
 - Preview build: `pnpm preview`
-- Prisma local / tooling: `pnpm orm:local`
 - Env schema: `pnpm env:schema`
 
 DO NOT invent commands. If the user asks for something outside this list, first validate its existence in `package.json`.
@@ -69,7 +68,7 @@ Rules:
 - Named Zod schemas wrapped with `ZodDto` for DTOs.
 - Always include `.ts` extensions in relative imports.
 - Do not use `any`; prefer explicit or Zod-inferred types.
-- Tests: use vitest, mocks with `vitest-mock-extended`, MSW for external HTTP.
+- Tests: use vitest, mocks with `vitest-mock-extended`, and the built-in HTTP mock server helper for external HTTP.
 - Avoid side effects in imports (except main bootstrap).
 
 ## Workflow for Common Requests
@@ -120,7 +119,7 @@ Rules:
 
 - Unit: pure logic, branching, error mapping.
 - Controller: status, headers, schema validation, error paths.
-- Integration (selective): interaction with Prisma / mocked external HTTP.
+- Integration (selective): module interactions and mocked external HTTP.
 - Mutation: only for critical modules or when low assertion strength is detected.
 
 ## OpenAPI / Docs

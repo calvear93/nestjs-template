@@ -252,7 +252,10 @@ import { ModuleDto } from '../schemas/module.dto.ts';
 // For shared libraries, use path aliases
 import { ZodDto, ZodValidationPipe } from '#libs/zod';
 import { HttpStatusCode } from '#libs/http';
-import { ApplyControllerDocs } from '#libs/decorators';
+import { createSecurityGuard } from '#libs/decorators';
+
+// For app-level decorators, use relative imports (with .ts extensions)
+import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
 ```
 
 ### Cross-module imports

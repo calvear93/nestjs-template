@@ -23,6 +23,16 @@ This library provides a complete integration of Zod with NestJS, including DTOs,
 - ✅ **Arrays & Iterables** - Support for arrays, sets, and tuples
 - ✅ **Error Handling** - Custom exceptions with detailed messages
 
+### Template Zod Extensions
+
+This template augments Zod with convenience helpers (on top of Zod v4), such as:
+
+- `z.email()`
+- `z.uuid()`
+- `z.iso.date()`, `z.iso.time()`, `z.iso.datetime()`, `z.iso.duration()`
+
+If you are used to vanilla Zod APIs (e.g. `z.string().email()`), this is expected.
+
 ## 🎯 Basic Usage
 
 ### Import the library

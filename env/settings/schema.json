@@ -1,0 +1,92 @@
+{
+	"package-json": {
+		"type": "object",
+		"properties": {
+			"ENV": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"VERSION": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"PROJECT": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"NAME": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"TITLE": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"DESCRIPTION": {
+				"type": ["string"],
+				"nullable": false
+			}
+		}
+	},
+	"app-settings": {
+		"type": "object",
+		"properties": {
+			"APP_ENV": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"APP_NAME": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"APP_VERSION": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"TZ": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"LANG": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"SWAGGER_UI": {
+				"type": ["boolean"],
+				"nullable": false
+			},
+			"BASE_URL": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"SECURITY": {
+				"type": ["object"],
+				"properties": {
+					"ENABLED": {
+						"type": ["boolean"],
+						"nullable": false
+					},
+					"HEADER_NAME": {
+						"type": ["string"],
+						"nullable": false
+					}
+				},
+				"nullable": false
+			},
+			"NODE_ENV": {
+				"type": ["string"],
+				"nullable": false
+			},
+			"PORT": {
+				"type": ["integer"],
+				"nullable": false
+			}
+		}
+	},
+	"secrets": {
+		"type": "object"
+	},
+	"local": {
+		"type": "object"
+	}
+}

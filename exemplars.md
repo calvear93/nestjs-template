@@ -22,6 +22,8 @@ The NestJS Template is a modern, production-ready foundation for building scalab
 
 These files demonstrate proper application bootstrap with environment-driven configuration:
 
+Note: reading from `process.env` is fine at the application boundary (entrypoints/bootstrap). Avoid using `process.env` directly inside services/controllers; inject configuration via providers.
+
 ```typescript
 // src/main.ts - Entry point with environment variables
 const PORT = +process.env.PORT;

@@ -120,7 +120,6 @@ secrets/
 private/
 
 # documentation that may contain sensitive info
-CHANGELOG.md
 SECURITY.md
 private-docs/
 

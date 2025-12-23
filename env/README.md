@@ -15,13 +15,16 @@
 
 ### 1.1. Dependencies
 
-Install the **env** library:
+This template uses the **env** CLI from `@calvear/env`.
+
+If you're starting from this template, it's already included in `devDependencies`.
+If you need to add it to a different project, install it with pnpm:
 
 ```bash
-npm i -D @calvear/env
+pnpm add -D @calvear/env
 ```
 
-### 1.2. NPM Scripts
+### 1.2. Scripts
 
 To load the desired environment, use the following format in your scripts:
 
@@ -29,13 +32,13 @@ To load the desired environment, use the following format in your scripts:
 env -e <env> -m <mode>[ <mode2>] : <your-command>
 ```
 
-- **env**: dev | qa | prod
-- **mode**: build | debug | test (you can use multiple)
+- **env**: project-defined environment name (this template ships with `dev` and `release`)
+- **mode**: `build` | `debug` | `test` (you can use multiple)
 
 Example:
 
 ```bash
-env -e dev -m debug : npm start
+env -e dev -m debug : vite
 ```
 
 ---
@@ -88,18 +91,20 @@ Recommended structure:
 
 ### 2.2. Secret and Local Variables
 
-- `dev.env.json`, `qa.env.json`, `prod.env.json`: secret variables per environment.
-- `dev.local.env.json`, `qa.local.env.json`, `prod.local.env.json`: local variables (highest priority).
+- `<env>.env.json`: secret variables per environment (recommended to keep out of version control).
+- `<env>.local.env.json`: local overrides (highest priority).
+
+This repository includes `dev.local.env.json` as an example. Create `release.env.json`, `release.local.env.json`, etc. as needed.
 
 ---
 
 ## 3. Schema
 
-The `settings/schema.json` file defines the structure and validation for environment files. It uses the JSON Schema v4 standard.
+The `env/settings/schema.json` file defines the structure and validation rules for environment variables.
 
-- When you add a new variable, use `env:schema` for update the schema.
-- To ignore a variable, remove it from the schema.
-- Variables can be retrieved from Azure Key Vault if configured.
+- Generate/update it with `pnpm env:schema`.
+- Keep it committed so everyone validates the same contract in CI and local development.
+- If you intentionally stop using a variable, remove it from the schema.
 
 ---
 
@@ -108,7 +113,7 @@ The `settings/schema.json` file defines the structure and validation for environ
 From lowest to highest:
 
 1. `appsettings.json` (default)
-2. `appsettings.json` (dev|qa|prod)
+2. `appsettings.json` (<env>)
 3. `appsettings.json` (debug|build|test)
 4. `<env>.env.json`
 5. `<env>.local.env.json` (highest priority)
@@ -119,7 +124,7 @@ From lowest to highest:
 
 ### 5.1. Nested Variables
 
-You can organize variables in nested objects. The default delimiter is `_`.
+You can organize variables in nested objects. The default delimiter in this template is `_` (see `env/settings/settings.json`).
 
 Example file:
 
@@ -138,6 +143,8 @@ Example file:
 Access in code:
 
 ```js
+// Prefer reading env vars at the application boundary (bootstrap/config providers)
+// and inject them into services/controllers.
 const dbHost = process.env.DATABASE_HOST;
 const apiKey = process.env.API_KEY;
 ```
@@ -146,6 +153,7 @@ const apiKey = process.env.API_KEY;
 
 - Keep sensitive variables only in `.env.json` files and never in version control.
 - Use local files for machine-specific variables.
+- Avoid using `process.env` directly inside services/controllers; read once and inject via providers.
 - Update the schema to keep validation and documentation up to date.
 
 ---
@@ -164,7 +172,7 @@ The `env` command supports a wide range of options to customize environment load
 | `--root`                |                  | string  | `env`                        | Default environment folder path                                   |
 | `--local`               | `-l`             | boolean |                              | Forces loading of local variables for the selected environment    |
 | `--ci`                  | `--ci`           | boolean | auto-detect                  | Enables CI mode (continuous integration)                          |
-| `--nestingDelimiter`    | `-nd`            | string  | `__`                         | Delimiter for nested keys (e.g. `l1__l2`)                         |
+| `--nestingDelimiter`    | `-nd`            | string  | `_`                          | Delimiter for nested keys (e.g. `l1_l2`)                          |
 | `--arrayDescomposition` | `--arrDesc`      | boolean | `false`                      | Whether to serialize or break down arrays                         |
 | `--expand`              | `-x`             | boolean | `false`                      | Interpolates environment variables using themselves               |
 | `--resolve`             | `-r`             | string  | `merge`                      | Schema update mode: `merge` or `override`                         |
@@ -180,6 +188,7 @@ The `env` command supports a wide range of options to customize environment load
 ### Usage Notes
 
 - You can combine options as needed. The command after the colon (`:`) will run with the loaded environment variables.
+- In this template, `nestingDelimiter` defaults to `_`.
 - For advanced usage, refer to the official documentation or run `env -h` for all available options.
 - Most options have sensible defaults; override them only for custom workflows or advanced scenarios.
 - Logging and masking options are useful for CI/CD and security-sensitive environments.

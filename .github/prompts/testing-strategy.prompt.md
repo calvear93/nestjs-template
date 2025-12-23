@@ -11,7 +11,7 @@ Create comprehensive tests for [COMPONENT] following the NestJS template testing
 
 1. **Unit Tests**: Test individual functions and methods in isolation
 2. **Integration Tests**: Test component interactions and API endpoints
-3. **Mock Strategy**: Use proper mocking with vitest-mock-extended and MSW
+3. **Mock Strategy**: Use proper mocking with `vitest-mock-extended` and Vitest spies; for real HTTP behavior use the built-in mock server helper
 4. **Coverage Goals**: Maintain high test coverage (80%+)
 5. **Test Organization**: Follow the project's test structure conventions
 6. **Error Scenarios**: Test both success and failure paths
@@ -35,7 +35,7 @@ Create comprehensive tests for [COMPONENT] following the NestJS template testing
 ### Mock Configuration
 
 - [ ] Services mocked with `vitest-mock-extended`
-- [ ] HTTP requests mocked with MSW when needed
+- [ ] HTTP requests mocked with Vitest-friendly helpers (e.g. `createHttpMockServer`) when needed
 - [ ] External dependencies properly mocked
 - [ ] Mock cleanup in `afterEach` hooks
 

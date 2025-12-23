@@ -17,35 +17,44 @@
 
 ## 📥 **Getting Started**
 
-- Replace globally these terms:
-    - `(((base-path)))` api base path, i.e. sample (for get /api/sample/v*/*)
-    - `(((app-name)))` app name, i.e. sample-api
-    - `(((app-title)))` app title, i.e. Sample API
-    - `(((project-name)))` project name, i.e. my-project
+- Replace these placeholders globally:
+    - `(((base-path)))` base API path segment, e.g. `sample` (default: `api/(((base-path)))`)
+    - `(((app-name)))` package/app name, e.g. `sample-api`
+    - `(((app-title)))` human-readable title, e.g. `Sample API`
+    - `(((project-name)))` repo/project name, e.g. `my-project`
 
-- Install [NodeJS](https://nodejs.org/es/).
-- Install [PNPM](https://pnpm.io/installation)
-- Execute `pnpm install` command.
-- Run either `pnpm start:dev` or `pnpm test:dev` commands.
+- Install Node.js (required by `package.json`): **Node `>=24`**.
+- Install [pnpm](https://pnpm.io/installation).
+- Install dependencies: `pnpm install`.
+- Run the app: `pnpm start:dev`.
 
-- Using Docker.
-    - Exec `pnpm exec env export -p ".env" -e dev -m build`
-    - Exec `docker build --no-cache -f Dockerfile --tag image_name .`
-    - Exec `docker run --env-file .env -d -it -p 8080:8080/tcp --name container_name image_name`
-    - Open `http://localhost:8080/api/(((base-path)))` in browser
+Notes:
 
-## 📋 **Branches and Environments**
+- This template uses the `env` CLI (`@calvear/env`) to load variables from `env/` before executing commands.
+- The app uses Fastify and enables API versioning.
 
-Project has 2 environments (infrastructure) base for project building.
+### Docker
 
-- **dev (development)**: environment with breaking changes and new features.
-- **release (production)**: release environment.
+- Export environment variables for build mode:
+    - `pnpm exec env export -e dev -m build -p .env`
+- Build and run:
+    - `docker build --no-cache -f Dockerfile --tag image_name .`
+    - `docker run --env-file .env -d -it -p 8080:8080/tcp --name container_name image_name`
+- Open `http://localhost:8080/api/(((base-path)))`.
+
+## 📋 **Environments**
+
+This template ships with two `env` environments:
+
+- **dev**: development environment
+- **release**: production-like environment
+
+These are environment profiles loaded by the `env` CLI (not necessarily Git branches).
 
 ## 🧪 **Executing**
 
-Project uses **npm scripts** for eases execution, testing and building.
-Many of these script run on a defined environment, specified after ':', and
-it environment may be 'dev' or 'release'.
+Project uses **pnpm scripts** to run, test and build.
+Some scripts are environment-specific, using the suffix `:<env>` where `<env>` is `dev` or `release`.
 
 | Command                      | Action                       |
 | ---------------------------- | ---------------------------- |
@@ -60,9 +69,9 @@ it environment may be 'dev' or 'release'.
 
 ## 🔥 **Helping Commands**
 
-| Command                     | Action                    |
-| --------------------------- | ------------------------- |
-| (get-command node.exe).Path | get current node exe path |
+| Command                       | Action                    |
+| ----------------------------- | ------------------------- |
+| `(Get-Command node.exe).Path` | get current node exe path |
 
 ## 📚 **Built-in Libraries**
 
@@ -98,12 +107,12 @@ Modern Fetch-based HTTP client with NestJS integration.
 
 📖 **[Full Documentation](src/libs/http/README.md)**
 
-| Feature                | Usage                        |
-| ---------------------- | ---------------------------- |
-| **Basic Requests**     | `client.get<T>(url)`         |
-| **Module Integration** | `HttpModule.forRoot(config)` |
-| **Error Handling**     | `HttpError`, `TimeoutError`  |
-| **Authentication**     | Built-in basic auth support  |
+| Feature                | Usage                         |
+| ---------------------- | ----------------------------- |
+| **Basic Requests**     | `client.get<T>(url)`          |
+| **Module Integration** | `HttpModule.register(config)` |
+| **Error Handling**     | `HttpError`, `TimeoutError`   |
+| **Authentication**     | Built-in basic auth support   |
 
 ```typescript
 // Example: HTTP Client usage
@@ -133,14 +142,26 @@ Type-safe security guard factory with argument injection.
 // Example: Security Guard
 @Injectable()
 export class ApiKeyGuard implements SecurityGuard {
-	canActivate(context: ExecutionContext): boolean {
+	canActivate(
+		context: ExecutionContext,
+		headerName: string,
+		apiKey: string,
+	): boolean {
 		const request = context.switchToHttp().getRequest();
-		return request.headers['x-api-key'] === process.env.API_KEY;
+		return request.headers[headerName] === apiKey;
 	}
 }
 
-export const [ApiKeySecurity, AllowAnonymous] =
-	createSecurityGuard(ApiKeyGuard);
+const HEADER_NAME = process.env.SECURITY_HEADER_NAME;
+const API_KEY = process.env.SECURITY_API_KEY;
+const ENABLED = process.env.SECURITY_ENABLED === 'true' && !!API_KEY;
+
+export const [ApiKeySecurity, AllowAnonymous] = createSecurityGuard(
+	ApiKeyGuard,
+	ENABLED,
+	HEADER_NAME,
+	API_KEY,
+);
 ```
 
 ## 🚀 **Creating New Modules**
