@@ -157,20 +157,16 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "file": {
       "anyOf": [
         {
-          "contentEncoding": "binary",
           "contentMediaType": "image/png",
-          "format": "binary",
-          "maxLength": 1000000,
-          "type": "string",
         },
         {
-          "contentEncoding": "binary",
           "contentMediaType": "image/jpeg",
-          "format": "binary",
-          "maxLength": 1000000,
-          "type": "string",
         },
       ],
+      "contentEncoding": "binary",
+      "format": "binary",
+      "maxLength": 1000000,
+      "type": "string",
     },
     "from": {
       "format": "date-time",
@@ -404,7 +400,6 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
       "type": "string",
     },
     "time": {
-      "format": "time",
       "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?$",
       "type": "string",
     },
