@@ -11,11 +11,10 @@ const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
 export default {
 	clearScreen: false,
 	build: {
-		minify: CODE_OPTIMIZE ? 'terser' : false,
+		minify: CODE_OPTIMIZE,
 		sourcemap: tsconfigRelease.sourceMap,
 		ssr: true,
 		target: tsconfig.target,
-		terserOptions: { compress: false, keep_classnames: true },
 		rolldownOptions: {
 			plugins: [packageJson()],
 			treeshake: CODE_OPTIMIZE,
