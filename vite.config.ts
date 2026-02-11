@@ -1,7 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import swc from 'unplugin-swc';
 import type { PluginOption, UserConfigExport } from 'vite';
-import { checker } from 'vite-plugin-checker';
 import { dependencies } from './package.json';
 import { compilerOptions as tsconfig } from './tsconfig.json';
 import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
@@ -31,16 +30,6 @@ export default {
 	// define: loadEnv(),
 	plugins: [
 		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
-		checker({
-			enableBuild: true,
-			terminal: true,
-			typescript: true,
-			eslint: {
-				dev: { logLevel: ['error'] },
-				lintCommand: 'eslint --cache',
-				useFlatConfig: true,
-			},
-		}),
 	],
 } satisfies UserConfigExport;
 
