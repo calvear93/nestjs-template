@@ -9,6 +9,8 @@ const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
 
 export default {
 	clearScreen: false,
+	// define: loadEnv(),
+	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' })],
 	build: {
 		minify: CODE_OPTIMIZE,
 		sourcemap: tsconfigRelease.sourceMap,
@@ -27,10 +29,6 @@ export default {
 			},
 		},
 	},
-	// define: loadEnv(),
-	plugins: [
-		swc.vite({ tsconfigFile: 'tsconfig.release.json' }),
-	],
 } satisfies UserConfigExport;
 
 /**
