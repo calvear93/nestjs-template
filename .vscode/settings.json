@@ -82,7 +82,7 @@
 	"js/ts.preferences.useAliasesForRenames": false,
 	"js/ts.suggest.autoImports": true,
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib",
-	"js/ts.tsserver.web.typeAcquisition.enabled": true,
+	"js/ts.tsserver.web.typeAcquisition.enabled": false,
 	"js/ts.validate.enabled": true,
 	"npm.packageManager": "pnpm",
 	"npm.scriptRunner": "pnpm",
