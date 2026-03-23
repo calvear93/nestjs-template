@@ -1,9 +1,7 @@
-import swc from 'unplugin-swc';
 import type { ViteUserConfig } from 'vitest/config';
 
 export default {
 	clearScreen: false,
-	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' })] as any,
 	test: {
 		include: ['src/**/*.{spec,test}.?(c|m)[jt]s'],
 		reporters: ['verbose'],

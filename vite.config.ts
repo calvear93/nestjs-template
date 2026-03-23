@@ -1,5 +1,4 @@
 import { writeFile } from 'node:fs/promises';
-import swc from 'unplugin-swc';
 import type { PluginOption, UserConfigExport } from 'vite';
 import { dependencies } from './package.json';
 import { compilerOptions as tsconfig } from './tsconfig.json';
@@ -10,7 +9,6 @@ const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
 export default {
 	clearScreen: false,
 	// define: loadEnv(),
-	plugins: [swc.vite({ tsconfigFile: 'tsconfig.release.json' })],
 	build: {
 		minify: CODE_OPTIMIZE,
 		sourcemap: tsconfigRelease.sourceMap,
