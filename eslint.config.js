@@ -34,7 +34,7 @@ export default [
 	{
 		files: [SRC_GLOB],
 		languageOptions: {
-			ecmaVersion: 2023,
+			ecmaVersion: 2024,
 			globals: { ...globals.node },
 			sourceType: 'module',
 		},
