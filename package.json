@@ -17,7 +17,7 @@
 		"env:schema": "env schema -e dev -m build",
 		"lint": "eslint --cache --cache-location node_modules/.cache/eslint/",
 		"format": "prettier --cache --write **/*.{ts,cts,mts,json,md,yml,yaml}",
-		"clean": "pnpx del-cli dist .reports **/*.tsbuildinfo .rollup.cache .swc .node_modules"
+		"clean": "pnpx del-cli dist .reports **/*.tsbuildinfo .node_modules"
 	},
 	"imports": {
 		"#libs/zod": "./src/libs/zod/index.ts",

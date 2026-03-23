@@ -9,8 +9,7 @@ node_modules
 # TypeScript cache
 *.tsbuildinfo
 
-# Rollup & Vite cache
-.rollup.cache
+# Vite cache
 vite.config.ts.*
 vitest.config.ts.*
 vite.config.js.timestamp-*

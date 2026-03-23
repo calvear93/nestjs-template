@@ -10,8 +10,7 @@ jspm_packages
 # TypeScript cache
 *.tsbuildinfo
 
-# Rollup & Vite cache
-.rollup.cache
+# Vite cache
 vite.config.ts.*
 
 # test reports and coverage directory

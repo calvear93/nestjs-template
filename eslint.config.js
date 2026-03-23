@@ -26,7 +26,6 @@ export default [
 			'**/node_modules/**/*',
 			'.reports/**/*',
 			'.vscode/**/*',
-			'.rollup.cache/**/*',
 			'vite.config.ts.*',
 		],
 	},
