@@ -4,10 +4,10 @@
 
 # global variables
 # https://hub.docker.com/_/node
-ARG NODE=node:24.14.0-alpine
+ARG NODE=node:24.14.1-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
-ARG PNPM_VER=10.32.1
+ARG PNPM_VER=10.33.0
 ARG APP_DIR='/app/'
 ARG OUT_DIR='dist'
 
