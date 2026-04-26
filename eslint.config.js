@@ -498,6 +498,7 @@ export default [
 						'multiline-optional-method',
 						'optional-method',
 						'unknown',
+						'index-signature',
 					],
 				},
 			],
