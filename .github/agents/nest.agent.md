@@ -160,6 +160,7 @@ Ready to assist as a NestJS expert.
 ### Zod Library (#libs/zod)
 
 **Core Features:**
+
 - `ZodDto(schema, 'Name')` - Create DTOs from Zod schemas
 - `ZodIterableDto(schema, 'Name')` - For arrays, sets, tuples
 - `ZodValidationPipe` - Automatic validation for controllers
@@ -167,27 +168,31 @@ Ready to assist as a NestJS expert.
 - Auto-generated OpenAPI schemas
 
 **Template Zod Extensions:**
+
 ```typescript
-z.email()           // Email validation
-z.uuid()            // UUID validation
-z.iso.date()        // ISO date
-z.iso.time()        // ISO time
-z.iso.datetime()    // ISO datetime
-z.iso.duration()    // ISO duration
+z.email(); // Email validation
+z.uuid(); // UUID validation
+z.iso.date(); // ISO date
+z.iso.time(); // ISO time
+z.iso.datetime(); // ISO datetime
+z.iso.duration(); // ISO duration
 ```
 
 **DTO Creation Pattern:**
+
 ```typescript
 import { ZodDto } from '#libs/zod';
 import { z } from 'zod';
 
 // Base schema
-const UserSchema = z.object({
-    id: z.coerce.number().optional(),
-    name: z.string().min(1).max(100),
-    email: z.email(),
-    createdAt: z.date().optional(),
-}).meta({ description: 'User DTO schema' });
+const UserSchema = z
+	.object({
+		id: z.coerce.number().optional(),
+		name: z.string().min(1).max(100),
+		email: z.email(),
+		createdAt: z.date().optional(),
+	})
+	.meta({ description: 'User DTO schema' });
 
 export class UserDto extends ZodDto(UserSchema, 'User') {}
 
@@ -201,23 +206,25 @@ export class UpdateUserDto extends ZodDto(UpdateUserSchema, 'UpdateUser') {}
 ```
 
 **Controller Usage:**
+
 ```typescript
 import { Body, Controller, Post } from '@nestjs/common';
 import { ZodValidationPipe } from '#libs/zod';
 
 @Controller('users')
 export class UserController {
-    @Post()
-    async create(@Body(ZodValidationPipe) data: CreateUserDto) {
-        // data is validated and typed automatically
-        return this.service.create(data);
-    }
+	@Post()
+	async create(@Body(ZodValidationPipe) data: CreateUserDto) {
+		// data is validated and typed automatically
+		return this.service.create(data);
+	}
 }
 ```
 
 ### HTTP Library (#libs/http)
 
 **Core Features:**
+
 - Modern Fetch API based
 - Full TypeScript support with generics
 - Request interceptors
@@ -227,48 +234,51 @@ export class UserController {
 - Basic authentication
 
 **Module Registration:**
+
 ```typescript
 import { HttpModule } from '#libs/http';
 
 @Module({
-    imports: [
-        HttpModule.register({
-            url: 'https://api.example.com',
-            timeout: 10000,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }),
-    ],
+	imports: [
+		HttpModule.register({
+			url: 'https://api.example.com',
+			timeout: 10000,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}),
+	],
 })
 export class FeatureModule {}
 ```
 
 **Service Usage:**
+
 ```typescript
 import { Injectable } from '@nestjs/common';
 import { HttpClient } from '#libs/http';
 
 @Injectable()
 export class ApiService {
-    constructor(private readonly httpClient: HttpClient) {}
+	constructor(private readonly httpClient: HttpClient) {}
 
-    async getUser(id: number) {
-        const response = await this.httpClient.get<User>(`/users/${id}`);
-        return response.json();
-    }
+	async getUser(id: number) {
+		const response = await this.httpClient.get<User>(`/users/${id}`);
+		return response.json();
+	}
 
-    async createUser(data: CreateUserDto) {
-        const response = await this.httpClient.post<User>('/users', {
-            data,
-            headers: { 'X-Custom': 'value' },
-        });
-        return response.json();
-    }
+	async createUser(data: CreateUserDto) {
+		const response = await this.httpClient.post<User>('/users', {
+			data,
+			headers: { 'X-Custom': 'value' },
+		});
+		return response.json();
+	}
 }
 ```
 
 **Advanced Configuration with Provider:**
+
 ```typescript
 import { HttpProvider } from '#libs/http';
 
@@ -292,33 +302,35 @@ import { HttpProvider } from '#libs/http';
 ```
 
 **Error Handling:**
+
 ```typescript
 import { HttpError, TimeoutError } from '#libs/http';
 
 try {
-    const result = await this.httpClient.post('/endpoint', { data });
+	const result = await this.httpClient.post('/endpoint', { data });
 } catch (error) {
-    if (error instanceof TimeoutError) {
-        // Handle timeout
-    } else if (error instanceof HttpError) {
-        // Access error.status, error.statusText, error.body
-    }
+	if (error instanceof TimeoutError) {
+		// Handle timeout
+	} else if (error instanceof HttpError) {
+		// Access error.status, error.statusText, error.body
+	}
 }
 ```
 
 ### Decorators Library (#libs/decorators)
 
 **Security Guard Factory:**
+
 ```typescript
 import { createSecurityGuard } from '#libs/decorators';
 
 // Create custom guard
 const { Guard: MyGuard, Decorator: MyDecorator } = createSecurityGuard({
-    name: 'MyGuard',
-    validate: async (request, context) => {
-        // Custom validation logic
-        return { isValid: true, metadata: {} };
-    },
+	name: 'MyGuard',
+	validate: async (request, context) => {
+		// Custom validation logic
+		return { isValid: true, metadata: {} };
+	},
 });
 
 // Use in controller
@@ -328,6 +340,7 @@ export class ProtectedController {}
 ```
 
 **Apply Decorator:**
+
 ```typescript
 import { Apply } from '#libs/decorators';
 
@@ -351,20 +364,20 @@ import { UserController } from './controllers/user.controller.ts';
 import { UserService } from './services/user.service.ts';
 
 @Module({
-    imports: [HttpModule],
-    providers: [
-        {
-            provide: 'USER_CONFIG',
-            useFactory: (config: ConfigService) => ({
-                maxUsers: config.get('USER.MAX_USERS'),
-                defaultRole: config.get('USER.DEFAULT_ROLE'),
-            }),
-            inject: [ConfigService],
-        },
-        UserService,
-    ],
-    controllers: [UserController],
-    exports: [UserService],
+	imports: [HttpModule],
+	providers: [
+		{
+			provide: 'USER_CONFIG',
+			useFactory: (config: ConfigService) => ({
+				maxUsers: config.get('USER.MAX_USERS'),
+				defaultRole: config.get('USER.DEFAULT_ROLE'),
+			}),
+			inject: [ConfigService],
+		},
+		UserService,
+	],
+	controllers: [UserController],
+	exports: [UserService],
 })
 export class UserModule {}
 ```
@@ -383,24 +396,24 @@ import { UserControllerDocs } from './user.controller.docs.ts';
 @Controller({ path: 'users', version: '1' })
 @ApplyControllerDocs(UserControllerDocs)
 export class UserController {
-    constructor(private readonly service: UserService) {}
+	constructor(private readonly service: UserService) {}
 
-    @Get()
-    async findAll(): Promise<UserDto[]> {
-        return this.service.findAll();
-    }
+	@Get()
+	async findAll(): Promise<UserDto[]> {
+		return this.service.findAll();
+	}
 
-    @Get(':id')
-    async findOne(@Param('id') id: number): Promise<UserDto> {
-        return this.service.findOne(id);
-    }
+	@Get(':id')
+	async findOne(@Param('id') id: number): Promise<UserDto> {
+		return this.service.findOne(id);
+	}
 
-    @Post()
-    async create(
-        @Body(ZodValidationPipe) data: CreateUserDto,
-    ): Promise<UserDto> {
-        return this.service.create(data);
-    }
+	@Post()
+	async create(
+		@Body(ZodValidationPipe) data: CreateUserDto,
+	): Promise<UserDto> {
+		return this.service.create(data);
+	}
 }
 ```
 
@@ -413,32 +426,32 @@ import type { CreateUserDto, UserDto } from '../schemas/user.dto.ts';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @Inject('USER_CONFIG') private readonly config: UserConfig,
-        private readonly httpClient: HttpClient,
-    ) {}
+	constructor(
+		@Inject('USER_CONFIG') private readonly config: UserConfig,
+		private readonly httpClient: HttpClient,
+	) {}
 
-    async findAll(): Promise<UserDto[]> {
-        const response = await this.httpClient.get<UserDto[]>('/users');
-        return response.json();
-    }
+	async findAll(): Promise<UserDto[]> {
+		const response = await this.httpClient.get<UserDto[]>('/users');
+		return response.json();
+	}
 
-    async findOne(id: number): Promise<UserDto> {
-        const response = await this.httpClient.get<UserDto>(`/users/${id}`);
+	async findOne(id: number): Promise<UserDto> {
+		const response = await this.httpClient.get<UserDto>(`/users/${id}`);
 
-        if (!response.ok) {
-            throw new NotFoundException(`User ${id} not found`);
-        }
+		if (!response.ok) {
+			throw new NotFoundException(`User ${id} not found`);
+		}
 
-        return response.json();
-    }
+		return response.json();
+	}
 
-    async create(data: CreateUserDto): Promise<UserDto> {
-        const response = await this.httpClient.post<UserDto>('/users', {
-            data: { ...data, role: this.config.defaultRole },
-        });
-        return response.json();
-    }
+	async create(data: CreateUserDto): Promise<UserDto> {
+		const response = await this.httpClient.post<UserDto>('/users', {
+			data: { ...data, role: this.config.defaultRole },
+		});
+		return response.json();
+	}
 }
 ```
 
@@ -448,14 +461,16 @@ import { ZodDto } from '#libs/zod';
 import { z } from 'zod';
 import { phone } from '#libs/zod';
 
-const UserSchema = z.object({
-    id: z.coerce.number().positive(),
-    name: z.string().min(1).max(100),
-    email: z.email(),
-    phone: phone().optional(),
-    role: z.enum(['admin', 'user', 'guest']).default('user'),
-    createdAt: z.date().optional(),
-}).meta({ description: 'User entity' });
+const UserSchema = z
+	.object({
+		id: z.coerce.number().positive(),
+		name: z.string().min(1).max(100),
+		email: z.email(),
+		phone: phone().optional(),
+		role: z.enum(['admin', 'user', 'guest']).default('user'),
+		createdAt: z.date().optional(),
+	})
+	.meta({ description: 'User entity' });
 
 export class UserDto extends ZodDto(UserSchema, 'User') {}
 
@@ -473,37 +488,37 @@ import { HttpClient } from '#libs/http';
 import { UserService } from './user.service.ts';
 
 describe('UserService', () => {
-    // shared variables
-    let service: UserService;
-    let httpClient: ReturnType<typeof mock<HttpClient>>;
+	// shared variables
+	let service: UserService;
+	let httpClient: ReturnType<typeof mock<HttpClient>>;
 
-    // mocks
-    const mockConfig = { maxUsers: 1000, defaultRole: 'user' };
+	// mocks
+	const mockConfig = { maxUsers: 1000, defaultRole: 'user' };
 
-    // hooks
-    beforeEach(() => {
-        httpClient = mock<HttpClient>();
-        service = new UserService(mockConfig, httpClient);
-    });
+	// hooks
+	beforeEach(() => {
+		httpClient = mock<HttpClient>();
+		service = new UserService(mockConfig, httpClient);
+	});
 
-    // tests
-    describe('when finding all users', () => {
-        test('should return array of users', async () => {
-            // arrange
-            const mockUsers = [{ id: 1, name: 'John' }];
-            httpClient.get.mockResolvedValue({
-                ok: true,
-                json: async () => mockUsers,
-            } as any);
+	// tests
+	describe('when finding all users', () => {
+		test('should return array of users', async () => {
+			// arrange
+			const mockUsers = [{ id: 1, name: 'John' }];
+			httpClient.get.mockResolvedValue({
+				ok: true,
+				json: async () => mockUsers,
+			} as any);
 
-            // act
-            const result = await service.findAll();
+			// act
+			const result = await service.findAll();
 
-            // assert
-            expect(result).toEqual(mockUsers);
-            expect(httpClient.get).toHaveBeenCalledWith('/users');
-        });
-    });
+			// assert
+			expect(result).toEqual(mockUsers);
+			expect(httpClient.get).toHaveBeenCalledWith('/users');
+		});
+	});
 });
 ```
 

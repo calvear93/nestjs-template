@@ -121,8 +121,8 @@ pnpm get_errors                   # Get compilation errors
 ```typescript
 // Correct pattern
 const UserSchema = z.object({
-    name: z.string().min(1),
-    email: z.email(),
+	name: z.string().min(1),
+	email: z.email(),
 });
 export class UserDto extends ZodDto(UserSchema, 'User') {}
 ```

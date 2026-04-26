@@ -242,7 +242,7 @@ import { ZodDto } from '#libs/zod';
 import { z } from 'zod';
 
 const Schema = z.object({
-    name: z.string().min(1),
+	name: z.string().min(1),
 });
 
 export class Dto extends ZodDto(Schema, 'DtoName') {}
