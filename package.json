@@ -30,13 +30,13 @@
 		"@nestjs/common": "11.1.19",
 		"@nestjs/core": "11.1.19",
 		"@nestjs/platform-fastify": "11.1.19",
-		"@nestjs/swagger": "11.4.1",
+		"@nestjs/swagger": "11.4.2",
 		"fastify": "5.8.5",
 		"luxon": "3.7.2",
 		"reflect-metadata": "0.2.2",
 		"rxjs": "7.8.2",
 		"tslib": "2.8.1",
-		"zod": "4.3.6"
+		"zod": "4.4.3"
 	},
 	"devDependencies": {
 		"@calvear/env": "2.10.6",
@@ -49,29 +49,23 @@
 		"@types/node": "25.6.0",
 		"@vitest/coverage-v8": "4.1.5",
 		"@vitest/eslint-plugin": "^1.6.16",
-		"eslint": "10.2.1",
+		"eslint": "10.3.0",
 		"eslint-config-prettier": "10.1.8",
 		"eslint-plugin-perfectionist": "5.9.0",
 		"eslint-plugin-prettier": "5.5.5",
-		"eslint-plugin-promise": "7.2.1",
+		"eslint-plugin-promise": "7.3.0",
 		"eslint-plugin-regexp": "3.1.0",
 		"eslint-plugin-sonarjs": "4.0.3",
 		"eslint-plugin-unicorn": "64.0.0",
-		"globals": "17.5.0",
+		"globals": "17.6.0",
 		"prettier": "3.8.3",
 		"type-fest": "5.6.0",
 		"typescript": "6.0.3",
-		"typescript-eslint": "8.59.0",
+		"typescript-eslint": "8.59.2",
 		"vite": "8.0.10",
 		"vite-node": "6.0.0",
 		"vitest": "4.1.5",
 		"vitest-mock-extended": "4.0.0"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@nestjs/core",
-			"@scarf/scarf"
-		]
 	},
 	"type": "module",
 	"engines": {

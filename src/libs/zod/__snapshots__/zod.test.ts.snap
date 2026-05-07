@@ -63,7 +63,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     },
     "cuid": {
       "format": "cuid",
-      "pattern": "^[cC][^\\s-]{8,}$",
+      "pattern": "^[cC][0-9a-z]{6,}$",
       "type": "string",
     },
     "cuid2": {
@@ -469,6 +469,7 @@ exports[`ZodValidationPipe > DTO generates JSON schema 1`] = `
     "string",
     "number",
     "boolean",
+    "undefined",
     "null",
     "void",
     "any",
