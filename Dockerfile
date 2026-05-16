@@ -7,7 +7,7 @@
 ARG NODE=node:24.15.0-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
-ARG PNPM_VER=11.0.8
+ARG PNPM_VER=11.1.2
 ARG APP_DIR='/app/'
 ARG OUT_DIR='dist'
 
