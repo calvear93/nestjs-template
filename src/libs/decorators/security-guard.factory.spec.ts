@@ -1,4 +1,5 @@
-import { type CanActivate } from '@nestjs/common';
+import { type CanActivate, type ExecutionContext } from '@nestjs/common';
+import { GUARDS_METADATA } from '@nestjs/common/constants';
 import { afterEach } from 'node:test';
 import {
 	afterAll,
@@ -10,7 +11,10 @@ import {
 	vi,
 } from 'vitest';
 import { mock } from 'vitest-mock-extended';
-import { createSecurityGuard } from './security-guard.factory.ts';
+import {
+	createSecurityGuard,
+	type SecurityGuard,
+} from './security-guard.factory.ts';
 
 class MockDecoratedClass {
 	method() {
@@ -113,5 +117,132 @@ describe('Security Guard Factory', () => {
 
 		expect(_mockCanActivate).toHaveBeenCalled();
 		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(6);
+	});
+
+	test('wraps canActivate to inject stored args from execution context', () => {
+		class WrappableGuard implements SecurityGuard {
+			canActivate(
+				_context: ExecutionContext,
+				_shared: string,
+				_extra: string,
+			) {
+				return true;
+			}
+		}
+		const _spyCanActivate = vi.spyOn(
+			WrappableGuard.prototype,
+			'canActivate',
+		);
+
+		const [SecureWith] = createSecurityGuard(
+			WrappableGuard,
+			true,
+			'shared' as string,
+		);
+
+		class TargetController {
+			handler() {
+				return 'ok';
+			}
+		}
+		const descriptor = Object.getOwnPropertyDescriptor(
+			TargetController.prototype,
+			'handler',
+		)!;
+		SecureWith('extra')(TargetController.prototype, 'handler', descriptor);
+
+		const handler = TargetController.prototype.handler;
+		const context = {
+			getHandler: () => handler,
+		} as unknown as ExecutionContext;
+		const result = new WrappableGuard().canActivate(context, '', '');
+
+		expect(result).toBe(true);
+		expect(_spyCanActivate).toHaveBeenCalledWith(
+			context,
+			'shared',
+			'extra',
+		);
+	});
+
+	test('applies the guard to every method when used as a class decorator', () => {
+		class ClassGuard implements CanActivate {
+			canActivate() {
+				return true;
+			}
+		}
+		const [SecureClass] = createSecurityGuard(ClassGuard, true);
+
+		class TargetClass {
+			action() {
+				return 'ok';
+			}
+		}
+		SecureClass()(TargetClass);
+
+		const guards = Reflect.getMetadata(
+			GUARDS_METADATA,
+			TargetClass.prototype.action,
+		);
+
+		expect(guards).toContain(ClassGuard);
+	});
+
+	test('class decoration keeps method-level args and skips locked methods', () => {
+		class CombinedGuard implements SecurityGuard {
+			canActivate(_context: ExecutionContext, _arg: string) {
+				return true;
+			}
+		}
+		const [SecureCombined] = createSecurityGuard(CombinedGuard, true);
+
+		class TargetWithBoth {
+			decoratedMethod() {
+				return 'decorated';
+			}
+			plainMethod() {
+				return 'plain';
+			}
+		}
+		const decoratedDescriptor = Object.getOwnPropertyDescriptor(
+			TargetWithBoth.prototype,
+			'decoratedMethod',
+		)!;
+
+		SecureCombined('method-arg')(
+			TargetWithBoth.prototype,
+			'decoratedMethod',
+			decoratedDescriptor,
+		);
+		SecureCombined('class-arg')(TargetWithBoth);
+
+		expect(
+			Reflect.getMetadata(
+				GUARDS_METADATA,
+				TargetWithBoth.prototype.plainMethod,
+			),
+		).toContain(CombinedGuard);
+	});
+
+	test('wrap is skipped when canActivate is missing a method value', () => {
+		class GetterGuard {
+			get canActivate() {
+				return () => true;
+			}
+		}
+
+		expect(() =>
+			createSecurityGuard(
+				GetterGuard as unknown as typeof MockGuard,
+				true,
+			),
+		).not.toThrow();
+	});
+
+	test('method decoration is a no-op when invoked without a descriptor', () => {
+		const [SecureMethod] = createSecurityGuard(MockGuard, true);
+		const decorate = SecureMethod() as PropertyDecorator;
+
+		expect(() => decorate(_mockDecoratedClass, 'anyKey')).not.toThrow();
 	});
 });

@@ -30,8 +30,7 @@ const setSignal = (
 /**
  * Gets a flag using reflect-metadata.
  */
-const getSignal = (signal: symbol, target: object, key?: string): boolean => {
-	if (!key) return false;
+const getSignal = (signal: symbol, target: object, key: string): boolean => {
 	return Reflect.getMetadata(signal, target, key);
 };
 
@@ -61,18 +60,16 @@ const argsInjector = (
 	accessKey: symbol,
 	target: object,
 	propertyKey: PropertyKey,
-	descriptor?: PropertyDescriptor,
+	descriptor: PropertyDescriptor,
 ) => {
-	const method = descriptor?.value;
+	const method = descriptor.value;
 
-	if (method) {
-		descriptor.value = function (context: ExecutionContext) {
-			const args = getArgs(accessKey, context.getHandler());
-			return method.call(this, context, ...args);
-		};
-		// overrides wrapped method
-		Object.defineProperty(target, propertyKey, descriptor);
-	}
+	descriptor.value = function (context: ExecutionContext) {
+		const args = getArgs(accessKey, context.getHandler());
+		return method.call(this, context, ...args);
+	};
+	// overrides wrapped method
+	Object.defineProperty(target, propertyKey, descriptor);
 };
 
 /**

@@ -98,6 +98,34 @@ describe(HttpClient, () => {
 		);
 	});
 
+	test('HttpError from TypeError exposes the underlying message via json()', async () => {
+		// mocking phase
+		const expectedMessage = 'fetch failed';
+		_fetchMock.mockRejectedValueOnce(new TypeError(expectedMessage));
+
+		// request phase
+		const error = await _httpClient
+			.request('/')
+			.catch((error_: HttpError) => error_);
+
+		// assertion data
+		const body = await (error as HttpError).json<string>();
+
+		expect(error).toBeInstanceOf(HttpError);
+		expect(body).toBe(expectedMessage);
+	});
+
+	test('request rethrows non-TypeError errors from fetch', async () => {
+		// mocking phase
+		const cause = new Error('boom');
+		_fetchMock.mockRejectedValueOnce(cause);
+
+		// request phase
+		const rejected = _httpClient.request('/');
+
+		await expect(rejected).rejects.toBe(cause);
+	});
+
 	test('request with json response is success', async () => {
 		// mocking phase
 		const expectedData = { value: 1 };
@@ -310,6 +338,52 @@ describe(HttpClient, () => {
 
 		// request phase
 		await expect(request).rejects.toThrow(TimeoutError);
+	});
+
+	test('clears the timeout timer when the response resolves in time', async () => {
+		// mocking phase
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
+		});
+
+		// request phase
+		const { status } = await _httpClient.get('/', { timeout: 5000 });
+
+		expect(status).toBe(HttpStatusCode.OK);
+	});
+
+	test('omits query string when all params are nullish', async () => {
+		// mocking phase
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
+		});
+
+		// request phase
+		const { status } = await _httpClient.request('/', {
+			query: { skip: null },
+		});
+
+		// assertion data
+		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+
+		expect(status).toBe(HttpStatusCode.OK);
+		expect(receivedUrl).toBe('/');
+	});
+
+	test('appends trailing slash to base URL when missing', async () => {
+		// mocking phase
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.end();
+		});
+
+		// request phase
+		const client = new HttpClient({ url: _URL.slice(0, -1) });
+		await client.request('/');
+
+		// assertion data
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+
+		expect(receivedUrl).toBe(_URL);
 	});
 
 	test('request can be aborted', async () => {

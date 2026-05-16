@@ -3,7 +3,10 @@ import { BadRequestException } from '@nestjs/common';
 import { type OpenAPIObject } from '@nestjs/swagger';
 import { describe, expect, test } from 'vitest';
 import { z } from 'zod';
-import { registerDtoOpenApiSchemas } from './json-schema-customizations.ts';
+import {
+	applyJsonSchemaCustomizations,
+	registerDtoOpenApiSchemas,
+} from './json-schema-customizations.ts';
 import { ZodDto, ZodIterableDto } from './zod-dto.ts';
 import { ZodValidationPipe } from './zod.pipe.ts';
 
@@ -180,6 +183,107 @@ describe(ZodValidationPipe, () => {
 
 		expect(dto[0]).toBe(1);
 		expect(dto[1]).toBe(true);
+	});
+
+	test('object DTO safeFrom returns parsed instance on valid input', () => {
+		class Dto extends ZodDto(z.object({ id: z.number() })) {}
+
+		const result = Dto.safeFrom({ id: 7 });
+
+		expect(result.success).toBe(true);
+		expect(result.data).toBeInstanceOf(Dto);
+		expect(result.data).toStrictEqual(new Dto({ id: 7 }));
+	});
+
+	test('object DTO safeFrom returns the error on invalid input', () => {
+		class Dto extends ZodDto(z.object({ id: z.number() })) {}
+
+		const result = Dto.safeFrom({ id: 'bad' } as any);
+
+		expect(result.success).toBe(false);
+		expect(result.error).toBeDefined();
+	});
+
+	test('iterable DTO safeFrom returns parsed instance on valid input', () => {
+		class DtoIterable extends ZodIterableDto(z.array(z.number())) {}
+
+		const result = DtoIterable.safeFrom([1, 2, 3]);
+
+		expect(result.success).toBe(true);
+		expect(result.data).toBeInstanceOf(DtoIterable);
+		expect([...(result.data as DtoIterable)]).toStrictEqual([1, 2, 3]);
+	});
+
+	test('iterable DTO safeFrom returns the error on invalid input', () => {
+		class DtoIterable extends ZodIterableDto(z.array(z.number())) {}
+
+		const result = DtoIterable.safeFrom(['not', 'numbers'] as any);
+
+		expect(result.success).toBe(false);
+		expect(result.error).toBeDefined();
+	});
+
+	test('registerDtoOpenApiSchemas preserves existing components and schemas', () => {
+		const existing = { type: 'object' } as any;
+		const openApi = {
+			components: { schemas: { Existing: existing } },
+		} as unknown as OpenAPIObject;
+
+		registerDtoOpenApiSchemas(openApi);
+
+		expect(openApi.components?.schemas?.Existing).toBe(existing);
+	});
+
+	describe('JSON schema customizations', () => {
+		// helpers
+		const runOverride = (def: object) => {
+			const jsonSchema = {};
+			applyJsonSchemaCustomizations()!.override!({
+				jsonSchema,
+				zodSchema: { _zod: { def } },
+			} as any);
+			return jsonSchema;
+		};
+
+		// tests
+		test('regex format customization stringifies the pattern', () => {
+			const result = runOverride({
+				format: 'regex',
+				pattern: /abc/u,
+				type: 'string',
+			});
+
+			expect(result).toStrictEqual({ pattern: '/abc/u', type: 'string' });
+		});
+
+		test('regex type customization applies its default schema', () => {
+			const result = runOverride({ type: 'regex' });
+
+			expect(result).toStrictEqual({
+				pattern: 'date-time',
+				type: 'string',
+			});
+		});
+
+		test('map type customization renders additionalProperties', () => {
+			const valueType = { def: { type: 'string' } };
+			const result = runOverride({ type: 'map', valueType });
+
+			expect(result).toStrictEqual({
+				additionalProperties: valueType.def,
+				type: 'object',
+			});
+		});
+
+		test('set type customization renders the items shape', () => {
+			const valueType = { def: { type: 'number' } };
+			const result = runOverride({ type: 'set', valueType });
+
+			expect(result).toStrictEqual({
+				items: valueType.def,
+				type: 'object',
+			});
+		});
 	});
 
 	describe('validation pipe', () => {
