@@ -46,8 +46,8 @@
 		"@stryker-mutator/vitest-runner": "9.6.1",
 		"@types/eslint": "9.6.1",
 		"@types/luxon": "3.7.1",
-		"@types/node": "25.8.0",
-		"@vitest/coverage-v8": "4.1.6",
+		"@types/node": "25.9.1",
+		"@vitest/coverage-v8": "4.1.7",
 		"@vitest/eslint-plugin": "1.6.17",
 		"eslint": "10.4.0",
 		"eslint-config-prettier": "10.1.8",
@@ -61,17 +61,17 @@
 		"prettier": "3.8.3",
 		"type-fest": "5.6.0",
 		"typescript": "6.0.3",
-		"typescript-eslint": "8.59.3",
+		"typescript-eslint": "8.59.4",
 		"vite": "8.0.13",
 		"vite-node": "6.0.0",
-		"vitest": "4.1.6",
+		"vitest": "4.1.7",
 		"vitest-mock-extended": "4.0.0"
 	},
 	"type": "module",
 	"engines": {
 		"node": ">=24",
-		"npm": ">=10",
-		"pnpm": ">=10"
+		"npm": ">=11",
+		"pnpm": ">=11"
 	},
 	"license": "MIT",
 	"repository": "https://github.com/calvear93/nestjs-template",
