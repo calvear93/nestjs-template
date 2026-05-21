@@ -27,16 +27,7 @@
 		"noUnusedParameters": false,
 		"strictPropertyInitialization": false,
 
-		"skipLibCheck": true,
-
-		"paths": {
-			"@nestjs/swagger/dist/interfaces/open-api-spec.interface": [
-				"./node_modules/@nestjs/swagger/dist/interfaces/open-api-spec.interface.d.ts"
-			],
-			"@nestjs/swagger/dist/interfaces/open-api-spec.interface.ts": [
-				"./node_modules/@nestjs/swagger/dist/interfaces/open-api-spec.interface.d.ts"
-			]
-		}
+		"skipLibCheck": true
 	},
 	"include": ["src/**/*.ts", "vite.config.ts", "vitest.config.ts"]
 }

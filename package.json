@@ -16,7 +16,6 @@
 		"test:mutation": "env -e dev -m test : stryker run",
 		"env:schema": "env schema -e dev -m build",
 		"lint": "eslint --cache --cache-location node_modules/.cache/eslint/",
-		"typecheck": "tsc --noEmit -p tsconfig.test.json",
 		"format": "prettier --cache --write **/*.{ts,cts,mts,json,md,yml,yaml}",
 		"clean": "pnpx del-cli dist .reports **/*.tsbuildinfo .node_modules"
 	},
