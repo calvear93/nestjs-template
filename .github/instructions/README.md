@@ -18,4 +18,5 @@ Related directories:
 
 - [`../prompts/`](../prompts/) — task-specific prompts (module/endpoint creation, docs, reviews).
 - [`../agents/`](../agents/) — reusable agent/chat-mode definitions.
-- [`../copilot-instructions.md`](../copilot-instructions.md) — Copilot's auto-loaded pointer to `AGENTS.md`.
+
+GitHub Copilot reads `AGENTS.md` natively; Claude, Gemini, and Codex reach it via their root context files.

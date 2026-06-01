@@ -20,7 +20,6 @@ Key facts:
 - [Architecture Guide](.github/instructions/architecture-guide.instructions.md): Module topology, configuration/DI wiring, registration and import conventions
 - [Coding Standards](.github/instructions/coding-standards.instructions.md): Formatting, naming, file suffixes, TypeScript rules and anti-patterns
 - [Patterns Guide](.github/instructions/patterns.instructions.md): Copy-paste recipes for modules, controllers, services, DTOs, guards and tests
-- [Copilot Instructions](.github/copilot-instructions.md): Auto-loaded pointer to AGENTS.md for GitHub Copilot
 - [Instructions README](.github/instructions/README.md): Index of the deep-reference instruction documents
 
 ## Libraries
