@@ -235,10 +235,10 @@ export class SystemException extends AppException {
 			correlationId,
 		);
 
-		// Log the original error for debugging
+		// log the original error for debugging
 		if (originalError) {
 			SystemException.logger.error(
-				'System error details',
+				'system error details',
 				originalError.stack,
 			);
 		}
@@ -250,16 +250,17 @@ export class SystemException extends AppException {
 
 ```typescript
 import {
-	ExceptionFilter,
+	type ArgumentsHost,
 	Catch,
-	ArgumentsHost,
+	type ExceptionFilter,
 	HttpException,
-	HttpStatus,
 	Logger,
 } from '@nestjs/common';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { type FastifyReply, type FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 import { AppException } from './exceptions/app.exception.ts';
+import { ValidationException } from './exceptions/validation.exception.ts';
+import { SystemException } from './exceptions/system.exception.ts';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -272,13 +273,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
 		const correlationId = request.headers['x-correlation-id'] as string;
 
-		// Handle different types of exceptions
+		// handle different types of exceptions
 		const errorResponse = this.handleException(exception, correlationId);
 
-		// Log error for monitoring
+		// log error for monitoring
 		this.logError(exception, request, errorResponse, correlationId);
 
-		// Send response
+		// send response
 		reply.status(errorResponse.status).send(errorResponse.body);
 	}
 
@@ -288,8 +289,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 	private handleException(
 		exception: unknown,
 		correlationId?: string,
-	): { status: number; body: any } {
-		// Custom application exceptions
+	): { status: number; body: unknown } {
+		// custom application exceptions
 		if (exception instanceof AppException) {
 			return {
 				status: exception.getStatus(),
@@ -297,23 +298,21 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 			};
 		}
 
-		// Zod validation errors
+		// zod validation errors
 		if (exception instanceof ZodError) {
-			const fields = exception.errors.reduce(
-				(acc, error) => {
-					const field = error.path.join('.');
-					if (!acc[field]) {
-						acc[field] = [];
-					}
-					acc[field].push(error.message);
+			const fields = exception.issues.reduce<Record<string, string[]>>(
+				(acc, issue) => {
+					const field = issue.path.join('.');
+					acc[field] ??= [];
+					acc[field].push(issue.message);
 					return acc;
 				},
-				{} as Record<string, string[]>,
+				{},
 			);
 
 			const validationException = new ValidationException(
 				fields,
-				'Validation failed',
+				'validation failed',
 				correlationId,
 			);
 			return {
@@ -322,19 +321,21 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 			};
 		}
 
-		// NestJS HTTP exceptions
+		// nestjs http exceptions
 		if (exception instanceof HttpException) {
 			const status = exception.getStatus();
 			const response = exception.getResponse();
+			const message =
+				typeof response === 'string'
+					? response
+					: ((response as { message?: string }).message ??
+						'http error');
 
 			return {
 				status,
 				body: {
 					error: {
-						message:
-							typeof response === 'string'
-								? response
-								: (response as any).message,
+						message,
 						code: this.getErrorCodeFromStatus(status),
 						status,
 						timestamp: new Date().toISOString(),
@@ -344,7 +345,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 			};
 		}
 
-		// Generic errors
+		// generic errors
 		const systemException = new SystemException(
 			'An unexpected error occurred',
 			exception instanceof Error ? exception : undefined,
@@ -363,7 +364,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 	private logError(
 		exception: unknown,
 		request: FastifyRequest,
-		errorResponse: { status: number; body: any },
+		errorResponse: { status: number; body: unknown },
 		correlationId?: string,
 	): void {
 		const { method, url, body, query, params, headers } = request;
@@ -381,30 +382,33 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 			pathParams: params,
 		};
 
+		const message =
+			exception instanceof Error ? exception.message : 'unknown error';
+
 		if (status >= 500) {
-			// Server errors - log as error with full stack trace
+			// server errors - log as error with full stack trace
 			this.logger.error(
-				`Server error: ${exception instanceof Error ? exception.message : 'Unknown error'}`,
+				`server error: ${message}`,
 				exception instanceof Error ? exception.stack : undefined,
 				JSON.stringify(logContext, null, 2),
 			);
 		} else if (status >= 400) {
-			// Client errors - log as warning
+			// client errors - log as warning
 			this.logger.warn(
-				`Client error: ${errorResponse.body.error?.message || 'Unknown client error'}`,
+				`client error: ${message}`,
 				JSON.stringify(logContext, null, 2),
 			);
 		} else {
-			// Other errors - log as info
+			// everything else - log as info
 			this.logger.log(
-				`Request completed with status ${status}`,
+				`request completed with status ${status}`,
 				JSON.stringify(logContext, null, 2),
 			);
 		}
 	}
 
 	/**
-	 * Maps HTTP status codes to error codes.
+	 * maps http status codes to error codes.
 	 */
 	private getErrorCodeFromStatus(status: number): string {
 		const statusToCode: Record<number, string> = {
@@ -422,13 +426,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 			504: 'GATEWAY_TIMEOUT',
 		};
 
-		return statusToCode[status] || 'UNKNOWN_ERROR';
+		return statusToCode[status] ?? 'UNKNOWN_ERROR';
 	}
 
 	/**
-	 * Sanitizes request data for logging (removes sensitive information).
+	 * sanitizes request data for logging (removes sensitive information).
 	 */
-	private sanitizeForLogging(data: any): any {
+	private sanitizeForLogging(data: unknown): unknown {
 		if (!data || typeof data !== 'object') {
 			return data;
 		}
@@ -440,7 +444,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 			'secret',
 			'key',
 		];
-		const sanitized = { ...data };
+		const sanitized = { ...(data as Record<string, unknown>) };
 
 		for (const field of sensitiveFields) {
 			if (field in sanitized) {
@@ -455,321 +459,183 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
 ### Service Error Handling Template
 
+Re-throw known exceptions, map unexpected ones to a `SystemException`, and map
+transport failures from `#libs/http` (`HttpError`, `TimeoutError`). For most
+cases the NestJS built-in exceptions (`NotFoundException`, `BadRequestException`)
+are enough — reach for the custom hierarchy only when you need a richer contract.
+
 ```typescript
+import { type HttpClient, HttpError, TimeoutError } from '#libs/http';
 import { Injectable, Logger } from '@nestjs/common';
 import {
-  BusinessRuleException,
-  ResourceNotFoundException,
-  ExternalServiceException,
-  SystemException,
+	BusinessRuleException,
+	ExternalServiceException,
+	ResourceNotFoundException,
+	SystemException,
 } from '../exceptions/index.ts';
-import { [Resource]Dto, Create[Resource]Dto } from '../schemas/[resource].dto.ts';
+import {
+	type Create[Resource]Dto,
+	type [Resource]Dto,
+} from '../schemas/[resource].dto.ts';
 
 @Injectable()
 export class [Resource]Service {
-  private readonly logger = new Logger([Resource]Service.name);
+	private readonly logger = new Logger([Resource]Service.name);
 
-  constructor(
-    // dependencies
-  ) {}
+	constructor(private readonly _http: HttpClient) {}
 
-  /**
-   * Creates a new [resource] with comprehensive error handling.
-   *
-   * @param createDto - creation data
-   * @param correlationId - request correlation ID
-   * @returns promise resolving to created [resource]
-   * @throws BusinessRuleException when business rules are violated
-   * @throws SystemException when database operations fail
-   */
-  async create(createDto: Create[Resource]Dto, correlationId?: string): Promise<[Resource]Dto> {
-    try {
-      // Business rule validation
-      await this.validateBusinessRules(createDto, correlationId);
+	/**
+	 * creates a new [resource], mapping unexpected failures to SystemException.
+	 *
+	 * @param dto - creation data
+	 * @param correlationId - request correlation id
+	 * @returns the created [resource]
+	 * @throws BusinessRuleException when business rules are violated
+	 */
+	async create(
+		dto: Create[Resource]Dto,
+		correlationId?: string,
+	): Promise<[Resource]Dto> {
+		this.validateBusinessRules(dto, correlationId);
 
-      // Attempt to create resource
-      this.logger.log(`Creating [resource] with data: ${JSON.stringify(createDto)}`, {
-        correlationId,
-      });
+		try {
+			// TODO: return await this._repository.create(dto);
+			return { id: 1, ...dto } as [Resource]Dto;
+		} catch (error) {
+			this.logger.error(
+				'failed to create [resource]',
+				error instanceof Error ? error.stack : undefined,
+			);
 
-      // TODO: Implement actual creation logic
-      // const result = await this.repository.create(createDto);
+			throw new SystemException(
+				'failed to create [resource]',
+				error instanceof Error ? error : undefined,
+				correlationId,
+			);
+		}
+	}
 
-      const result = { id: 1, ...createDto } as [Resource]Dto;
+	/**
+	 * finds a [resource] by id.
+	 *
+	 * @param id - [resource] id
+	 * @param correlationId - request correlation id
+	 * @returns the [resource]
+	 * @throws ResourceNotFoundException when it does not exist
+	 */
+	async findById(
+		id: number,
+		correlationId?: string,
+	): Promise<[Resource]Dto> {
+		// TODO: const result = await this._repository.findById(id);
+		const result: [Resource]Dto | null = null;
 
-      this.logger.log(`Successfully created [resource] with ID: ${result.id}`, {
-        correlationId,
-      });
+		if (!result) {
+			throw new ResourceNotFoundException('[Resource]', id, correlationId);
+		}
 
-      return result;
+		return result;
+	}
 
-    } catch (error: unknown) {
-      // Re-throw known exceptions
-      if (error instanceof BusinessRuleException) {
-        throw error;
-      }
+	/**
+	 * calls an external service, translating transport errors to a domain error.
+	 *
+	 * @param data - request payload
+	 * @param correlationId - request correlation id
+	 * @returns the external service response
+	 * @throws ExternalServiceException when the call fails
+	 */
+	async callExternalService(
+		data: unknown,
+		correlationId?: string,
+	): Promise<unknown> {
+		try {
+			return await this._http.post('external-api', { body: data });
+		} catch (error) {
+			if (error instanceof TimeoutError || error instanceof HttpError) {
+				throw new ExternalServiceException(
+					'ExternalAPI',
+					'service call failed',
+					error.message,
+					correlationId,
+				);
+			}
 
-      // Handle database/system errors
-      this.logger.error(
-        `Failed to create [resource]: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        error instanceof Error ? error.stack : undefined,
-        { correlationId, createDto },
-      );
+			throw error;
+		}
+	}
 
-      throw new SystemException(
-        'Failed to create [resource]',
-        error instanceof Error ? error : undefined,
-        correlationId,
-      );
-    }
-  }
-
-  /**
-   * Finds [resource] by ID with proper error handling.
-   *
-   * @param id - [resource] ID
-   * @param correlationId - request correlation ID
-   * @returns promise resolving to found [resource]
-   * @throws ResourceNotFoundException when [resource] is not found
-   * @throws SystemException when database operations fail
-   */
-  async findById(id: number, correlationId?: string): Promise<[Resource]Dto> {
-    try {
-      this.logger.log(`Finding [resource] with ID: ${id}`, { correlationId });
-
-      // TODO: Implement actual database query
-      // const result = await this.repository.findById(id);
-
-      const result = null; // Mock - simulating not found
-
-      if (!result) {
-        throw new ResourceNotFoundException('[Resource]', id, correlationId);
-      }
-
-      this.logger.log(`Successfully found [resource] with ID: ${id}`, { correlationId });
-
-      return result;
-
-    } catch (error: unknown) {
-      // Re-throw known exceptions
-      if (error instanceof ResourceNotFoundException) {
-        throw error;
-      }
-
-      // Handle system errors
-      this.logger.error(
-        `Failed to find [resource] with ID ${id}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        error instanceof Error ? error.stack : undefined,
-        { correlationId, id },
-      );
-
-      throw new SystemException(
-        'Failed to retrieve [resource]',
-        error instanceof Error ? error : undefined,
-        correlationId,
-      );
-    }
-  }
-
-  /**
-   * Calls external service with proper error handling and retry logic.
-   *
-   * @param data - request data
-   * @param correlationId - request correlation ID
-   * @returns promise resolving to external service response
-   * @throws ExternalServiceException when external service fails
-   */
-  async callExternalService(data: unknown, correlationId?: string): Promise<unknown> {
-    const maxRetries = 3;
-    let lastError: Error;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        this.logger.log(
-          `Calling external service (attempt ${attempt}/${maxRetries})`,
-          { correlationId, data },
-        );
-
-        // TODO: Implement actual external service call
-        // const response = await this.httpClient.post('/external-api', data);
-
-        // Mock external service call
-        if (Math.random() < 0.3) {
-          throw new Error('External service temporarily unavailable');
-        }
-
-        const response = { success: true, data: 'mock response' };
-
-        this.logger.log(`External service call successful on attempt ${attempt}`, {
-          correlationId,
-        });
-
-        return response;
-
-      } catch (error) {
-        lastError = error instanceof Error ? error : new Error('Unknown error');
-
-        this.logger.warn(
-          `External service call failed on attempt ${attempt}: ${lastError.message}`,
-          { correlationId, attempt, maxRetries },
-        );
-
-        // Wait before retry (exponential backoff)
-        if (attempt < maxRetries) {
-          const delay = Math.pow(2, attempt) * 1000;
-          await new Promise(resolve => setTimeout(resolve, delay));
-        }
-      }
-    }
-
-    // All retries failed
-    throw new ExternalServiceException(
-      'ExternalAPI',
-      `Service call failed after ${maxRetries} attempts`,
-      lastError!.message,
-      correlationId,
-    );
-  }
-
-  /**
-   * Validates business rules with specific error handling.
-   *
-   * @param createDto - data to validate
-   * @param correlationId - request correlation ID
-   * @throws BusinessRuleException when validation fails
-   */
-  private async validateBusinessRules(
-    createDto: Create[Resource]Dto,
-    correlationId?: string,
-  ): Promise<void> {
-    // Example business rule validation
-    if (!createDto.name || createDto.name.trim().length === 0) {
-      throw new BusinessRuleException(
-        'Resource name cannot be empty',
-        'INVALID_NAME',
-        correlationId,
-      );
-    }
-
-    // Check for duplicates
-    // TODO: Implement actual duplicate check
-    // const existing = await this.repository.findByName(createDto.name);
-    const existing = null; // Mock
-
-    if (existing) {
-      throw new BusinessRuleException(
-        `[Resource] with name '${createDto.name}' already exists`,
-        'DUPLICATE_NAME',
-        correlationId,
-      );
-    }
-
-    this.logger.log('Business rule validation passed', { correlationId });
-  }
+	/**
+	 * validates business rules.
+	 *
+	 * @param dto - data to validate
+	 * @param correlationId - request correlation id
+	 * @throws BusinessRuleException when a rule is violated
+	 */
+	private validateBusinessRules(
+		dto: Create[Resource]Dto,
+		correlationId?: string,
+	): void {
+		if (dto.name.trim().length === 0) {
+			throw new BusinessRuleException(
+				'resource name cannot be empty',
+				'INVALID_NAME',
+				correlationId,
+			);
+		}
+	}
 }
 ```
 
 ### Controller Error Handling Template
 
+Keep the controller thin: the service owns every error scenario and the error
+`@ApiResponse(...)` documentation lives in the colocated `*.controller.docs.ts`.
+
 ```typescript
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  ParseIntPipe,
-  Headers,
-  HttpCode,
-  HttpStatus,
+	Body,
+	Controller,
+	Get,
+	Headers,
+	HttpCode,
+	HttpStatus,
+	Param,
+	ParseIntPipe,
+	Post,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiKey } from '../../../decorators/api-key.guard.ts';
+import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
+import {
+	type Create[Resource]Dto,
+	type [Resource]Dto,
+} from '../schemas/[resource].dto.ts';
 import { [Resource]Service } from '../services/[resource].service.ts';
-import { [Resource]Dto, Create[Resource]Dto } from '../schemas/[resource].dto.ts';
+import { [Resource]ControllerDocs } from './[resource].controller.docs.ts';
 
+@ApiKey()
 @Controller('[resources]')
+@ApplyControllerDocs([Resource]ControllerDocs)
 export class [Resource]Controller {
-  constructor(private readonly _[resource]Service: [Resource]Service) {}
+	@Post()
+	@HttpCode(HttpStatus.CREATED)
+	create(
+		@Body() dto: Create[Resource]Dto,
+		@Headers('x-correlation-id') correlationId?: string,
+	): Promise<[Resource]Dto> {
+		// the service handles every error scenario
+		return this._service.create(dto, correlationId);
+	}
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create a new [resource]' })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: '[Resource] created successfully',
-    type: [Resource]Dto,
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'Validation error or business rule violation',
-    schema: {
-      type: 'object',
-      properties: {
-        error: {
-          type: 'object',
-          properties: {
-            message: { type: 'string' },
-            code: { type: 'string' },
-            status: { type: 'number' },
-            timestamp: { type: 'string' },
-            correlationId: { type: 'string' },
-            fields: {
-              type: 'object',
-              additionalProperties: {
-                type: 'array',
-                items: { type: 'string' },
-              },
-            },
-          },
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    description: 'Internal server error',
-  })
-  async create(
-    @Body() createDto: Create[Resource]Dto,
-    @Headers('x-correlation-id') correlationId?: string,
-  ): Promise<[Resource]Dto> {
-    // Service handles all error scenarios
-    return this._[resource]Service.create(createDto, correlationId);
-  }
+	@Get(':id')
+	findById(
+		@Param('id', ParseIntPipe) id: number,
+		@Headers('x-correlation-id') correlationId?: string,
+	): Promise<[Resource]Dto> {
+		return this._service.findById(id, correlationId);
+	}
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get [resource] by ID' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: '[Resource] found',
-    type: [Resource]Dto,
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: '[Resource] not found',
-    schema: {
-      type: 'object',
-      properties: {
-        error: {
-          type: 'object',
-          properties: {
-            message: { type: 'string' },
-            code: { type: 'string', example: 'RESOURCE_NOT_FOUND' },
-            status: { type: 'number', example: 404 },
-            timestamp: { type: 'string' },
-            correlationId: { type: 'string' },
-          },
-        },
-      },
-    },
-  })
-  async findById(
-    @Param('id', ParseIntPipe) id: number,
-    @Headers('x-correlation-id') correlationId?: string,
-  ): Promise<[Resource]Dto> {
-    // Service handles all error scenarios
-    return this._[resource]Service.findById(id, correlationId);
-  }
+	constructor(private readonly _service: [Resource]Service) {}
 }
 ```
 
@@ -800,12 +666,12 @@ export class ErrorMetricsService {
 		this.metrics.count++;
 		this.metrics.lastOccurrence = new Date();
 
-		// Update error code metrics
-		const codeCount = this.metrics.errorsByCode.get(code) || 0;
+		// update error code metrics
+		const codeCount = this.metrics.errorsByCode.get(code) ?? 0;
 		this.metrics.errorsByCode.set(code, codeCount + 1);
 
-		// Update endpoint metrics
-		const endpointCount = this.metrics.errorsByEndpoint.get(endpoint) || 0;
+		// update endpoint metrics
+		const endpointCount = this.metrics.errorsByEndpoint.get(endpoint) ?? 0;
 		this.metrics.errorsByEndpoint.set(endpoint, endpointCount + 1);
 	}
 

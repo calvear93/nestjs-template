@@ -64,9 +64,11 @@ Optimize the performance of [COMPONENT] following NestJS template patterns and i
 
 ### Caching Service Template
 
+Config comes from a Zod factory under `src/app/config/` injected via a DI token.
+
 ```typescript
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import type { CacheConfig } from '../config/cache.config.ts';
+import { type CacheConfig } from '../config/cache.config.ts';
 
 interface CacheItem<T> {
 	data: T;
@@ -77,13 +79,13 @@ interface CacheItem<T> {
 @Injectable()
 export class CacheService {
 	private readonly logger = new Logger(CacheService.name);
-	private readonly cache = new Map<string, CacheItem<any>>();
+	private readonly cache = new Map<string, CacheItem<unknown>>();
 	private readonly defaultTtl: number;
 
 	constructor(@Inject('CACHE_CONFIG') private readonly _config: CacheConfig) {
 		this.defaultTtl = this._config.defaultTtl ?? 300_000; // 5 minutes
 
-		// Cleanup expired items every minute
+		// cleanup expired items every minute
 		setInterval(() => this.cleanup(), 60_000);
 	}
 
@@ -107,8 +109,8 @@ export class CacheService {
 			return null;
 		}
 
-		this.logger.debug(`Cache hit: ${key}`);
-		return item.data;
+		this.logger.debug(`cache hit: ${key}`);
+		return item.data as T;
 	}
 
 	/**
@@ -224,112 +226,107 @@ export class CacheService {
 ```typescript
 import { Injectable, Logger } from '@nestjs/common';
 import { CacheService } from '../cache/cache.service.ts';
-import { [Resource]Dto, [Resource]QueryDto } from '../schemas/[resource].dto.ts';
+import {
+	type Create[Resource]Dto,
+	type [Resource]Dto,
+	type [Resource]QueryDto,
+	type Update[Resource]Dto,
+} from '../schemas/[resource].dto.ts';
 
 @Injectable()
 export class [Resource]Service {
 	private readonly logger = new Logger([Resource]Service.name);
 
 	constructor(
-		private readonly cacheService: CacheService,
+		private readonly _cache: CacheService,
 		// other dependencies
 	) {}
 
 	/**
-	 * Finds all [resource]s with caching support.
+	 * finds all [resource]s with caching support.
 	 *
 	 * @param query - query parameters
-	 * @returns promise resolving to cached or fresh data
+	 * @returns cached or fresh data
 	 */
-	async findAll(query: [Resource]QueryDto): Promise<[Resource]Dto[]> {
-		// Create cache key based on query parameters
+	findAll(query: [Resource]QueryDto): Promise<[Resource]Dto[]> {
 		const cacheKey = `[resource]:all:${JSON.stringify(query)}`;
 
-		return this.cacheService.getOrSet(
+		return this._cache.getOrSet(
 			cacheKey,
-			async () => {
-				this.logger.log(`Fetching [resource]s from database with query: ${JSON.stringify(query)}`);
+			() => {
+				this.logger.log(`fetching [resource]s`, query);
 
-				// TODO: Implement actual database call
-        // return this.repository.findAll(query);
+				// TODO: return this._repository.findAll(query);
+				return [];
+			},
+			300_000, // 5 minutes
+		);
+	}
 
-        return []; // Mock return
-      },
-      300_000, // 5 minutes cache
-    );
-  }
+	/**
+	 * finds a [resource] by id with caching.
+	 *
+	 * @param id - [resource] id
+	 * @returns cached or fresh data
+	 */
+	findById(id: number): Promise<[Resource]Dto | null> {
+		return this._cache.getOrSet(
+			`[resource]:${id}`,
+			() => {
+				this.logger.log(`fetching [resource] ${id}`);
 
-  /**
-   * Finds [resource] by ID with caching.
-   *
-   * @param id - [resource] ID
-   * @returns promise resolving to cached or fresh data
-   */
-  async findById(id: number): Promise<[Resource]Dto | null> {
-    const cacheKey = `[resource]:${id}`;
+				// TODO: return this._repository.findById(id);
+				return null;
+			},
+			600_000, // 10 minutes
+		);
+	}
 
-    return this.cacheService.getOrSet(
-      cacheKey,
-      async () => {
-        this.logger.log(`Fetching [resource] ${id} from database`);
+	/**
+	 * creates a [resource] and invalidates related cache entries.
+	 *
+	 * @param dto - creation data
+	 * @returns the created [resource]
+	 */
+	async create(dto: Create[Resource]Dto): Promise<[Resource]Dto> {
+		// TODO: const result = await this._repository.create(dto);
+		const result = { id: 1, ...dto } as [Resource]Dto;
 
-        // TODO: Implement actual database call
-        // return this.repository.findById(id);
+		this._cache.invalidateByPattern(/^\[resource\]:all:/);
+		this.logger.log('created [resource] and invalidated list cache');
 
-        return null; // Mock return
-      },
-      600_000, // 10 minutes cache for individual items
-    );
-  }
+		return result;
+	}
 
-  /**
-   * Creates [resource] and invalidates related cache.
-   *
-   * @param createDto - creation data
-   * @returns promise resolving to created [resource]
-   */
-  async create(createDto: Create[Resource]Dto): Promise<[Resource]Dto> {
-    // TODO: Implement actual database call
-    // const result = await this.repository.create(createDto);
+	/**
+	 * updates a [resource] and invalidates related cache entries.
+	 *
+	 * @param id - [resource] id
+	 * @param dto - update data
+	 * @returns the updated [resource]
+	 */
+	async update(
+		id: number,
+		dto: Update[Resource]Dto,
+	): Promise<[Resource]Dto> {
+		// TODO: const result = await this._repository.update(id, dto);
+		const result = { id, ...dto } as [Resource]Dto;
 
-    // Invalidate list caches
-    this.cacheService.invalidateByPattern(/^[resource]:all:/);
+		this._cache.invalidateByPattern(new RegExp(`^\\[resource\\]:(${id}|all:)`));
+		this.logger.log(`updated [resource] ${id} and invalidated cache`);
 
-    this.logger.log(`Created [resource] and invalidated list cache`);
-
-    // Mock return
-    return { id: 1, ...createDto } as [Resource]Dto;
-  }
-
-  /**
-   * Updates [resource] and invalidates related cache.
-   *
-   * @param id - [resource] ID
-   * @param updateDto - update data
-   * @returns promise resolving to updated [resource]
-   */
-  async update(id: number, updateDto: Update[Resource]Dto): Promise<[Resource]Dto> {
-    // TODO: Implement actual database call
-    // const result = await this.repository.update(id, updateDto);
-
-    // Invalidate specific item and list caches
-    this.cacheService.invalidateByPattern(new RegExp(`^[resource]:(${id}|all:)`));
-
-    this.logger.log(`Updated [resource] ${id} and invalidated related cache`);
-
-    // Mock return
-    return { id, ...updateDto } as [Resource]Dto;
-  }
+		return result;
+	}
 }
 ```
 
 ### Pagination Template
 
 ```typescript
-import { z } from 'zod';
 import { ZodDto } from '#libs/zod';
+import { z } from 'zod';
 
-// Pagination query schema
+// pagination query schema
 const PaginationQuerySchema = z.object({
 	page: z.coerce.number().min(1).default(1),
 	limit: z.coerce.number().min(1).max(100).default(20),
@@ -342,7 +339,7 @@ export class PaginationQueryDto extends ZodDto(
 	'PaginationQuery',
 ) {}
 
-// Paginated response schema
+// paginated response schema
 const PaginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
 	z.object({
 		data: z.array(itemSchema),
@@ -356,7 +353,7 @@ const PaginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
 		}),
 	});
 
-// Paginated response utility
+// paginated response utility
 export interface PaginatedResponse<T> {
 	data: T[];
 	pagination: {
@@ -395,7 +392,7 @@ export const createPaginatedResponse = <T>(
 
 ```typescript
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import type { JobQueueConfig } from '../config/job-queue.config.ts';
+import { type JobQueueConfig } from '../config/job-queue.config.ts';
 
 interface Job<T = unknown> {
 	id: string;
@@ -421,7 +418,7 @@ export class JobQueueService {
 	constructor(
 		@Inject('JOB_QUEUE_CONFIG') private readonly _config: JobQueueConfig,
 	) {
-		// Start job processing
+		// start job processing
 		this.startProcessing();
 	}
 
@@ -455,18 +452,19 @@ export class JobQueueService {
 			maxAttempts?: number;
 		} = {},
 	): string {
-		const id = `${type}_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+		const id = `${type}_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 		const now = new Date();
+		const delay = options.delay ?? 0;
 
 		const job: Job<T> = {
 			id,
 			type,
 			data,
 			attempts: 0,
-			maxAttempts: options.maxAttempts || 3,
-			delay: options.delay || 0,
+			maxAttempts: options.maxAttempts ?? 3,
+			delay,
 			createdAt: now,
-			scheduledFor: new Date(now.getTime() + (options.delay || 0)),
+			scheduledFor: new Date(now.getTime() + delay),
 		};
 
 		this.jobs.set(id, job);
@@ -529,27 +527,27 @@ export class JobQueueService {
 
 			await handler(job.data);
 
-			// Job completed successfully
+			// job completed successfully
 			this.jobs.delete(job.id);
-			this.logger.log(`Job ${job.id} completed successfully`);
+			this.logger.log(`job ${job.id} completed`);
 		} catch (error) {
 			this.logger.error(
-				`Job ${job.id} failed: ${error.message}`,
-				error.stack,
+				`job ${job.id} failed`,
+				error instanceof Error ? error.stack : undefined,
 			);
 
 			if (job.attempts >= job.maxAttempts) {
-				// Max attempts reached, remove job
+				// max attempts reached, remove job
 				this.jobs.delete(job.id);
 				this.logger.error(
-					`Job ${job.id} failed permanently after ${job.attempts} attempts`,
+					`job ${job.id} failed permanently after ${job.attempts} attempts`,
 				);
 			} else {
-				// Schedule retry with exponential backoff
-				const backoffDelay = Math.pow(2, job.attempts) * 1000;
+				// schedule retry with exponential backoff
+				const backoffDelay = 2 ** job.attempts * 1_000;
 				job.scheduledFor = new Date(Date.now() + backoffDelay);
 				this.logger.log(
-					`Job ${job.id} scheduled for retry in ${backoffDelay}ms`,
+					`job ${job.id} scheduled for retry in ${backoffDelay}ms`,
 				);
 			}
 		}
@@ -568,13 +566,10 @@ export class JobQueueService {
 		const jobs = Array.from(this.jobs.values());
 		const now = new Date();
 
-		const jobsByType = jobs.reduce(
-			(acc, job) => {
-				acc[job.type] = (acc[job.type] || 0) + 1;
-				return acc;
-			},
-			{} as Record<string, number>,
-		);
+		const jobsByType = jobs.reduce<Record<string, number>>((acc, job) => {
+			acc[job.type] = (acc[job.type] ?? 0) + 1;
+			return acc;
+		}, {});
 
 		return {
 			totalJobs: jobs.length,
@@ -603,11 +598,10 @@ import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class PerformanceMonitoringService {
-	private readonly logger = new Logger(PerformanceMonitoringService.name);
 	private readonly metrics = new Map<string, number[]>();
 
 	/**
-	 * Records execution time for an operation.
+	 * records execution time for an operation.
 	 *
 	 * @param operation - operation name
 	 * @param duration - execution time in milliseconds
@@ -620,14 +614,14 @@ export class PerformanceMonitoringService {
 		const times = this.metrics.get(operation)!;
 		times.push(duration);
 
-		// Keep only last 1000 measurements
-		if (times.length > 1000) {
+		// keep only the last 1000 measurements
+		if (times.length > 1_000) {
 			times.shift();
 		}
 	}
 
 	/**
-	 * Gets performance statistics for an operation.
+	 * gets performance statistics for an operation.
 	 *
 	 * @param operation - operation name
 	 * @returns performance statistics
@@ -660,27 +654,28 @@ export class PerformanceMonitoringService {
 	}
 }
 
-// Decorator for automatic performance monitoring
-export function MonitorPerformance(operation?: string) {
-	return function (
-		target: any,
+// decorator for automatic performance monitoring
+export const MonitorPerformance = (operation?: string) => {
+	const logger = new Logger('MonitorPerformance');
+
+	return (
+		target: object,
 		propertyKey: string,
 		descriptor: PropertyDescriptor,
-	) {
+	): PropertyDescriptor => {
 		const originalMethod = descriptor.value;
 		const operationName =
-			operation || `${target.constructor.name}.${propertyKey}`;
+			operation ?? `${target.constructor.name}.${propertyKey}`;
 
-		descriptor.value = async function (...args: any[]) {
+		descriptor.value = async function (...args: unknown[]) {
 			const start = performance.now();
 
 			try {
-				const result = await originalMethod.apply(this, args);
-				return result;
+				return await originalMethod.apply(this, args);
 			} finally {
 				const duration = performance.now() - start;
 
-				// Inject monitoring service if available
+				// inject the monitoring service if available
 				if (this.performanceMonitoring) {
 					this.performanceMonitoring.recordExecutionTime(
 						operationName,
@@ -688,10 +683,10 @@ export function MonitorPerformance(operation?: string) {
 					);
 				}
 
-				// Log slow operations
-				if (duration > 1000) {
-					console.warn(
-						`Slow operation detected: ${operationName} took ${duration.toFixed(2)}ms`,
+				// log slow operations
+				if (duration > 1_000) {
+					logger.warn(
+						`slow operation: ${operationName} took ${duration.toFixed(2)}ms`,
 					);
 				}
 			}
@@ -699,7 +694,7 @@ export function MonitorPerformance(operation?: string) {
 
 		return descriptor;
 	};
-}
+};
 ```
 
 ## 🚀 Optimization Implementation Steps

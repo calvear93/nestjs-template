@@ -52,279 +52,223 @@ Create comprehensive tests for [COMPONENT] following the NestJS template testing
 ### Controller Unit Test Template
 
 ```typescript
-import { Test, TestingModule } from '@nestjs/testing';
-import { beforeAll, afterEach, describe, expect, test, vi } from 'vitest';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { mock, mockReset } from 'vitest-mock-extended';
-import { [ComponentName]Controller } from './[component].controller.ts';
+import {
+	type Create[ComponentName]Dto,
+	type [ComponentName]Dto,
+} from '../schemas/[component].dto.ts';
 import { [ComponentName]Service } from '../services/[component].service.ts';
-import { [ComponentName]Dto, Create[ComponentName]Dto } from '../schemas/[component].dto.ts';
+import { [ComponentName]Controller } from './[component].controller.ts';
 
-describe('[ComponentName]Controller', () => {
-  // shared variables
-  let controller: [ComponentName]Controller;
-  let module: TestingModule;
+describe([ComponentName]Controller, () => {
+	// shared variables
+	let controller: [ComponentName]Controller;
 
-  // mocks
-  const mockService = mock<[ComponentName]Service>();
+	// mocks
+	const mockService = mock<[ComponentName]Service>();
 
-  // hooks
-  beforeAll(async () => {
-    module = await Test.createTestingModule({
-      controllers: [[ComponentName]Controller],
-      providers: [
-        {
-          provide: [ComponentName]Service,
-          useValue: mockService,
-        },
-      ],
-    }).compile();
+	// hooks
+	beforeAll(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			controllers: [[ComponentName]Controller],
+			providers: [
+				{
+					provide: [ComponentName]Service,
+					useValue: mockService,
+				},
+			],
+		}).compile();
 
-    controller = module.get<[ComponentName]Controller>([ComponentName]Controller);
-  });
+		controller = module.get([ComponentName]Controller);
+	});
 
-  afterEach(() => {
-    mockReset(mockService);
-  });
+	afterEach(() => {
+		mockReset(mockService);
+	});
 
-  // tests
-  describe('when finding all [component]s', () => {
-    test('should return array of [component]s', async () => {
-      // arrange
-      const expected[ComponentName]s: [ComponentName]Dto[] = [
-        { id: 1, name: 'Test [Component]' },
-      ];
-      mockService.findAll.mockResolvedValue(expected[ComponentName]s);
+	// tests
+	test('findAll returns an array of [component]s', async () => {
+		// arrange
+		const expected: [ComponentName]Dto[] = [{ id: 1, name: 'a name' }];
+		mockService.findAll.mockResolvedValue(expected);
 
-      // act
-      const result = await controller.findAll();
+		// act
+		const result = await controller.findAll();
 
-      // assert
-      expect(result).toEqual(expected[ComponentName]s);
-      expect(mockService.findAll).toHaveBeenCalledOnce();
-    });
-  });
+		// assert
+		expect(result).toEqual(expected);
+		expect(mockService.findAll).toHaveBeenCalledOnce();
+	});
 
-  describe('when creating [component]', () => {
-    test('should create and return [component]', async () => {
-      // arrange
-      const create[ComponentName]Dto: Create[ComponentName]Dto = {
-        name: 'New [Component]',
-      };
-      const expected[ComponentName]: [ComponentName]Dto = {
-        id: 1,
-        ...create[ComponentName]Dto,
-      };
-      mockService.create.mockResolvedValue(expected[ComponentName]);
+	test('create delegates to the service', async () => {
+		// arrange
+		const dto: Create[ComponentName]Dto = { name: 'a name' };
+		const expected: [ComponentName]Dto = { id: 1, ...dto };
+		mockService.create.mockResolvedValue(expected);
 
-      // act
-      const result = await controller.create(create[ComponentName]Dto);
+		// act
+		const result = await controller.create(dto);
 
-      // assert
-      expect(result).toEqual(expected[ComponentName]);
-      expect(mockService.create).toHaveBeenCalledWith(create[ComponentName]Dto);
-    });
+		// assert
+		expect(result).toEqual(expected);
+		expect(mockService.create).toHaveBeenCalledWith(dto);
+	});
 
-    test('should throw BadRequestException for invalid data', async () => {
-      // arrange
-      const invalidData = {} as Create[ComponentName]Dto;
-      mockService.create.mockRejectedValue(new Error('Validation failed'));
+	test('create rejects when the service throws', async () => {
+		// arrange
+		const dto = {} as Create[ComponentName]Dto;
+		mockService.create.mockRejectedValue(new Error('failed'));
 
-      // act & assert
-      expect(() => controller.create(invalidData)).rejects.toThrow();
-    });
-  });
+		// act & assert
+		await expect(controller.create(dto)).rejects.toThrow();
+	});
 });
 ```
 
 ### Service Unit Test Template
 
+Services are tested by direct instantiation with `mock<T>()` (no testing module
+needed). Reset mocks in `afterEach`.
+
 ```typescript
-import { Test, TestingModule } from '@nestjs/testing';
-import { beforeAll, afterEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { mock, mockReset } from 'vitest-mock-extended';
-import { [ComponentName]Service } from './[component].service.ts';
 import { [ComponentName]Repository } from '../repositories/[component].repository.ts';
-import { [ComponentName]Dto, Create[ComponentName]Dto } from '../schemas/[component].dto.ts';
+import {
+	type Create[ComponentName]Dto,
+	type [ComponentName]Dto,
+} from '../schemas/[component].dto.ts';
+import { [ComponentName]Service } from './[component].service.ts';
 
-describe('[ComponentName]Service', () => {
-  // shared variables
-  let service: [ComponentName]Service;
-  let module: TestingModule;
+describe([ComponentName]Service, () => {
+	// shared variables
+	let service: [ComponentName]Service;
 
-  // mocks
-  const mockRepository = mock<[ComponentName]Repository>();
+	// mocks
+	const mockRepository = mock<[ComponentName]Repository>();
 
-  // hooks
-  beforeAll(async () => {
-    module = await Test.createTestingModule({
-      providers: [
-        [ComponentName]Service,
-        {
-          provide: [ComponentName]Repository,
-          useValue: mockRepository,
-        },
-      ],
-    }).compile();
+	// hooks
+	beforeAll(() => {
+		service = new [ComponentName]Service(mockRepository);
+	});
 
-    service = module.get<[ComponentName]Service>([ComponentName]Service);
-  });
+	afterEach(() => {
+		mockReset(mockRepository);
+	});
 
-  afterEach(() => {
-    mockReset(mockRepository);
-  });
+	// tests
+	test('findAll returns [component]s from the repository', async () => {
+		// arrange
+		const expected: [ComponentName]Dto[] = [{ id: 1, name: 'a name' }];
+		mockRepository.findAll.mockResolvedValue(expected);
 
-  // tests
-  describe('when finding all [component]s', () => {
-    test('should return all [component]s from repository', async () => {
-      // arrange
-      const expected[ComponentName]s: [ComponentName]Dto[] = [
-        { id: 1, name: 'Test [Component]' },
-      ];
-      mockRepository.findAll.mockResolvedValue(expected[ComponentName]s);
+		// act
+		const result = await service.findAll();
 
-      // act
-      const result = await service.findAll();
+		// assert
+		expect(result).toEqual(expected);
+		expect(mockRepository.findAll).toHaveBeenCalledOnce();
+	});
 
-      // assert
-      expect(result).toEqual(expected[ComponentName]s);
-      expect(mockRepository.findAll).toHaveBeenCalledOnce();
-    });
-  });
+	test('create persists and returns the [component]', async () => {
+		// arrange
+		const dto: Create[ComponentName]Dto = { name: 'a name' };
+		const expected: [ComponentName]Dto = { id: 1, ...dto };
+		mockRepository.create.mockResolvedValue(expected);
 
-  describe('when creating [component]', () => {
-    test('should create [component] successfully', async () => {
-      // arrange
-      const create[ComponentName]Dto: Create[ComponentName]Dto = {
-        name: 'New [Component]',
-      };
-      const expected[ComponentName]: [ComponentName]Dto = {
-        id: 1,
-        ...create[ComponentName]Dto,
-      };
-      mockRepository.create.mockResolvedValue(expected[ComponentName]);
+		// act
+		const result = await service.create(dto);
 
-      // act
-      const result = await service.create(create[ComponentName]Dto);
+		// assert
+		expect(result).toEqual(expected);
+		expect(mockRepository.create).toHaveBeenCalledWith(dto);
+	});
 
-      // assert
-      expect(result).toEqual(expected[ComponentName]);
-      expect(mockRepository.create).toHaveBeenCalledWith(create[ComponentName]Dto);
-    });
+	test('create propagates repository errors', async () => {
+		// arrange
+		const dto: Create[ComponentName]Dto = { name: 'a name' };
+		mockRepository.create.mockRejectedValue(new Error('database error'));
 
-    test('should handle repository errors', async () => {
-      // arrange
-      const create[ComponentName]Dto: Create[ComponentName]Dto = {
-        name: 'Invalid [Component]',
-      };
-      mockRepository.create.mockRejectedValue(new Error('Database error'));
-
-      // act & assert
-      expect(() => service.create(create[ComponentName]Dto)).rejects.toThrow('Database error');
-    });
-  });
+		// act & assert
+		await expect(service.create(dto)).rejects.toThrow('database error');
+	});
 });
 ```
 
 ### Integration Test Template
 
+Integration tests boot a Fastify app via the `#testing` helper and exercise it
+with `app.inject`. Use `HttpStatusCode`/`HttpMethod` from `#libs/http` and the
+`#testing` alias for the helper.
+
 ```typescript
-import { Test, TestingModule } from '@nestjs/testing';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { beforeAll, afterAll, describe, expect, test } from 'vitest';
+import { HttpMethod, HttpStatusCode } from '#libs/http';
+import { createFastifyApplication } from '#testing';
+import { type NestFastifyApplication } from '@nestjs/platform-fastify';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { [ComponentName]Module } from '../[component].module.ts';
-import { createFastifyApplication } from '../../../__tests__/utils/fastify-test-module.ts';
 
-describe('[ComponentName] Integration', () => {
-  // shared variables
-  let app: NestFastifyApplication;
-  let module: TestingModule;
+describe('[ComponentName] (integration)', () => {
+	// shared variables
+	let app: NestFastifyApplication;
+	let module: TestingModule;
 
-  // hooks
-  beforeAll(async () => {
-    module = await Test.createTestingModule({
-      imports: [[ComponentName]Module],
-    }).compile();
+	// hooks
+	beforeAll(async () => {
+		module = await Test.createTestingModule({
+			imports: [[ComponentName]Module],
+		}).compile();
 
-    app = await createFastifyApplication(module);
-  });
+		app = await createFastifyApplication(module);
+	});
 
-  afterAll(async () => {
-    await app.close();
-  });
+	afterAll(async () => {
+		await module.close();
+		await app.close();
+	});
 
-  // tests
-  describe('GET /[component]', () => {
-    test('should return list of [component]s', async () => {
-      // act
-      const response = await app.inject({
-        method: 'GET',
-        url: '/[component]',
-        headers: {
-          'x-api-key': 'test-key',
-        },
-      });
+	// tests
+	test('GET /[component] returns the list', async () => {
+		// act
+		const response = await app.inject({
+			method: HttpMethod.GET,
+			url: '/[component]',
+			headers: { 'ms-api-key': 'test-key' },
+		});
 
-      // assert
-      expect(response.statusCode).toBe(200);
-      expect(response.json()).toEqual(expect.arrayContaining([]));
-    });
+		// assert
+		expect(response.statusCode).toBe(HttpStatusCode.OK);
+	});
 
-    test('should return 401 without API key', async () => {
-      // act
-      const response = await app.inject({
-        method: 'GET',
-        url: '/[component]',
-      });
+	test('GET /[component] rejects a missing api key', async () => {
+		// act
+		const response = await app.inject({
+			method: HttpMethod.GET,
+			url: '/[component]',
+		});
 
-      // assert
-      expect(response.statusCode).toBe(401);
-    });
-  });
+		// assert
+		expect(response.statusCode).toBe(HttpStatusCode.UNAUTHORIZED);
+	});
 
-  describe('POST /[component]', () => {
-    test('should create [component] with valid data', async () => {
-      // arrange
-      const create[ComponentName]Data = {
-        name: 'Test [Component]',
-      };
+	test('POST /[component] rejects invalid data', async () => {
+		// act
+		const response = await app.inject({
+			method: HttpMethod.POST,
+			url: '/[component]',
+			headers: {
+				'ms-api-key': 'test-key',
+				'content-type': 'application/json',
+			},
+			payload: { name: '' },
+		});
 
-      // act
-      const response = await app.inject({
-        method: 'POST',
-        url: '/[component]',
-        headers: {
-          'x-api-key': 'test-key',
-          'content-type': 'application/json',
-        },
-        payload: create[ComponentName]Data,
-      });
-
-      // assert
-      expect(response.statusCode).toBe(201);
-      expect(response.json()).toMatchObject(create[ComponentName]Data);
-    });
-
-    test('should return 400 for invalid data', async () => {
-      // arrange
-      const invalidData = {
-        name: '', // Invalid: empty name
-      };
-
-      // act
-      const response = await app.inject({
-        method: 'POST',
-        url: '/[component]',
-        headers: {
-          'x-api-key': 'test-key',
-          'content-type': 'application/json',
-        },
-        payload: invalidData,
-      });
-
-      // assert
-      expect(response.statusCode).toBe(400);
-    });
-  });
+		// assert
+		expect(response.statusCode).toBe(HttpStatusCode.BAD_REQUEST);
+	});
 });
 ```
 

@@ -18,6 +18,10 @@ Improve the code quality of [FILE/COMPONENT] by:
 9. Applying consistent naming conventions
 10. Removing code duplication
 
+Follow `AGENTS.md` (the single source of truth) and
+`.github/instructions/coding-standards.instructions.md` for the full lint and
+style contract; the points below are the high-value highlights.
+
 ## Maintain:
 
 - Backward compatibility
@@ -30,17 +34,16 @@ Improve the code quality of [FILE/COMPONENT] by:
 
 ### TypeScript Best Practices:
 
-- Use explicit types instead of `any`
-- Implement proper interface definitions
-- Apply union types and generics appropriately
-- Use type guards for runtime type checking
+- Prefer `unknown` + narrowing over `any`; explicit types everywhere
+- Use inline `type` imports (`import { type Foo } from '...'`)
+- Apply union types, generics, and type guards appropriately
 
 ### Error Handling:
 
-- Implement proper try-catch blocks
-- Use meaningful error messages
-- Apply appropriate HTTP status codes
-- Follow error handling patterns
+- Throw NestJS HTTP exceptions (`NotFoundException`, `BadRequestException`, …)
+  with messages; map transport errors from `#libs/http`
+- Name the catch parameter `error`; log via `Logger` (never `console.log`)
+- Validate inputs with `ZodDto` / `ZodValidationPipe`
 
 ### Performance Optimization:
 

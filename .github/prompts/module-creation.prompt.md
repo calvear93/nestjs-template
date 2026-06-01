@@ -99,44 +99,54 @@ export class [ModuleName]Module {}
 ### Complete DTO Schema Template
 
 ```typescript
+import { epoch, phone, ZodDto } from '#libs/zod';
 import { z } from 'zod';
-import { ZodDto, phone, epoch } from '#libs/zod';
 
-// Base entity schema
-const [ModuleName]Schema = z.object({
-	id: z.coerce.number().positive(),
-	name: z.string().min(1).max(100),
-	description: z.string().max(500).optional(),
-	status: z.enum(['active', 'inactive', 'pending']).default('pending'),
-	email: z.email().optional(),
-	phone: phone().optional(),
-	metadata: z.record(z.unknown()).optional(),
-	createdAt: epoch(),
-	updatedAt: epoch(),
-}).describe('[ModuleName] entity');
+// base entity schema
+const [ModuleName]Schema = z
+	.object({
+		id: z.coerce.number().positive(),
+		name: z.string().min(1).max(100),
+		description: z.string().max(500).optional(),
+		status: z.enum(['active', 'inactive', 'pending']).default('pending'),
+		email: z.email().optional(),
+		phone: phone().optional(),
+		metadata: z.record(z.string(), z.unknown()).optional(),
+		createdAt: epoch(),
+		updatedAt: epoch(),
+	})
+	.meta({ description: '[ModuleName] entity' });
 
-// Response DTO
+// response DTO
 export class [ModuleName]Dto extends ZodDto([ModuleName]Schema, '[ModuleName]') {}
 
-// Create DTO (omit generated fields)
+// create DTO (omit generated fields)
 const Create[ModuleName]Schema = [ModuleName]Schema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
 });
 
-export class Create[ModuleName]Dto extends ZodDto(Create[ModuleName]Schema, 'Create[ModuleName]') {}
+export class Create[ModuleName]Dto extends ZodDto(
+	Create[ModuleName]Schema,
+	'Create[ModuleName]',
+) {}
 
-// Update DTO (partial with omitted fields)
-const Update[ModuleName]Schema = [ModuleName]Schema.omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-}).partial();
+// update DTO (partial with omitted fields)
+const Update[ModuleName]Schema = [ModuleName]Schema
+	.omit({
+		id: true,
+		createdAt: true,
+		updatedAt: true,
+	})
+	.partial();
 
-export class Update[ModuleName]Dto extends ZodDto(Update[ModuleName]Schema, 'Update[ModuleName]') {}
+export class Update[ModuleName]Dto extends ZodDto(
+	Update[ModuleName]Schema,
+	'Update[ModuleName]',
+) {}
 
-// Query DTO for filtering
+// query DTO for filtering
 const [ModuleName]QuerySchema = z.object({
 	page: z.coerce.number().min(1).default(1),
 	limit: z.coerce.number().min(1).max(100).default(10),
@@ -146,249 +156,190 @@ const [ModuleName]QuerySchema = z.object({
 	sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
-export class [ModuleName]QueryDto extends ZodDto([ModuleName]QuerySchema, '[ModuleName]Query') {}
+export class [ModuleName]QueryDto extends ZodDto(
+	[ModuleName]QuerySchema,
+	'[ModuleName]Query',
+) {}
 ```
 
 ### Service Template
 
+Inject config and external dependencies through the constructor (it sorts after
+the methods). Throw NestJS HTTP exceptions on the error path and log with `Logger`.
+Replace the mocked bodies with real repository/HTTP calls.
+
 ```typescript
-import { Injectable, NotFoundException, ConflictException, Logger } from '@nestjs/common';
-import { [ModuleName]Dto, Create[ModuleName]Dto, Update[ModuleName]Dto, [ModuleName]QueryDto } from '../schemas/[module-name].dto.ts';
+import {
+	ConflictException,
+	Injectable,
+	Logger,
+	NotFoundException,
+} from '@nestjs/common';
+import {
+	type Create[ModuleName]Dto,
+	type [ModuleName]Dto,
+	type [ModuleName]QueryDto,
+	type Update[ModuleName]Dto,
+} from '../schemas/[module-name].dto.ts';
 
 @Injectable()
 export class [ModuleName]Service {
-	private readonly logger = new Logger([ModuleName]Service.name);
+	/**
+	 * retrieves all [module-name]s with optional filtering and pagination.
+	 *
+	 * @param query - filtering and pagination parameters
+	 * @returns array of [module-name]s
+	 */
+	async findAll(query: [ModuleName]QueryDto): Promise<[ModuleName]Dto[]> {
+		this._logger.log(`finding [module-name]s`, query);
 
-	constructor(
-		// Inject repositories or external services here
-		// @Inject('CONFIG') private readonly config: [ModuleName]Config,
-	) {}
+		// TODO: replace with repository call
+		return Promise.resolve([]);
+	}
 
 	/**
-	 * Retrieves all [module-name]s with optional filtering and pagination.
+	 * retrieves a single [module-name] by id.
 	 *
-	 * @param query - query parameters for filtering and pagination
-   * @returns promise resolving to array of [module-name]s
-   */
-  async findAll(query: [ModuleName]QueryDto): Promise<[ModuleName]Dto[]> {
-    try {
-      this.logger.log(`Finding all [module-name]s with query: ${JSON.stringify(query)}`);
+	 * @param id - [module-name] id
+	 * @returns the [module-name]
+	 * @throws NotFoundException when it does not exist
+	 */
+	async findById(id: number): Promise<[ModuleName]Dto> {
+		const result = await this._repository.findById(id);
 
-      // TODO: Implement repository call
-      // const result = await this.repository.findAll(query);
+		if (!result) {
+			throw new NotFoundException(`[module-name] ${id} not found`);
+		}
 
-      const mockResult: [ModuleName]Dto[] = [];
-      return mockResult;
-    } catch (error) {
-      this.logger.error(`Failed to find [module-name]s: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
+		return result;
+	}
 
-  /**
-   * Retrieves a single [module-name] by ID.
-   *
-   * @param id - [module-name] ID
-   * @returns promise resolving to [module-name] entity
-   * @throws NotFoundException if [module-name] doesn't exist
-   */
-  async findById(id: number): Promise<[ModuleName]Dto> {
-    try {
-      this.logger.log(`Finding [module-name] with ID: ${id}`);
+	/**
+	 * creates a new [module-name].
+	 *
+	 * @param dto - [module-name] creation data
+	 * @returns the created [module-name]
+	 * @throws ConflictException when the name already exists
+	 */
+	async create(dto: Create[ModuleName]Dto): Promise<[ModuleName]Dto> {
+		if (await this._repository.existsByName(dto.name)) {
+			throw new ConflictException(`'${dto.name}' already exists`);
+		}
 
-      // TODO: Implement repository call
-      // const result = await this.repository.findById(id);
-      // if (!result) {
-      //   throw new NotFoundException(`[ModuleName] with ID ${id} not found`);
-      // }
+		const result = await this._repository.create(dto);
+		this._logger.log(`created [module-name] ${result.id}`);
 
-      // Mock implementation
-      throw new NotFoundException(`[ModuleName] with ID ${id} not found`);
-    } catch (error) {
-      this.logger.error(`Failed to find [module-name] ${id}: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
+		return result;
+	}
 
-  /**
-   * Creates a new [module-name].
-   *
-   * @param create[ModuleName]Dto - [module-name] creation data
-   * @returns promise resolving to created [module-name]
-   * @throws ConflictException if [module-name] already exists
-   */
-  async create(create[ModuleName]Dto: Create[ModuleName]Dto): Promise<[ModuleName]Dto> {
-    try {
-      this.logger.log(`Creating [module-name]: ${JSON.stringify(create[ModuleName]Dto)}`);
+	/**
+	 * updates an existing [module-name].
+	 *
+	 * @param id - [module-name] id
+	 * @param dto - [module-name] update data
+	 * @returns the updated [module-name]
+	 * @throws NotFoundException when it does not exist
+	 */
+	async update(
+		id: number,
+		dto: Update[ModuleName]Dto,
+	): Promise<[ModuleName]Dto> {
+		await this.findById(id);
 
-      // TODO: Implement validation and repository call
-      // const exists = await this.repository.existsByName(create[ModuleName]Dto.name);
-      // if (exists) {
-      //   throw new ConflictException(`[ModuleName] with name '${create[ModuleName]Dto.name}' already exists`);
-      // }
+		return this._repository.update(id, dto);
+	}
 
-      // const result = await this.repository.create(create[ModuleName]Dto);
+	/**
+	 * deletes a [module-name] by id.
+	 *
+	 * @param id - [module-name] id
+	 * @throws NotFoundException when it does not exist
+	 */
+	async delete(id: number): Promise<void> {
+		await this.findById(id);
+		await this._repository.delete(id);
+	}
 
-      // Mock implementation
-      const result: [ModuleName]Dto = {
-        id: 1,
-        ...create[ModuleName]Dto,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      } as [ModuleName]Dto;
+	private readonly _logger = new Logger([ModuleName]Service.name);
 
-      this.logger.log(`Created [module-name] with ID: ${result.id}`);
-      return result;
-    } catch (error) {
-      this.logger.error(`Failed to create [module-name]: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
-
-  /**
-   * Updates an existing [module-name].
-   *
-   * @param id - [module-name] ID
-   * @param update[ModuleName]Dto - [module-name] update data
-   * @returns promise resolving to updated [module-name]
-   * @throws NotFoundException if [module-name] doesn't exist
-   */
-  async update(id: number, update[ModuleName]Dto: Update[ModuleName]Dto): Promise<[ModuleName]Dto> {
-    try {
-      this.logger.log(`Updating [module-name] ${id}: ${JSON.stringify(update[ModuleName]Dto)}`);
-
-      // TODO: Implement repository call
-      // const existing = await this.findById(id);
-      // const result = await this.repository.update(id, update[ModuleName]Dto);
-
-      // Mock implementation
-      throw new NotFoundException(`[ModuleName] with ID ${id} not found`);
-    } catch (error) {
-      this.logger.error(`Failed to update [module-name] ${id}: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
-
-  /**
-   * Deletes a [module-name] by ID.
-   *
-   * @param id - [module-name] ID
-   * @returns promise resolving when deletion is complete
-   * @throws NotFoundException if [module-name] doesn't exist
-   */
-  async delete(id: number): Promise<void> {
-    try {
-      this.logger.log(`Deleting [module-name] with ID: ${id}`);
-
-      // TODO: Implement repository call
-      // const existing = await this.findById(id);
-      // await this.repository.delete(id);
-
-      // Mock implementation
-      throw new NotFoundException(`[ModuleName] with ID ${id} not found`);
-    } catch (error) {
-      this.logger.error(`Failed to delete [module-name] ${id}: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
+	constructor(
+		private readonly _repository: [ModuleName]Repository,
+		// inject config via a DI token, e.g.:
+		// @Inject('[MODULE_NAME]_CONFIG') private readonly _config: [ModuleName]Config,
+	) {}
 }
 ```
 
 ### Controller Template
 
+Thin controller: `@Body()` is validated by the global `ZodValidationPipe`; query
+DTOs (with coercion) are too. The constructor sorts after the handlers.
+
 ```typescript
 import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-  ParseIntPipe,
-  HttpCode,
-  HttpStatus,
+	Body,
+	Controller,
+	Delete,
+	Get,
+	HttpCode,
+	HttpStatus,
+	Param,
+	ParseIntPipe,
+	Post,
+	Put,
+	Query,
 } from '@nestjs/common';
-import { ApiKey } from '../../decorators/api-key.guard.ts';
-import { ApplyControllerDocs } from '../../decorators/docs.decorator.ts';
-import { [ModuleName]Service } from '../services/[module-name].service.ts';
+import { ApiKey } from '../../../decorators/api-key.guard.ts';
+import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
 import {
-  [ModuleName]Dto,
-  Create[ModuleName]Dto,
-  Update[ModuleName]Dto,
-  [ModuleName]QueryDto,
+	type Create[ModuleName]Dto,
+	type [ModuleName]Dto,
+	type [ModuleName]QueryDto,
+	type Update[ModuleName]Dto,
 } from '../schemas/[module-name].dto.ts';
+import { [ModuleName]Service } from '../services/[module-name].service.ts';
 import { [ModuleName]ControllerDocs } from './[module-name].controller.docs.ts';
 
 @ApiKey()
 @Controller({
-  path: '[module-name]',
-  version: '1',
+	path: '[module-name]',
+	version: '1',
 })
 @ApplyControllerDocs([ModuleName]ControllerDocs)
 export class [ModuleName]Controller {
-  constructor(private readonly [moduleName]Service: [ModuleName]Service) {}
+	@Get()
+	findAll(@Query() query: [ModuleName]QueryDto): Promise<[ModuleName]Dto[]> {
+		return this._service.findAll(query);
+	}
 
-  /**
-   * Retrieves all [module-name]s with optional filtering.
-   *
-   * @param query - query parameters for filtering and pagination
-   * @returns promise resolving to array of [module-name]s
-   */
-  @Get()
-  async findAll(@Query() query: [ModuleName]QueryDto): Promise<[ModuleName]Dto[]> {
-    return this.[moduleName]Service.findAll(query);
-  }
+	@Get(':id')
+	findById(
+		@Param('id', ParseIntPipe) id: number,
+	): Promise<[ModuleName]Dto> {
+		return this._service.findById(id);
+	}
 
-  /**
-   * Retrieves a single [module-name] by ID.
-   *
-   * @param id - [module-name] ID
-   * @returns promise resolving to [module-name] entity
-   */
-  @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number): Promise<[ModuleName]Dto> {
-    return this.[moduleName]Service.findById(id);
-  }
+	@Post()
+	@HttpCode(HttpStatus.CREATED)
+	create(@Body() dto: Create[ModuleName]Dto): Promise<[ModuleName]Dto> {
+		return this._service.create(dto);
+	}
 
-  /**
-   * Creates a new [module-name].
-   *
-   * @param create[ModuleName]Dto - [module-name] creation data
-   * @returns promise resolving to created [module-name]
-   */
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async create(@Body() create[ModuleName]Dto: Create[ModuleName]Dto): Promise<[ModuleName]Dto> {
-    return this.[moduleName]Service.create(create[ModuleName]Dto);
-  }
+	@Put(':id')
+	update(
+		@Param('id', ParseIntPipe) id: number,
+		@Body() dto: Update[ModuleName]Dto,
+	): Promise<[ModuleName]Dto> {
+		return this._service.update(id, dto);
+	}
 
-  /**
-   * Updates an existing [module-name].
-   *
-   * @param id - [module-name] ID
-   * @param update[ModuleName]Dto - [module-name] update data
-   * @returns promise resolving to updated [module-name]
-   */
-  @Put(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() update[ModuleName]Dto: Update[ModuleName]Dto,
-  ): Promise<[ModuleName]Dto> {
-    return this.[moduleName]Service.update(id, update[ModuleName]Dto);
-  }
+	@Delete(':id')
+	@HttpCode(HttpStatus.NO_CONTENT)
+	delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+		return this._service.delete(id);
+	}
 
-  /**
-   * Deletes a [module-name] by ID.
-   *
-   * @param id - [module-name] ID
-   */
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.[moduleName]Service.delete(id);
-  }
+	constructor(private readonly _service: [ModuleName]Service) {}
 }
 ```
 

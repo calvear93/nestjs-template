@@ -29,29 +29,25 @@ Create a new API endpoint for [ENDPOINT_DESCRIPTION] following the NestJS templa
 
 ### Controller Implementation
 
-- [ ] Controller uses proper HTTP verb (GET, POST, PUT, PATCH, DELETE)
-- [ ] Correct HTTP status codes returned (200, 201, 204, 400, 404, etc.)
-- [ ] Security decorator applied: `@ApiKey()` or `@AllowAnonymous()`
-- [ ] Controller documentation applied: `@ApplyControllerDocs(DocsObject)`
-- [ ] Proper dependency injection in constructor
-- [ ] Error handling with try-catch where needed
+- [ ] Thin controller (HTTP only); business logic lives in the service
+- [ ] Proper HTTP verb and status code (`@HttpCode` for 201/204)
+- [ ] Security decorator applied: `@ApiKey()` (class) / `@AllowAnonymous()`
+- [ ] Documentation applied: `@ApplyControllerDocs([Resource]ControllerDocs)`
+- [ ] Constructor injection with underscore-prefixed private deps
 
 ### OpenAPI Documentation
 
-- [ ] `@ApiOperation()` with clear summary and description
-- [ ] `@ApiResponse()` for success and error responses
-- [ ] `@ApiBody()` for request body documentation (POST/PUT)
-- [ ] `@ApiQuery()` for query parameters
-- [ ] `@ApiParam()` for path parameters
-- [ ] Examples provided for request/response bodies
+- [ ] Heavy `@Api*()` decorators live in the colocated `*.controller.docs.ts`,
+      typed as `DecoratorsLookUp<Controller>` (not in the controller body)
+- [ ] `ApiOperation` per handler; `ApiResponse` for success and error cases
+- [ ] Request/response schemas referenced via `Dto.jsonSchema`
 
 ### Service Layer
 
-- [ ] Business logic separated into service
-- [ ] Service properly injected into controller
-- [ ] Configuration injected via dynamic providers (not hardcoded)
-- [ ] Async/await patterns used consistently
-- [ ] Proper error handling and logging
+- [ ] Business logic separated into the service
+- [ ] Config injected via DI tokens from `src/app/config/` (never `process.env`)
+- [ ] `async`/`await` with NestJS HTTP exceptions on the error path
+- [ ] Logging via NestJS `Logger` (never `console.log`)
 
 ### Testing
 
@@ -65,12 +61,17 @@ Create a new API endpoint for [ENDPOINT_DESCRIPTION] following the NestJS templa
 
 ### Basic Controller Structure
 
+`ZodValidationPipe` is registered globally (`app.useGlobalPipes`), so a plain
+`@Body()` already validates the incoming `ZodDto`. Note the constructor sorts
+**after** the public methods (perfectionist class-member order), and private
+members are underscore-prefixed.
+
 ```typescript
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ApiKey, AllowAnonymous } from '../../decorators/api-key.guard.ts';
-import { ApplyControllerDocs } from '../../decorators/docs.decorator.ts';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { AllowAnonymous, ApiKey } from '../../../decorators/api-key.guard.ts';
+import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
+import { Create[ResourceName]Dto, [ResourceName]Dto } from '../schemas/[resource].dto.ts';
 import { [ResourceName]Service } from '../services/[resource].service.ts';
-import { [ResourceName]Dto, Create[ResourceName]Dto } from '../schemas/[resource].dto.ts';
 import { [ResourceName]ControllerDocs } from './[resource].controller.docs.ts';
 
 @ApiKey()
@@ -80,95 +81,92 @@ import { [ResourceName]ControllerDocs } from './[resource].controller.docs.ts';
 })
 @ApplyControllerDocs([ResourceName]ControllerDocs)
 export class [ResourceName]Controller {
-	constructor(private readonly [resource]Service: [ResourceName]Service) {}
-
 	@Get()
-	async findAll(): Promise<[ResourceName]Dto[]> {
-		return this.[resource]Service.findAll();
+	findAll(): Promise<[ResourceName]Dto[]> {
+		return this._service.findAll();
 	}
 
 	@Post()
-	async create(@Body() create[ResourceName]Dto: Create[ResourceName]Dto): Promise<[ResourceName]Dto> {
-		return this.[resource]Service.create(create[ResourceName]Dto);
+	create(@Body() dto: Create[ResourceName]Dto): Promise<[ResourceName]Dto> {
+		return this._service.create(dto);
 	}
+
+	constructor(private readonly _service: [ResourceName]Service) {}
 }
 ```
 
 ### Zod Schema Template
 
 ```typescript
+import { epoch, phone, ZodDto } from '#libs/zod';
 import { z } from 'zod';
-import { ZodDto, phone, epoch } from '#libs/zod';
 
-const [ResourceName]Schema = z.object({
-	id: z.coerce.number().positive(),
-	name: z.string().min(1).max(100),
-	email: z.email(),
-	phone: phone().optional(),
-	createdAt: epoch(),
-	updatedAt: epoch(),
-}).describe('[ResourceName] entity schema');
+const [ResourceName]Schema = z
+	.object({
+		id: z.coerce.number().positive(),
+		name: z.string().min(1).max(100),
+		email: z.email(),
+		phone: phone().optional(),
+		createdAt: epoch(),
+		updatedAt: epoch(),
+	})
+	.meta({ description: '[ResourceName] entity' });
 
 export class [ResourceName]Dto extends ZodDto([ResourceName]Schema, '[ResourceName]') {}
 
 const Create[ResourceName]Schema = [ResourceName]Schema.omit({
 	id: true,
 	createdAt: true,
-	updatedAt: true
+	updatedAt: true,
 });
 
-export class Create[ResourceName]Dto extends ZodDto(Create[ResourceName]Schema, 'Create[ResourceName]') {}
+export class Create[ResourceName]Dto extends ZodDto(
+	Create[ResourceName]Schema,
+	'Create[ResourceName]',
+) {}
 ```
 
 ### Controller Documentation Template
 
-```typescript
-import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { HttpStatusCode } from '#libs/http';
-import { [ResourceName]Dto, Create[ResourceName]Dto } from '../schemas/[resource].dto.ts';
+Keep heavy `@Api*()` decorators out of the controller body. Type the docs map
+with `DecoratorsLookUp<Controller>`; keys are `class`, `common`, and `method`
+(one entry per handler). Reference the DTO schema via `Dto.jsonSchema`.
 
-export const [ResourceName]ControllerDocs = {
-	findAll: [
-		ApiOperation({
-			summary: 'Get all [resource]s',
-			description: 'Retrieves a list of all [resource]s with pagination support',
-		}),
-		ApiResponse({
-			status: HttpStatusCode.OK,
-			description: 'List of [resource]s retrieved successfully',
-			type: [ResourceName]Dto,
-			isArray: true,
-		}),
-	],
-	create: [
-		ApiOperation({
-			summary: 'Create a new [resource]',
-			description: 'Creates a new [resource] with the provided data',
-		}),
-		ApiBody({
-			type: Create[ResourceName]Dto,
-			description: '[ResourceName] creation data',
-			examples: {
-				'valid-example': {
-					description: 'Valid [resource] data',
-					value: {
-						name: 'Example [Resource]',
-						email: 'example@domain.com',
-					},
-				},
-			},
-		}),
-		ApiResponse({
-			status: HttpStatusCode.CREATED,
-			description: '[ResourceName] created successfully',
-			type: [ResourceName]Dto,
-		}),
-		ApiResponse({
-			status: HttpStatusCode.BAD_REQUEST,
-			description: 'Invalid input data',
-		}),
-	],
-};
+```typescript
+import { HttpStatusCode } from '#libs/http';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
+import { Create[ResourceName]Dto, [ResourceName]Dto } from '../schemas/[resource].dto.ts';
+import { type [ResourceName]Controller } from './[resource].controller.ts';
+
+export const [ResourceName]ControllerDocs: DecoratorsLookUp<[ResourceName]Controller> =
+	{
+		class: [ApiTags('[ResourceName]')],
+		method: {
+			findAll: [
+				ApiOperation({ summary: 'Get all [resource]s' }),
+				ApiResponse({
+					description: 'List of [resource]s',
+					status: HttpStatusCode.OK,
+					schema: [ResourceName]Dto.jsonSchema,
+					isArray: true,
+				}),
+			],
+			create: [
+				ApiOperation({ summary: 'Create a new [resource]' }),
+				ApiBody({ schema: Create[ResourceName]Dto.jsonSchema }),
+				ApiResponse({
+					description: '[ResourceName] created',
+					status: HttpStatusCode.CREATED,
+					schema: [ResourceName]Dto.jsonSchema,
+				}),
+				ApiResponse({
+					description: 'Invalid input data',
+					status: HttpStatusCode.BAD_REQUEST,
+				}),
+			],
+		},
+	};
 ```
 
 ## 🔍 Quality Validation

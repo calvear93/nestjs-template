@@ -14,8 +14,9 @@ Review the security aspects of [COMPONENT] and ensure:
 5. Proper error handling without information leakage
 6. Rate limiting where appropriate
 7. HTTPS enforcement in production
-8. Environment variable usage for secrets
-9. Proper logging without exposing sensitive data
+8. Secrets read only in the config layer (`src/app/config/`), never
+   `process.env` in services/controllers
+9. Proper logging (NestJS `Logger`) without exposing sensitive data
 10. Following OWASP security guidelines
 
 ## Focus on:
@@ -57,13 +58,17 @@ Review the security aspects of [COMPONENT] and ensure:
 
 ## Security Checklist:
 
-- [ ] Input validation with Zod schemas
-- [ ] Authentication decorators applied (@ApiKey)
+- [ ] Input validation with `ZodDto` / `ZodValidationPipe`
+- [ ] `@ApiKey()` applied at controller level; `@AllowAnonymous()` only where intended
+- [ ] Custom guards built with `createSecurityGuard()` (`#libs/decorators`)
 - [ ] Sensitive data properly protected
-- [ ] Error messages don't leak information
-- [ ] Environment variables used for secrets
+- [ ] Error messages don't leak information (use NestJS HTTP exceptions)
+- [ ] Secrets read only in the config layer, never `process.env` in services
 - [ ] HTTPS enforced in production
 - [ ] Rate limiting implemented
-- [ ] Logging excludes sensitive data
+- [ ] Logging via `Logger` excludes sensitive data
 - [ ] OWASP guidelines followed
 - [ ] Security headers configured
+
+Cross-check against `AGENTS.md` (Security) and
+`.github/instructions/coding-standards.instructions.md`.
