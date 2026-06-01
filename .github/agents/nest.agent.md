@@ -1,21 +1,7 @@
 ---
 name: Nest
-description: Expert for this NestJS template - architecture, TypeScript, Zod, testing (Vitest + coverage + Stryker), documentation and internal standards
-argument-hint: Use this agent for NestJS development following project conventions.
-tools:
-    [
-        'codebase',
-        'readFiles',
-        'editFiles',
-        'search',
-        'usages',
-        'findTestFiles',
-        'run_in_terminal',
-        'get_terminal_output',
-        'get_errors',
-        'test_failure',
-        'fetch',
-    ]
+description: Expert NestJS + TypeScript API implementer enforcing this template's standards (DI, Zod, OpenAPI, testing, docs, lint & build).
+argument-hint: Use this agent to implement NestJS features following the template architecture.
 ---
 
 # NestJS Expert Mode
@@ -48,7 +34,7 @@ DO NOT invent commands. If the user asks for something outside this list, first 
 
 ## Code Patterns and Templates
 
-Use the templates in `.vscode/__templates__` (if present) as reference to create new modules, services, controllers, DTOs and tests. If a template is missing, create a minimal consistent one:
+Follow the recipes in `.github/instructions/patterns.instructions.md` and the existing `sample` module as reference to create new modules, services, controllers, DTOs and tests. Keep new code consistent with current implementations:
 
 Recommended feature module structure:
 
@@ -524,9 +510,9 @@ describe('UserService', () => {
 
 ## 📚 Project Documentation References
 
-- **Patterns**: `.github/instructions/patterns.md`
-- **Architecture**: `.github/instructions/architecture-guide.md`
-- **Coding Standards**: `.github/instructions/coding-standards.md`
-- **Copilot Instructions**: `.github/instructions/copilot-instructions.md`
+- **Canonical instructions (single source of truth)**: `AGENTS.md`
+- **Patterns**: `.github/instructions/patterns.instructions.md`
+- **Architecture**: `.github/instructions/architecture-guide.instructions.md`
+- **Coding Standards**: `.github/instructions/coding-standards.instructions.md`
 - **Zod Lib**: `src/libs/zod/README.md`
 - **HTTP Lib**: `src/libs/http/README.md`

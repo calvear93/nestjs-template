@@ -1,6 +1,6 @@
 savePrefix: ''
 allowBuilds:
-  '@nestjs/core': true
-  '@scarf/scarf': true
+    '@nestjs/core': true
+    '@scarf/scarf': true
 minimumReleaseAgeExclude:
-  - '@calvear/env@3.0.0'
+    - '@calvear/env@3.0.0'

@@ -1,33 +1,21 @@
-# Copilot Instructions
+# Instructions
 
-This directory contains instructions for GitHub Copilot to understand the project structure, coding standards, and development practices.
+These are the **deep-reference documents** for AI assistants and developers. The canonical,
+tool-agnostic entry point is [`AGENTS.md`](../../AGENTS.md) at the repository root — start
+there. These files hold the long-form detail it links to, each with a single, non-overlapping
+scope:
 
-## Files Overview
+| File                                                                       | Scope                                                                                    |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [`architecture-guide.instructions.md`](architecture-guide.instructions.md) | Module topology, configuration/DI wiring, registration, import conventions               |
+| [`coding-standards.instructions.md`](coding-standards.instructions.md)     | Formatting, naming, file suffixes, TypeScript rules, comments, test style, anti-patterns |
+| [`patterns.instructions.md`](patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, DTOs, guards, docs, tests            |
 
-- **`copilot-instructions.md`** - Main project overview, technology stack, and development guidelines
-- **`coding-standards.md`** - TypeScript formatting rules, test organization, and style conventions
-- **`patterns.md`** - Comprehensive NestJS development patterns, testing strategies, and best practices
-- **`architecture-guide.md`** - Project structure, module organization, and architectural conventions
+Each file carries `applyTo` frontmatter so GitHub Copilot can apply it as a path-scoped
+instruction; other tools read them as plain documentation linked from `AGENTS.md`.
 
-## Quick Reference
+Related directories:
 
-### Essential Commands
-
-```bash
-pnpm start:dev                 # Development with hot reload
-pnpm test:dev --coverage --run # Run tests with coverage
-pnpm test:dev                  # Watch mode testing
-pnpm lint                      # Code quality checks
-pnpm format                    # Code formatting
-```
-
-### Key Principles
-
-- **Type Safety First**: Zod validation and TypeScript throughout
-- **Configuration Management**: Never hardcode values, use dependency injection
-- **Testing Strategy**: Comprehensive test coverage with arrange/act/assert structure
-- **Security**: API keys, proper validation, and authorization patterns
-
-## Usage
-
-These instruction files are automatically recognized by GitHub Copilot and provide context-aware code suggestions that follow the project's established patterns and conventions.
+- [`../prompts/`](../prompts/) — task-specific prompts (module/endpoint creation, docs, reviews).
+- [`../agents/`](../agents/) — reusable agent/chat-mode definitions.
+- [`../copilot-instructions.md`](../copilot-instructions.md) — Copilot's auto-loaded pointer to `AGENTS.md`.

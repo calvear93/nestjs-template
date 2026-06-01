@@ -17,8 +17,8 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.expand": false,
 	"explorer.fileNesting.patterns": {
-		".copilotrc.json": ".copilotignore, llms.txt",
 		".gitignore": ".gitattributes",
+		"agents.md": "claude.md, gemini.md, llms.txt, .copilotignore",
 		"*.cts": "${capture}.cts.*",
 		"*.env.json": "${capture}.*.env.json",
 		"*.json": "${capture}.json, ${capture}.*.json",

@@ -7,6 +7,12 @@ description: 'Implement comprehensive error handling following NestJS template p
 
 Implement comprehensive error handling for [COMPONENT] following NestJS template patterns and industry best practices:
 
+> **Note:** In this template the canonical validation exception comes from `#libs/zod`
+> (`ZodValidationPipe` rejects invalid input automatically). The custom `AppException`
+> hierarchy and `GlobalExceptionFilter` shown below are **optional and illustrative** —
+> the base template does not ship them. Add them only if a project genuinely needs a
+> richer error contract, and prefer NestJS built-in HTTP exceptions otherwise.
+
 ## 🎯 Error Handling Objectives
 
 1. **Consistent Error Responses**: Standardized error format across all endpoints
@@ -57,7 +63,7 @@ Implement comprehensive error handling for [COMPONENT] following NestJS template
 ### Custom Exception Classes
 
 ```typescript
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Logger } from '@nestjs/common';
 
 /**
  * Base application exception with enhanced error details.
@@ -215,6 +221,8 @@ export class ExternalServiceException extends AppException {
  * System error exception for internal failures.
  */
 export class SystemException extends AppException {
+	private static readonly logger = new Logger(SystemException.name);
+
 	constructor(
 		message: string,
 		originalError?: Error,
@@ -229,7 +237,10 @@ export class SystemException extends AppException {
 
 		// Log the original error for debugging
 		if (originalError) {
-			console.error('System error details:', originalError);
+			SystemException.logger.error(
+				'System error details',
+				originalError.stack,
+			);
 		}
 	}
 }
@@ -246,7 +257,7 @@ import {
 	HttpStatus,
 	Logger,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 import { AppException } from './exceptions/app.exception.ts';
 
@@ -256,8 +267,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
 	catch(exception: unknown, host: ArgumentsHost): void {
 		const ctx = host.switchToHttp();
-		const response = ctx.getResponse<Response>();
-		const request = ctx.getRequest<Request>();
+		const reply = ctx.getResponse<FastifyReply>();
+		const request = ctx.getRequest<FastifyRequest>();
 
 		const correlationId = request.headers['x-correlation-id'] as string;
 
@@ -268,7 +279,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 		this.logError(exception, request, errorResponse, correlationId);
 
 		// Send response
-		response.status(errorResponse.status).json(errorResponse.body);
+		reply.status(errorResponse.status).send(errorResponse.body);
 	}
 
 	/**
@@ -351,7 +362,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 	 */
 	private logError(
 		exception: unknown,
-		request: Request,
+		request: FastifyRequest,
 		errorResponse: { status: number; body: any },
 		correlationId?: string,
 	): void {
@@ -492,7 +503,7 @@ export class [Resource]Service {
 
       return result;
 
-    } catch (error) {
+    } catch (error: unknown) {
       // Re-throw known exceptions
       if (error instanceof BusinessRuleException) {
         throw error;
@@ -500,8 +511,8 @@ export class [Resource]Service {
 
       // Handle database/system errors
       this.logger.error(
-        `Failed to create [resource]: ${error.message}`,
-        error.stack,
+        `Failed to create [resource]: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        error instanceof Error ? error.stack : undefined,
         { correlationId, createDto },
       );
 
@@ -539,7 +550,7 @@ export class [Resource]Service {
 
       return result;
 
-    } catch (error) {
+    } catch (error: unknown) {
       // Re-throw known exceptions
       if (error instanceof ResourceNotFoundException) {
         throw error;
@@ -547,8 +558,8 @@ export class [Resource]Service {
 
       // Handle system errors
       this.logger.error(
-        `Failed to find [resource] with ID ${id}: ${error.message}`,
-        error.stack,
+        `Failed to find [resource] with ID ${id}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        error instanceof Error ? error.stack : undefined,
         { correlationId, id },
       );
 
@@ -568,7 +579,7 @@ export class [Resource]Service {
    * @returns promise resolving to external service response
    * @throws ExternalServiceException when external service fails
    */
-  async callExternalService(data: any, correlationId?: string): Promise<any> {
+  async callExternalService(data: unknown, correlationId?: string): Promise<unknown> {
     const maxRetries = 3;
     let lastError: Error;
 
@@ -678,7 +689,7 @@ import { [Resource]Dto, Create[Resource]Dto } from '../schemas/[resource].dto.ts
 
 @Controller('[resources]')
 export class [Resource]Controller {
-  constructor(private readonly [resource]Service: [Resource]Service) {}
+  constructor(private readonly _[resource]Service: [Resource]Service) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -723,7 +734,7 @@ export class [Resource]Controller {
     @Headers('x-correlation-id') correlationId?: string,
   ): Promise<[Resource]Dto> {
     // Service handles all error scenarios
-    return this..[resource]Service.create(createDto, correlationId);
+    return this._[resource]Service.create(createDto, correlationId);
   }
 
   @Get(':id')
@@ -757,7 +768,7 @@ export class [Resource]Controller {
     @Headers('x-correlation-id') correlationId?: string,
   ): Promise<[Resource]Dto> {
     // Service handles all error scenarios
-    return this.[resource]Service.findById(id, correlationId);
+    return this._[resource]Service.findById(id, correlationId);
   }
 }
 ```

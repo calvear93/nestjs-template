@@ -1,13 +1,13 @@
 ---
 mode: agent
-description: 'Comprehensive technology stack blueprint generator that analyzes codebases to create detailed architectural documentation. Automatically detects technology stacks, programming languages, and implementation patterns across multiple platforms (.NET, Java, JavaScript, React, Python). Generates configurable blueprints with version information, licensing details, usage patterns, coding conventions, and visual diagrams. Provides implementation-ready templates and maintains architectural consistency for guided development.'
+description: 'Comprehensive technology stack blueprint generator that analyzes the codebase to create detailed architectural documentation for this NestJS + Fastify + TypeScript API. Detects the JavaScript/TypeScript and NestJS stack and implementation patterns. Generates configurable blueprints with version information, licensing details, usage patterns, coding conventions, and visual diagrams. Provides implementation-ready templates and maintains architectural consistency for guided development.'
 ---
 
 # Comprehensive Technology Stack Blueprint Generator
 
 ## Configuration Variables
 
-${PROJECT_TYPE="Auto-detect|.NET|Java|JavaScript|React.js|React Native|Angular|Python|Other"} <!-- Primary technology -->
+${PROJECT_TYPE="Auto-detect|JavaScript|Node.js|Other"} <!-- Primary technology (this repo is a NestJS + Fastify + TypeScript API) -->
 ${DEPTH_LEVEL="Basic|Standard|Comprehensive|Implementation-Ready"} <!-- Analysis depth -->
 ${INCLUDE_VERSIONS=true|false} <!-- Include version information -->
 ${INCLUDE_LICENSES=true|false} <!-- Include license information -->
@@ -32,56 +32,24 @@ ${CATEGORIZATION="Technology Type|Layer|Purpose"} <!-- Organization method -->
 
 ### 2. Core Technologies Analysis
 
-${PROJECT_TYPE == ".NET" || PROJECT_TYPE == "Auto-detect" ? "#### .NET Stack Analysis (if detected)
+#### JavaScript / TypeScript Stack Analysis
 
-- Target frameworks and language versions (detect from project files)
-- All NuGet package references with versions and purpose comments
-- Project structure and organization patterns
-- Configuration approach (appsettings.json, IOptions, etc.)
-- Authentication mechanisms (Identity, JWT, etc.)
-- API design patterns (REST, GraphQL, minimal APIs, etc.)
-- Data access approaches (EF Core, Dapper, etc.)
-- Dependency injection patterns
-- Middleware pipeline components" : ""}
+- ECMAScript / TypeScript version and compiler settings (tsconfig)
+- All npm dependencies (pnpm) categorized by purpose
+- Module system (ESM) and path aliases (`#libs/*`)
+- Build/runtime tooling (Vite + vite-node) with configuration
+- Testing frameworks and patterns (Vitest + vitest-mock-extended)
 
-${PROJECT_TYPE == "Java" || PROJECT_TYPE == "Auto-detect" ? "#### Java Stack Analysis (if detected)
+#### NestJS (Node.js) Stack Analysis
 
-- JDK version and core frameworks
-- All Maven/Gradle dependencies with versions and purpose
-- Package structure organization
-- Spring Boot usage and configurations
-- Annotation patterns
-- Dependency injection approach
-- Data access technologies (JPA, JDBC, etc.)
-- API design (Spring MVC, JAX-RS, etc.)" : ""}
-
-${PROJECT_TYPE == "JavaScript" || PROJECT_TYPE == "Auto-detect" ? "#### JavaScript Stack Analysis (if detected)
-
-- ECMAScript version and transpiler settings
-- All npm dependencies categorized by purpose
-- Module system (ESM, CommonJS)
-- Build tooling (webpack, Vite, etc.) with configuration
-- TypeScript usage and configuration
-- Testing frameworks and patterns" : ""}
-
-${PROJECT_TYPE == "React.js" || PROJECT_TYPE == "Auto-detect" ? "#### React Analysis (if detected)
-
-- React version and key patterns (hooks vs class components)
-- State management approach (Context, Redux, Zustand, etc.)
-- Component library usage (Material-UI, Chakra, etc.)
-- Routing implementation
-- Form handling strategies
-- API integration patterns
-- Testing approach for components" : ""}
-
-${PROJECT_TYPE == "Python" || PROJECT_TYPE == "Auto-detect" ? "#### Python Analysis (if detected)
-
-- Python version and key language features used
-- Package dependencies and virtual environment setup
-- Web framework details (Django, Flask, FastAPI)
-- ORM usage patterns
-- Project structure organization
-- API design patterns" : ""}
+- NestJS version and core framework usage
+- HTTP server (Fastify via `@nestjs/platform-fastify`)
+- Module organization and feature-module boundaries
+- Configuration approach (Zod config factories under `src/app/config/`)
+- Validation (`ZodDto` / `ZodValidationPipe` via `#libs/zod`)
+- API documentation (OpenAPI / Swagger)
+- Security guards (`#libs/decorators`, `ApiKey` / `AllowAnonymous`)
+- HTTP client (`#libs/http`) and NestJS dependency injection patterns
 
 ### 3. Implementation Patterns & Conventions
 
@@ -181,59 +149,32 @@ ${DEPTH_LEVEL == "Comprehensive" || DEPTH_LEVEL == "Implementation-Ready" ?
 
 ### 6. Technology-Specific Implementation Details
 
-${PROJECT_TYPE == ".NET" || PROJECT_TYPE == "Auto-detect" ?
-"#### .NET Implementation Details (if detected)
+#### NestJS Implementation Details
 
 - **Dependency Injection Pattern**:
-    - Service registration approach (Scoped/Singleton/Transient patterns)
-    - Configuration binding patterns
+    - Provider registration approach (`useFactory`, `useValue`, tokens)
+    - Configuration injection from `src/app/config/` factories
+    - Module imports/exports and feature-module boundaries
 
 - **Controller Patterns**:
-    - Base controller usage
-    - Action result types and patterns
-    - Route attribute conventions
-    - Filter usage (authorization, validation, etc.)
+    - Thin controllers delegating to services
+    - Route decorators and HTTP method conventions
+    - OpenAPI docs via colocated `*.controller.docs.ts`
+    - Security via `@ApiKey()` / `@AllowAnonymous()` and custom guards
 
-- **Data Access Patterns**:
-    - ORM configuration and usage
-    - Entity configuration approach
-    - Relationship definitions
-    - Query patterns and optimization approaches
+- **Service & Data Access Patterns**:
+    - Service class implementation and business logic organization
+    - HTTP client usage via `#libs/http` (`HttpClient`, `HttpError`)
+    - Error handling with NestJS HTTP exceptions
 
-- **API Design Patterns** (if used):
-    - Endpoint organization
-    - Parameter binding approaches
-    - Response type handling
+- **Validation Patterns**:
+    - `ZodDto` classes for all DTOs (`ZodDto(schema, 'Model')`)
+    - `ZodValidationPipe` at the edge; custom validators (`phone()`, `epoch()`)
 
 - **Language Features Used**:
-    - Detect specific language features from code
+    - Detect specific TypeScript features from code
     - Identify common patterns and idioms
-    - Note any specific version-dependent features" : ""}
-
-${PROJECT_TYPE == "React.js" || PROJECT_TYPE == "Auto-detect" ?
-"#### React Implementation Details (if detected)
-
-- **Component Structure**:
-    - Function vs class components
-    - Props interface definitions
-    - Component composition patterns
-
-- **Hook Usage Patterns**:
-    - Custom hook implementation style
-    - useState patterns
-    - useEffect cleanup approaches
-    - Context usage patterns
-
-- **State Management**:
-    - Local vs global state decisions
-    - State management library patterns
-    - Store configuration
-    - Selector patterns
-
-- **Styling Approach**:
-    - CSS methodology (CSS modules, styled-components, etc.)
-    - Theme implementation
-    - Responsive design patterns" : ""}
+    - Note any specific version-dependent features
 
 ### 7. Blueprint for New Code Implementation
 

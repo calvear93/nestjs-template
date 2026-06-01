@@ -7,6 +7,12 @@ description: 'Optimize performance following NestJS template patterns and best p
 
 Optimize the performance of [COMPONENT] following NestJS template patterns and industry best practices:
 
+> **Note:** Configuration in this template comes from a Zod config factory under
+> `src/app/config/` provided via a DI token (e.g. `@Inject('SOME_CONFIG')`) — there is
+> **no** `ConfigService`/`@nestjs/config` dependency. Redis, database, and ORM examples
+> below are **illustrative/optional infra** and are not part of the base template; wire
+> them up only if a project actually needs them.
+
 ## 🎯 Optimization Focus Areas
 
 1. **Database Optimization**: Query efficiency, indexing, connection pooling
@@ -59,8 +65,8 @@ Optimize the performance of [COMPONENT] following NestJS template patterns and i
 ### Caching Service Template
 
 ```typescript
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import type { CacheConfig } from '../config/cache.config.ts';
 
 interface CacheItem<T> {
 	data: T;
@@ -74,11 +80,8 @@ export class CacheService {
 	private readonly cache = new Map<string, CacheItem<any>>();
 	private readonly defaultTtl: number;
 
-	constructor(private readonly configService: ConfigService) {
-		this.defaultTtl = this.configService.get<number>(
-			'CACHE_DEFAULT_TTL',
-			300_000,
-		); // 5 minutes
+	constructor(@Inject('CACHE_CONFIG') private readonly _config: CacheConfig) {
+		this.defaultTtl = this._config.defaultTtl ?? 300_000; // 5 minutes
 
 		// Cleanup expired items every minute
 		setInterval(() => this.cleanup(), 60_000);
@@ -391,10 +394,10 @@ export const createPaginatedResponse = <T>(
 ### Background Job Processing Template
 
 ```typescript
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import type { JobQueueConfig } from '../config/job-queue.config.ts';
 
-interface Job<T = any> {
+interface Job<T = unknown> {
 	id: string;
 	type: string;
 	data: T;
@@ -409,10 +412,15 @@ interface Job<T = any> {
 export class JobQueueService {
 	private readonly logger = new Logger(JobQueueService.name);
 	private readonly jobs = new Map<string, Job>();
-	private readonly handlers = new Map<string, (data: any) => Promise<void>>();
+	private readonly handlers = new Map<
+		string,
+		(data: unknown) => Promise<void>
+	>();
 	private readonly isProcessing = false;
 
-	constructor(private readonly configService: ConfigService) {
+	constructor(
+		@Inject('JOB_QUEUE_CONFIG') private readonly _config: JobQueueConfig,
+	) {
 		// Start job processing
 		this.startProcessing();
 	}
@@ -475,10 +483,7 @@ export class JobQueueService {
 			return;
 		}
 
-		const interval = this.configService.get<number>(
-			'JOB_QUEUE_INTERVAL',
-			1000,
-		);
+		const interval = this._config.interval ?? 1000;
 
 		setInterval(async () => {
 			await this.processJobs();

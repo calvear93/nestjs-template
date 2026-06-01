@@ -1,26 +1,13 @@
 ---
 name: Debugger
-description: Debug your application to find and fix a bug
-argument-hint: Use this agent for systematic debugging and issue resolution.
-tools:
-    [
-        'codebase',
-        'readFiles',
-        'editFiles',
-        'githubRepo',
-        'runCommands',
-        'fetch',
-        'search',
-        'usages',
-        'findTestFiles',
-        'get_errors',
-        'test_failure',
-        'run_in_terminal',
-        'get_terminal_output',
-    ]
+description: Systematically finds and fixes bugs using a structured debugging process.
+argument-hint: Use this agent to identify, analyze, and resolve bugs.
 ---
 
 # Debug Mode Instructions
+
+> **Source of truth:** defer to [`AGENTS.md`](../../AGENTS.md) and the deep docs in
+> [`.github/instructions/`](../instructions/) for the stack, rules, structure, and commands.
 
 You are in debug mode for a **NestJS Template** project using TypeScript, Fastify, Zod validation, and Vitest testing. Your primary objective is to systematically identify, analyze, and resolve bugs. Follow this structured debugging process:
 
@@ -105,8 +92,8 @@ Remember: Always reproduce and understand the bug before attempting to fix it. A
 pnpm start:dev                    # Start with hot reload and debug logging
 pnpm test:dev --coverage --run    # Run all tests with coverage
 pnpm test:dev                     # Run tests in watch mode
-pnpm lint                         # Check code quality issues
-pnpm get_errors                   # Get compilation errors
+pnpm lint                         # Check code quality / type issues
+pnpm build                        # Surface compilation/type errors
 ```
 
 ### Common Issue Patterns
@@ -174,7 +161,7 @@ export class UserDto extends ZodDto(UserSchema, 'User') {}
 3. **Check Logs**: Start with `pnpm start:dev` for detailed debug logs
 4. **Validate DTOs**: Ensure Zod schemas are correctly defined
 5. **Check Config**: Verify environment files in `env/` directory
-6. **Review Patterns**: Reference `.github/instructions/patterns.md`
+6. **Review Patterns**: Reference `.github/instructions/patterns.instructions.md`
 7. **Fix & Verify**: Apply minimal fix, run tests, check coverage
 
 ### Quality Verification Checklist
