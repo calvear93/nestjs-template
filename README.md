@@ -92,15 +92,15 @@ Start from the canonical scaffolds in [`.vscode/__templates__/`](.vscode/__templ
 
 Conventions, patterns, and worked examples live in the docs — start with whichever fits:
 
-| Topic                                                | Where                                                |
-| ---------------------------------------------------- | ---------------------------------------------------- |
-| Project contract (stack, rules, conventions)         | [`AGENTS.md`](AGENTS.md)                             |
-| Architecture, coding standards, copy-paste patterns  | [`.github/instructions/`](.github/instructions/)     |
-| Reusable skills & the OpenSpec spec-driven workflow  | [`.ai/`](.ai/README.md)                              |
-| Task playbooks (module / endpoint / docs / testing)  | [`.ai/prompts/`](.ai/prompts/)                       |
-| Canonical code scaffolds for new files               | [`.vscode/__templates__/`](.vscode/__templates__/)  |
-| High-quality examples already in this repo           | [`exemplars.md`](exemplars.md)                       |
-| Library usage (Zod · HTTP · Decorators)              | [`src/libs/`](src/libs/)                             |
+| Topic                                               | Where                                              |
+| --------------------------------------------------- | -------------------------------------------------- |
+| Project contract (stack, rules, conventions)        | [`AGENTS.md`](AGENTS.md)                           |
+| Architecture, coding standards, copy-paste patterns | [`.github/instructions/`](.github/instructions/)   |
+| Reusable skills & the OpenSpec spec-driven workflow | [`.ai/`](.ai/README.md)                            |
+| Task playbooks (module / endpoint / docs / testing) | [`.ai/prompts/`](.ai/prompts/)                     |
+| Canonical code scaffolds for new files              | [`.vscode/__templates__/`](.vscode/__templates__/) |
+| High-quality examples already in this repo          | [`exemplars.md`](exemplars.md)                     |
+| Library usage (Zod · HTTP · Decorators)             | [`src/libs/`](src/libs/)                           |
 
 ## 🧰 Configuring fnm (Fast Node Manager)
 

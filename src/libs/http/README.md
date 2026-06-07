@@ -1,680 +1,207 @@
-# HTTP Library for NestJS
+# 🌐 `#libs/http` — Fetch HTTP Client
 
-This library provides a complete HTTP client integration for NestJS, built on top of the modern Fetch API. It includes a powerful HTTP client, module registration, providers, custom errors, enums, and comprehensive TypeScript support.
+> A typed, `fetch`-based HTTP client for NestJS with first-class **query serialization**, **timeouts**, **interceptors**, and **error throwing** — wired into DI as a module or a provider.
 
-## 📋 Table of Contents
+Built on the native Fetch API (no `axios`). You get a small `HttpClient` class plus two ways to inject it, typed responses, and ergonomic helpers for query strings and JSON bodies.
 
-- [Key Features](#key-features)
-- [Basic Usage](#basic-usage)
-- [HTTP Client](#http-client)
-- [Module Integration](#module-integration)
-- [Provider Usage](#provider-usage)
-- [Error Handling](#error-handling)
-- [Configuration](#configuration)
-- [Advanced Examples](#advanced-examples)
-- [API Reference](#api-reference)
+## ✨ Highlights
 
-## ✨ Key Features
+- **Typed responses** — `client.get<User>(url)` → `HttpResponse<User>` with a typed `.json()`.
+- **Smart query strings** — nested objects (dot-notation), arrays (comma-joined), `Date`/`bigint`, nullish values dropped.
+- **JSON & form bodies** — pass `data`; content-type is set for you (`URLSearchParams` → form-urlencoded).
+- **Timeouts & cancellation** — `timeout` aborts with `TimeoutError`; bring your own `AbortController` via `cancel`.
+- **Throws on errors** — non-2xx raises `HttpError` (toggle with `throwOnClientError`); network failures become `BAD_GATEWAY`.
+- **DI-ready** — `HttpModule.register()` (a shared client) or `HttpProvider.register()` (named, per-service clients).
 
-- ✅ **Modern Fetch API** - Built on top of the native Fetch API
-- ✅ **TypeScript Support** - Full type safety with generic responses
-- ✅ **NestJS Integration** - Module and provider registration
-- ✅ **Request Interceptors** - Modify requests before sending
-- ✅ **Automatic Serialization** - JSON and URL-encoded data handling
-- ✅ **Query Parameters** - Complex query parameter building
-- ✅ **Timeout Support** - Configurable request timeouts
-- ✅ **Error Handling** - Custom HTTP and timeout errors
-- ✅ **Basic Auth** - Built-in basic authentication support
+## 📦 API at a glance
 
-## 🎯 Basic Usage
+| Export                          | Type                                         | Use it to…                               |
+| ------------------------------- | -------------------------------------------- | ---------------------------------------- |
+| `HttpClient`                    | class                                        | make requests (standalone or injected)   |
+| `HttpModule`                    | `register(config?) => DynamicModule`         | provide a shared client to a module      |
+| `HttpProvider`                  | `register(config?) => FactoryProvider`       | provide named clients in `providers: []` |
+| `HttpError`                     | `Error` + `status`, `statusText`, `response` | catch non-2xx responses                  |
+| `TimeoutError`                  | `Error`                                      | catch aborted-by-timeout requests        |
+| `HttpMethod` / `HttpStatusCode` | enums                                        | reference verbs / status codes           |
 
-### Import the library
+**`HttpClient` methods** — all return `Promise<HttpResponse<R>>`:
 
-```typescript
-import { HttpClient, HttpModule, HttpProvider } from '#libs/http';
-```
+| Method                            | Body? | Notes                                  |
+| --------------------------------- | ----- | -------------------------------------- |
+| `get<R>(url, config?)`            | no    |                                        |
+| `delete<R>(url, config?)`         | no    |                                        |
+| `post/put/patch<R>(url, config?)` | yes   | `config.data` → serialized body        |
+| `request<R>(url, options?)`       | —     | low-level escape hatch                 |
+| `setHeader(k, v)` · `config`      | —     | mutate base headers/config             |
+| `HttpClient.basicAuth(u, p)`      | —     | static · base64url for `Authorization` |
 
-### Create a basic HTTP client
+**Request `config`** — extends `RequestInit` (minus `signal`) with: `query`, `data` (body methods), `timeout` (ms), `cancel` (`AbortController`), `onRequest` (interceptor), `headers`.
 
-```typescript
-// basic usage
-const client = new HttpClient({
-	url: 'https://api.example.com',
-	timeout: 5000,
-	headers: {
-		Authorization: 'Bearer your-token',
-	},
-});
-
-// making requests
-const response = await client.get<{ id: number; name: string }>('/users/1');
-console.log(response.data); // typed response data
-```
-
-### Use in a NestJS service
-
-```typescript
-// user.service.ts
-import { Injectable } from '@nestjs/common';
-import { HttpClient } from '#libs/http';
-
-@Injectable()
-export class UserService {
-	constructor(private readonly httpClient: HttpClient) {}
-
-	async getUser(id: number) {
-		const response = await this.httpClient.get<User>(`/users/${id}`);
-		return response.json();
-	}
-
-	async createUser(userData: CreateUserDto) {
-		const response = await this.httpClient.post<User>('/users', {
-			data: userData,
-		});
-		return response.json();
-	}
-}
-```
-
-## 🌐 HTTP Client
-
-### Basic HTTP Methods
+## 🚀 Quick start (standalone)
 
 ```typescript
 import { HttpClient } from '#libs/http';
 
-const client = new HttpClient({ url: 'https://api.example.com' });
+const api = new HttpClient({ url: 'https://api.example.com' });
 
-// GET request
-const users = await client.get<User[]>('/users');
+// typed GET — responses are fetch Responses, so call .json()
+const res = await api.get<User>('/users/1');
+const user = await res.json(); // User
 
-// POST request with data
-const newUser = await client.post<User>('/users', {
-	data: {
-		name: 'John Doe',
-		email: 'john@example.com',
-	},
-});
-
-// PUT request
-const updatedUser = await client.put<User>(`/users/${userId}`, {
-	data: { name: 'Jane Doe' },
-});
-
-// PATCH request
-const patchedUser = await client.patch<User>(`/users/${userId}`, {
-	data: { email: 'jane@example.com' },
-});
-
-// DELETE request
-await client.delete(`/users/${userId}`);
+// POST with a JSON body (content-type set automatically)
+const created = await api
+	.post<User>('/users', { data: { name: 'Ada' } })
+	.then((r) => r.json());
 ```
 
-### Query Parameters
+## 🔌 NestJS integration
+
+**Option A — `HttpModule` (one shared client per module):**
 
 ```typescript
-// simple query parameters
-const response = await client.get('/users', {
-	query: {
-		page: 1,
-		limit: 10,
-		status: 'active',
-	},
-});
-// URL: /users?page=1&limit=10&status=active
-
-// complex nested parameters
-const response = await client.get('/search', {
-	query: {
-		filter: {
-			name: 'John',
-			age: 25,
-		},
-		sort: ['name', 'email'],
-		include: ['profile', 'posts'],
-	},
-});
-// URL: /search?filter.name=John&filter.age=25&sort=name,email&include=profile,posts
-
-// using URLSearchParams
-const params = new URLSearchParams();
-params.append('search', 'term');
-params.append('category', 'books');
-
-const response = await client.get('/products', { query: params });
-```
-
-### Request Configuration
-
-```typescript
-// custom headers
-const response = await client.get('/protected', {
-	headers: {
-		Authorization: 'Bearer token',
-		'X-Custom-Header': 'value',
-	},
-});
-
-// timeout configuration
-const response = await client.get('/slow-endpoint', {
-	timeout: 10000, // 10 seconds
-});
-
-// request cancellation
-const controller = new AbortController();
-const response = client.get('/data', {
-	cancel: controller,
-});
-
-// cancel the request after 2 seconds
-setTimeout(() => controller.abort(), 2000);
-```
-
-## 🏗️ Module Integration
-
-### Register as a module
-
-```typescript
-// app.module.ts
 import { Module } from '@nestjs/common';
 import { HttpModule } from '#libs/http';
 
 @Module({
 	imports: [
-		HttpModule.register({
-			url: 'https://api.example.com',
-			timeout: 5000,
-			headers: {
-				'User-Agent': 'MyApp/1.0',
-			},
-			global: true, // makes it available globally
-		}),
+		HttpModule.register({ url: 'https://api.example.com', global: true }),
 	],
 })
 export class AppModule {}
 ```
 
-### Multiple HTTP clients
-
 ```typescript
-// app.module.ts
-@Module({
-	imports: [
-		// default client
-		HttpModule.register({
-			url: 'https://api.example.com',
-		}),
-		// custom token for different API
-		HttpModule.register({
-			url: 'https://another-api.com',
-			useToken: 'ANOTHER_API_CLIENT',
-			headers: {
-				'X-API-Key': 'different-key',
-			},
-		}),
-	],
-})
-export class AppModule {}
+import { Injectable } from '@nestjs/common';
+import { HttpClient } from '#libs/http';
 
-// user.service.ts
 @Injectable()
 export class UserService {
-	constructor(
-		private readonly defaultClient: HttpClient,
-		@Inject('ANOTHER_API_CLIENT')
-		private readonly anotherClient: HttpClient,
-	) {}
+	constructor(private readonly http: HttpClient) {}
+
+	getUser(id: number) {
+		return this.http.get<User>(`/users/${id}`).then((r) => r.json());
+	}
 }
 ```
 
-## 🔧 Provider Usage
-
-### Using HttpProvider
+**Option B — `HttpProvider` (named clients, e.g. several upstreams):**
 
 ```typescript
-// user.module.ts
 import { Module } from '@nestjs/common';
 import { HttpProvider } from '#libs/http';
+
+const BILLING_API = 'BILLING_API';
 
 @Module({
 	providers: [
 		HttpProvider.register({
-			url: 'https://jsonplaceholder.typicode.com',
-			useToken: 'JSON_PLACEHOLDER_CLIENT',
+			useToken: BILLING_API,
+			url: 'https://billing.internal',
 		}),
-		UserService,
 	],
 })
-export class UserModule {}
+export class BillingModule {}
 
-// user.service.ts
-@Injectable()
-export class UserService {
-	constructor(
-		@Inject('JSON_PLACEHOLDER_CLIENT')
-		private readonly httpClient: HttpProvider,
-	) {}
-
-	async getUsers() {
-		const response = await this.httpClient.get<User[]>('/users');
-		return response.json();
-	}
-}
+// inject with @Inject(BILLING_API) private readonly billing: HttpProvider
 ```
 
-## ⚠️ Error Handling
+## 🧰 Request features
 
-### HTTP Errors
+### Query parameters
 
 ```typescript
-import { HttpError, HttpStatusCode } from '#libs/http';
-
-try {
-	const response = await client.get('/api/users/999');
-} catch (error) {
-	if (error instanceof HttpError) {
-		console.log('Status:', error.status); // 404
-		console.log('Status Text:', error.statusText); // 'Not Found'
-
-		// get error response body
-		const errorBody = await error.json();
-		console.log('Error details:', errorBody);
-
-		// handle specific status codes
-		switch (error.status) {
-			case HttpStatusCode.NOT_FOUND:
-				console.log('Resource not found');
-				break;
-			case HttpStatusCode.UNAUTHORIZED:
-				console.log('Authentication required');
-				break;
-			default:
-				console.log('HTTP error occurred');
-		}
-	}
-}
+await api.get('/search', {
+	query: {
+		q: 'nest',
+		tags: ['a', 'b'], //        → tags=a,b
+		page: { size: 20, n: 2 }, // → page.size=20&page.n=2
+		empty: null, //             dropped
+	},
+});
 ```
 
-### Timeout Errors
+### Timeouts & cancellation
 
 ```typescript
 import { TimeoutError } from '#libs/http';
 
 try {
-	const response = await client.get('/slow-api', { timeout: 1000 });
-} catch (error) {
-	if (error instanceof TimeoutError) {
-		console.log('Request timed out');
-	}
+	await api.get('/slow', { timeout: 3000 }); // aborts after 3s
+} catch (e) {
+	if (e instanceof TimeoutError) retry();
 }
+
+const ctrl = new AbortController();
+api.get('/stream', { cancel: ctrl });
+ctrl.abort(); // cancel manually
 ```
 
-### Disable error throwing
+### Request interceptor & auth
 
 ```typescript
-// client won't throw on 4xx/5xx responses
-const client = new HttpClient({
+const api = new HttpClient({
 	url: 'https://api.example.com',
-	throwOnClientError: false,
-});
-
-const response = await client.get('/might-fail');
-if (!response.ok) {
-	console.log('Request failed but no error was thrown');
-	console.log('Status:', response.status);
-}
-```
-
-## ⚙️ Configuration
-
-### Client Configuration
-
-```typescript
-interface HttpClientConfig {
-	// base URL for all requests
-	url?: string;
-
-	// throw errors on 4xx/5xx status codes (default: true)
-	throwOnClientError?: boolean;
-
-	// default timeout for requests
-	timeout?: number;
-
-	// default headers
-	headers?: Record<string, string>;
-
-	// request interceptor
-	onRequest?: (
-		options: HttpRequestOptions,
-		url: string | URL,
-	) => void | Promise<void>;
-
-	// other fetch options
-	// ... (all standard RequestInit options)
-}
-```
-
-### Request Interceptors
-
-```typescript
-const client = new HttpClient({
-	url: 'https://api.example.com',
-	onRequest: async (options, url) => {
-		// add authentication token
+	onRequest: (options) => {
 		options.headers = {
 			...options.headers,
-			Authorization: `Bearer ${await getAuthToken()}`,
+			'x-trace': crypto.randomUUID(),
 		};
-
-		// log requests
-		console.log(`Making ${options.method} request to ${url}`);
-
-		// modify request data
-		if (options.method === 'POST' && options.data) {
-			options.data = {
-				...options.data,
-				timestamp: new Date().toISOString(),
-			};
-		}
 	},
 });
+
+api.setHeader('authorization', `Basic ${HttpClient.basicAuth('user', 'pass')}`);
 ```
 
-## 🚀 Advanced Examples
-
-### Authentication Service
+### Error handling
 
 ```typescript
-@Injectable()
-export class AuthService {
-	private readonly authClient: HttpClient;
+import { HttpError } from '#libs/http';
 
-	constructor() {
-		this.authClient = new HttpClient({
-			url: 'https://auth.example.com',
-			onRequest: async (options) => {
-				// add api key to all requests
-				options.headers = {
-					...options.headers,
-					'X-API-Key': process.env.AUTH_API_KEY,
-				};
-			},
-		});
-	}
-
-	async login(credentials: LoginDto): Promise<AuthResponse> {
-		const response = await this.authClient.post<AuthResponse>(
-			'/auth/login',
-			{
-				data: credentials,
-			},
-		);
-		return response.json();
-	}
-
-	async refreshToken(refreshToken: string): Promise<AuthResponse> {
-		const response = await this.authClient.post<AuthResponse>(
-			'/auth/refresh',
-			{
-				data: { refreshToken },
-			},
-		);
-		return response.json();
+try {
+	await api.get('/protected');
+} catch (e) {
+	if (e instanceof HttpError) {
+		console.error(e.status, e.statusText); // e.g. 401 UNAUTHORIZED
+		const body = await e.json(); // the parsed error payload
 	}
 }
+
+// opt out of throwing and inspect the response yourself
+const lenient = new HttpClient({ url: '…', throwOnClientError: false });
+const res = await lenient.get('/maybe-404');
+if (!res.ok) handle(res.status);
 ```
 
-### File Upload Service
+## 🧪 Testing
+
+Mock the client with `vitest-mock-extended` when unit-testing a service:
 
 ```typescript
-@Injectable()
-export class FileService {
-	constructor(private readonly httpClient: HttpClient) {}
+import { mock } from 'vitest-mock-extended';
+import { HttpClient, type HttpResponse } from '#libs/http';
 
-	async uploadFile(
-		file: File,
-		metadata?: Record<string, any>,
-	): Promise<UploadResponse> {
-		const formData = new FormData();
-		formData.append('file', file);
+const http = mock<HttpClient>();
+http.get.mockResolvedValue({
+	json: async () => ({ name: 'Ada' }),
+} as HttpResponse<User>);
 
-		if (metadata) {
-			formData.append('metadata', JSON.stringify(metadata));
-		}
-
-		const response = await this.httpClient.post<UploadResponse>(
-			'/files/upload',
-			{
-				body: formData, // use body directly for FormData
-				timeout: 30000, // 30 seconds for file upload
-			},
-		);
-
-		return response.json();
-	}
-
-	async downloadFile(fileId: string): Promise<Blob> {
-		const response = await this.httpClient.get(`/files/${fileId}/download`);
-		return response.blob();
-	}
-}
+const service = new UserService(http);
+expect(await service.getUser(1)).toEqual({ name: 'Ada' });
 ```
 
-### Paginated API Service
+For integration tests against real `fetch`, spin up a throwaway server with the helper bundled in `src/libs/http/__mocks__/` (import it by relative path — it's a test-only helper, not part of the public `#libs/http` entrypoint):
 
 ```typescript
-interface PaginatedResponse<T> {
-	data: T[];
-	pagination: {
-		page: number;
-		limit: number;
-		total: number;
-		totalPages: number;
-	};
-}
+import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
 
-@Injectable()
-export class ApiService {
-	constructor(private readonly httpClient: HttpClient) {}
-
-	async getPaginatedData<T>(
-		endpoint: string,
-		page: number = 1,
-		limit: number = 10,
-		filters?: Record<string, any>,
-	): Promise<PaginatedResponse<T>> {
-		const response = await this.httpClient.get<PaginatedResponse<T>>(
-			endpoint,
-			{
-				query: {
-					page,
-					limit,
-					...filters,
-				},
-			},
-		);
-
-		return response.json();
-	}
-
-	async getAllPages<T>(
-		endpoint: string,
-		filters?: Record<string, any>,
-	): Promise<T[]> {
-		let allData: T[] = [];
-		let page = 1;
-		let totalPages = 1;
-
-		do {
-			const response = await this.getPaginatedData<T>(
-				endpoint,
-				page,
-				100,
-				filters,
-			);
-			allData = [...allData, ...response.data];
-			totalPages = response.pagination.totalPages;
-			page++;
-		} while (page <= totalPages);
-
-		return allData;
-	}
-}
+const [server, handler, port] = await createHttpMockServer();
+handler.mockImplementation((_req, res) =>
+	res.end(JSON.stringify({ ok: true })),
+);
+const api = new HttpClient({ url: `http://localhost:${port}` });
+// …assert on handler calls, then server.close()
 ```
 
-### Retry Logic Service
+## 🧠 How it works
 
-```typescript
-@Injectable()
-export class RetryableApiService {
-	constructor(private readonly httpClient: HttpClient) {}
-
-	async withRetry<T>(
-		request: () => Promise<T>,
-		maxRetries: number = 3,
-		delay: number = 1000,
-	): Promise<T> {
-		let lastError: Error;
-
-		for (let attempt = 1; attempt <= maxRetries; attempt++) {
-			try {
-				return await request();
-			} catch (error) {
-				lastError = error as Error;
-
-				// don't retry on client errors (4xx)
-				if (error instanceof HttpError && error.status < 500) {
-					throw error;
-				}
-
-				if (attempt < maxRetries) {
-					await new Promise((resolve) =>
-						setTimeout(resolve, delay * attempt),
-					);
-				}
-			}
-		}
-
-		throw lastError!;
-	}
-
-	async getData<T>(endpoint: string): Promise<T> {
-		return this.withRetry(async () => {
-			const response = await this.httpClient.get<T>(endpoint);
-			return response.json();
-		});
-	}
-}
-```
-
-## 📖 API Reference
-
-### HttpClient
-
-The main HTTP client class built on the Fetch API.
-
-**Constructor:**
-
-- `new HttpClient(config?: HttpClientConfig)`
-
-**Methods:**
-
-- `get<R>(url, config?): Promise<HttpResponse<R>>` - GET request
-- `post<R>(url, config?): Promise<HttpResponse<R>>` - POST request
-- `put<R>(url, config?): Promise<HttpResponse<R>>` - PUT request
-- `patch<R>(url, config?): Promise<HttpResponse<R>>` - PATCH request
-- `delete<R>(url, config?): Promise<HttpResponse<R>>` - DELETE request
-- `request<R>(url, config?): Promise<HttpResponse<R>>` - Generic request
-- `setHeader(key: string, value: string): void` - Set default header
-
-**Static Methods:**
-
-- `HttpClient.basicAuth(user: string, password: string): string` - Generate basic auth
-
-### HttpModule
-
-NestJS module for dependency injection.
-
-**Methods:**
-
-- `HttpModule.register(config?: HttpModuleConfig): DynamicModule`
-
-### HttpProvider
-
-Alternative provider implementation.
-
-**Methods:**
-
-- `HttpProvider.register(config?: HttpProviderConfig): FactoryProvider`
-
-### HttpError
-
-Custom error for HTTP failures.
-
-**Properties:**
-
-- `status: HttpStatusCode` - HTTP status code
-- `statusText: string` - HTTP status text
-- `response: HttpResponse` - Original response object
-
-**Methods:**
-
-- `json<R>(): Promise<R>` - Get error response body
-
-### TimeoutError
-
-Error thrown when requests timeout.
-
-### HttpMethod
-
-Enum with HTTP methods:
-
-- `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`
-
-### HttpStatusCode
-
-Enum with HTTP status codes (100-599).
-
-## 🔧 Customization
-
-### Custom Interceptors
-
-```typescript
-const loggerInterceptor: OnRequestInterceptor = async (options, url) => {
-	const start = Date.now();
-	console.log(`➡️ ${options.method} ${url}`);
-
-	// add timing to response (if supported by your setup)
-	options.metadata = { start };
-};
-
-const client = new HttpClient({
-	url: 'https://api.example.com',
-	onRequest: loggerInterceptor,
-});
-```
-
-### Environment-based Configuration
-
-```typescript
-// config/http.config.ts
-export const getHttpConfig = (): HttpClientConfig => ({
-	url: process.env.API_BASE_URL || 'http://localhost:3000',
-	timeout: parseInt(process.env.HTTP_TIMEOUT || '5000'),
-	headers: {
-		'User-Agent': `${process.env.APP_NAME}/${process.env.APP_VERSION}`,
-		...(process.env.API_KEY && { 'X-API-Key': process.env.API_KEY }),
-	},
-	throwOnClientError: process.env.NODE_ENV !== 'development',
-});
-
-// app.module.ts
-@Module({
-	imports: [HttpModule.register(getHttpConfig())],
-})
-export class AppModule {}
-```
-
----
-
-**Note:** This library is specifically designed for NestJS projects with TypeScript. It's built on top of the modern Fetch API and provides a clean, type-safe interface for HTTP communications.
+Each call merges the base config with per-request options (headers deep-merged), runs the optional `onRequest` interceptor, serializes `query` into the URL and `data` into the body, and arms an `AbortController` when `timeout` is set. It then `fetch`es and — unless `throwOnClientError` is `false` — throws `HttpError` for any non-`ok` response; a network `TypeError` is normalized into an `HttpError` with status `BAD_GATEWAY`. The resolved value is the native `Response`, narrowed to `HttpResponse<R>` so `.json()` is typed. `HttpModule` binds a single `HttpClient` instance under a token (default `HttpClient`); `HttpProvider` is an `HttpClient` subclass exposing a `FactoryProvider` for `providers: []`.
