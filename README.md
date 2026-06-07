@@ -74,245 +74,33 @@ Some scripts are environment-specific, using the suffix `:<env>` where `<env>` i
 | ----------------------------- | ------------------------- |
 | `(Get-Command node.exe).Path` | get current node exe path |
 
-## 📚 **Built-in Libraries**
+## 🏗️ **Architecture Overview**
 
-This template includes several custom libraries to accelerate development:
+A modular NestJS API on Fastify, built around a few in-house libraries; each ships its own README with usage and examples:
 
-### **Zod Integration Library**
+- **🧩 Zod Integration** — `ZodDto`, `ZodValidationPipe`, custom validators, OpenAPI from schemas · [`src/libs/zod`](src/libs/zod/README.md)
+- **🌐 HTTP Client** — Fetch-based client with NestJS module integration and typed errors · [`src/libs/http`](src/libs/http/README.md)
+- **🔐 Security Decorators** — `createSecurityGuard()`, `@ApiKey()`, `@AllowAnonymous()` · [`src/libs/decorators`](src/libs/decorators/README.md)
 
-Type-safe validation with automatic OpenAPI documentation.
+Feature modules live under `src/app/modules/<name>/` (flat layout); configuration is read only in `src/app/config/`.
 
-📖 **[Full Documentation](src/libs/zod/README.md)**
+## 🧱 **Creating Modules**
 
-| Feature               | Usage                          |
-| --------------------- | ------------------------------ |
-| **ZodDto Creation**   | `ZodDto(schema, 'ModelName')`  |
-| **Array Validation**  | `ZodIterableDto(schema, name)` |
-| **Validation Pipe**   | `@Body(ZodValidationPipe)`     |
-| **Custom Validators** | `phone()`, `epoch()`           |
+Start from the canonical scaffolds in [`.vscode/__templates__/`](.vscode/__templates__/) (controller, service, module, DTO, guard, …) instead of writing boilerplate by hand. The step-by-step procedure and copy-paste recipes live in the docs below.
 
-```typescript
-// Example: Create typed DTO
-const UserSchema = z.object({
-	name: z.string().min(1),
-	email: z.email(),
-	age: z.number().optional(),
-});
+## 📚 **Documentation**
 
-export class UserDto extends ZodDto(UserSchema, 'User') {}
-```
+Conventions, patterns, and worked examples live in the docs — start with whichever fits:
 
-### **HTTP Client Library**
-
-Modern Fetch-based HTTP client with NestJS integration.
-
-📖 **[Full Documentation](src/libs/http/README.md)**
-
-| Feature                | Usage                         |
-| ---------------------- | ----------------------------- |
-| **Basic Requests**     | `client.get<T>(url)`          |
-| **Module Integration** | `HttpModule.register(config)` |
-| **Error Handling**     | `HttpError`, `TimeoutError`   |
-| **Authentication**     | Built-in basic auth support   |
-
-```typescript
-// Example: HTTP Client usage
-const client = new HttpClient({
-	url: 'https://api.example.com',
-	timeout: 5000,
-	headers: { Authorization: 'Bearer token' },
-});
-
-const users = await client.get<User[]>('/users');
-```
-
-### **Security Decorators Library**
-
-Type-safe security guard factory with argument injection.
-
-📖 **[Full Documentation](src/libs/decorators/README.md)**
-
-| Feature                  | Usage                          |
-| ------------------------ | ------------------------------ |
-| **Guard Creation**       | `createSecurityGuard(Guard)`   |
-| **Argument Injection**   | Pre-configure guard parameters |
-| **Conditional Security** | Enable/disable by environment  |
-| **Allow Anonymous**      | `@AllowAnonymous()`            |
-
-```typescript
-// Example: Security Guard
-@Injectable()
-export class ApiKeyGuard implements SecurityGuard {
-	canActivate(
-		context: ExecutionContext,
-		headerName: string,
-		apiKey: string,
-	): boolean {
-		const request = context.switchToHttp().getRequest();
-		return request.headers[headerName] === apiKey;
-	}
-}
-
-const HEADER_NAME = process.env.SECURITY_HEADER_NAME;
-const API_KEY = process.env.SECURITY_API_KEY;
-const ENABLED = process.env.SECURITY_ENABLED === 'true' && !!API_KEY;
-
-export const [ApiKeySecurity, AllowAnonymous] = createSecurityGuard(
-	ApiKeyGuard,
-	ENABLED,
-	HEADER_NAME,
-	API_KEY,
-);
-```
-
-## 🚀 **Creating New Modules**
-
-Follow this step-by-step guide to create new feature modules:
-
-### **1. Module Structure**
-
-Create a new module following the established pattern:
-
-```bash
-src/app/modules/your-module/
-├── controllers/
-│   ├── your-module.controller.ts      # Main controller
-│   ├── your-module.controller.docs.ts # OpenAPI docs
-│   └── your-module.controller.spec.ts # Tests
-├── services/
-│   ├── your-module.service.ts         # Business logic
-│   └── your-module.service.spec.ts    # Tests
-├── schemas/
-│   └── your-module.dto.ts             # DTOs with Zod
-└── your-module.module.ts              # Module definition
-```
-
-### **2. Implementation Steps**
-
-| Step  | File                                         | Description                        |
-| ----- | -------------------------------------------- | ---------------------------------- |
-| **1** | `schemas/your-module.dto.ts`                 | Define Zod schemas and DTOs        |
-| **2** | `services/your-module.service.ts`            | Implement business logic           |
-| **3** | `controllers/your-module.controller.ts`      | Create API endpoints               |
-| **4** | `controllers/your-module.controller.docs.ts` | Add OpenAPI documentation          |
-| **5** | `your-module.module.ts`                      | Register providers and controllers |
-| **6** | `modules/index.ts`                           | Export the new module              |
-| **7** | `app.module.ts`                              | Import the module                  |
-
-### **3. Code Templates**
-
-#### **DTO Schema**
-
-```typescript
-// schemas/user.dto.ts
-import { ZodDto } from '#libs/zod';
-import { z } from 'zod';
-
-const UserSchema = z
-	.object({
-		id: z.coerce.number(),
-		name: z.string().min(1),
-		email: z.email(),
-		age: z.number().optional(),
-	})
-	.meta({ description: 'User DTO schema' });
-
-export class UserDto extends ZodDto(UserSchema, 'User') {}
-```
-
-#### **Service**
-
-```typescript
-// services/user.service.ts
-import { Injectable } from '@nestjs/common';
-import { UserDto } from '../schemas/user.dto.ts';
-
-@Injectable()
-export class UserService {
-	async findAll(): Promise<UserDto[]> {
-		// Business logic here
-		return [];
-	}
-
-	async create(user: UserDto): Promise<UserDto> {
-		// Creation logic here
-		return user;
-	}
-}
-```
-
-#### **Controller**
-
-```typescript
-// controllers/user.controller.ts
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiKey, AllowAnonymous } from '../../../decorators/api-key.guard.ts';
-import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
-import { UserDto } from '../schemas/user.dto.ts';
-import { UserService } from '../services/user.service.ts';
-import { UserControllerDocs } from './user.controller.docs.ts';
-
-@ApiKey()
-@Controller({ path: 'users', version: '1' })
-@ApplyControllerDocs(UserControllerDocs)
-export class UserController {
-	constructor(private readonly userService: UserService) {}
-
-	@Get()
-	async findAll(): Promise<UserDto[]> {
-		return this.userService.findAll();
-	}
-
-	@Post()
-	async create(@Body() user: UserDto): Promise<UserDto> {
-		return this.userService.create(user);
-	}
-}
-```
-
-#### **Module Definition**
-
-```typescript
-// user.module.ts
-import { Module } from '@nestjs/common';
-import { UserController } from './controllers/user.controller.ts';
-import { UserService } from './services/user.service.ts';
-
-@Module({
-	providers: [UserService],
-	controllers: [UserController],
-	exports: [UserService], // Export if needed by other modules
-})
-export class UserModule {}
-```
-
-#### **Module Registration**
-
-```typescript
-// modules/index.ts
-export { SampleModule } from './sample/sample.module';
-export { UserModule } from './user/user.module'; // Add your module
-
-// app.module.ts
-import { Module } from '@nestjs/common';
-import { SampleModule, UserModule } from './modules/index.ts';
-
-@Module({
-	imports: [SampleModule, UserModule], // Import your module
-})
-export class AppModule {}
-```
-
-### **4. Best Practices**
-
-| Practice                   | Description                                                 |
-| -------------------------- | ----------------------------------------------------------- |
-| **Consistent Naming**      | Use `kebab-case` for files, `PascalCase` for classes        |
-| **Separation of Concerns** | Keep controllers thin, put logic in services                |
-| **Type Safety**            | Use Zod DTOs for validation and type inference              |
-| **Documentation**          | Always create `.docs.ts` files for OpenAPI                  |
-| **Testing**                | Create `.spec.ts` files for unit tests                      |
-| **Security**               | Apply appropriate guards (`@ApiKey()`, `@AllowAnonymous()`) |
+| Topic                                                | Where                                                |
+| ---------------------------------------------------- | ---------------------------------------------------- |
+| Project contract (stack, rules, conventions)         | [`AGENTS.md`](AGENTS.md)                             |
+| Architecture, coding standards, copy-paste patterns  | [`.github/instructions/`](.github/instructions/)     |
+| Reusable skills & the OpenSpec spec-driven workflow  | [`.ai/`](.ai/README.md)                              |
+| Task playbooks (module / endpoint / docs / testing)  | [`.ai/prompts/`](.ai/prompts/)                       |
+| Canonical code scaffolds for new files               | [`.vscode/__templates__/`](.vscode/__templates__/)  |
+| High-quality examples already in this repo           | [`exemplars.md`](exemplars.md)                       |
+| Library usage (Zod · HTTP · Decorators)              | [`src/libs/`](src/libs/)                             |
 
 ## 🧰 Configuring fnm (Fast Node Manager)
 
