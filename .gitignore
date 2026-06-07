@@ -68,3 +68,35 @@ pids
 *.pid
 *.seed
 *.pid.lock
+
+# AI assistants — local / temporary artifacts only.
+# The repo intentionally versions its shared AI files (do NOT ignore these):
+#   .ai/, CLAUDE.md, GEMINI.md, AGENTS.md, .copilotrc.json, llms.txt,
+#   .github/{prompts,instructions,agents}/
+
+# Claude Code (local settings + local memory + runtime locks; shared CLAUDE.md/.claude config stay tracked)
+.claude/settings.local.json
+.claude/*.local.json
+CLAUDE.local.md
+.claude/scheduled_tasks.lock
+
+# Gemini CLI (local state; shared context lives in the tracked GEMINI.md)
+.gemini/
+GEMINI.local.md
+
+# GitHub Copilot (local CLI state)
+.copilot/
+
+# OpenAI Codex CLI
+.codex/
+
+# Cursor / Windsurf / Codeium
+.cursor/
+.windsurf/
+.codeium/
+
+# Continue
+.continue/
+
+# Aider (chat history, input history, tags cache)
+.aider*

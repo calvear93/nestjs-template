@@ -5,6 +5,7 @@
 	"[json][jsonc][markdown]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
+	"codeTemplateTool.templatesPath": "{workspace}/.vscode/__templates__",
 	"editor.detectIndentation": true,
 	"editor.insertSpaces": false,
 	"editor.tabSize": 4,
@@ -18,7 +19,7 @@
 	"explorer.fileNesting.expand": false,
 	"explorer.fileNesting.patterns": {
 		".gitignore": ".gitattributes",
-		"agents.md": "claude.md, gemini.md, llms.txt, .copilotignore",
+		"agents.md": "claude.md, gemini.md, llms.txt, .copilotrc.json, .copilotignore",
 		"*.cts": "${capture}.cts.*",
 		"*.env.json": "${capture}.*.env.json",
 		"*.json": "${capture}.json, ${capture}.*.json",

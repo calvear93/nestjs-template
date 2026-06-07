@@ -1,0 +1,4 @@
+{
+	"name": "Nest: HTTP Exception",
+	"variables": ["exceptionName", "description"]
+}

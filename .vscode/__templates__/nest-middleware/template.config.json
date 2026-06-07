@@ -1,0 +1,4 @@
+{
+	"name": "Nest: Middleware",
+	"variables": ["middlewareName"]
+}

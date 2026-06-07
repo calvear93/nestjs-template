@@ -1,0 +1,4 @@
+{
+	"name": "Nest: Service",
+	"variables": ["serviceName"]
+}

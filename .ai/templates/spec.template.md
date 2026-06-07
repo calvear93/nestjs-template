@@ -1,38 +1,31 @@
-# Spec: <feature name>
+# <Capability> Specification
 
-- **ID:** NNN-<slug>
-- **Status:** draft | approved | implemented
-- **Created:** <YYYY-MM-DD>
+> Living spec — the current truth for this capability. Lives at
+> `specs/specs/<capability>/spec.md`. Updated only by `spec-archive` applying change deltas.
 
-## Problem / motivation
+## Purpose
 
-<What user or business need does this address? Why now? 1–3 sentences.>
+<One short paragraph: what this capability is and the value it provides.>
 
-## Scope
+## Requirements
 
-- **In scope:** <bullet list of what this feature includes>
-- **Out of scope:** <explicitly excluded, to prevent scope creep>
+### Requirement: <Behavior Name>
 
-## User stories
+The system SHALL <observable behavior>. <Use RFC 2119 keywords: SHALL / MUST / SHOULD / MAY.>
 
-- As a <role>, I want <capability>, so that <benefit>.
+#### Scenario: <Scenario Name>
 
-## Acceptance criteria
+- GIVEN <initial state / precondition>
+- WHEN <action occurs>
+- THEN <observable outcome>
+- AND <additional outcome, optional>
 
-Written as Given/When/Then so they map directly to tests. Each becomes at least one test.
+### Requirement: <Another Behavior>
 
-1. **Given** <context> **when** <action> **then** <observable outcome>.
-2. ...
+The system MUST <behavior detail>.
 
-## Non-functional requirements
+#### Scenario: <Case Name>
 
-- Security, performance, observability, rate limits, etc. (only what applies).
-
-## Domain entities / data
-
-- <Entity>: <fields and meaning>. Note any business terms kept in their original language
-  (per `AGENTS.md` language policy).
-
-## Open questions
-
-- <Anything unresolved that needs an answer before /plan. Resolve before approval.>
+- GIVEN <precondition>
+- WHEN <trigger>
+- THEN <result>

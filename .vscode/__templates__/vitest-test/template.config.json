@@ -1,0 +1,11 @@
+{
+	"name": "Vitest: Test",
+	"variables": [
+		{
+			"name": "testName",
+			"style": {
+				"noTransformation": true
+			}
+		}
+	]
+}

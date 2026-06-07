@@ -1,0 +1,13 @@
+{
+	"name": "TypeScript: Error",
+	"variables": [
+		"errorName",
+		{
+			"name": "message",
+			"defaultValue": "An error has ocurred!",
+			"style": {
+				"noTransformation": true
+			}
+		}
+	]
+}

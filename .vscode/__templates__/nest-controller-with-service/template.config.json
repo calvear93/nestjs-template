@@ -1,0 +1,17 @@
+{
+	"name": "Nest: Controller (with Service)",
+	"allowExistingFolder": true,
+	"variables": [
+		"controllerName",
+		{
+			"name": "path",
+			"style": {
+				"noTransformation": true
+			}
+		},
+		{
+			"name": "version",
+			"defaultValue": "1"
+		}
+	]
+}

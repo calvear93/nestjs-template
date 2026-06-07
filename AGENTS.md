@@ -68,10 +68,17 @@ src/
     http/                #libs/http — HttpClient, HttpModule, errors, enums
     decorators/          #libs/decorators — createSecurityGuard, ApplyToClass, DecoratorsLookUp
 env/                     appsettings.json (non-secret) + <env>.env.json (secrets)
+.vscode/__templates__/   canonical code scaffolds for every component type (controller,
+                         service, module, provider, guard, interceptor, DTO/schema,
+                         exception filter, test, …)
 ```
 
 Path aliases (`package.json#imports`): `#libs/zod`, `#libs/http`, `#libs/decorators`,
 `#testing`. See **architecture-guide** for full module topology and wiring.
+
+When generating any component, start from the matching scaffold in
+[`.vscode/__templates__/`](.vscode/__templates__/) — it is the source of truth for file
+suffixes, folder layout, and controller/service/module/DTO/test signatures.
 
 ## Core principles
 
@@ -160,35 +167,48 @@ Common types: `feat` ✨, `fix` 🐛, `docs` 📚, `style` 🎨, `refactor` ♻�
 
 ## Spec-driven development (SDD)
 
-Build features through a spec-first loop. `AGENTS.md` is the constitution; the procedures
-live in [`.ai/skills/`](.ai/skills/):
+Build features through a spec-first loop that follows the **OpenSpec** convention
+([openspec.dev](https://openspec.dev)): living specs are the current truth, and each request
+is a **change** (like a DB migration) carrying spec **deltas** that get applied on ship.
+`AGENTS.md` is the constitution; the procedures live in [`.ai/skills/`](.ai/skills/):
 
 ```
-/specify  idea     → specs/NNN-slug/spec.md   (what + acceptance criteria)
-/plan     spec     → specs/NNN-slug/plan.md   (technical design)
-/tasks    plan     → specs/NNN-slug/tasks.md  (atomic, test-first tasks)
-/implement tasks   → code + tests (TDD, reusing .github/prompts/*)
-/verify   code     → lint + tests + coverage vs the spec
+/spec-intake    rough idea → an idea brief (optional on-ramp: shape a detailed input)
+/spec-propose   idea    → specs/changes/<id>/proposal.md + specs/<cap>/spec.md deltas (what + why)
+/spec-design    change  → specs/changes/<id>/design.md   (technical design; skip if trivial)
+/spec-tasks     change  → specs/changes/<id>/tasks.md    (atomic, test-first tasks)
+/spec-implement change  → code + tests (test → build → fix, Vitest)
+/spec-archive   change  → verify + apply deltas to specs/specs/ + move to specs/changes/archive/
 ```
 
-`/implement` reuses the canonical task prompts in [`.ai/prompts/`](.ai/prompts/)
+`/spec-intake` is optional: a guided interview that helps anyone (technical or not) turn a
+rough idea into a detailed brief, which `/spec-propose` then formalizes. Skip it when the
+request is already clear and complete.
+
+Folder model (root `specs/`): `specs/specs/` = **living truth** (one folder per capability);
+`specs/changes/<id>/` = **proposals** with `## ADDED|MODIFIED|REMOVED Requirements` deltas;
+`specs/changes/archive/YYYY-MM-DD-<id>/` = shipped changes (the durable decision log). See
+[`.ai/skills/spec-conventions.md`](.ai/skills/spec-conventions.md) for the exact format and
+[`specs/project.md`](specs/project.md) for project context. The official `openspec` CLI is not
+used (it hardcodes an `openspec/` root and can't target `specs/`); the skills are the engine.
+
+`/spec-implement` reuses the canonical task prompts in [`.ai/prompts/`](.ai/prompts/)
 (`module-creation`, `api-endpoint-creation`, `api-documentation`, `error-handling`,
-`testing-strategy`) instead of redefining them.
-
-GitHub Copilot exposes these as `/spec-*` prompts under `.github/prompts/`; Claude, Gemini,
-and Codex follow the procedure files directly — point the agent at `.ai/skills/sdd-<step>.md`.
-The best-practice skills (`zod-schema`, `ioc-binding`, `vitest-tdd`, `vite-config`) live
-alongside them in [`.ai/skills/`](.ai/skills/).
+`testing-strategy`) instead of redefining them. GitHub Copilot exposes the loop as `/spec-*`
+prompts under `.github/prompts/`; Claude, Gemini, and Codex follow the procedure files
+directly. The best-practice skills (`typescript`, `nestjs`, `zod-schema`, `ioc-binding`, `vitest-tdd`,
+`vite-config`) live alongside them in [`.ai/skills/`](.ai/skills/).
 
 ## Deep references
 
-| Document                                                                      | Scope                                                                         |
-| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| [Architecture guide](.github/instructions/architecture-guide.instructions.md) | Module topology, configuration/DI wiring, registration, import conventions    |
-| [Coding standards](.github/instructions/coding-standards.instructions.md)     | Formatting, naming, file suffixes, TypeScript rules, comments, anti-patterns  |
-| [Patterns](.github/instructions/patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, DTOs, guards, docs, tests |
-| [Code exemplars](exemplars.md)                                                | Pointers to high-quality real examples in this repo                           |
-| [README](README.md)                                                           | Human-facing project documentation and setup                                  |
+| Document                                                                      | Scope                                                                               |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [Architecture guide](.github/instructions/architecture-guide.instructions.md) | Module topology, configuration/DI wiring, registration, import conventions          |
+| [Coding standards](.github/instructions/coding-standards.instructions.md)     | Formatting, naming, file suffixes, TypeScript rules, comments, anti-patterns        |
+| [Patterns](.github/instructions/patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, DTOs, guards, docs, tests       |
+| [Code exemplars](exemplars.md)                                                | Pointers to high-quality real examples in this repo                                 |
+| [`.vscode/__templates__/`](.vscode/__templates__/)                            | Canonical code scaffolds for every component type — the starting point for new code |
+| [README](README.md)                                                           | Human-facing project documentation and setup                                        |
 
 Task prompts and agents are canonical in [`.ai/prompts/`](.ai/prompts/) and
 [`.ai/agents/`](.ai/agents/). GitHub Copilot surfaces them natively via thin pointers in
