@@ -17,21 +17,22 @@
 
 ## 📥 **Getting Started**
 
-- Replace these placeholders globally:
-    - `(((base-path)))` base API path segment, e.g. `sample` (default: `api/(((base-path)))`)
-    - `(((app-name)))` package/app name, e.g. `sample-api`
-    - `(((app-title)))` human-readable title, e.g. `Sample API`
-    - `(((project-name)))` repo/project name, e.g. `my-project`
+> ⚡ **Quick start:** run `pwsh ./INIT.ps1` to configure the project interactively — it fills the placeholders below, formats the result, and removes itself.
 
-- Install Node.js (required by `package.json`): **Node `>=24`**.
-- Install [pnpm](https://pnpm.io/installation).
-- Install dependencies: `pnpm install`.
-- Run the app: `pnpm start:dev`.
+Otherwise, replace these terms across the project by hand:
 
-Notes:
+- `(((project-name)))` — repo/project name, e.g. `my-project`
+- `(((app-name)))` — package/app name, e.g. `sample-api`
+- `(((app-title)))` — human-readable title, e.g. `Sample API`
+- `(((app-description)))` — short description of the app
+- `(((base-path)))` — base API path segment, e.g. `sample` (empty = `/api`)
 
-- This template uses the `env` CLI (`@calvear/env`) to load variables from `env/` before executing commands.
-- The app uses Fastify and enables API versioning.
+1. Install [Node.js](https://nodejs.org/) — see `engines.node` in `package.json` (**Node `>=24`**).
+2. Install [pnpm](https://pnpm.io/installation).
+3. Run `pnpm install`.
+4. Start with `pnpm start:dev` (or run tests with `pnpm test:dev`).
+
+> The `env` CLI (`@calvear/env`) loads variables from `env/` before each command. The app runs on Fastify with API versioning enabled.
 
 ### Docker
 
@@ -58,7 +59,7 @@ Some scripts are environment-specific, using the suffix `:<env>` where `<env>` i
 
 | Command                      | Action                       |
 | ---------------------------- | ---------------------------- |
-| node start:`<env>`           | executes the app             |
+| pnpm start:`<env>`           | executes the app             |
 | pnpm build:`<env>`           | build the app                |
 | pnpm preview                 | builds and serves the app    |
 | pnpm test:`<env>`            | executes tests               |
