@@ -247,6 +247,31 @@ describe(HttpClient, () => {
 		expect(status).toBe(HttpStatusCode.OK);
 	});
 
+	test('does not mutate the caller config object', async () => {
+		// mocking phase
+		_fetchMock.mockResolvedValueOnce(new Response('{}', { status: 200 }));
+		const config = {};
+
+		// request phase
+		await _httpClient.post('/', config);
+
+		expect(config).toStrictEqual({});
+	});
+
+	test('throwOnError:false is an alias that disables error throwing', async () => {
+		// mocking phase
+		_serverResponse.mockImplementationOnce((_, response) => {
+			response.writeHead(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
+		});
+		const _client = new HttpClient({ throwOnError: false, url: _URL });
+
+		// request phase
+		const response = await _client.get('/');
+
+		expect(response.ok).toBe(false);
+		expect(response.status).toBe(HttpStatusCode.INTERNAL_SERVER_ERROR);
+	});
+
 	test('post request with json body is success', async () => {
 		// mocking phase
 		const body = { id: 1, name: 'test' };

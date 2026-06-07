@@ -44,9 +44,7 @@ export class HttpClient {
 		url: RequestURL,
 		config: HttpRequestOptions = {},
 	): Promise<HttpResponse<R>> | never {
-		config.method = HttpMethod.DELETE;
-
-		return this.request(url, config);
+		return this.request(url, { ...config, method: HttpMethod.DELETE });
 	}
 
 	/**
@@ -62,9 +60,7 @@ export class HttpClient {
 		url: RequestURL,
 		config: HttpRequestOptions = {},
 	): Promise<HttpResponse<R>> | never {
-		config.method = HttpMethod.GET;
-
-		return this.request(url, config);
+		return this.request(url, { ...config, method: HttpMethod.GET });
 	}
 
 	/**
@@ -80,10 +76,13 @@ export class HttpClient {
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
 	): Promise<HttpResponse<R>> | never {
-		this.#serializeBody(config);
-		config.method = HttpMethod.PATCH;
+		const cfg: HttpRequestBodyOptions = {
+			...config,
+			method: HttpMethod.PATCH,
+		};
+		this.#serializeBody(cfg);
 
-		return this.request(url, config);
+		return this.request(url, cfg);
 	}
 
 	/**
@@ -99,10 +98,13 @@ export class HttpClient {
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
 	): Promise<HttpResponse<R>> | never {
-		this.#serializeBody(config);
-		config.method = HttpMethod.POST;
+		const cfg: HttpRequestBodyOptions = {
+			...config,
+			method: HttpMethod.POST,
+		};
+		this.#serializeBody(cfg);
 
-		return this.request(url, config);
+		return this.request(url, cfg);
 	}
 
 	/**
@@ -118,10 +120,13 @@ export class HttpClient {
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
 	): Promise<HttpResponse<R>> | never {
-		this.#serializeBody(config);
-		config.method = HttpMethod.PUT;
+		const cfg: HttpRequestBodyOptions = {
+			...config,
+			method: HttpMethod.PUT,
+		};
+		this.#serializeBody(cfg);
 
-		return this.request(url, config);
+		return this.request(url, cfg);
 	}
 
 	/**
@@ -287,10 +292,12 @@ export class HttpClient {
 	 */
 	constructor(config?: HttpClientConfig) {
 		if (config) {
-			const { throwOnClientError = true, url, ...cfg } = config;
+			const { throwOnClientError, throwOnError, url, ...cfg } = config;
 
 			if (url) this.#baseUrl = url?.endsWith('/') ? url : `${url}/`;
-			this.#throwOnClientError = throwOnClientError;
+			// `throwOnError` is the preferred name; `throwOnClientError` kept as an alias
+			this.#throwOnClientError =
+				throwOnError ?? throwOnClientError ?? true;
 			this.#baseConfig = cfg;
 		}
 	}
@@ -359,8 +366,10 @@ export interface HttpRequestBodyOptions extends HttpRequestOptions {
 }
 
 export interface HttpClientConfig extends HttpRequestOptions {
-	// when true, throws HttpError if a client error occurs (4XX).
+	// @deprecated alias of `throwOnError` (kept for backward compatibility).
 	throwOnClientError?: boolean;
+	// when true (default), throws HttpError on any non-2xx response.
+	throwOnError?: boolean;
 	// base url
 	url?: string;
 }

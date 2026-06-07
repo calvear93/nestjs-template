@@ -11,14 +11,14 @@ export type Optional<T> = {
 	[K in keyof T]?: T[K];
 };
 
-export type SubstractLeft<T extends any[], U extends any[]> = T extends [
+export type SubtractLeft<T extends any[], U extends any[]> = T extends [
 	infer F,
 	...infer R,
 ]
 	? U extends [infer G, ...infer S]
 		? F extends G
-			? SubstractLeft<R, S>
-			: [F, ...SubstractLeft<R, U>]
+			? SubtractLeft<R, S>
+			: [F, ...SubtractLeft<R, U>]
 		: T
 	: [];
 

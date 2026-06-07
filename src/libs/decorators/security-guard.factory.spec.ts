@@ -245,4 +245,66 @@ describe('Security Guard Factory', () => {
 
 		expect(() => decorate(_mockDecoratedClass, 'anyKey')).not.toThrow();
 	});
+
+	test('a guard class reused by two factories injects each factory args', () => {
+		class SharedGuard implements SecurityGuard {
+			canActivate(_context: ExecutionContext, _a: string, _b: string) {
+				return true;
+			}
+		}
+		const _spyCanActivate = vi.spyOn(SharedGuard.prototype, 'canActivate');
+
+		// two independent factories over the SAME guard class
+		const [SecureA] = createSecurityGuard(SharedGuard, true, 'a');
+		const [SecureB] = createSecurityGuard(SharedGuard, true, 'b');
+
+		class CtrlA {
+			handler() {
+				return 'a';
+			}
+		}
+		class CtrlB {
+			handler() {
+				return 'b';
+			}
+		}
+		const descriptorA = Object.getOwnPropertyDescriptor(
+			CtrlA.prototype,
+			'handler',
+		)!;
+		const descriptorB = Object.getOwnPropertyDescriptor(
+			CtrlB.prototype,
+			'handler',
+		)!;
+		SecureA('x')(CtrlA.prototype, 'handler', descriptorA);
+		SecureB('y')(CtrlB.prototype, 'handler', descriptorB);
+
+		const guard = new SharedGuard();
+
+		guard.canActivate(
+			{
+				getHandler: () => CtrlA.prototype.handler,
+			} as unknown as ExecutionContext,
+			'',
+			'',
+		);
+		expect(_spyCanActivate).toHaveBeenLastCalledWith(
+			expect.anything(),
+			'a',
+			'x',
+		);
+
+		guard.canActivate(
+			{
+				getHandler: () => CtrlB.prototype.handler,
+			} as unknown as ExecutionContext,
+			'',
+			'',
+		);
+		expect(_spyCanActivate).toHaveBeenLastCalledWith(
+			expect.anything(),
+			'b',
+			'y',
+		);
+	});
 });

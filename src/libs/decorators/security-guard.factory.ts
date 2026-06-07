@@ -11,7 +11,7 @@ import {
 	isFn,
 	isString,
 	type Optional,
-	type SubstractLeft,
+	type SubtractLeft,
 } from './security-guard.factory.types.ts';
 
 /**
@@ -65,22 +65,38 @@ const argsInjector = (
 	const method = descriptor.value;
 
 	descriptor.value = function (context: ExecutionContext) {
-		const args = getArgs(accessKey, context.getHandler());
+		const args = getArgs(accessKey, context.getHandler()) ?? [];
 		return method.call(this, context, ...args);
 	};
 	// overrides wrapped method
 	Object.defineProperty(target, propertyKey, descriptor);
 };
 
-/**
- * Decorates "canActivate" method with args
- * injector for improved configuration injection
- */
-const wrapWithArgsInjector = (Guard: Class<SecurityGuard>, key: symbol) => {
-	const { canActivate } = Object.getOwnPropertyDescriptors(Guard.prototype);
-	if (!canActivate.value) return;
+// shared metadata key for the args injected into `canActivate`
+const SECURITY_ARGS = Symbol('security-guard:args');
+// marks a guard prototype as already wrapped, so reusing a guard class across
+// several factories never wraps `canActivate` more than once
+const SECURITY_WRAPPED = Symbol('security-guard:wrapped');
 
-	argsInjector(key, Guard.prototype, canActivate.value.name, canActivate);
+/**
+ * Decorates "canActivate" method with args injector for improved configuration
+ * injection. Idempotent: a guard prototype is wrapped at most once, even when the
+ * same guard class is shared by several `createSecurityGuard` factories.
+ */
+const wrapWithArgsInjector = (Guard: Class<SecurityGuard>) => {
+	const proto = Guard.prototype as Record<PropertyKey, unknown>;
+	if (proto[SECURITY_WRAPPED]) return;
+
+	const { canActivate } = Object.getOwnPropertyDescriptors(Guard.prototype);
+	if (!canActivate?.value) return;
+
+	argsInjector(
+		SECURITY_ARGS,
+		Guard.prototype,
+		canActivate.value.name,
+		canActivate,
+	);
+	proto[SECURITY_WRAPPED] = true;
 };
 
 /**
@@ -99,9 +115,8 @@ const createSecureDecorator = <G extends SecurityGuard, A extends any[]>(
 
 	// metadata accessors
 	const lockSignal = Symbol(guardName);
-	const argsAccessKey = Symbol(guardName);
 
-	wrapWithArgsInjector(Guard, argsAccessKey);
+	wrapWithArgsInjector(Guard);
 
 	const apply = (descriptor: PropertyDescriptor) => {
 		applyDecorators(guard, schema)(
@@ -123,7 +138,7 @@ const createSecureDecorator = <G extends SecurityGuard, A extends any[]>(
 				// enables lock for avoid re-apply guard in class decoration
 				setSignal(lockSignal, true, target, propertyKey);
 				// stores args for injection in canActivate method
-				setArgs(argsAccessKey, args, descriptor);
+				setArgs(SECURITY_ARGS, args, descriptor);
 				return descriptor && apply(descriptor);
 			}
 
@@ -141,8 +156,8 @@ const createSecureDecorator = <G extends SecurityGuard, A extends any[]>(
 				const propertyDescriptor = descriptors[key];
 
 				// if no args from method, uses class args
-				if (!getArgs(argsAccessKey, propertyDescriptor.value))
-					setArgs(argsAccessKey, args, propertyDescriptor);
+				if (!getArgs(SECURITY_ARGS, propertyDescriptor.value))
+					setArgs(SECURITY_ARGS, args, propertyDescriptor);
 
 				if (ignored || locked || key === 'constructor') continue;
 
@@ -331,7 +346,7 @@ export const createSecurityGuard = <
 	enabled = true,
 	...args: SA
 ): [
-	ReturnType<typeof createSecureDecorator<G, SubstractLeft<A, SA>>>,
+	ReturnType<typeof createSecureDecorator<G, SubtractLeft<A, SA>>>,
 	ReturnType<typeof createAllowDecorator>,
 ] => {
 	if (!enabled) return [disabled, disabled];

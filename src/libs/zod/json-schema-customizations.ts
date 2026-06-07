@@ -12,8 +12,8 @@ type JsonSchemaCustomization =
 	  ) => z.core.JSONSchemaMeta);
 type JsonSchemaCustomizations = Record<string, JsonSchemaCustomization>;
 
-// global JSON schema registry for OpenAPI
-const registered: [name: string, jsonSchema: SchemaObject][] = [];
+// global JSON schema registry for OpenAPI (keyed by name → dedupes on re-registration)
+const registered = new Map<string, SchemaObject>();
 
 export const JsonSchemaCustomizations: {
 	readonly formats: JsonSchemaCustomizations;
@@ -125,7 +125,7 @@ export const toJSONSchema = (schema: z.ZodTypeAny, schemaName?: string) => {
 	) as SchemaObject;
 
 	// registers global JSON schema for OpenAPI only if schemaName is provided
-	if (schemaName) registered.push([schemaName, jsonSchema]);
+	if (schemaName) registered.set(schemaName, jsonSchema);
 
 	return jsonSchema;
 };
@@ -136,14 +136,14 @@ export const toJSONSchema = (schema: z.ZodTypeAny, schemaName?: string) => {
  * @example
  * ```ts
  *	import { ... } from '...';
- *	import { registerDtoSchemas } from '#libs/zod';
+ *	import { registerDtoOpenApiSchemas } from '#libs/zod';
  *
  *	const app = await NestFactory.create(AppModule);
  *
  *	const config = new DocumentBuilder().build();
  *	const document = SwaggerModule.createDocument(app, config);
  *
- *	registerDtoSchemas(document);
+ *	registerDtoOpenApiSchemas(document);
  * ```
  */
 export const registerDtoOpenApiSchemas = (

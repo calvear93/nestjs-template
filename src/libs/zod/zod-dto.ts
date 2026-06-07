@@ -44,7 +44,7 @@ export interface ZodTypeDto<
  * ```
  */
 export const isZodDto = (dto: any): dto is ZodTypeDto => {
-	return !!dto.schema;
+	return !!dto?.schema;
 };
 
 /**
