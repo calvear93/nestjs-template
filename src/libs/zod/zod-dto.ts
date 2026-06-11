@@ -43,8 +43,8 @@ export interface ZodTypeDto<
  * console.log(isZodDto({})); // false
  * ```
  */
-export const isZodDto = (dto: any): dto is ZodTypeDto => {
-	return !!dto?.schema;
+export const isZodDto = (dto: unknown): dto is ZodTypeDto => {
+	return !!(dto as Partial<ZodTypeDto> | null | undefined)?.schema;
 };
 
 /**

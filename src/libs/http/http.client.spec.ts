@@ -377,6 +377,17 @@ describe(HttpClient, () => {
 		expect(status).toBe(HttpStatusCode.OK);
 	});
 
+	test('clears the timeout timer when the request fails', async () => {
+		// mocking phase
+		_fetchMock.mockRejectedValueOnce(new TypeError('network failure'));
+
+		// request phase
+		const rejected = _httpClient.get('/', { timeout: 5000 });
+
+		await expect(rejected).rejects.toThrow(HttpError);
+		expect(vi.getTimerCount()).toBe(0);
+	});
+
 	test('omits query string when all params are nullish', async () => {
 		// mocking phase
 		_serverResponse.mockImplementationOnce((_, response) => {

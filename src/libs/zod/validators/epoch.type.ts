@@ -70,7 +70,7 @@ export const epoch = ({ seconds }: { seconds: boolean } = { seconds: false }) =>
 					origin: 'epoch',
 					values: [],
 				});
-				return null as any;
+				return z.NEVER;
 			}
 
 			const epoch = seconds

@@ -43,7 +43,7 @@ export class HttpClient {
 	delete<R>(
 		url: RequestURL,
 		config: HttpRequestOptions = {},
-	): Promise<HttpResponse<R>> | never {
+	): Promise<HttpResponse<R>> {
 		return this.request(url, { ...config, method: HttpMethod.DELETE });
 	}
 
@@ -59,7 +59,7 @@ export class HttpClient {
 	get<R>(
 		url: RequestURL,
 		config: HttpRequestOptions = {},
-	): Promise<HttpResponse<R>> | never {
+	): Promise<HttpResponse<R>> {
 		return this.request(url, { ...config, method: HttpMethod.GET });
 	}
 
@@ -75,7 +75,7 @@ export class HttpClient {
 	patch<R>(
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
-	): Promise<HttpResponse<R>> | never {
+	): Promise<HttpResponse<R>> {
 		const cfg: HttpRequestBodyOptions = {
 			...config,
 			method: HttpMethod.PATCH,
@@ -97,7 +97,7 @@ export class HttpClient {
 	post<R>(
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
-	): Promise<HttpResponse<R>> | never {
+	): Promise<HttpResponse<R>> {
 		const cfg: HttpRequestBodyOptions = {
 			...config,
 			method: HttpMethod.POST,
@@ -119,7 +119,7 @@ export class HttpClient {
 	put<R>(
 		url: RequestURL,
 		config: HttpRequestBodyOptions = {},
-	): Promise<HttpResponse<R>> | never {
+	): Promise<HttpResponse<R>> {
 		const cfg: HttpRequestBodyOptions = {
 			...config,
 			method: HttpMethod.PUT,
@@ -140,7 +140,7 @@ export class HttpClient {
 	async request<R = unknown>(
 		url: RequestURL,
 		options?: HttpRequestOptions,
-	): Promise<HttpResponse<R>> | never {
+	): Promise<HttpResponse<R>> {
 		let clrFn: NodeJS.Timeout | null = null;
 		const mergedConfig = {
 			...this.#baseConfig,
@@ -165,27 +165,31 @@ export class HttpClient {
 		// sets fetch cancel signal from abort controller
 		(config as RequestInit).signal ??= config.cancel?.signal;
 
-		const response = await fetch(
-			this.#getFullUrl(url.toString(), query),
-			config,
-		).catch((error) => {
-			if (error instanceof TypeError) {
-				throw new HttpError({
-					ok: false,
-					status: HttpStatusCode.BAD_GATEWAY,
-					url,
-					json: () => Promise.resolve(error.message),
-				} as HttpResponse);
-			}
+		try {
+			const response = await fetch(
+				this.#getFullUrl(url.toString(), query),
+				config,
+			).catch((error) => {
+				if (error instanceof TypeError) {
+					throw new HttpError({
+						ok: false,
+						status: HttpStatusCode.BAD_GATEWAY,
+						url,
+						json: () => Promise.resolve(error.message),
+					} as HttpResponse);
+				}
 
-			throw error;
-		});
+				throw error;
+			});
 
-		if (clrFn) clearTimeout(clrFn);
-		if (this.#throwOnClientError && !response.ok)
-			throw new HttpError(response as HttpResponse);
+			if (this.#throwOnClientError && !response.ok)
+				throw new HttpError(response as HttpResponse);
 
-		return response as HttpResponse;
+			return response as HttpResponse;
+		} finally {
+			// always release the timeout timer, even on error paths
+			if (clrFn) clearTimeout(clrFn);
+		}
 	}
 
 	/**
