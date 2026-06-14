@@ -31,8 +31,8 @@ Work tasks **in order**. For each unchecked task:
    `pnpm test:dev <pattern>` to filter). See the `vitest-tdd` skill.
 2. **Green** — implement the minimum to pass, reusing the matching prompt instead of
    reinventing patterns:
-    - Module → `.ai/prompts/module-creation.md`
-    - Endpoint → `.ai/prompts/api-endpoint-creation.md`
+    - Module → `.ai/prompts/create-module.md`
+    - Endpoint → `.ai/prompts/create-api-endpoint.md`
     - OpenAPI docs → `.ai/prompts/api-documentation.md`
     - Error handling → `.ai/prompts/error-handling.md`
     - Tests → `.ai/prompts/testing-strategy.md`

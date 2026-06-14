@@ -71,7 +71,7 @@ pids
 
 # AI assistants — local / temporary artifacts only.
 # The repo intentionally versions its shared AI files (do NOT ignore these):
-#   .ai/, CLAUDE.md, GEMINI.md, AGENTS.md, .copilotrc.json, llms.txt,
+#   .ai/, CLAUDE.md, GEMINI.md, AGENTS.md, llms.txt,
 #   .github/{prompts,instructions,agents}/
 
 # Claude Code (local settings + local memory + runtime locks; shared CLAUDE.md/.claude config stay tracked)

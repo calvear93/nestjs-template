@@ -5,15 +5,21 @@ Tool-neutral, single canonical home for **all** AI task prompts, agents, the
 the source of truth for every procedure; each AI tool gets a thin adapter that points here
 (same philosophy as [`AGENTS.md`](../AGENTS.md)).
 
+**Start with [`skills/ways-of-working.md`](skills/ways-of-working.md)** — the operating manual
+that makes agents autonomous and usable by non-technical people: when to act vs. ask, the
+default technical decisions, the single Definition of Done, and how to talk to the user.
+
 ## Layout
 
 ```
 .ai/
   prompts/         canonical task-prompt bodies (the real procedures — edit these)
-    api-documentation.md  api-endpoint-creation.md  module-creation.md  …  (14)
+    api-documentation.md  create-api-endpoint.md  create-module.md  …  (17)
+    optimize-documentation.md  update-instructions.md   # stack self-maintenance
   agents/          canonical agent definitions (the real bodies — edit these)
     blueprint.md  debug.md  mentor.md  nest.md
   skills/          canonical skill bodies (the real procedures — edit these)
+    ways-of-working.md   # ← operating manual: read first
     spec-intake.md   # optional on-ramp: guided interview to shape any idea into a detailed brief
     spec-propose.md  spec-design.md  spec-tasks.md  spec-implement.md  spec-archive.md
     spec-conventions.md  # OpenSpec format & folder-model reference
@@ -59,12 +65,12 @@ There is **one** canonical copy of every procedure here. Only GitHub Copilot kee
 adapter files; the other tools read `.ai/` directly via their root context file. This keeps
 the root clean and avoids duplicate command listings.
 
-| Tool           | How it reaches `.ai/`                                                                                                                                                                |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| GitHub Copilot | Native thin pointers under `.github/`: `prompts/spec-*.prompt.md` (spec loop), `prompts/*.prompt.md` (tasks), `agents/*.agent.md`. Invoked as `/spec-propose`, `/module-creation`, … |
-| Claude Code    | `CLAUDE.md` links here — reads `.ai/` directly: point the agent at `.ai/skills/spec-<step>.md`, `.ai/prompts/<task>.md`, or `.ai/agents/<role>.md`.                                  |
-| Gemini CLI     | `GEMINI.md` links here — same as Claude.                                                                                                                                             |
-| Codex          | `AGENTS.md` links here. For native slash commands: `mkdir -p ~/.codex/prompts && cp .ai/skills/spec-*.md .ai/prompts/*.md ~/.codex/prompts/`.                                        |
+| Tool           | How it reaches `.ai/`                                                                                                                                                              |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GitHub Copilot | Native thin pointers under `.github/`: `prompts/spec-*.prompt.md` (spec loop), `prompts/*.prompt.md` (tasks), `agents/*.agent.md`. Invoked as `/spec-propose`, `/create-module`, … |
+| Claude Code    | `CLAUDE.md` links here — reads `.ai/` directly: point the agent at `.ai/skills/spec-<step>.md`, `.ai/prompts/<task>.md`, or `.ai/agents/<role>.md`.                                |
+| Gemini CLI     | `GEMINI.md` links here — same as Claude.                                                                                                                                           |
+| Codex          | `AGENTS.md` links here. For native slash commands: `mkdir -p ~/.codex/prompts && cp .ai/skills/spec-*.md .ai/prompts/*.md ~/.codex/prompts/`.                                      |
 
 ## Editing rule
 

@@ -14,7 +14,18 @@ dependency injection, OpenAPI/Swagger documentation, and comprehensive testing.
   duplicate guidance into those pointers.
 - Keep this file as the high-level contract (stack, rules, conventions). Long-form
   detail lives in the deep references at the bottom; link to them instead of repeating.
-- User instructions (a direct request in chat) always take precedence over this file.
+- **Operating manual:** read [`.ai/skills/ways-of-working.md`](.ai/skills/ways-of-working.md) first — the autonomy policy, the Definition of Done, and how to talk to a (possibly non-technical) user.
+- User instructions always take precedence — see Priority order below.
+
+## Priority order
+
+When guidance conflicts, resolve in this order:
+
+1. **User instructions** — a direct request in chat.
+2. **This file (`AGENTS.md`)** — the canonical, tool-agnostic contract.
+3. **Deep references** in [`.github/instructions/`](.github/instructions/) and the canonical
+   scaffolds in [`.vscode/__templates__/`](.vscode/__templates__/).
+4. **Existing patterns** in the codebase (`src/`, and `docs/` where present).
 
 ## Tech stack
 
@@ -106,8 +117,8 @@ These are non-negotiable. Violations should be fixed before code is considered d
 
 ### Language policy
 
-- All code and documentation is in **English**: identifiers, comments, API names, errors, docs.
-- **Exception:** preserve business-domain terms in their original language when the user
+- Code and documentation are in **English** — identifiers, comments, API names, errors, docs.
+- **Domain exception:** preserve business-domain terms in their original language when the user
   explicitly defines them as domain entities (e.g. `Siniestro`, `Episodio`). Implementation
   around them stays in English.
 
@@ -193,7 +204,7 @@ Folder model (root `specs/`): `specs/specs/` = **living truth** (one folder per 
 used (it hardcodes an `openspec/` root and can't target `specs/`); the skills are the engine.
 
 `/spec-implement` reuses the canonical task prompts in [`.ai/prompts/`](.ai/prompts/)
-(`module-creation`, `api-endpoint-creation`, `api-documentation`, `error-handling`,
+(`create-module`, `create-api-endpoint`, `api-documentation`, `error-handling`,
 `testing-strategy`) instead of redefining them. GitHub Copilot exposes the loop as `/spec-*`
 prompts under `.github/prompts/`; Claude, Gemini, and Codex follow the procedure files
 directly. The best-practice skills (`typescript`, `nestjs`, `zod-schema`, `ioc-binding`, `vitest-tdd`,
@@ -203,6 +214,7 @@ directly. The best-practice skills (`typescript`, `nestjs`, `zod-schema`, `ioc-b
 
 | Document                                                                      | Scope                                                                               |
 | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [Operating manual](.ai/skills/ways-of-working.md)                             | Autonomy, default technical decisions, Definition of Done, non-technical-user comms |
 | [Architecture guide](.github/instructions/architecture-guide.instructions.md) | Module topology, configuration/DI wiring, registration, import conventions          |
 | [Coding standards](.github/instructions/coding-standards.instructions.md)     | Formatting, naming, file suffixes, TypeScript rules, comments, anti-patterns        |
 | [Patterns](.github/instructions/patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, DTOs, guards, docs, tests       |

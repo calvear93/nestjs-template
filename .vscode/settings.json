@@ -19,7 +19,7 @@
 	"explorer.fileNesting.expand": false,
 	"explorer.fileNesting.patterns": {
 		".gitignore": ".gitattributes",
-		"agents.md": "claude.md, gemini.md, llms.txt, .copilotrc.json, .copilotignore",
+		"agents.md": "claude.md, gemini.md, llms.txt, .copilotignore",
 		"INIT.ps1": "INIT.lib.ps1",
 		"*.cts": "${capture}.cts.*",
 		"*.env.json": "${capture}.*.env.json",

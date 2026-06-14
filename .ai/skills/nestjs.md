@@ -46,5 +46,5 @@ export class UserController {
 }
 ```
 
-> Module / endpoint scaffolding: `.ai/prompts/module-creation.md` and
-> `.ai/prompts/api-endpoint-creation.md`.
+> Module / endpoint scaffolding: `.ai/prompts/create-module.md` and
+> `.ai/prompts/create-api-endpoint.md`.
