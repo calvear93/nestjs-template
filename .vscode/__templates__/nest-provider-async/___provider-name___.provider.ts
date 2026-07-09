@@ -40,9 +40,7 @@ export class ___ProviderName___Provider {
 	): Provider<Promise<___ProviderName___Provider>> {
 		return {
 			provide: ___ProviderName___Provider,
-			inject: [
-				/* your injected dependencies tokens here */
-			],
+			inject: [/* your injected dependencies tokens here */],
 			useFactory: async (/* your dependencies from inject */) => {
 				const provider = new ___ProviderName___Provider(baseNumber);
 

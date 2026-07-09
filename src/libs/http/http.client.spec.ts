@@ -1,41 +1,53 @@
-import { type RequestListener, type Server } from 'node:http';
 import {
 	afterAll,
 	afterEach,
 	beforeAll,
 	describe,
 	expect,
-	type Mock,
 	type MockInstance,
 	test,
 	vi,
 } from 'vitest';
-import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
 import { HttpStatusCode } from './enums/http-status.enum.ts';
 import { HttpError } from './errors/http.error.ts';
 import { TimeoutError } from './errors/timeout.error.ts';
 import { HttpClient, type OnRequestInterceptor } from './http.client.ts';
 
+/**
+ * Creates a fetch mock implementation that models an in-flight
+ * request: it never settles on its own and only rejects (with the
+ * abort reason) once the request signal is aborted.
+ */
+const pendingUntilAborted = () => {
+	return (_url: RequestInfo | URL, init?: RequestInit) =>
+		new Promise<Response>((_resolve, reject) => {
+			const signal = init?.signal;
+			if (signal?.aborted) {
+				reject(signal.reason);
+				return;
+			}
+
+			signal?.addEventListener('abort', () => reject(signal.reason), {
+				once: true,
+			});
+		});
+};
+
 describe(HttpClient, () => {
 	let _httpClient: HttpClient;
 	let _altHttpClient: HttpClient;
 
-	let port: number;
-	let _server: Server;
-	let _serverResponse: Mock<RequestListener>;
 	let _fetchMock: MockInstance<typeof fetch>;
 
-	let _URL: string;
+	// http://localhost/ base URL — no real server is involved, fetch is mocked
+	const _URL = 'http://localhost/';
 
 	// hooks
-	beforeAll(async () => {
+	beforeAll(() => {
 		vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 
-		// mock server
-		[_server, _serverResponse, port] = await createHttpMockServer();
-		_URL = `http://localhost:${port}/`;
-		// fetch spy
-		globalThis.fetch = vi.fn(fetch);
+		// fetch mock (defaults to an empty 200 response)
+		globalThis.fetch = vi.fn(() => Promise.resolve(new Response()));
 		_fetchMock = vi.mocked(fetch);
 
 		_httpClient = new HttpClient({ url: _URL });
@@ -46,24 +58,23 @@ describe(HttpClient, () => {
 	});
 
 	afterEach(() => {
-		vi.clearAllMocks();
 		vi.clearAllTimers();
+		vi.clearAllMocks();
 	});
 
 	afterAll(() => {
 		vi.useRealTimers();
 		vi.resetAllMocks();
-
-		_server.closeAllConnections();
-		_server.close();
 	});
 
 	// tests
 	test('failed request does not throw on throwOnError false', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, {
+				status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+			}),
+		);
 
 		const response = await _altHttpClient.get('/');
 
@@ -74,9 +85,9 @@ describe(HttpClient, () => {
 
 	test('request not ok (status in the range 200-299) throws HttpError', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.BAD_REQUEST).end();
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.BAD_REQUEST }),
+		);
 
 		// request phase
 		const rejected = _httpClient.request('/');
@@ -129,9 +140,9 @@ describe(HttpClient, () => {
 	test('request with json response is success', async () => {
 		// mocking phase
 		const expectedData = { value: 1 };
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end(JSON.stringify(expectedData));
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(JSON.stringify(expectedData)),
+		);
 
 		// request phase
 		const response = await _httpClient.request<typeof expectedData>('/');
@@ -144,9 +155,7 @@ describe(HttpClient, () => {
 	test('request with text response is success', async () => {
 		// mocking phase
 		const expectedData = 'ok';
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end(expectedData);
-		});
+		_fetchMock.mockResolvedValueOnce(new Response(expectedData));
 
 		// request phase
 		const response = await _httpClient.request<string>('/');
@@ -159,10 +168,7 @@ describe(HttpClient, () => {
 	test('request with query params is success', async () => {
 		// mocking phase
 		const query = { id: '1', name: 'test' };
-		const expectedUrl = `/?${new URLSearchParams(query)}`;
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end();
-		});
+		const expectedUrl = `${_URL}?${new URLSearchParams(query)}`;
 
 		// request phase
 		const { status } = await _httpClient.request('/', {
@@ -170,7 +176,7 @@ describe(HttpClient, () => {
 		});
 
 		// assertion data
-		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
 
 		expect(status).toBe(HttpStatusCode.OK);
 		expect(receivedUrl).toBe(expectedUrl);
@@ -193,10 +199,7 @@ describe(HttpClient, () => {
 			bigint: query.bigint.toString(),
 			date: query.date.toISOString(),
 		};
-		const expectedUrl = `/?${new URLSearchParams(queryExpected)}&nested.prop1=hola&nested.prop2=mundo`;
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end();
-		});
+		const expectedUrl = `${_URL}?${new URLSearchParams(queryExpected)}&nested.prop1=hola&nested.prop2=mundo`;
 
 		// request phase
 		const { status } = await _httpClient.request('/', {
@@ -204,7 +207,7 @@ describe(HttpClient, () => {
 		});
 
 		// assertion data
-		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
 
 		expect(status).toBe(HttpStatusCode.OK);
 		expect(receivedUrl).toBe(expectedUrl);
@@ -218,10 +221,7 @@ describe(HttpClient, () => {
 		params.append('list', '1');
 		params.append('list', '2');
 
-		const expectedUrl = `/?${params}`;
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end();
-		});
+		const expectedUrl = `${_URL}?${params}`;
 
 		// request phase
 		const { status } = await _httpClient.request('/', {
@@ -229,7 +229,7 @@ describe(HttpClient, () => {
 		});
 
 		// assertion data
-		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
 
 		expect(status).toBe(HttpStatusCode.OK);
 		expect(receivedUrl).toBe(expectedUrl);
@@ -237,9 +237,7 @@ describe(HttpClient, () => {
 
 	test('get request is success', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end();
-		});
+		_fetchMock.mockResolvedValueOnce(new Response());
 
 		// request phase
 		const { status } = await _httpClient.get('/');
@@ -260,9 +258,11 @@ describe(HttpClient, () => {
 
 	test('throwOnError:false is an alias that disables error throwing', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.INTERNAL_SERVER_ERROR).end();
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, {
+				status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+			}),
+		);
 		const _client = new HttpClient({ throwOnError: false, url: _URL });
 
 		// request phase
@@ -276,9 +276,9 @@ describe(HttpClient, () => {
 		// mocking phase
 		const body = { id: 1, name: 'test' };
 		const expectedSerializedBody = JSON.stringify(body);
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.CREATED).end();
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.CREATED }),
+		);
 
 		// request phase
 		const { status } = await _httpClient.post('/', {
@@ -297,9 +297,9 @@ describe(HttpClient, () => {
 		const body = { value: 'test' };
 		const expectedContentType =
 			'application/x-www-form-urlencoded;charset=utf-8';
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.CREATED).end();
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.CREATED }),
+		);
 
 		// request phase
 		const { status } = await _httpClient.post('/', {
@@ -318,9 +318,9 @@ describe(HttpClient, () => {
 
 	test('put request is success', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.NO_CONTENT).end();
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.NO_CONTENT }),
+		);
 
 		// request phase
 		const { status } = await _httpClient.put('/');
@@ -330,9 +330,9 @@ describe(HttpClient, () => {
 
 	test('patch request is success', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.NO_CONTENT).end();
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.NO_CONTENT }),
+		);
 
 		// request phase
 		const { status } = await _httpClient.patch('/');
@@ -342,9 +342,9 @@ describe(HttpClient, () => {
 
 	test('delete request is success', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.writeHead(HttpStatusCode.ACCEPTED).end();
-		});
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.ACCEPTED }),
+		);
 
 		// request phase
 		const { status } = await _httpClient.delete('/');
@@ -354,27 +354,29 @@ describe(HttpClient, () => {
 
 	test('request fails for timeout', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce(async (_, response) => {
-			await vi.advanceTimersToNextTimerAsync(); // wait for http timeout
-			response.end();
-		});
+		// fetch never resolves on its own; it only settles when the
+		// client's timeout aborts the request signal
+		_fetchMock.mockImplementationOnce(pendingUntilAborted());
 
 		const request = _httpClient.get<string>('/', { timeout: 1 });
+		// attach the rejection handler before advancing timers so the
+		// abort rejection is never momentarily unhandled
+		const assertion = expect(request).rejects.toThrow(TimeoutError);
 
 		// request phase
-		await expect(request).rejects.toThrow(TimeoutError);
+		await vi.advanceTimersByTimeAsync(1); // trigger the client timeout
+		await assertion;
 	});
 
 	test('clears the timeout timer when the response resolves in time', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end();
-		});
+		_fetchMock.mockResolvedValueOnce(new Response());
 
 		// request phase
 		const { status } = await _httpClient.get('/', { timeout: 5000 });
 
 		expect(status).toBe(HttpStatusCode.OK);
+		expect(vi.getTimerCount()).toBe(0);
 	});
 
 	test('clears the timeout timer when the request fails', async () => {
@@ -390,9 +392,7 @@ describe(HttpClient, () => {
 
 	test('omits query string when all params are nullish', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end();
-		});
+		_fetchMock.mockResolvedValueOnce(new Response());
 
 		// request phase
 		const { status } = await _httpClient.request('/', {
@@ -400,17 +400,15 @@ describe(HttpClient, () => {
 		});
 
 		// assertion data
-		const receivedUrl = _serverResponse.mock.calls[0][0].url;
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
 
 		expect(status).toBe(HttpStatusCode.OK);
-		expect(receivedUrl).toBe('/');
+		expect(receivedUrl).toBe(_URL);
 	});
 
 	test('appends trailing slash to base URL when missing', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end();
-		});
+		_fetchMock.mockResolvedValueOnce(new Response());
 
 		// request phase
 		const client = new HttpClient({ url: _URL.slice(0, -1) });
@@ -424,9 +422,7 @@ describe(HttpClient, () => {
 
 	test('request can be aborted', async () => {
 		// mocking phase
-		_serverResponse.mockImplementationOnce((_, response) => {
-			response.end();
-		});
+		_fetchMock.mockImplementationOnce(pendingUntilAborted());
 
 		// request phase
 		const controller = new AbortController();
@@ -454,13 +450,11 @@ describe(HttpClient, () => {
 	describe('url parsing', () => {
 		// hooks
 		beforeAll(() => {
-			_serverResponse.mockImplementation((_, response) => {
-				response.end();
-			});
+			_fetchMock.mockResolvedValue(new Response());
 		});
 
 		afterAll(() => {
-			_serverResponse.mockClear();
+			_fetchMock.mockClear();
 		});
 
 		// tests
@@ -530,6 +524,7 @@ describe(HttpClient, () => {
 	});
 
 	test('base URL is not required in initial config', async () => {
+		_fetchMock.mockResolvedValueOnce(new Response());
 		const client = new HttpClient({});
 
 		// request phase
@@ -576,6 +571,7 @@ describe(HttpClient, () => {
 	});
 
 	test('can intercept request config', async () => {
+		_fetchMock.mockResolvedValueOnce(new Response());
 		const expectedHeaders = { anyHeader: 'anyValue' };
 		const mockRequestInterceptor = vi.fn<OnRequestInterceptor>((config) => {
 			config.headers = expectedHeaders;

@@ -31,9 +31,7 @@ export class ___ProviderName___Provider {
 	static register(baseNumber: number): Provider<___ProviderName___Provider> {
 		return {
 			provide: ___ProviderName___Provider,
-			inject: [
-				/* your injected dependencies tokens here */
-			],
+			inject: [/* your injected dependencies tokens here */],
 			useFactory: (/* your dependencies from inject */) =>
 				new ___ProviderName___Provider(baseNumber),
 		};

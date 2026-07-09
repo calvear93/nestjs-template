@@ -110,9 +110,7 @@ export const UsersControllerDocs: DecoratorsLookUp<UsersController> = {
 		list: [ApiOperation({ summary: 'List users' }), ApiOkResponse()],
 	},
 	common: {
-		method: [
-			/* decorators applied to every listed method */
-		],
+		method: [/* decorators applied to every listed method */],
 	},
 };
 ```
