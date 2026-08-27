@@ -189,47 +189,83 @@ const disabled = () => voided;
  * 	1. **Security Decorator**: Applies the guard to protect endpoints
  * 	2. **Allow Anonymous Decorator**: Bypasses the guard for specific endpoints
  *
- * The factory supports dependency injection for guard arguments, allowing you to
- * pre-configure some parameters while leaving others to be provided at decoration time.
- * This enables flexible and reusable security configurations across your application.
+ * The factory lets you pre-configure some `canActivate` parameters while leaving
+ * others to be provided at decoration time. Note these are two different
+ * mechanisms living together: the **guard itself** is handed to `UseGuards` as a
+ * class, so Nest resolves it from its container by DI, while the **arguments**
+ * travel through `reflect-metadata` and are spread after `context`. An injectable
+ * provider is therefore not something you can pass as an argument.
  *
  * **Key Features:**
  * 	- Type-safe argument injection based on your guard's `canActivate` signature
  * 	- Conditional enabling/disabling of security based on environment or configuration
  * 	- Automatic symbol-based metadata management for allow/deny patterns
+ * 	- A guard class can be shared by several factories: its `canActivate` is
+ * 	  wrapped at most once, and each factory injects its own arguments
  * 	- Full compatibility with NestJS guard ecosystem
  *
  * **Argument Injection Logic:**
  * 	Arguments are injected from left to right based on the `canActivate` method signature.
  * 	Parameters provided to `createSecurityGuard` are injected first, followed by
  * 	parameters provided when using the resulting decorator.
+ * 	When the decorator is applied to a class, a method that already carries its own
+ * 	arguments keeps them: the class level ones only fill in the methods without any.
+ *
+ * **Swagger:**
+ * 	The protect decorator also applies `ApiSecurity(Guard.name)`, so the scheme must
+ * 	be registered under that very name, i.e.
+ * 	`.addApiKey(SECURITY_API_SCHEMA, ApiKeyGuard.name)` in `src/app/app.ts`.
  *
  * @param Guard - The guard class that implements SecurityGuard interface
- * @param enabled - Whether the security guard is active (default: true). When false, both decorators become no-ops
+ * @param enabled - Whether the security guard is active (default: true). When false both
+ * 	decorators become no-ops and the guard is never registered, so the routes are left
+ * 	unprotected rather than protected by default
  * @param args - Pre-configured arguments to inject into the guard's canActivate method (from left to right)
  * @returns A tuple containing [SecurityDecorator, AllowAnonymousDecorator]
  *
  * @example
  * Basic API Key Guard:
  * ```ts
- * import { createSecurityGuard } from '#libs/decorators';
- * import { ExecutionContext, Injectable } from '@nestjs/common';
+ * import { createSecurityGuard, type SecurityGuard } from '#libs/decorators';
+ * import {
+ *	ExecutionContext,
+ *	Injectable,
+ *	UnauthorizedException,
+ * } from '@nestjs/common';
  *
  * \@Injectable()
  * export class ApiKeyGuard implements SecurityGuard {
- *	canActivate(context: ExecutionContext): boolean {
- *		const request = context.switchToHttp().getRequest();
- *		const apiKey = request.headers['x-api-key'];
- *		return apiKey === process.env.API_KEY;
+ *	// headerName and apiKey are injected by the decorator, not read here
+ *	canActivate(
+ *		context: ExecutionContext,
+ *		headerName: string,
+ *		apiKey: string,
+ *	): boolean {
+ *		const { headers } = context.switchToHttp().getRequest();
+ *		const received = headers[headerName];
+ *
+ *		// returning false would make Nest answer 403; 401 is "who are you"
+ *		if (received !== apiKey)
+ *			throw new UnauthorizedException('Api key is not valid');
+ *
+ *		return true;
  *	}
  * }
  *
- * // Create the decorators
- * export const [ApiKeySecurity, AllowAnonymous] = createSecurityGuard(ApiKeyGuard);
+ * // Create the decorators, pre-configuring both injected args
+ * export const [ApiKey, AllowAnonymous] = createSecurityGuard(
+ *	ApiKeyGuard,
+ *	process.env.SECURITY_ENABLED === 'true',
+ *	process.env.SECURITY_HEADER_NAME, // injected as headerName
+ *	process.env.SECURITY_API_KEY,     // injected as apiKey
+ * );
+ *
+ * // app.ts, registered under the guard class name
+ * new DocumentBuilder().addApiKey(SECURITY_API_SCHEMA, ApiKeyGuard.name);
  *
  * // Usage in controllers
  * \@Controller('protected')
- * \@ApiKeySecurity()
+ * \@ApiKey()
  * export class ProtectedController {
  *	\@Get('secure')
  *	secureEndpoint() {
@@ -359,6 +395,15 @@ export const createSecurityGuard = <
 	return [Secure, Allow];
 };
 
+/**
+ * Contract every guard built by `createSecurityGuard` must implement.
+ *
+ * It widens Nest's own `CanActivate`: the first parameter is always the
+ * `ExecutionContext`, and any parameter after it is configuration injected by
+ * the decorator, never resolved by Nest DI.
+ *
+ * @see createSecurityGuard
+ */
 export interface SecurityGuard {
 	canActivate(
 		context: ExecutionContext,
