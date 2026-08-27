@@ -1,4 +1,4 @@
-import type { ExecutionContext } from '@nestjs/common';
+import { type ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import type { HttpArgumentsHost } from '@nestjs/common/interfaces/index.ts';
 import { randomUUID } from 'node:crypto';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vitest';
@@ -38,14 +38,22 @@ describe(ApiKeyGuard, () => {
 		expect(result).toBe(true);
 	});
 
-	test('return false when api key is not valid', () => {
+	test('throws UnauthorizedException when api key is not valid', () => {
 		_mockCtxGetRequest.mockReturnValueOnce({
 			headers: { [_headerName]: 'bad_api_key' },
 		});
 
-		const result = _guard.canActivate(_mockCtx, _headerName, _apiKey);
+		expect(() =>
+			_guard.canActivate(_mockCtx, _headerName, _apiKey),
+		).toThrow(UnauthorizedException);
+	});
 
-		expect(result).toBe(false);
+	test('throws UnauthorizedException when the header is missing', () => {
+		_mockCtxGetRequest.mockReturnValueOnce({ headers: {} });
+
+		expect(() =>
+			_guard.canActivate(_mockCtx, _headerName, _apiKey),
+		).toThrow(UnauthorizedException);
 	});
 
 	test('module exposes SECURITY_API_SCHEMA with apiKey type', async () => {
@@ -72,13 +80,28 @@ describe(ApiKeyGuard, () => {
 		expect(AllowAnonymous.name).not.toBe('disabled');
 	});
 
-	test('ApiKey decorator is disabled when SECURITY_ENABLED is true but API_KEY is missing', async () => {
+	// fails the boot instead of leaving the api silently unprotected
+	test('module throws when SECURITY_ENABLED is true but API_KEY is missing', async () => {
 		vi.stubEnv('SECURITY_ENABLED', 'true');
+		vi.stubEnv('SECURITY_HEADER_NAME', _headerName);
 		vi.stubEnv('SECURITY_API_KEY', '');
 
-		const { AllowAnonymous, ApiKey } = await import('./api-key.guard.ts');
+		await expect(import('./api-key.guard.ts')).rejects.toThrow();
+	});
 
-		expect(ApiKey.name).toBe('disabled');
-		expect(AllowAnonymous.name).toBe('disabled');
+	test('module throws when SECURITY_ENABLED is true but HEADER_NAME is missing', async () => {
+		vi.stubEnv('SECURITY_ENABLED', 'true');
+		vi.stubEnv('SECURITY_HEADER_NAME', '');
+		vi.stubEnv('SECURITY_API_KEY', _apiKey);
+
+		await expect(import('./api-key.guard.ts')).rejects.toThrow();
+	});
+
+	test('normalizes the configured header name', async () => {
+		vi.stubEnv('SECURITY_HEADER_NAME', 'X-Api-Key');
+
+		const { SECURITY_API_SCHEMA } = await import('./api-key.guard.ts');
+
+		expect(SECURITY_API_SCHEMA.name).toBe('x-api-key');
 	});
 });

@@ -24,14 +24,26 @@
 ### Define a guard and create the decorators
 
 ```typescript
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import {
+	ExecutionContext,
+	Injectable,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { createSecurityGuard, type SecurityGuard } from '#libs/decorators';
 
 @Injectable()
 export class ApiKeyGuard implements SecurityGuard {
 	canActivate(context: ExecutionContext, headerName: string, apiKey: string) {
 		const req = context.switchToHttp().getRequest();
-		return req.headers[headerName] === apiKey;
+		const received = req.headers[headerName];
+
+		// 401 is "I do not know who you are", 403 is left for authorization:
+		// returning false here would make Nest answer 403 instead
+		if (!received) throw new UnauthorizedException('Api key is missing');
+		if (received !== apiKey)
+			throw new UnauthorizedException('Api key is not valid');
+
+		return true;
 	}
 }
 
@@ -148,6 +160,17 @@ it('accepts the matching api key', () => {
 	expect(new ApiKeyGuard().canActivate(ctx, 'x-api-key', 'secret')).toBe(
 		true,
 	);
+});
+
+it('rejects a wrong api key with 401', () => {
+	const ctx = mock<ExecutionContext>();
+	ctx.switchToHttp().getRequest.mockReturnValue({
+		headers: { 'x-api-key': 'nope' },
+	});
+
+	expect(() =>
+		new ApiKeyGuard().canActivate(ctx, 'x-api-key', 'secret'),
+	).toThrow(UnauthorizedException);
 });
 ```
 
