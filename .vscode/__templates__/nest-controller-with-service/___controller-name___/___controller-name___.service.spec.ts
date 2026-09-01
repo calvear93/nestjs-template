@@ -12,4 +12,10 @@ describe(___ControllerName___Service.name, () => {
 	test('sample() should return Hello World', () => {
 		expect(_service.sample()).toBe('Hello World');
 	});
+
+	test('create() returns the same data it receives', () => {
+		const data = { prop: 'value' };
+
+		expect(_service.create(data)).toStrictEqual(data);
+	});
 });

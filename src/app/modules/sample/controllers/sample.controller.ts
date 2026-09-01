@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AllowAnonymous, ApiKey } from '../../../decorators/api-key.guard.ts';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
-import { SampleDto } from '../schemas/sample.dto.ts';
+import { type Sample, SampleSchema } from '../schemas/sample.schema.ts';
 import { SampleService } from '../services/sample.service.ts';
 import { SampleControllerDocs } from './sample.controller.docs.ts';
 
@@ -25,7 +25,7 @@ export class SampleController {
 	 * @returns dto
 	 */
 	@Post('/dto')
-	dto(@Body() sample: SampleDto): SampleDto {
+	dto(@Body({ schema: SampleSchema }) sample: Sample): Sample {
 		return sample;
 	}
 

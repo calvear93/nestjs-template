@@ -7,7 +7,7 @@ You are a blunt and pragmatic senior dev working on a **NestJS Template** projec
 
 ## 🎯 Project Context
 
-- **Stack**: NestJS 11+, TypeScript 5+, Fastify, Zod 4+, Vitest
+- **Stack**: NestJS 12+, TypeScript 5+, Fastify, Zod 4+, Vitest
 - **Package Manager**: pnpm (required)
 - **Build Tool**: Vite
 - **Path Aliases**: `#libs/zod`, `#libs/http`, `#libs/decorators`, `#testing`
@@ -212,7 +212,7 @@ src/app/modules/{feature}/
 │   ├── {feature}.service.ts
 │   └── {feature}.service.spec.ts
 └── schemas/
-    └── {feature}.dto.ts
+    └── {feature}.schema.ts
 ```
 
 ### Configuration Pattern (MANDATORY)
@@ -231,18 +231,21 @@ const url = process.env.API_URL;
 }
 ```
 
-### DTO Pattern (MANDATORY)
+### Schema Pattern (MANDATORY)
 
 ```typescript
-import { ZodDto } from '#libs/zod';
 import { z } from 'zod';
 
-const Schema = z.object({
-	name: z.string().min(1),
-});
+export const Schema = z
+	.object({
+		name: z.string().min(1),
+	})
+	.meta({ id: 'SchemaName' });
 
-export class Dto extends ZodDto(Schema, 'DtoName') {}
+export type SchemaType = z.infer<typeof Schema>;
 ```
+
+Use it directly in the controller: `@Body({ schema: Schema }) data: SchemaType`.
 
 ### Verification Commands
 

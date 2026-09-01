@@ -11,32 +11,37 @@ High-level rules live in [AGENTS.md](../../AGENTS.md); wiring in
 [architecture-guide](architecture-guide.instructions.md); style in [coding-standards](coding-standards.instructions.md).
 This document is the place for long worked examples.
 
-## DTO (Zod)
+## Schema (Zod)
 
 ```typescript
-// schemas/user.dto.ts
+// schemas/user.schema.ts
 import { z } from 'zod';
-import { ZodDto } from '#libs/zod';
 
-const UserSchema = z
+export const UserSchema = z
 	.object({
 		id: z.coerce.number().optional(),
 		name: z.string().min(1).max(100),
 		email: z.email(),
 		isActive: z.boolean().default(true),
 	})
-	.meta({ description: 'User DTO schema' });
+	.meta({ id: 'User' });
 
-export class UserDto extends ZodDto(UserSchema, 'User') {}
+export type User = z.infer<typeof UserSchema>;
 
-// create: drop server-generated fields
-export class CreateUserDto extends ZodDto(
-	UserSchema.omit({ id: true }),
-	'CreateUser',
-) {}
+// create: drop server-generated fields — needs its own `id` to register as
+// its own OpenAPI component (derived schemas don't inherit the base `id`)
+export const CreateUserSchema = UserSchema.omit({ id: true }).meta({
+	id: 'CreateUser',
+});
+
+export type CreateUser = z.infer<typeof CreateUserSchema>;
 
 // update: everything optional
-export class UpdateUserDto extends ZodDto(UserSchema.partial(), 'UpdateUser') {}
+export const UpdateUserSchema = UserSchema.partial().meta({
+	id: 'UpdateUser',
+});
+
+export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 ```
 
 ## Controller (thin, validated, documented)
@@ -51,10 +56,13 @@ import {
 	ParseIntPipe,
 	Post,
 } from '@nestjs/common';
-import { ZodValidationPipe } from '#libs/zod';
 import { ApiKey, AllowAnonymous } from '../../../decorators/api-key.guard.ts';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
-import { CreateUserDto, UserDto } from '../schemas/user.dto.ts';
+import {
+	type CreateUser,
+	CreateUserSchema,
+	type User,
+} from '../schemas/user.schema.ts';
 import { UserService } from '../services/user.service.ts';
 import { UserControllerDocs } from './user.controller.docs.ts';
 
@@ -65,12 +73,14 @@ export class UserController {
 	constructor(private readonly _service: UserService) {}
 
 	@Get(':id')
-	findOne(@Param('id', ParseIntPipe) id: number): Promise<UserDto> {
+	findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
 		return this._service.findOne(id);
 	}
 
 	@Post()
-	create(@Body(ZodValidationPipe) data: CreateUserDto): Promise<UserDto> {
+	create(
+		@Body({ schema: CreateUserSchema }) data: CreateUser,
+	): Promise<User> {
 		return this._service.create(data);
 	}
 
@@ -88,9 +98,9 @@ Keep OpenAPI metadata in a colocated `*.controller.docs.ts`, typed with `Decorat
 
 ```typescript
 // controllers/user.controller.docs.ts
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { DecoratorsLookUp } from '#libs/decorators';
-import { CreateUserDto } from '../schemas/user.dto.ts';
+import { UserSchema } from '../schemas/user.schema.ts';
 import type { UserController } from './user.controller.ts';
 
 export const UserControllerDocs: DecoratorsLookUp<UserController> = {
@@ -101,7 +111,12 @@ export const UserControllerDocs: DecoratorsLookUp<UserController> = {
 	method: {
 		create: [
 			ApiOperation({ summary: 'Create a new user' }),
-			ApiBody({ schema: CreateUserDto.jsonSchema }),
+			// no ApiBody needed here — NestJS derives the request schema
+			// straight from @Body({ schema }) on the controller method
+			ApiResponse({
+				status: 201,
+				standardSchema: UserSchema,
+			}),
 		],
 	},
 };
@@ -112,7 +127,7 @@ export const UserControllerDocs: DecoratorsLookUp<UserController> = {
 ```typescript
 // services/user.service.ts
 import { ConflictException, Injectable, Logger } from '@nestjs/common';
-import type { CreateUserDto, UserDto } from '../schemas/user.dto.ts';
+import type { CreateUser, User } from '../schemas/user.schema.ts';
 import type { UserRepository } from '../repositories/user.repository.ts';
 
 @Injectable()
@@ -121,7 +136,7 @@ export class UserService {
 
 	constructor(private readonly _repository: UserRepository) {}
 
-	async create(data: CreateUserDto): Promise<UserDto> {
+	async create(data: CreateUser): Promise<User> {
 		// business rule: email must be unique
 		if (await this._repository.findByEmail(data.email)) {
 			throw new ConflictException('Email already exists');
@@ -132,7 +147,7 @@ export class UserService {
 		return user;
 	}
 
-	findOne(id: number): Promise<UserDto> {
+	findOne(id: number): Promise<User> {
 		return this._repository.findById(id);
 	}
 }

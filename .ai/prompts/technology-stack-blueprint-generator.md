@@ -41,7 +41,7 @@ ${CATEGORIZATION="Technology Type|Layer|Purpose"} <!-- Organization method -->
 - HTTP server (Fastify via `@nestjs/platform-fastify`)
 - Module organization and feature-module boundaries
 - Configuration approach (Zod config factories under `src/app/config/`)
-- Validation (`ZodDto` / `ZodValidationPipe` via `#libs/zod`)
+- Validation (`@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe` via `#libs/zod`)
 - API documentation (OpenAPI / Swagger)
 - Security guards (`#libs/decorators`, `ApiKey` / `AllowAnonymous`)
 - HTTP client (`#libs/http`) and NestJS dependency injection patterns
@@ -163,8 +163,9 @@ ${DEPTH_LEVEL == "Comprehensive" || DEPTH_LEVEL == "Implementation-Ready" ?
     - Error handling with NestJS HTTP exceptions
 
 - **Validation Patterns**:
-    - `ZodDto` classes for all DTOs (`ZodDto(schema, 'Model')`)
-    - `ZodValidationPipe` at the edge; custom validators (`phone()`, `epoch()`)
+    - Zod schemas with `.meta({ id: 'Model' })` for OpenAPI registration
+    - `StandardSchemaValidationPipe` at the edge via `@Body`/`@Query`/`@Param({ schema })`;
+      custom validators (`phone()`, `epoch()`)
 
 - **Language Features Used**:
     - Detect specific TypeScript features from code

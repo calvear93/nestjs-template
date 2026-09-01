@@ -53,7 +53,7 @@ Review the security aspects of [COMPONENT] and ensure:
 
 ## Security Checklist:
 
-- [ ] Input validation with `ZodDto` / `ZodValidationPipe`
+- [ ] Input validation with `@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe`
 - [ ] `@ApiKey()` applied at controller level; `@AllowAnonymous()` only where intended
 - [ ] Custom guards built with `createSecurityGuard()` (`#libs/decorators`)
 - [ ] Sensitive data properly protected

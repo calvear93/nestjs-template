@@ -2,8 +2,9 @@
 
 Implement comprehensive error handling for [COMPONENT] following NestJS template patterns and industry best practices:
 
-> **Note:** In this template the canonical validation exception comes from `#libs/zod`
-> (`ZodValidationPipe` rejects invalid input automatically). The custom `AppException`
+> **Note:** In this template the canonical validation exception comes from NestJS's built-in
+> `StandardSchemaValidationPipe` (rejects invalid `@Body`/`@Query`/`@Param({ schema })` input
+> automatically with a `BadRequestException`). The custom `AppException`
 > hierarchy and `GlobalExceptionFilter` shown below are **optional and illustrative** —
 > the base template does not ship them. Add them only if a project genuinely needs a
 > richer error contract, and prefer NestJS built-in HTTP exceptions otherwise.

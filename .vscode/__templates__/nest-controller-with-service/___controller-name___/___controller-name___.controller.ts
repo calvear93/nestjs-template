@@ -1,5 +1,9 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { ApplyControllerDocs } from '../../decorators/docs.decorator.ts';
+import {
+	type ___ControllerName___,
+	___ControllerName___Schema,
+} from './___controller-name___.schema.ts';
 import { ___ControllerName___Service } from './___controller-name___.service.ts';
 import { ___ControllerName___ControllerDocs } from './___controller-name___.controller.docs.ts';
 
@@ -22,6 +26,20 @@ export class ___ControllerName___Controller {
 	@Get()
 	run(): string {
 		return this.service.sample();
+	}
+
+	/**
+	 * Receives, validates and returns a body.
+	 *
+	 * @param data - validated request body
+	 * @returns the same data, echoed back
+	 */
+	@Post()
+	create(
+		@Body({ schema: ___ControllerName___Schema })
+		data: ___ControllerName___,
+	): ___ControllerName___ {
+		return this.service.create(data);
 	}
 
 	private readonly _logger = new Logger(___ControllerName___Controller.name);

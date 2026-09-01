@@ -38,7 +38,7 @@ style contract; the points below are the high-value highlights.
 - Throw NestJS HTTP exceptions (`NotFoundException`, `BadRequestException`, …)
   with messages; map transport errors from `#libs/http`
 - Name the catch parameter `error`; log via `Logger` (never `console.log`)
-- Validate inputs with `ZodDto` / `ZodValidationPipe`
+- Validate inputs with `@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe`
 
 ### Performance Optimization:
 

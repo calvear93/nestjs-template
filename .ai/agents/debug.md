@@ -95,17 +95,19 @@ pnpm build                        # Surface compilation/type errors
 #### Zod Validation Errors
 
 - **Symptom**: 400 Bad Request with validation details
-- **Check**: Zod schemas in `schemas/*.dto.ts`
-- **Fix**: Ensure DTO schemas match the data structure
-- **Verify**: Use `ZodDto(schema, 'SchemaName')` wrapper
+- **Check**: Zod schemas in `schemas/*.schema.ts`
+- **Fix**: Ensure schemas match the data structure
+- **Verify**: Use `.meta({ id: 'SchemaName' })` to register the schema as an OpenAPI component
 
 ```typescript
 // Correct pattern
-const UserSchema = z.object({
-	name: z.string().min(1),
-	email: z.email(),
-});
-export class UserDto extends ZodDto(UserSchema, 'User') {}
+export const UserSchema = z
+	.object({
+		name: z.string().min(1),
+		email: z.email(),
+	})
+	.meta({ id: 'User' });
+export type User = z.infer<typeof UserSchema>;
 ```
 
 #### Configuration Issues
@@ -145,7 +147,7 @@ export class UserDto extends ZodDto(UserSchema, 'User') {}
 
 - **Symptom**: Request body parsing errors
 - **Check**: Content-Type headers and body parser configuration
-- **Fix**: Ensure proper DTO validation with `ZodValidationPipe`
+- **Fix**: Ensure the route uses `@Body`/`@Query`/`@Param({ schema })` so `StandardSchemaValidationPipe` validates it
 - **Verify**: Controller method signatures use correct decorators
 
 ### Debugging Workflow for This Project
@@ -167,4 +169,4 @@ export class UserDto extends ZodDto(UserSchema, 'User') {}
 - [ ] No hardcoded values (use config providers)
 - [ ] Proper error handling with specific exceptions
 - [ ] All imports use correct path aliases
-- [ ] DTOs use `ZodDto` wrapper with schema names
+- [ ] Schemas use `.meta({ id })` for named OpenAPI components

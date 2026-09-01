@@ -32,17 +32,15 @@ const PHONE_REGEX = /^\+?\(?\d{1,3}\)?[\s\-.]?\d{3}[\s\-.]?\d{4,6}$/u;
  * ```
  *
  * @example
- * In a DTO:
+ * In a schema:
  * ```ts
- * import { ZodDto, phone } from '#libs/zod';
+ * import { phone } from '#libs/zod';
  *
  * const UserSchema = z.object({
  *	name: z.string(),
  *	primaryPhone: phone(),
  *	secondaryPhone: phone().optional(),
- * });
- *
- * export class UserDto extends ZodDto(UserSchema, 'User') {}
+ * }).meta({ id: 'User' });
  * ```
  *
  * @example

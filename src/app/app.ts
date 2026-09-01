@@ -1,5 +1,8 @@
-import { registerDtoOpenApiSchemas, ZodValidationPipe } from '#libs/zod';
-import { type INestApplication } from '@nestjs/common';
+import { standardSchemaConverter } from '#libs/zod';
+import {
+	type INestApplication,
+	StandardSchemaValidationPipe,
+} from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import {
@@ -27,10 +30,9 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 		.addApiKey(SECURITY_API_SCHEMA, ApiKeyGuard.name)
 		.build();
 
-	const document = SwaggerModule.createDocument(app, config);
-
-	// register zod DTOs
-	registerDtoOpenApiSchemas(document);
+	const document = SwaggerModule.createDocument(app, config, {
+		standardSchemaConverter,
+	});
 
 	SwaggerModule.setup(prefix, app, document, {
 		customSiteTitle: process.env.TITLE,
@@ -58,7 +60,7 @@ export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 
 	app.enableVersioning();
 	app.setGlobalPrefix(prefix);
-	app.useGlobalPipes(new ZodValidationPipe());
+	app.useGlobalPipes(new StandardSchemaValidationPipe());
 
 	if (swagger) addSwagger(app, prefix);
 

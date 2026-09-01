@@ -39,7 +39,7 @@ services/
   {module-name}.service.ts           business logic
   {module-name}.service.spec.ts      service tests
 schemas/
-  {module-name}.dto.ts               Zod schemas + ZodDto classes
+  {module-name}.schema.ts            Zod schemas + inferred types
 interfaces/                          optional TypeScript interfaces
 index.ts                             barrel exports
 {module-name}.module.ts              NestJS module definition
@@ -123,7 +123,8 @@ export class AppModule {}
 - **Controllers** — HTTP only: routing, status codes, delegating to services. Keep thin.
   Apply `@ApiKey()` and attach docs with `@ApplyControllerDocs(...)`.
 - **Services** — business logic, `@Injectable()`, dependencies via constructor injection.
-- **Schemas/DTOs** — `ZodDto` classes; the single source of validation and OpenAPI shape.
+- **Schemas** — plain Zod schemas with `.meta({ id })`; the single source of validation and
+  OpenAPI shape.
 - **Docs** — a colocated `*.controller.docs.ts` using `DecoratorsLookUp` for type safety.
 
 Worked code for each layer is in [patterns](patterns.instructions.md).
@@ -142,7 +143,8 @@ Worked code for each layer is in [patterns](patterns.instructions.md).
 `@ApiKey` / `@AllowAnonymous` are created from `createSecurityGuard()` (`#libs/decorators`)
 in `src/app/decorators/api-key.guard.ts`. Apply `@ApiKey()` at the controller class level and
 mark individual public endpoints with `@AllowAnonymous()`. Build additional role/permission
-guards with the same factory. Validation guards (`ZodValidationPipe`) run on every DTO input.
+guards with the same factory. The global `StandardSchemaValidationPipe` runs on every
+`@Body`/`@Query`/`@Param({ schema })` input.
 
 ## Performance guidelines
 

@@ -8,7 +8,7 @@ import {
 	ApiTags,
 } from '@nestjs/swagger';
 import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
-import { SampleDto } from '../schemas/sample.dto.ts';
+import { SampleSchema } from '../schemas/sample.schema.ts';
 import { type SampleController } from './sample.controller.ts';
 
 export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
@@ -27,7 +27,13 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				summary: 'Receives, validate and returns a DTO',
 			}),
 			ApiBody({
-				schema: SampleDto.jsonSchema,
+				// `schema` here is inert: NestJS always overwrites it with the
+				// schema derived (and correctly registered) from
+				// @Body({ schema }) on the controller method — see #libs/zod's
+				// README, "OpenAPI Integration". This placeholder only exists
+				// to satisfy ApiBody's TypeScript signature, which requires
+				// `schema` whenever `examples` is set.
+				schema: { type: 'object' },
 				examples: {
 					example: {
 						description: 'example',
@@ -54,7 +60,7 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 			}),
 			ApiResponse({
 				description: 'DTO',
-				schema: SampleDto.jsonSchema,
+				standardSchema: SampleSchema,
 				status: HttpStatusCode.CREATED,
 			}),
 		],

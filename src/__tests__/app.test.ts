@@ -5,7 +5,7 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { AppModule } from '../app/app.module.ts';
-import type { SampleDto } from '../app/modules/sample/schemas/sample.dto.ts';
+import type { Sample } from '../app/modules/sample/schemas/sample.schema.ts';
 import { SampleService } from '../app/modules/sample/services/sample.service.ts';
 
 describe(AppModule, () => {
@@ -63,7 +63,7 @@ describe(AppModule, () => {
 	});
 
 	test('get /v1/basic/dto return same body sent', async () => {
-		const expected: SampleDto = {
+		const expected: Sample = {
 			id: 1,
 			name: 'name',
 		};

@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { StandardSchemaValidationPipe } from '@nestjs/common';
 import {
 	FastifyAdapter,
 	type NestFastifyApplication,
@@ -21,6 +22,10 @@ export const createFastifyApplication = async (
 	}
 
 	const app = module.createNestApplication<NestFastifyApplication>(adapter);
+
+	// mirrors the global pipe registered in src/app/app.ts's start() — without
+	// it, integration tests never actually exercise request validation
+	app.useGlobalPipes(new StandardSchemaValidationPipe());
 
 	await app.enableVersioning().init();
 	await app.getHttpAdapter().getInstance().ready();

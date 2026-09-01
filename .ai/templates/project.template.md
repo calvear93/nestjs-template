@@ -7,7 +7,7 @@
 
 - **Platform / language:** <e.g. NestJS + TypeScript on Fastify>
 - **Architecture:** <e.g. feature modules — src/app/modules, src/libs>
-- **Validation:** <e.g. Zod (ZodDto) via #libs/zod>
+- **Validation:** <e.g. Zod via #libs/zod's native Standard Schema support>
 - **Testing:** <e.g. Vitest + vitest-mock-extended>
 - **Runtime / tooling:** <e.g. Vite + vite-node + pnpm scripts>
 

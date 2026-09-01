@@ -41,7 +41,7 @@ Work tasks **in order**. For each unchecked task:
    config injected via providers (never hardcoded / no `process.env` outside `src/app/config/`).
 4. **Conform to the conventions** (`AGENTS.md` Code style + `coding-standards`): tabs (width 4),
    single quotes, semicolons, trailing commas; `.ts` extension on relative imports;
-   `#libs/*` aliases; no `any`; inputs validated through `ZodDto`; NestJS
+   `#libs/*` aliases; no `any`; inputs validated through `@Body`/`@Query`/`@Param({ schema })`; NestJS
    HTTP exceptions for the error path; no `console.log` (use the NestJS `Logger`). Run
    `pnpm lint` and `pnpm build` as you go and fix every error before moving on.
 5. **Check the task off** in `tasks.md`, run `pnpm test:dev --run`, and move on.

@@ -21,12 +21,13 @@ Feature modules use a **flat layout**: colocate `*.controller.ts`, `*.controller
 
 - **Thin controllers, rich services.** Controllers handle HTTP only; business logic lives in
   `@Injectable()` services.
-- **Validate at the edge.** Every input is a `ZodDto` consumed via `ZodValidationPipe` — provide
-  a schema name for OpenAPI (`ZodDto(schema, 'Model')`). See the `zod-schema` skill.
+- **Validate at the edge.** Every input goes through `@Body`/`@Query`/`@Param({ schema })` and the
+  global `StandardSchemaValidationPipe` — register the schema for OpenAPI with
+  `.meta({ id: 'Model' })`. See the `zod-schema` skill.
 - **Inject, never hardcode.** Config and dependencies flow through NestJS DI (`useFactory`
   providers); **never** read `process.env` outside `src/app/config/`. See the `ioc-binding` skill.
 - **Document every endpoint.** A colocated `*.controller.docs.ts` carries the `@nestjs/swagger`
-  decorators (`ApiOperation`, `ApiResponse`, `CreateUserDto.jsonSchema`).
+  decorators (`ApiOperation`, `ApiResponse({ standardSchema })`).
 - **Errors.** Throw NestJS HTTP exceptions; always handle the error path. The global filter is
   Fastify-based — use Fastify types/adapter, never Express.
 - **Security.** `@ApiKey()` at the controller level; `@AllowAnonymous()` for public endpoints;
@@ -40,7 +41,7 @@ export class UserController {
 	constructor(private readonly _users: UserService) {}
 
 	@Post()
-	create(@Body(ZodValidationPipe) dto: CreateUserDto): Promise<UserDto> {
+	create(@Body({ schema: CreateUserSchema }) dto: CreateUser): Promise<User> {
 		return this._users.create(dto);
 	}
 }

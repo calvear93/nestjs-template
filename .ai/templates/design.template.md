@@ -23,15 +23,15 @@
 - **Controller:** `src/app/modules/<name>/<name>.controller.ts` (thin; `@ApiKey()` /
   `@AllowAnonymous()`) + OpenAPI in `<name>.controller.docs.ts`
 - **Service / provider:** `src/app/modules/<name>/<name>.service.ts` — business logic via DI
-- **DTOs / schemas:** `src/app/modules/<name>/<name>.dto.ts` — `ZodDto(schema, 'Model')`
+- **Schemas:** `src/app/modules/<name>/<name>.schema.ts` — `.meta({ id: 'Model' })`
 - **Outbound data:** `#libs/http` clients injected into services (no ORM/database layer)
 - **Guards / interceptors / pipes:** `src/app/decorators/*` / `src/libs/decorators` (`createSecurityGuard()` from `#libs/decorators`)
 - **Shared libs touched:** `#libs/zod` · `#libs/http` · `#libs/decorators`
 
 ## Data & validation
 
-- Zod schemas and `ZodDto` shapes, input validation at the edge (`ZodValidationPipe`),
-  and any computed fields. See the `zod-schema` skill.
+- Zod schemas, input validation at the edge (`@Body`/`@Query`/`@Param({ schema })` +
+  `StandardSchemaValidationPipe`), and any computed fields. See the `zod-schema` skill.
 
 ## Configuration & DI (if applicable)
 

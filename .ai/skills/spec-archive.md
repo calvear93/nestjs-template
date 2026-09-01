@@ -34,7 +34,7 @@ exist, loop back to `/spec-tasks` or `/spec-implement` — do not archive.
 
 (`zod-schema`, `ioc-binding`, `nestjs`, `vitest-tdd` skills): controllers thin with business
 logic in services; config injected via providers (no hardcoded values, no `process.env` outside
-`src/app/config/`); inputs validated through `ZodDto`;
+`src/app/config/`); inputs validated through `@Body`/`@Query`/`@Param({ schema })`;
 errors thrown as NestJS HTTP exceptions; `@ApiKey()`/`@AllowAnonymous()` applied correctly; no
 `any` left where a real type fits; meaningful assertions (would fail if the logic broke).
 

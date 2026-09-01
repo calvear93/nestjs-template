@@ -4,7 +4,7 @@ Create a new API endpoint for [ENDPOINT_DESCRIPTION] following the NestJS templa
 
 ## 🎯 Core Requirements
 
-1. **Zod Schema & DTOs**: Define request/response schemas with proper validation
+1. **Zod Schemas**: Define request/response schemas with proper validation
 2. **Controller Implementation**: Use proper HTTP methods and status codes
 3. **Security**: Apply `@ApiKey()` or `@AllowAnonymous()` decorators appropriately
 4. **OpenAPI Documentation**: Include comprehensive Swagger documentation
@@ -19,8 +19,8 @@ Create a new API endpoint for [ENDPOINT_DESCRIPTION] following the NestJS templa
 
 - [ ] Zod schema defined with proper validation rules
 - [ ] Custom validators used where appropriate (`phone()`, `epoch()`)
-- [ ] Schema names provided for OpenAPI: `ZodDto(schema, 'SchemaName')`
-- [ ] Request/response DTOs extend ZodDto properly
+- [ ] Schema registered for OpenAPI: `.meta({ id: 'SchemaName' })`
+- [ ] Request schema passed via `@Body`/`@Query`/`@Param({ schema })`
 
 ### Controller Implementation
 
@@ -35,7 +35,9 @@ Create a new API endpoint for [ENDPOINT_DESCRIPTION] following the NestJS templa
 - [ ] Heavy `@Api*()` decorators live in the colocated `*.controller.docs.ts`,
       typed as `DecoratorsLookUp<Controller>` (not in the controller body)
 - [ ] `ApiOperation` per handler; `ApiResponse` for success and error cases
-- [ ] Request/response schemas referenced via `Dto.jsonSchema`
+- [ ] Response schemas referenced via `ApiResponse({ standardSchema: Schema })`; `ApiBody`'s
+      `schema:` is inert (overwritten by the reflected `@Body({ schema })`) — only its
+      `examples:` matters
 
 ### Service Layer
 
@@ -56,16 +58,20 @@ Create a new API endpoint for [ENDPOINT_DESCRIPTION] following the NestJS templa
 
 ### Basic Controller Structure
 
-`ZodValidationPipe` is registered globally (`app.useGlobalPipes`), so a plain
-`@Body()` already validates the incoming `ZodDto`. Note the constructor sorts
-**after** the public methods (perfectionist class-member order), and private
-members are underscore-prefixed.
+The global `StandardSchemaValidationPipe` validates any parameter decorated with a `schema`
+option, so `@Body({ schema: Create[ResourceName]Schema })` is all the validation a handler
+needs. Note the constructor sorts **after** the public methods (perfectionist class-member
+order), and private members are underscore-prefixed.
 
 ```typescript
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AllowAnonymous, ApiKey } from '../../../decorators/api-key.guard.ts';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
-import { Create[ResourceName]Dto, [ResourceName]Dto } from '../schemas/[resource].dto.ts';
+import {
+	type Create[ResourceName],
+	Create[ResourceName]Schema,
+	type [ResourceName],
+} from '../schemas/[resource].schema.ts';
 import { [ResourceName]Service } from '../services/[resource].service.ts';
 import { [ResourceName]ControllerDocs } from './[resource].controller.docs.ts';
 
@@ -77,12 +83,14 @@ import { [ResourceName]ControllerDocs } from './[resource].controller.docs.ts';
 @ApplyControllerDocs([ResourceName]ControllerDocs)
 export class [ResourceName]Controller {
 	@Get()
-	findAll(): Promise<[ResourceName]Dto[]> {
+	findAll(): Promise<[ResourceName][]> {
 		return this._service.findAll();
 	}
 
 	@Post()
-	create(@Body() dto: Create[ResourceName]Dto): Promise<[ResourceName]Dto> {
+	create(
+		@Body({ schema: Create[ResourceName]Schema }) dto: Create[ResourceName],
+	): Promise<[ResourceName]> {
 		return this._service.create(dto);
 	}
 
@@ -93,10 +101,10 @@ export class [ResourceName]Controller {
 ### Zod Schema Template
 
 ```typescript
-import { epoch, phone, ZodDto } from '#libs/zod';
+import { epoch, phone } from '#libs/zod';
 import { z } from 'zod';
 
-const [ResourceName]Schema = z
+export const [ResourceName]Schema = z
 	.object({
 		id: z.coerce.number().positive(),
 		name: z.string().min(1).max(100),
@@ -105,33 +113,33 @@ const [ResourceName]Schema = z
 		createdAt: epoch(),
 		updatedAt: epoch(),
 	})
-	.meta({ description: '[ResourceName] entity' });
+	.meta({ id: '[ResourceName]' });
 
-export class [ResourceName]Dto extends ZodDto([ResourceName]Schema, '[ResourceName]') {}
+export type [ResourceName] = z.infer<typeof [ResourceName]Schema>;
 
-const Create[ResourceName]Schema = [ResourceName]Schema.omit({
+export const Create[ResourceName]Schema = [ResourceName]Schema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
-});
+}).meta({ id: 'Create[ResourceName]' });
 
-export class Create[ResourceName]Dto extends ZodDto(
-	Create[ResourceName]Schema,
-	'Create[ResourceName]',
-) {}
+export type Create[ResourceName] = z.infer<typeof Create[ResourceName]Schema>;
 ```
 
 ### Controller Documentation Template
 
 Keep heavy `@Api*()` decorators out of the controller body. Type the docs map
 with `DecoratorsLookUp<Controller>`; keys are `class`, `common`, and `method`
-(one entry per handler). Reference the DTO schema via `Dto.jsonSchema`.
+(one entry per handler). Reference response schemas via `ApiResponse({ standardSchema })`
+(`isArray: true` combines with it for list responses); `ApiBody`'s `schema:` is inert
+(NestJS overwrites it from the reflected `@Body({ schema })`) — pass a placeholder and rely
+on `examples:` for anything worth documenting there.
 
 ```typescript
 import { HttpStatusCode } from '#libs/http';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
-import { Create[ResourceName]Dto, [ResourceName]Dto } from '../schemas/[resource].dto.ts';
+import { [ResourceName]Schema } from '../schemas/[resource].schema.ts';
 import { type [ResourceName]Controller } from './[resource].controller.ts';
 
 export const [ResourceName]ControllerDocs: DecoratorsLookUp<[ResourceName]Controller> =
@@ -143,17 +151,21 @@ export const [ResourceName]ControllerDocs: DecoratorsLookUp<[ResourceName]Contro
 				ApiResponse({
 					description: 'List of [resource]s',
 					status: HttpStatusCode.OK,
-					schema: [ResourceName]Dto.jsonSchema,
+					standardSchema: [ResourceName]Schema,
 					isArray: true,
 				}),
 			],
 			create: [
 				ApiOperation({ summary: 'Create a new [resource]' }),
-				ApiBody({ schema: Create[ResourceName]Dto.jsonSchema }),
+				ApiBody({
+					// inert placeholder — NestJS overwrites it with the schema
+					// derived from @Body({ schema }) on the controller method
+					schema: { type: 'object' },
+				}),
 				ApiResponse({
 					description: '[ResourceName] created',
 					status: HttpStatusCode.CREATED,
-					schema: [ResourceName]Dto.jsonSchema,
+					standardSchema: [ResourceName]Schema,
 				}),
 				ApiResponse({
 					description: 'Invalid input data',

@@ -6,9 +6,11 @@
 
 ## Stack
 
-- **Framework / language:** NestJS 11+ on Fastify · TypeScript 5+
+- **Framework / language:** NestJS 12+ on Fastify · TypeScript 5+
 - **Architecture:** feature modules (flat layout) — `src/app/modules`, `src/libs`
-- **Validation:** Zod 4+ via `#libs/zod` (`ZodDto`, `ZodValidationPipe`)
+- **Validation:** Zod 4+ via NestJS's native Standard Schema support (`@Body`/`@Query`/
+  `@Param({ schema })` + `StandardSchemaValidationPipe`); `#libs/zod` adds OpenAPI wiring and
+  custom validators
 - **API docs:** OpenAPI / Swagger (colocated `*.controller.docs.ts`)
 - **HTTP client:** `#libs/http` for outbound calls; no ORM/database layer in this template
 - **Testing:** Vitest + `vitest-mock-extended` (coverage ≥ 80%)

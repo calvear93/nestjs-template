@@ -29,21 +29,21 @@ When guidance conflicts, resolve in this order:
 
 ## Tech stack
 
-| Area              | Choice                                                 |
-| ----------------- | ------------------------------------------------------ |
-| Framework         | NestJS 11+ with TypeScript 5+                          |
-| HTTP server       | Fastify (`@nestjs/platform-fastify`)                   |
-| Validation        | Zod 4+ via `#libs/zod` (`ZodDto`, `ZodValidationPipe`) |
-| API docs          | OpenAPI / Swagger (`@nestjs/swagger`)                  |
-| Dependency inject | NestJS built-in IoC container                          |
-| HTTP client       | Built-in client via `#libs/http`                       |
-| Dates             | Luxon                                                  |
-| Testing           | Vitest + `vitest-mock-extended`                        |
-| Coverage          | Vitest Coverage V8 (target ≥ 80%)                      |
-| Mutation testing  | Stryker Mutator                                        |
-| Build/runtime     | Vite + vite-node; Node `>=24`, pnpm `>=11`             |
-| Env loading       | `@calvear/env` (`env/` folder)                         |
-| Tooling           | ESLint + Prettier, pnpm                                |
+| Area              | Choice                                                                                                                                                                             |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework         | NestJS 12+ with TypeScript 5+                                                                                                                                                      |
+| HTTP server       | Fastify (`@nestjs/platform-fastify`)                                                                                                                                               |
+| Validation        | Zod 4+ via NestJS's native Standard Schema support (`@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe`); `#libs/zod` adds OpenAPI wiring and custom validators |
+| API docs          | OpenAPI / Swagger (`@nestjs/swagger`)                                                                                                                                              |
+| Dependency inject | NestJS built-in IoC container                                                                                                                                                      |
+| HTTP client       | Built-in client via `#libs/http`                                                                                                                                                   |
+| Dates             | Luxon                                                                                                                                                                              |
+| Testing           | Vitest + `vitest-mock-extended`                                                                                                                                                    |
+| Coverage          | Vitest Coverage V8 (target ≥ 80%)                                                                                                                                                  |
+| Mutation testing  | Stryker Mutator                                                                                                                                                                    |
+| Build/runtime     | Vite + vite-node; Node `>=24`, pnpm `>=11`                                                                                                                                         |
+| Env loading       | `@calvear/env` (`env/` folder)                                                                                                                                                     |
+| Tooling           | ESLint + Prettier, pnpm                                                                                                                                                            |
 
 ## Commands
 
@@ -75,7 +75,7 @@ src/
     decorators/          app-level decorators (ApiKey, AllowAnonymous, ApplyControllerDocs)
     modules/             feature modules (controllers, services, schemas)
   libs/
-    zod/                 #libs/zod  — ZodDto, ZodValidationPipe, custom validators
+    zod/                 #libs/zod  — standardSchemaConverter (OpenAPI), custom validators
     http/                #libs/http — HttpClient, HttpModule, errors, enums
     decorators/          #libs/decorators — createSecurityGuard, ApplyToClass, DecoratorsLookUp
 env/                     appsettings.json (non-secret) + <env>.env.json (secrets)
@@ -96,7 +96,8 @@ suffixes, folder layout, and controller/service/module/DTO/test signatures.
 - **Type safety first** — leverage TypeScript and Zod from API to data layer; never `any`.
 - **Inject, never hardcode** — all config and dependencies flow through NestJS DI.
 - **Thin controllers, rich services** — controllers handle HTTP; business logic lives in services.
-- **Validate at the edge** — every input passes through a `ZodDto` / `ZodValidationPipe`.
+- **Validate at the edge** — every input passes through `@Body`/`@Query`/`@Param({ schema })` and
+  the global `StandardSchemaValidationPipe`.
 - **Document every endpoint** — OpenAPI via a colocated `*.controller.docs.ts` file.
 - **Test what you ship** — unit + integration tests with meaningful assertions (mutation-aware).
 - **YAGNI** — minimal, atomic changes; no speculative abstractions.
@@ -125,7 +126,8 @@ These are non-negotiable. Violations should be fixed before code is considered d
 ### TypeScript & validation
 
 - Explicit types everywhere; no `any` (prefer `unknown` + narrowing).
-- All DTOs are `ZodDto` classes; provide a schema name for OpenAPI: `ZodDto(schema, 'Model')`.
+- All request/response shapes are plain Zod schemas; add `.meta({ id: 'Model' })` to register
+  them as named OpenAPI components.
 - Prefer `async`/`await` over raw Promises; always handle the error path with proper
   NestJS HTTP exceptions.
 

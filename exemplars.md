@@ -59,7 +59,7 @@ export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 
 	app.enableVersioning();
 	app.setGlobalPrefix(prefix);
-	app.useGlobalPipes(new ZodValidationPipe());
+	app.useGlobalPipes(new StandardSchemaValidationPipe());
 
 	if (swagger) addSwagger(app, prefix);
 	// ...
@@ -115,7 +115,7 @@ Shows comprehensive controller implementation with proper decorators and pattern
 @ApplyControllerDocs(SampleControllerDocs)
 export class SampleController {
 	@Post('/dto')
-	dto(@Body() sample: SampleDto): SampleDto {
+	dto(@Body({ schema: SampleSchema }) sample: Sample): Sample {
 		return sample;
 	}
 
@@ -153,7 +153,9 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				summary: 'Receives, validate and returns a DTO',
 			}),
 			ApiBody({
-				schema: SampleDto.jsonSchema,
+				// inert placeholder — NestJS overwrites it with the schema
+				// derived from @Body({ schema }) on the controller method
+				schema: { type: 'object' },
 				examples: {
 					example: {
 						value: { id: 1, name: 'a name' },
@@ -163,6 +165,11 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 					},
 				},
 			}),
+			ApiResponse({
+				description: 'DTO',
+				standardSchema: SampleSchema,
+				status: HttpStatusCode.CREATED,
+			}),
 		],
 	},
 };
@@ -171,10 +178,10 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 **Key Principles Demonstrated**:
 
 - Structured documentation with operation summaries
-- Request/response schema definitions
+- Request/response schema definitions via `standardSchema`
 - Multiple examples including edge cases
 - Proper HTTP status codes
-- Type-safe documentation using DTO schemas
+- Type-safe documentation using plain Zod schemas
 
 ### Service Layer
 
@@ -207,67 +214,61 @@ export class SampleService {
 
 ### Data Transfer Objects & Validation
 
-#### Exemplar: Type-Safe DTO with Zod Schema
+#### Exemplar: Type-Safe Schema with Zod
 
-**File**: `src/app/modules/sample/schemas/sample.dto.ts`
+**File**: `src/app/modules/sample/schemas/sample.schema.ts`
 
-Demonstrates Zod integration for runtime type validation:
+Demonstrates Zod integration for runtime type validation — a plain schema, no DTO class:
 
 ```typescript
-const SampleSchema = z
+export const SampleSchema = z
 	.object({
 		id: z.coerce.number(),
 		name: z.string().meta({ description: 'Sample name' }),
 	})
-	.meta({ description: 'Sample DTO schema' });
+	.meta({ id: 'Sample', description: 'Sample DTO schema' });
 
-export class SampleDto extends ZodDto(SampleSchema, 'Sample') {}
+export type Sample = z.infer<typeof SampleSchema>;
 ```
 
 **Key Principles Demonstrated**:
 
 - Schema-first approach with Zod
 - Automatic type coercion
-- OpenAPI schema generation
+- OpenAPI component registration via `.meta({ id })`
 - Metadata for documentation
-- Type-safe class generation
+- Type inference (`z.infer`) instead of a generated class
 
-#### Exemplar: Advanced Zod DTO Implementation
+#### Exemplar: OpenAPI Type-Override Table
 
-**File**: `src/libs/zod/zod-dto.ts`
+**File**: `src/libs/zod/openapi.ts`
 
-Shows sophisticated DTO factory with validation and schema generation:
+Shows the `standardSchemaConverter` wired into `SwaggerModule.createDocument`, including the
+override table for Zod types `zod-openapi` treats as "unrepresentable" (`void`, `nan`, `symbol`,
+`map`, `set`) and a defensive `allowEmptySchema` fallback for `custom`/`function`:
 
 ```typescript
-export const ZodDto = <Z extends ZodShape, I = z.input<Z>>(
-	schema: Z,
-	schemaName?: string,
-) => {
-	return class {
-		constructor(input?: I) {
-			if (input) Object.assign(this, schema.parse(input));
-		}
+export const standardSchemaConverter: SwaggerDocumentOptions['standardSchemaConverter'] =
+	(schema, { schemaType }) => {
+		const converted = createSchema(schema as never, {
+			io: schemaType,
+			openapiVersion: OPENAPI_VERSION,
+			opts: {
+				allowEmptySchema: { custom: true, function: true },
+				override: applyTypeOverrides,
+			},
+		});
 
-		static safeFrom(input: I) {
-			const { data, error, success } = schema.safeParse(input);
-			if (!success) return { error, success: false };
-			const instance = Object.assign(new this(), data);
-			return { data: instance, success: true };
-		}
-
-		static readonly jsonSchema = toJSONSchema(schema, schemaName);
-		static readonly schema = schema;
-	} as ZodTypeDto<Z, I>;
-};
+		return { components: converted.components, schema: converted.schema };
+	};
 ```
 
 **Key Principles Demonstrated**:
 
-- Generic factory pattern for DTO creation
-- Safe parsing with error handling
-- Automatic JSON schema generation for OpenAPI
-- Type-safe constructor with validation
-- Static methods for validation utilities
+- Deferred conversion — runs when `SwaggerModule.createDocument()` builds the document, so
+  registered components (`.meta({ id })`) actually get populated
+- Defensive `allowEmptySchema` fallback instead of a hard crash for edge-case types
+- See `src/libs/zod/openapi.spec.ts` for the full regression-test coverage
 
 ### HTTP Client Library
 
@@ -423,7 +424,7 @@ describe(SampleController, () => {
 // ✅ CORRECT import order and style
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { ZodDto } from '#libs/zod';
+import { phone } from '#libs/zod';
 import { HttpClient } from '#libs/http';
 import { UserService } from '../services/user.service.ts';
 ```
@@ -445,7 +446,8 @@ import { UserService } from '../services/user.service.ts';
 
 1. **Don't use `any` type** - Always provide explicit types
 2. **Don't hardcode configuration** - Use environment variables
-3. **Don't skip validation** - Apply ZodValidationPipe globally
+3. **Don't skip validation** - register `StandardSchemaValidationPipe` globally and pass a
+   `schema` to every `@Body`/`@Query`/`@Param`
 4. **Don't mix concerns** - Keep controllers thin, logic in services
 5. **Don't forget testing** - Maintain comprehensive test coverage
 6. **Don't ignore documentation** - Document all APIs with OpenAPI

@@ -40,7 +40,7 @@ template's established patterns — the best-practice skills in `.ai/skills/` ha
 | New code of any kind       | Start from the matching scaffold in `.vscode/__templates__/<pattern>/`                                                                                                                                                                    |
 | Calling an external API    | `HttpClient` from `#libs/http`, injected via the constructor — never raw `fetch`                                                                                                                                                          |
 | Config, URLs, secrets      | Never hardcode; never read `process.env` outside `src/app/config/`. Non-secret in `env/appsettings.json`, secrets in `env/<env>.env.json`; validate with Zod; provide via `useFactory` and inject. After adding a var → `pnpm env:schema` |
-| Request / response shapes  | A `ZodDto` class — `ZodDto(schema, 'Model')`; validate with `ZodValidationPipe` at the controller edge                                                                                                                                    |
+| Request / response shapes  | A plain Zod schema — `.meta({ id: 'Model' })`; validate with `@Body`/`@Query`/`@Param({ schema })` + the global `StandardSchemaValidationPipe`                                                                                            |
 | A new service / dependency | `@Injectable()`, register in the module's providers, inject via the constructor                                                                                                                                                           |
 | A new endpoint             | A thin controller + a colocated `*.controller.docs.ts` (OpenAPI); apply `@ApiKey()` (or `@AllowAnonymous()` for public endpoints)                                                                                                         |
 | Security guards            | Build with `createSecurityGuard()` from `#libs/decorators`                                                                                                                                                                                |
@@ -76,7 +76,7 @@ roles reference it instead of keeping their own copy.
 - ☑️ Tests written **first** and passing — `pnpm test:dev --coverage --run`
 - ☑️ Lint clean — `pnpm lint`
 - ☑️ No `any`, no disabled TS checks, no hardcoded config / URLs / secrets (inject via DI; `process.env` only in `src/app/config/`; `pnpm env:schema` after changes)
-- ☑️ Inputs validated with `ZodDto` / `ZodValidationPipe` at the edges
+- ☑️ Inputs validated with `@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe` at the edges
 - ☑️ Every endpoint documented via a colocated `*.controller.docs.ts` (OpenAPI)
 - ☑️ Meaningful unit + integration tests, ≥ 80% coverage (mutation-aware)
 - ☑️ It **actually runs**: verify the behavior (`pnpm start:dev`, check Swagger), don't just trust the diff

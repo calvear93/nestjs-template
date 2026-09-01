@@ -64,7 +64,7 @@ const apiUrl = process.env.API_URL;
 
 **Validation Strategy**
 
-- Always use Zod schemas wrapped in `ZodDto(schema, 'Name')`
+- Always use Zod schemas with `.meta({ id: 'Name' })` for OpenAPI registration
 - Never skip validation on endpoints
 - Guide engineers to think about edge cases in schemas
 
@@ -115,7 +115,7 @@ const apiUrl = process.env.API_URL;
 | Hardcoded timeouts/limits         | Configuration values            | Flexibility across environments       |
 | Generic error messages            | Specific custom exceptions      | Debugging, client clarity             |
 | Missing tests                     | Comprehensive test coverage     | Quality assurance                     |
-| Manual DTO validation             | Zod schemas + `ZodDto`          | Consistency, auto-docs                |
+| Manual DTO validation             | Zod schemas + `@Body({schema})` | Consistency, auto-docs                |
 
 ### Resources to Reference
 

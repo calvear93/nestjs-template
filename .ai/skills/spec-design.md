@@ -28,8 +28,9 @@ Input: `specs/changes/<change-id>/`.
     - **Services / providers** hold business logic, injected through NestJS DI
       (constructor injection) — never hardcode config or read `process.env` outside
       `src/app/config/`. See the `ioc-binding` skill.
-    - **DTOs / validation** are `ZodDto` classes (`ZodDto(schema, 'Model')`) validated at the
-      edge via `ZodValidationPipe`. See the `zod-schema` skill.
+    - **DTOs / validation** are Zod schemas (`.meta({ id: 'Model' })` for named OpenAPI
+      components) validated at the edge via `@Body`/`@Query`/`@Param({ schema })` +
+      `StandardSchemaValidationPipe`. See the `zod-schema` skill.
     - **Outbound data** is fetched through `#libs/http` clients injected into services; this
       template ships no ORM/database layer — keep external access inside services, not controllers.
     - **Guards / interceptors / pipes** for cross-cutting concerns; build custom guards with

@@ -143,7 +143,7 @@ ${PROJECT_TYPE == "Auto-detect" ? "For each detected technology stack, document 
 - NestJS dependency injection and provider/factory patterns
 - Fastify HTTP layer integration (`@nestjs/platform-fastify`)
 - Controller/service separation (thin controllers, rich services)
-- Validation at the edge via `ZodDto` / `ZodValidationPipe` (`#libs/zod`)
+- Validation at the edge via `@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe` (`#libs/zod`)
 - Configuration via Zod config factories under `src/app/config/`
 - OpenAPI/Swagger documentation and security guards (`#libs/decorators`)
 

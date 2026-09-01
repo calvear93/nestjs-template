@@ -40,14 +40,15 @@ feature/
   feature.service.ts
   feature.service.spec.ts
   feature.controller.spec.ts
-  sample.dto.ts (or schemas/ if multiple)
+  sample.schema.ts (or schemas/ if multiple)
   exceptions/ (if applicable)
 ```
 
 Rules:
 
 - Thin controllers; logic belongs in services.
-- Named Zod schemas wrapped with `ZodDto` for DTOs.
+- Named Zod schemas (`.meta({ id: 'Name' })`) used directly as request/response shapes — no DTO
+  class wrapper.
 - Always include `.ts` extensions in relative imports.
 - Do not use `any`; prefer explicit or Zod-inferred types.
 - Tests: use vitest, mocks with `vitest-mock-extended`, and the built-in HTTP mock server helper for external HTTP.
@@ -58,7 +59,7 @@ Rules:
 ### 1. Create New Module
 
 1. Confirm special domain terms (if any) that must remain in Spanish.
-2. Define Zod schema(s) and DTO(s) (`ZodDto(schema, 'SchemaName')`).
+2. Define Zod schema(s) with `.meta({ id: 'SchemaName' })` for OpenAPI registration.
 3. Implement service with clear interface and unit tests.
 4. Implement controller with validation and correct status codes.
 5. Add docs file (`*.controller.docs.ts`) with Swagger decorators.
@@ -141,11 +142,11 @@ Ready to assist as a NestJS expert.
 
 **Core Features:**
 
-- `ZodDto(schema, 'Name')` - Create DTOs from Zod schemas
-- `ZodIterableDto(schema, 'Name')` - For arrays, sets, tuples
-- `ZodValidationPipe` - Automatic validation for controllers
+- Native NestJS 12 Standard Schema support — `@Body`/`@Query`/`@Param({ schema })` + the global
+  `StandardSchemaValidationPipe`, no DTO class needed
+- `standardSchemaConverter` - wires those schemas into the generated OpenAPI document
 - Custom validators: `phone()`, `epoch()`
-- Auto-generated OpenAPI schemas
+- Auto-generated OpenAPI schemas from `.meta({ id: 'Name' })`
 
 **Template Zod Extensions:**
 
@@ -158,43 +159,50 @@ z.iso.datetime(); // ISO datetime
 z.iso.duration(); // ISO duration
 ```
 
-**DTO Creation Pattern:**
+**Schema Creation Pattern:**
 
 ```typescript
-import { ZodDto } from '#libs/zod';
 import { z } from 'zod';
 
 // Base schema
-const UserSchema = z
+export const UserSchema = z
 	.object({
 		id: z.coerce.number().optional(),
 		name: z.string().min(1).max(100),
 		email: z.email(),
 		createdAt: z.date().optional(),
 	})
-	.meta({ description: 'User DTO schema' });
+	.meta({ id: 'User' });
 
-export class UserDto extends ZodDto(UserSchema, 'User') {}
+export type User = z.infer<typeof UserSchema>;
 
-// Create variant (omit auto-generated fields)
-const CreateUserSchema = UserSchema.omit({ id: true, createdAt: true });
-export class CreateUserDto extends ZodDto(CreateUserSchema, 'CreateUser') {}
+// Create variant (omit auto-generated fields) — needs its own `id` to
+// register as a separate OpenAPI component
+export const CreateUserSchema = UserSchema.omit({
+	id: true,
+	createdAt: true,
+}).meta({ id: 'CreateUser' });
+
+export type CreateUser = z.infer<typeof CreateUserSchema>;
 
 // Update variant (all fields optional)
-const UpdateUserSchema = UserSchema.partial();
-export class UpdateUserDto extends ZodDto(UpdateUserSchema, 'UpdateUser') {}
+export const UpdateUserSchema = UserSchema.partial().meta({
+	id: 'UpdateUser',
+});
+
+export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 ```
 
 **Controller Usage:**
 
 ```typescript
 import { Body, Controller, Post } from '@nestjs/common';
-import { ZodValidationPipe } from '#libs/zod';
+import { type CreateUser, CreateUserSchema } from './user.schema.ts';
 
 @Controller('users')
 export class UserController {
 	@Post()
-	async create(@Body(ZodValidationPipe) data: CreateUserDto) {
+	async create(@Body({ schema: CreateUserSchema }) data: CreateUser) {
 		// data is validated and typed automatically
 		return this.service.create(data);
 	}
@@ -365,10 +373,13 @@ export class UserModule {}
 ```typescript
 // controllers/user.controller.ts
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ZodValidationPipe } from '#libs/zod';
 import { ApiKey, AllowAnonymous } from '../../../decorators/api-key.guard.ts';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
-import { CreateUserDto, UserDto } from '../schemas/user.dto.ts';
+import {
+	type CreateUser,
+	CreateUserSchema,
+	type User,
+} from '../schemas/user.schema.ts';
 import { UserService } from '../services/user.service.ts';
 import { UserControllerDocs } from './user.controller.docs.ts';
 
@@ -379,19 +390,19 @@ export class UserController {
 	constructor(private readonly service: UserService) {}
 
 	@Get()
-	async findAll(): Promise<UserDto[]> {
+	async findAll(): Promise<User[]> {
 		return this.service.findAll();
 	}
 
 	@Get(':id')
-	async findOne(@Param('id') id: number): Promise<UserDto> {
+	async findOne(@Param('id') id: number): Promise<User> {
 		return this.service.findOne(id);
 	}
 
 	@Post()
 	async create(
-		@Body(ZodValidationPipe) data: CreateUserDto,
-	): Promise<UserDto> {
+		@Body({ schema: CreateUserSchema }) data: CreateUser,
+	): Promise<User> {
 		return this.service.create(data);
 	}
 }
@@ -402,7 +413,7 @@ export class UserController {
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { HttpClient } from '#libs/http';
 import type { UserConfig } from '../interfaces/user-config.interface.ts';
-import type { CreateUserDto, UserDto } from '../schemas/user.dto.ts';
+import type { CreateUser, User } from '../schemas/user.schema.ts';
 
 @Injectable()
 export class UserService {
@@ -411,13 +422,13 @@ export class UserService {
 		private readonly httpClient: HttpClient,
 	) {}
 
-	async findAll(): Promise<UserDto[]> {
-		const response = await this.httpClient.get<UserDto[]>('/users');
+	async findAll(): Promise<User[]> {
+		const response = await this.httpClient.get<User[]>('/users');
 		return response.json();
 	}
 
-	async findOne(id: number): Promise<UserDto> {
-		const response = await this.httpClient.get<UserDto>(`/users/${id}`);
+	async findOne(id: number): Promise<User> {
+		const response = await this.httpClient.get<User>(`/users/${id}`);
 
 		if (!response.ok) {
 			throw new NotFoundException(`User ${id} not found`);
@@ -426,8 +437,8 @@ export class UserService {
 		return response.json();
 	}
 
-	async create(data: CreateUserDto): Promise<UserDto> {
-		const response = await this.httpClient.post<UserDto>('/users', {
+	async create(data: CreateUser): Promise<User> {
+		const response = await this.httpClient.post<User>('/users', {
 			data: { ...data, role: this.config.defaultRole },
 		});
 		return response.json();
@@ -436,12 +447,11 @@ export class UserService {
 ```
 
 ```typescript
-// schemas/user.dto.ts
-import { ZodDto } from '#libs/zod';
+// schemas/user.schema.ts
 import { z } from 'zod';
 import { phone } from '#libs/zod';
 
-const UserSchema = z
+export const UserSchema = z
 	.object({
 		id: z.coerce.number().positive(),
 		name: z.string().min(1).max(100),
@@ -450,12 +460,16 @@ const UserSchema = z
 		role: z.enum(['admin', 'user', 'guest']).default('user'),
 		createdAt: z.date().optional(),
 	})
-	.meta({ description: 'User entity' });
+	.meta({ id: 'User' });
 
-export class UserDto extends ZodDto(UserSchema, 'User') {}
+export type User = z.infer<typeof UserSchema>;
 
-const CreateUserSchema = UserSchema.omit({ id: true, createdAt: true });
-export class CreateUserDto extends ZodDto(CreateUserSchema, 'CreateUser') {}
+export const CreateUserSchema = UserSchema.omit({
+	id: true,
+	createdAt: true,
+}).meta({ id: 'CreateUser' });
+
+export type CreateUser = z.infer<typeof CreateUserSchema>;
 ```
 
 ## 🧪 Testing Patterns

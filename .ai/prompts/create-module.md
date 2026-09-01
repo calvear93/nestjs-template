@@ -6,7 +6,7 @@ Create a complete NestJS module for [MODULE_NAME] following the template's modul
 
 1. **Feature-based organization** under `src/app/modules/[module-name]/`
 2. **Complete CRUD operations** with proper error handling
-3. **Zod validation** for all DTOs
+3. **Zod validation** for all request/response schemas
 4. **Security decorators** applied appropriately
 5. **OpenAPI documentation** with examples
 6. **Unit and integration tests** with high coverage
@@ -25,7 +25,7 @@ src/app/modules/[module-name]/
 │   ├── [module-name].service.ts           # Business logic service
 │   └── [module-name].service.spec.ts      # Service unit tests
 ├── schemas/
-│   └── [module-name].dto.ts               # Zod schemas and DTOs
+│   └── [module-name].schema.ts            # Zod schemas + inferred types
 └── repositories/ (if needed)
     ├── [module-name].repository.ts        # Data access layer
     └── [module-name].repository.spec.ts   # Repository tests
@@ -41,20 +41,20 @@ src/app/modules/[module-name]/
 - [ ] Proper imports from other modules if needed
 - [ ] Configuration providers if external dependencies exist
 
-### DTOs and Schemas
+### Schemas
 
 - [ ] Zod schemas with comprehensive validation rules
 - [ ] Custom validators used where appropriate (`phone()`, `epoch()`)
-- [ ] Schema names provided for OpenAPI generation
-- [ ] CRUD DTOs: Create, Update, Response DTOs
-- [ ] Proper type inference and exports
+- [ ] Each schema registered for OpenAPI: `.meta({ id: 'Name' })`
+- [ ] CRUD schemas: Create, Update, Query, Response
+- [ ] Proper type inference (`z.infer<>`) and exports
 
 ### Controller Implementation
 
 - [ ] RESTful endpoint structure (GET, POST, PUT, PATCH, DELETE)
 - [ ] Proper HTTP status codes for each operation
 - [ ] Security decorators: `@ApiKey()` or `@AllowAnonymous()`
-- [ ] Request validation with Zod DTOs
+- [ ] Request validation via `@Body`/`@Query`/`@Param({ schema })`
 - [ ] Error handling with meaningful responses
 - [ ] OpenAPI documentation applied
 
@@ -91,14 +91,14 @@ import { [ModuleName]Service } from './services/[module-name].service.ts';
 export class [ModuleName]Module {}
 ```
 
-### Complete DTO Schema Template
+### Schema Template
 
 ```typescript
-import { epoch, phone, ZodDto } from '#libs/zod';
+import { epoch, phone } from '#libs/zod';
 import { z } from 'zod';
 
 // base entity schema
-const [ModuleName]Schema = z
+export const [ModuleName]Schema = z
 	.object({
 		id: z.coerce.number().positive(),
 		name: z.string().min(1).max(100),
@@ -110,51 +110,44 @@ const [ModuleName]Schema = z
 		createdAt: epoch(),
 		updatedAt: epoch(),
 	})
-	.meta({ description: '[ModuleName] entity' });
+	.meta({ id: '[ModuleName]' });
 
-// response DTO
-export class [ModuleName]Dto extends ZodDto([ModuleName]Schema, '[ModuleName]') {}
+export type [ModuleName] = z.infer<typeof [ModuleName]Schema>;
 
-// create DTO (omit generated fields)
-const Create[ModuleName]Schema = [ModuleName]Schema.omit({
+// create schema (omit generated fields)
+export const Create[ModuleName]Schema = [ModuleName]Schema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
-});
+}).meta({ id: 'Create[ModuleName]' });
 
-export class Create[ModuleName]Dto extends ZodDto(
-	Create[ModuleName]Schema,
-	'Create[ModuleName]',
-) {}
+export type Create[ModuleName] = z.infer<typeof Create[ModuleName]Schema>;
 
-// update DTO (partial with omitted fields)
-const Update[ModuleName]Schema = [ModuleName]Schema
+// update schema (partial with omitted fields)
+export const Update[ModuleName]Schema = [ModuleName]Schema
 	.omit({
 		id: true,
 		createdAt: true,
 		updatedAt: true,
 	})
-	.partial();
+	.partial()
+	.meta({ id: 'Update[ModuleName]' });
 
-export class Update[ModuleName]Dto extends ZodDto(
-	Update[ModuleName]Schema,
-	'Update[ModuleName]',
-) {}
+export type Update[ModuleName] = z.infer<typeof Update[ModuleName]Schema>;
 
-// query DTO for filtering
-const [ModuleName]QuerySchema = z.object({
-	page: z.coerce.number().min(1).default(1),
-	limit: z.coerce.number().min(1).max(100).default(10),
-	status: z.enum(['active', 'inactive', 'pending']).optional(),
-	search: z.string().min(1).optional(),
-	sortBy: z.enum(['name', 'createdAt', 'updatedAt']).default('createdAt'),
-	sortOrder: z.enum(['asc', 'desc']).default('desc'),
-});
+// query schema for filtering
+export const [ModuleName]QuerySchema = z
+	.object({
+		page: z.coerce.number().min(1).default(1),
+		limit: z.coerce.number().min(1).max(100).default(10),
+		status: z.enum(['active', 'inactive', 'pending']).optional(),
+		search: z.string().min(1).optional(),
+		sortBy: z.enum(['name', 'createdAt', 'updatedAt']).default('createdAt'),
+		sortOrder: z.enum(['asc', 'desc']).default('desc'),
+	})
+	.meta({ id: '[ModuleName]Query' });
 
-export class [ModuleName]QueryDto extends ZodDto(
-	[ModuleName]QuerySchema,
-	'[ModuleName]Query',
-) {}
+export type [ModuleName]Query = z.infer<typeof [ModuleName]QuerySchema>;
 ```
 
 ### Service Template
@@ -171,11 +164,11 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 import {
-	type Create[ModuleName]Dto,
-	type [ModuleName]Dto,
-	type [ModuleName]QueryDto,
-	type Update[ModuleName]Dto,
-} from '../schemas/[module-name].dto.ts';
+	type Create[ModuleName],
+	type [ModuleName],
+	type [ModuleName]Query,
+	type Update[ModuleName],
+} from '../schemas/[module-name].schema.ts';
 
 @Injectable()
 export class [ModuleName]Service {
@@ -185,7 +178,7 @@ export class [ModuleName]Service {
 	 * @param query - filtering and pagination parameters
 	 * @returns array of [module-name]s
 	 */
-	async findAll(query: [ModuleName]QueryDto): Promise<[ModuleName]Dto[]> {
+	async findAll(query: [ModuleName]Query): Promise<[ModuleName][]> {
 		this._logger.log(`finding [module-name]s`, query);
 
 		// TODO: replace with repository call
@@ -199,7 +192,7 @@ export class [ModuleName]Service {
 	 * @returns the [module-name]
 	 * @throws NotFoundException when it does not exist
 	 */
-	async findById(id: number): Promise<[ModuleName]Dto> {
+	async findById(id: number): Promise<[ModuleName]> {
 		const result = await this._repository.findById(id);
 
 		if (!result) {
@@ -216,7 +209,7 @@ export class [ModuleName]Service {
 	 * @returns the created [module-name]
 	 * @throws ConflictException when the name already exists
 	 */
-	async create(dto: Create[ModuleName]Dto): Promise<[ModuleName]Dto> {
+	async create(dto: Create[ModuleName]): Promise<[ModuleName]> {
 		if (await this._repository.existsByName(dto.name)) {
 			throw new ConflictException(`'${dto.name}' already exists`);
 		}
@@ -235,10 +228,7 @@ export class [ModuleName]Service {
 	 * @returns the updated [module-name]
 	 * @throws NotFoundException when it does not exist
 	 */
-	async update(
-		id: number,
-		dto: Update[ModuleName]Dto,
-	): Promise<[ModuleName]Dto> {
+	async update(id: number, dto: Update[ModuleName]): Promise<[ModuleName]> {
 		await this.findById(id);
 
 		return this._repository.update(id, dto);
@@ -267,8 +257,8 @@ export class [ModuleName]Service {
 
 ### Controller Template
 
-Thin controller: `@Body()` is validated by the global `ZodValidationPipe`; query
-DTOs (with coercion) are too. The constructor sorts after the handlers.
+Thin controller: `@Body({ schema })`/`@Query({ schema })` are validated by the global
+`StandardSchemaValidationPipe`. The constructor sorts after the handlers.
 
 ```typescript
 import {
@@ -287,11 +277,14 @@ import {
 import { ApiKey } from '../../../decorators/api-key.guard.ts';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
 import {
-	type Create[ModuleName]Dto,
-	type [ModuleName]Dto,
-	type [ModuleName]QueryDto,
-	type Update[ModuleName]Dto,
-} from '../schemas/[module-name].dto.ts';
+	type Create[ModuleName],
+	Create[ModuleName]Schema,
+	type [ModuleName],
+	type [ModuleName]Query,
+	[ModuleName]QuerySchema,
+	type Update[ModuleName],
+	Update[ModuleName]Schema,
+} from '../schemas/[module-name].schema.ts';
 import { [ModuleName]Service } from '../services/[module-name].service.ts';
 import { [ModuleName]ControllerDocs } from './[module-name].controller.docs.ts';
 
@@ -303,28 +296,30 @@ import { [ModuleName]ControllerDocs } from './[module-name].controller.docs.ts';
 @ApplyControllerDocs([ModuleName]ControllerDocs)
 export class [ModuleName]Controller {
 	@Get()
-	findAll(@Query() query: [ModuleName]QueryDto): Promise<[ModuleName]Dto[]> {
+	findAll(
+		@Query({ schema: [ModuleName]QuerySchema }) query: [ModuleName]Query,
+	): Promise<[ModuleName][]> {
 		return this._service.findAll(query);
 	}
 
 	@Get(':id')
-	findById(
-		@Param('id', ParseIntPipe) id: number,
-	): Promise<[ModuleName]Dto> {
+	findById(@Param('id', ParseIntPipe) id: number): Promise<[ModuleName]> {
 		return this._service.findById(id);
 	}
 
 	@Post()
 	@HttpCode(HttpStatus.CREATED)
-	create(@Body() dto: Create[ModuleName]Dto): Promise<[ModuleName]Dto> {
+	create(
+		@Body({ schema: Create[ModuleName]Schema }) dto: Create[ModuleName],
+	): Promise<[ModuleName]> {
 		return this._service.create(dto);
 	}
 
 	@Put(':id')
 	update(
 		@Param('id', ParseIntPipe) id: number,
-		@Body() dto: Update[ModuleName]Dto,
-	): Promise<[ModuleName]Dto> {
+		@Body({ schema: Update[ModuleName]Schema }) dto: Update[ModuleName],
+	): Promise<[ModuleName]> {
 		return this._service.update(id, dto);
 	}
 

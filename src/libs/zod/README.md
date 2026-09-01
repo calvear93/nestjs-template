@@ -1,174 +1,184 @@
 # 🧩 `#libs/zod` — Zod ↔ NestJS
 
-> Turn a [Zod](https://zod.dev) schema into a NestJS **DTO** that validates at the edge **and** documents itself in OpenAPI — one schema, one source of truth.
+> Turn a [Zod](https://zod.dev) schema into request/response validation **and** OpenAPI documentation — one schema, one source of truth.
 
-Define the shape once with Zod; `ZodDto` gives you a class you can type `@Body()` with, a pipe that validates incoming payloads, and a JSON Schema for Swagger. No duplicated class-validator decorators.
+This library wires Zod into NestJS's **native Standard Schema support** (v12+): request/response validation via `@Body`/`@Query`/`@Param({ schema })` + the built-in `StandardSchemaValidationPipe`, OpenAPI generation via `zod-openapi`, plus domain validators NestJS doesn't cover natively.
 
 ## ✨ Highlights
 
-- **One schema, three jobs** — runtime validation, static TS types, and OpenAPI schema from a single Zod definition.
-- **Drop-in DTOs** — `ZodDto(schema)` returns a class; type params with it and let `ZodValidationPipe` validate.
-- **Named OpenAPI schemas** — pass a name to get reusable `$ref` components in the Swagger doc.
-- **Iterables too** — `ZodIterableDto` for array / set / tuple bodies.
+- **No DTO classes** — a schema is the request type, the response type, and the OpenAPI shape.
+- **Native validation** — `@Body`/`@Query`/`@Param({ schema })` + the global `StandardSchemaValidationPipe`.
+- **OpenAPI/Swagger** — schemas double as the request/response documentation via `zod-openapi`.
 - **Domain validators** — `phone()` and `epoch()` (Unix / .NET dates → `Date`), ready to compose.
-
-## 📦 API at a glance
-
-| Export                      | Signature                     | Use it to…                                        |
-| --------------------------- | ----------------------------- | ------------------------------------------------- |
-| `ZodDto`                    | `(schema, name?) => DtoClass` | build a DTO from an object/map/record schema      |
-| `ZodIterableDto`            | `(schema, name?) => DtoClass` | build a DTO from an array/set/tuple schema        |
-| `ZodValidationPipe`         | `PipeTransform`               | validate any `ZodDto`-typed argument              |
-| `registerDtoOpenApiSchemas` | `(openApiDoc) => openApiDoc`  | publish named DTO schemas into Swagger components |
-| `isZodDto`                  | `(x) => x is ZodTypeDto`      | detect a DTO class (has a static `schema`)        |
-| `phone` / `epoch`           | Zod validators                | validate phone numbers / convert timestamps       |
-
-**A `ZodDto` class exposes**
-
-| Member                | Description                                                |
-| --------------------- | ---------------------------------------------------------- |
-| `new Dto(input)`      | parses `input` (throws on invalid) and assigns the result  |
-| `Dto.safeFrom(input)` | `{ success: true, data } \| { success: false, error }`     |
-| `Dto.jsonSchema`      | OpenAPI `SchemaObject` (use in `@ApiBody`, `@ApiResponse`) |
-| `Dto.schema`          | the original Zod schema                                    |
+- **Type Safety** — full TypeScript typing via `z.infer<>`.
 
 ## 🚀 Quick start
 
-**1. Enable the pipe globally** (validate every `ZodDto` argument):
+### Define a schema
 
 ```typescript
-// main.ts
-import { ZodValidationPipe } from '#libs/zod';
-
-const app = await NestFactory.create(AppModule);
-app.useGlobalPipes(new ZodValidationPipe());
-```
-
-**2. Define a schema and a DTO:**
-
-```typescript
-// users/user.dto.ts
+// user.schema.ts
 import { z } from 'zod';
-import { ZodDto } from '#libs/zod';
 
-const UserSchema = z.object({
-	id: z.number().positive(),
-	name: z.string().min(1),
-	email: z.email(),
-});
+export const UserSchema = z
+	.object({
+		id: z.number().positive(),
+		name: z.string().min(1).max(100),
+		email: z.email(),
+	})
+	// registers this as a named, reusable OpenAPI component; without an
+	// `id`, the schema always renders inline and never appears under the
+	// document's `components.schemas` — see "OpenAPI Integration" below
+	.meta({ id: 'User' });
 
-export class UserDto extends ZodDto(UserSchema, 'User') {}
+export type User = z.infer<typeof UserSchema>;
 ```
 
-**3. Use it in a controller** — the body is validated and typed:
+### Use in a controller
 
 ```typescript
+// user.controller.ts
 import { Body, Controller, Post } from '@nestjs/common';
-import { UserDto } from './user.dto.ts';
+import { ApiOperation } from '@nestjs/swagger';
+import { type User, UserSchema } from './user.schema.ts';
 
 @Controller('users')
 export class UserController {
 	@Post()
-	create(@Body() user: UserDto) {
-		// `user` is parsed, typed, and guaranteed valid here
-		return { message: `Created ${user.name}` };
+	@ApiOperation({ summary: 'Create a new user' })
+	create(@Body({ schema: UserSchema }) userData: User) {
+		// userData is validated and typed — no manual .parse() needed
+		return { message: `Created ${userData.name}` };
 	}
 }
 ```
 
-Invalid payloads are rejected before your handler runs (a `ZodSchemaException` carrying the Zod issues).
+## 🔍 Validation
 
-## 📚 OpenAPI / Swagger
-
-`ZodDto(schema, 'User')` records the schema under the name `User`. Reference it in decorators via `.jsonSchema`, and publish all named schemas into the document so they appear as reusable components:
+The global `StandardSchemaValidationPipe` (registered once in `src/app/app.ts`'s `start()`) validates any parameter decorated with a `schema` option — `@Body({ schema })`, `@Query({ schema })`, `@Param({ schema })`:
 
 ```typescript
-// main.ts
-import { registerDtoOpenApiSchemas } from '#libs/zod';
+import { StandardSchemaValidationPipe } from '@nestjs/common';
 
-const document = SwaggerModule.createDocument(app, config);
-registerDtoOpenApiSchemas(document); // adds every named DTO to components.schemas
-SwaggerModule.setup('docs', app, document);
+app.useGlobalPipes(new StandardSchemaValidationPipe());
 ```
 
-```typescript
-@Post()
-@ApiBody({ schema: UserDto.jsonSchema })
-@ApiOkResponse({ schema: UserDto.jsonSchema })
-create(@Body() user: UserDto) { /* … */ }
-```
-
-## 🔢 Iterable DTOs
-
-For endpoints that take or return a collection:
-
-```typescript
-import { z } from 'zod';
-import { ZodIterableDto } from '#libs/zod';
-
-const IdsSchema = z.array(z.number().positive());
-export class IdsDto extends ZodIterableDto(IdsSchema, 'Ids') {}
-
-const ids = new IdsDto([1, 2, 3]);
-ids.length; // 3 — it really is an array
-```
+On failure, the pipe throws a `BadRequestException` whose `message` is an array of `"field.path: error message"` strings — no custom exception needed.
 
 ## 🧰 Built-in validators
 
 ```typescript
 import { z } from 'zod';
-import { phone, epoch } from '#libs/zod';
+import { epoch, phone } from '#libs/zod';
 
 const ContactSchema = z.object({
 	// strips spaces, validates international / US formats
-	phone: phone(), //                "+56 9 9264 1781" → "+56992641781"
-	phoneAlt: phone().optional(),
+	phone: phone(), //             "+56 9 9264 1781" → "+56992641781"
 
 	// string timestamp → Date
-	createdAt: epoch(), //            milliseconds: "1753134591000" → Date
-	bornAt: epoch({ seconds: true }), // seconds:      "1753134591"    → Date
+	createdAt: epoch(), //         milliseconds: "1753134591000" → Date
+	bornAt: epoch({ seconds: true }), // seconds: "1753134591" → Date
 });
 ```
 
-`epoch()` also accepts the .NET `"/Date(1753134591)/"` shape. Both validators ship OpenAPI metadata (`format`, `examples`, `pattern`) so the generated schema stays accurate.
+`epoch()` also accepts the .NET `"/Date(1753134591)/"` shape.
 
-## 🍳 Recipes
+## 📚 OpenAPI Integration
 
-### Validate without throwing
-
-```typescript
-const result = UserDto.safeFrom(payload);
-if (!result.success) return reportIssues(result.error.issues);
-useUser(result.data);
-```
-
-### Scope the pipe instead of going global
+### Wiring the converter
 
 ```typescript
-import { UsePipes } from '@nestjs/common';
-import { ZodValidationPipe } from '#libs/zod';
+// app.ts
+import { standardSchemaConverter } from '#libs/zod';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-@UsePipes(ZodValidationPipe) // on a controller or a single handler
+const config = new DocumentBuilder().setTitle('API Documentation').build();
+
+const document = SwaggerModule.createDocument(app, config, {
+	standardSchemaConverter,
+});
+
+SwaggerModule.setup('api/docs', app, document);
 ```
+
+Once wired, every `@Body`/`@Query`/`@Param({ schema })` on a route is picked up automatically and turned into the **request** body/parameter schema in the generated document — registered as a named `components.schemas` entry whenever the schema has `.meta({ id })` — no per-route registration needed, and no manual schema in `ApiBody` does anything (see below).
+
+### Documenting responses in `*.controller.docs.ts`
+
+Request-side registration is automatic (previous section), but **responses** have no equivalent route-parameter decorator to piggyback on — use `ApiResponse`'s `standardSchema` option, passing the raw Zod schema directly:
+
+```typescript
+import { ApiResponse } from '@nestjs/swagger';
+import { UserSchema } from './user.schema.ts';
+
+ApiResponse({
+	standardSchema: UserSchema,
+	status: 200,
+});
+```
+
+This is the **only** correct way to register a response schema. Do not compute a `schema:` value by hand (e.g. calling `zod-openapi`'s `createSchema()` yourself) — that runs at decorator-application time, before `SwaggerModule.createDocument()` builds the document, so there is no live `components.schemas` map to register into; any `$ref` it produces would point at a component that was never created. `standardSchema` defers the conversion until the document actually gets built, which is what makes registration work.
+
+### `ApiBody`'s `schema:` field is inert
+
+`ApiBody` has no `standardSchema` option. When a route uses `@Body({ schema })` (this template's convention on every body-validated endpoint), NestJS **always overwrites** whatever `schema:` you pass to `ApiBody` with the properly-registered schema derived from that `@Body()` parameter — the value you supply is discarded. You still have to pass _something_ to satisfy `ApiBody`'s TypeScript signature when attaching `examples` (its type requires `schema` alongside `examples`), so use a trivial placeholder:
+
+```typescript
+import { ApiBody } from '@nestjs/swagger';
+
+ApiBody({
+	schema: { type: 'object' }, // inert — overwritten automatically, see above
+	examples: { admin: { value: { id: 1, name: 'Admin', email: 'a@b.cl' } } },
+});
+```
+
+`examples:` itself is **not** discarded — it merges into the final document as declared.
+
+### Same schema, both request and response
+
+Referencing the same `.meta({ id })` schema for both a request and a response works, but note how the registration actually happens: NestJS calls `standardSchemaConverter` **once per context** (`input` for the `@Body`-derived request schema, `output` for the `ApiResponse({ standardSchema })`-derived response schema), and each call is an independent `createSchema()` invocation with its own private component registry — there's no batching across calls. Both calls still register under the **same** component name, so whichever call runs later wins (last write into the shared `components.schemas` NestJS builds up across the whole document). `zod-openapi`'s own `outputId`/`outputIdSuffix` auto-renaming does **not** help here — that mechanism only fires when `zod-openapi` itself batches an input+output pair through one `createDocument()`/`createSchemas()` call, which this app doesn't do (verified in `openapi.spec.ts`). If a schema's request and response shapes genuinely need separate documented components, give them different `id`s outright.
+
+## 📖 API Reference
+
+### `standardSchemaConverter`
+
+The `SwaggerDocumentOptions['standardSchemaConverter']` implementation — pass it to `SwaggerModule.createDocument(app, config, { standardSchemaConverter })` once, in the app bootstrap. Also carries a small internal type-override table (not exported — see "Known gaps" below).
+
+### `epoch(options?)`
+
+Validator for Unix timestamps that converts to `Date`.
+
+**Parameters:**
+
+- `options.seconds?: boolean` — if true, treats timestamp as seconds (default: `false`)
+
+### `phone()`
+
+Validator for international phone numbers.
 
 ## 🧪 Testing
 
-DTOs are plain classes — exercise the schema directly, no Nest context required:
+Schemas are plain Zod values — exercise them directly, no Nest context required:
 
 ```typescript
-import { UserDto } from './user.dto.ts';
+import { UserSchema } from './user.schema.ts';
 
-it('rejects an invalid email', () => {
-	const result = UserDto.safeFrom({ id: 1, name: 'Ada', email: 'nope' });
+test('rejects an invalid email', () => {
+	const result = UserSchema.safeParse({ id: 1, name: 'Ada', email: 'nope' });
 	expect(result.success).toBe(false);
-});
-
-it('parses a valid payload', () => {
-	const user = new UserDto({ id: 1, name: 'Ada', email: 'ada@dev.io' });
-	expect(user.name).toBe('Ada');
 });
 ```
 
-## 🧠 How it works
+## ⚠️ Known gaps vs. the old `json-schema-customizations.ts`
 
-`ZodDto(schema, name?)` returns an anonymous class whose constructor runs `schema.parse(input)` and whose static `safeFrom` runs `schema.safeParse`. The static `jsonSchema` is produced by `z.toJSONSchema` with project-specific overrides (dates → `date-time`, maps/sets/tuples, regex patterns, …) and, when a `name` is given, cached in a module-level registry. `ZodValidationPipe` checks each argument's `metatype` with `isZodDto` (a DTO has a static `schema`); matches are validated via `safeFrom` and rejected with `ZodSchemaException` on failure, while everything else passes through untouched. `registerDtoOpenApiSchemas` flushes the registry into the Swagger document's `components.schemas`.
+Zod 4's native `toJSONSchema()` (which `zod-openapi` wraps) treats several Zod types as "unrepresentable": `z.void()`, `z.nan()`, `z.symbol()`, `z.map()`, `z.set()`. Left unhandled, using one of these in a schema throws an `Error` at `SwaggerModule.createDocument()` time (not just an imprecise render) — the previous `ZodDto`-based system's manual override table avoided this. `standardSchemaConverter` restores the same representations via a small internal `override` function (see `src/libs/zod/openapi.spec.ts` for exact shapes), so this template's own code doesn't need to do anything — this section is for anyone extending the override table itself. `z.date()` is representable but, without the override, renders as a bare `{ type: 'string' }`; the override adds back `format: 'date-time'`.
+
+`z.map()`/`z.set()` go further than the old table: their value type is recursively converted into a real `additionalProperties`/`items` sub-schema (`z.set()` also gets `uniqueItems: true`) instead of a bare `{ type: 'object' }`/`{ type: 'array' }` stub — the old table's equivalent read `def.valueType.def`, one level too deep, and produced a raw internal Zod definition instead of a schema. One limitation remains: that nested conversion isn't `$ref`-aware, since named-component registration only happens through Zod's internal registry plumbing, which isn't reachable from this `override` hook — so a value type with its own `.meta({ id })` still gets inlined rather than extracted into its own component. Map keys are assumed string-like, per JSON Schema/OpenAPI 3.0 (there's no "key schema" field in the spec).
+
+`z.custom()`/`z.function()` (and some dynamic `z.catch()` fallback values) have no generic JSON shape and would otherwise throw the same way — `standardSchemaConverter` allowlists them via `zod-openapi`'s `allowEmptySchema` option, so they render as an open `{}` schema instead of crashing the whole document. Give one of these its own `.meta()` if you need a precise shape documented.
+
+Everything else the old system customized (`bigint`, `.regex()` string formats, `tuple`, `.nullable()`/`.optional()`, `never`) either matches the old behavior exactly or Zod 4/`zod-openapi` already handle it natively — no override needed.
+
+---
+
+**Note:** This library is specifically designed for NestJS 12+ projects with TypeScript. For more information about Zod, check the [official documentation](https://zod.dev/); for `zod-openapi`, see its [README](https://github.com/samchungy/zod-openapi).

@@ -78,7 +78,7 @@ Some scripts are environment-specific, using the suffix `:<env>` where `<env>` i
 
 A modular NestJS API on Fastify, built around a few in-house libraries; each ships its own README with usage and examples:
 
-- **🧩 Zod Integration** — `ZodDto`, `ZodValidationPipe`, custom validators, OpenAPI from schemas · [`src/libs/zod`](src/libs/zod/README.md)
+- **🧩 Zod Integration** — native Standard Schema validation (`@Body`/`@Query`/`@Param({ schema })`), custom validators, OpenAPI from schemas · [`src/libs/zod`](src/libs/zod/README.md)
 - **🌐 HTTP Client** — Fetch-based client with NestJS module integration and typed errors · [`src/libs/http`](src/libs/http/README.md)
 - **🔐 Security Decorators** — `createSecurityGuard()`, `@ApiKey()`, `@AllowAnonymous()` · [`src/libs/decorators`](src/libs/decorators/README.md)
 

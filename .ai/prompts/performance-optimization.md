@@ -318,21 +318,19 @@ export class [Resource]Service {
 ### Pagination Template
 
 ```typescript
-import { ZodDto } from '#libs/zod';
 import { z } from 'zod';
 
 // pagination query schema
-const PaginationQuerySchema = z.object({
-	page: z.coerce.number().min(1).default(1),
-	limit: z.coerce.number().min(1).max(100).default(20),
-	sortBy: z.string().optional(),
-	sortOrder: z.enum(['asc', 'desc']).default('desc'),
-});
+export const PaginationQuerySchema = z
+	.object({
+		page: z.coerce.number().min(1).default(1),
+		limit: z.coerce.number().min(1).max(100).default(20),
+		sortBy: z.string().optional(),
+		sortOrder: z.enum(['asc', 'desc']).default('desc'),
+	})
+	.meta({ id: 'PaginationQuery' });
 
-export class PaginationQueryDto extends ZodDto(
-	PaginationQuerySchema,
-	'PaginationQuery',
-) {}
+export type PaginationQuery = z.infer<typeof PaginationQuerySchema>;
 
 // paginated response schema
 const PaginatedResponseSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>

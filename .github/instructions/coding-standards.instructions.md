@@ -141,11 +141,11 @@ const value = maybe ?? 'default'; // not `maybe || 'default'`
 config.timeout ??= 10_000;
 ```
 
-### DTOs with Zod
+### Schemas with Zod
 
 ```typescript
-// provide a schema name so OpenAPI documents the model correctly
-const UserSchema = z
+// .meta({ id }) registers the schema as a named OpenAPI component
+export const UserSchema = z
 	.object({
 		id: z.coerce.number(),
 		name: z.string().min(1),
@@ -153,9 +153,9 @@ const UserSchema = z
 		phone: phone(), // custom validator from #libs/zod
 		createdAt: epoch(), // custom validator from #libs/zod
 	})
-	.meta({ description: 'User DTO schema' });
+	.meta({ id: 'User' });
 
-export class UserDto extends ZodDto(UserSchema, 'User') {}
+export type User = z.infer<typeof UserSchema>;
 ```
 
 ## Comments
@@ -246,7 +246,7 @@ describe('UserService', () => {
 - Regular `enum` where `const enum` suffices.
 - Reading `process.env` outside the config layer.
 - Fat controllers — keep HTTP concerns in controllers, logic in services.
-- Skipping `ZodDto`/validation on inputs, or OpenAPI docs on endpoints.
+- Skipping `@Body`/`@Query`/`@Param({ schema })` validation on inputs, or OpenAPI docs on endpoints.
 - Non-meaningful names, redundant context (`Car.carModel` → `Car.model`).
 - Obvious, outdated, or commented-out code (use version control instead).
 - Too many positional parameters (use a parameter object); `||` for null coalescing (use `??`).
