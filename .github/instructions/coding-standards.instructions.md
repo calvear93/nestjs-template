@@ -72,7 +72,7 @@ const hasAccess = true;
 
 ### Files & directories — kebab-case
 
-`user.service.ts`, `user.controller.ts`, `create-user.dto.ts`, `user-management/`.
+`user.service.ts`, `user.controller.ts`, `user.schema.ts`, `user-management/`.
 
 ## File suffixes
 
@@ -82,10 +82,9 @@ const hasAccess = true;
 | `.controller.ts`      | Controller (endpoints)  | `user.controller.ts`        |
 | `.controller.docs.ts` | OpenAPI documentation   | `user.controller.docs.ts`   |
 | `.service.ts`         | Business logic service  | `user.service.ts`           |
-| `.dto.ts`             | Zod schemas + DTOs      | `create-user.dto.ts`        |
+| `.schema.ts`          | Zod schemas              | `user.schema.ts`            |
 | `.guard.ts`           | Guards                  | `api-key.guard.ts`          |
 | `.decorator.ts`       | Custom decorators       | `docs.decorator.ts`         |
-| `.pipe.ts`            | Pipes                   | `zod.pipe.ts`               |
 | `.interface.ts`       | Interfaces              | `user.interface.ts`         |
 | `.type.ts`            | Type definitions        | `user.type.ts`              |
 | `.config.ts`          | Configuration factories | `feature.config.ts`         |
@@ -187,7 +186,7 @@ const jwtToken = '...'; // JWT authentication token
  * @throws {BadRequestException} when user data is invalid
  * @throws {NotFoundException} when the user id is not found
  */
-async createUser(userData: CreateUserDto): Promise<UserDto> {}
+async createUser(userData: CreateUser): Promise<User> {}
 ```
 
 ### Meaningful over obvious

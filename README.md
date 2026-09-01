@@ -82,11 +82,11 @@ A modular NestJS API on Fastify, built around a few in-house libraries; each shi
 - **🌐 HTTP Client** — Fetch-based client with NestJS module integration and typed errors · [`src/libs/http`](src/libs/http/README.md)
 - **🔐 Security Decorators** — `createSecurityGuard()`, `@ApiKey()`, `@AllowAnonymous()` · [`src/libs/decorators`](src/libs/decorators/README.md)
 
-Feature modules live under `src/app/modules/<name>/` (flat layout); configuration is read only in `src/app/config/`.
+Feature modules live under `src/app/modules/<name>/`, grouped into `controllers/`, `services/`, `schemas/` subfolders; configuration is read only in `src/app/config/`.
 
 ## 🧱 **Creating Modules**
 
-Start from the canonical scaffolds in [`.vscode/__templates__/`](.vscode/__templates__/) (controller, service, module, DTO, guard, …) instead of writing boilerplate by hand. The step-by-step procedure and copy-paste recipes live in the docs below.
+Start from the canonical scaffolds in [`.vscode/__templates__/`](.vscode/__templates__/) (controller, service, module, schema, guard, …) instead of writing boilerplate by hand. The step-by-step procedure and copy-paste recipes live in the docs below.
 
 ## 📚 **Documentation**
 

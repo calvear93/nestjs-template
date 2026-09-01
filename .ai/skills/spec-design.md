@@ -18,10 +18,10 @@ Input: `specs/changes/<change-id>/`.
    `.vscode/__templates__/` before designing.
 2. **Write `specs/changes/<change-id>/design.md`** from `.ai/templates/design.template.md`.
 3. **Design within the NestJS feature-module layout (`src/app`, `src/libs`):**
-    - **Feature modules** in `src/app/modules/<name>/` use a **flat layout** — colocate
-      `<name>.module.ts`, `<name>.controller.ts`, `<name>.controller.docs.ts`,
-      `<name>.service.ts`, `<name>.dto.ts`, and `<name>.spec.ts` (no `controllers/`,
-      `services/`, `schemas/` subfolders). Wire the module into `src/app/app.module.ts`.
+    - **Feature modules** in `src/app/modules/<name>/` group files by kind:
+      `<name>.module.ts` at the root, `controllers/<name>.controller.ts` +
+      `<name>.controller.docs.ts` + `.spec.ts`, `services/<name>.service.ts` + `.spec.ts`,
+      `schemas/<name>.schema.ts`. Wire the module into `src/app/app.module.ts`.
     - **Controllers** stay thin: HTTP concerns only, delegating to services. Apply `@ApiKey()`
       at the controller level; mark public endpoints with `@AllowAnonymous()`. OpenAPI lives in
       a colocated `<name>.controller.docs.ts`.

@@ -1,6 +1,6 @@
 ---
 applyTo: 'src/**/*.{ts,cts,mts}'
-description: 'Copy-paste recipes: modules, controllers, services, DTOs, guards, docs, tests'
+description: 'Copy-paste recipes: modules, controllers, services, schemas, guards, docs, tests'
 ---
 
 # Patterns

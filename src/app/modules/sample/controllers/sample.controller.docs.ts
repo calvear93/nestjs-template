@@ -24,7 +24,7 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 	method: {
 		dto: [
 			ApiOperation({
-				summary: 'Receives, validate and returns a DTO',
+				summary: 'Receives, validates and returns the sample payload',
 			}),
 			ApiBody({
 				// `schema` here is inert: NestJS always overwrites it with the
@@ -59,7 +59,7 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				},
 			}),
 			ApiResponse({
-				description: 'DTO',
+				description: 'Sample',
 				standardSchema: SampleSchema,
 				status: HttpStatusCode.CREATED,
 			}),

@@ -219,7 +219,7 @@ directly. The best-practice skills (`typescript`, `nestjs`, `zod-schema`, `ioc-b
 | [Operating manual](.ai/skills/ways-of-working.md)                             | Autonomy, default technical decisions, Definition of Done, non-technical-user comms |
 | [Architecture guide](.github/instructions/architecture-guide.instructions.md) | Module topology, configuration/DI wiring, registration, import conventions          |
 | [Coding standards](.github/instructions/coding-standards.instructions.md)     | Formatting, naming, file suffixes, TypeScript rules, comments, anti-patterns        |
-| [Patterns](.github/instructions/patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, DTOs, guards, docs, tests       |
+| [Patterns](.github/instructions/patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, schemas, guards, docs, tests       |
 | [Code exemplars](exemplars.md)                                                | Pointers to high-quality real examples in this repo                                 |
 | [`.vscode/__templates__/`](.vscode/__templates__/)                            | Canonical code scaffolds for every component type — the starting point for new code |
 | [README](README.md)                                                           | Human-facing project documentation and setup                                        |

@@ -48,7 +48,7 @@ Writing or reviewing any `.ts` / `.cts` / `.mts` in this repository.
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import type { CreateUser } from './user.dto.ts';
+import type { CreateUser } from './user.schema.ts';
 
 @Injectable()
 export class UserService {

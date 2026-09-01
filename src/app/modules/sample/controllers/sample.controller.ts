@@ -20,9 +20,9 @@ import { SampleControllerDocs } from './sample.controller.docs.ts';
 @ApplyControllerDocs(SampleControllerDocs)
 export class SampleController {
 	/**
-	 * Receives, validate and returns a DTO
+	 * Receives, validates and returns the sample payload.
 	 *
-	 * @returns dto
+	 * @returns the same data, echoed back
 	 */
 	@Post('/dto')
 	dto(@Body({ schema: SampleSchema }) sample: Sample): Sample {

@@ -19,7 +19,7 @@ Key facts:
 - [Code Exemplars](exemplars.md): High-quality code examples demonstrating architectural patterns and best practices
 - [Architecture Guide](.github/instructions/architecture-guide.instructions.md): Module topology, configuration/DI wiring, registration and import conventions
 - [Coding Standards](.github/instructions/coding-standards.instructions.md): Formatting, naming, file suffixes, TypeScript rules and anti-patterns
-- [Patterns Guide](.github/instructions/patterns.instructions.md): Copy-paste recipes for modules, controllers, services, DTOs, guards and tests
+- [Patterns Guide](.github/instructions/patterns.instructions.md): Copy-paste recipes for modules, controllers, services, schemas, guards and tests
 - [Instructions README](.github/instructions/README.md): Index of the deep-reference instruction documents
 
 ## Libraries
@@ -38,7 +38,7 @@ Key facts:
 
 ## Examples
 
-- [Sample Module](src/app/modules/sample/): Complete example module with controller, service, DTOs, and comprehensive tests
+- [Sample Module](src/app/modules/sample/): Complete example module with controller, service, schemas, and comprehensive tests
 
 ## Development Tools
 

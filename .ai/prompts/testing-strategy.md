@@ -51,9 +51,9 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import { afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { mock, mockReset } from 'vitest-mock-extended';
 import {
-	type Create[ComponentName]Dto,
-	type [ComponentName]Dto,
-} from '../schemas/[component].dto.ts';
+	type Create[ComponentName],
+	type [ComponentName],
+} from '../schemas/[component].schema.ts';
 import { [ComponentName]Service } from '../services/[component].service.ts';
 import { [ComponentName]Controller } from './[component].controller.ts';
 
@@ -86,7 +86,7 @@ describe([ComponentName]Controller, () => {
 	// tests
 	test('findAll returns an array of [component]s', async () => {
 		// arrange
-		const expected: [ComponentName]Dto[] = [{ id: 1, name: 'a name' }];
+		const expected: [ComponentName][] = [{ id: 1, name: 'a name' }];
 		mockService.findAll.mockResolvedValue(expected);
 
 		// act
@@ -99,25 +99,25 @@ describe([ComponentName]Controller, () => {
 
 	test('create delegates to the service', async () => {
 		// arrange
-		const dto: Create[ComponentName]Dto = { name: 'a name' };
-		const expected: [ComponentName]Dto = { id: 1, ...dto };
+		const data: Create[ComponentName] = { name: 'a name' };
+		const expected: [ComponentName] = { id: 1, ...data };
 		mockService.create.mockResolvedValue(expected);
 
 		// act
-		const result = await controller.create(dto);
+		const result = await controller.create(data);
 
 		// assert
 		expect(result).toEqual(expected);
-		expect(mockService.create).toHaveBeenCalledWith(dto);
+		expect(mockService.create).toHaveBeenCalledWith(data);
 	});
 
 	test('create rejects when the service throws', async () => {
 		// arrange
-		const dto = {} as Create[ComponentName]Dto;
+		const data = {} as Create[ComponentName];
 		mockService.create.mockRejectedValue(new Error('failed'));
 
 		// act & assert
-		await expect(controller.create(dto)).rejects.toThrow();
+		await expect(controller.create(data)).rejects.toThrow();
 	});
 });
 ```
@@ -132,9 +132,9 @@ import { afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { mock, mockReset } from 'vitest-mock-extended';
 import { [ComponentName]Repository } from '../repositories/[component].repository.ts';
 import {
-	type Create[ComponentName]Dto,
-	type [ComponentName]Dto,
-} from '../schemas/[component].dto.ts';
+	type Create[ComponentName],
+	type [ComponentName],
+} from '../schemas/[component].schema.ts';
 import { [ComponentName]Service } from './[component].service.ts';
 
 describe([ComponentName]Service, () => {
@@ -156,7 +156,7 @@ describe([ComponentName]Service, () => {
 	// tests
 	test('findAll returns [component]s from the repository', async () => {
 		// arrange
-		const expected: [ComponentName]Dto[] = [{ id: 1, name: 'a name' }];
+		const expected: [ComponentName][] = [{ id: 1, name: 'a name' }];
 		mockRepository.findAll.mockResolvedValue(expected);
 
 		// act
@@ -169,25 +169,25 @@ describe([ComponentName]Service, () => {
 
 	test('create persists and returns the [component]', async () => {
 		// arrange
-		const dto: Create[ComponentName]Dto = { name: 'a name' };
-		const expected: [ComponentName]Dto = { id: 1, ...dto };
+		const data: Create[ComponentName] = { name: 'a name' };
+		const expected: [ComponentName] = { id: 1, ...data };
 		mockRepository.create.mockResolvedValue(expected);
 
 		// act
-		const result = await service.create(dto);
+		const result = await service.create(data);
 
 		// assert
 		expect(result).toEqual(expected);
-		expect(mockRepository.create).toHaveBeenCalledWith(dto);
+		expect(mockRepository.create).toHaveBeenCalledWith(data);
 	});
 
 	test('create propagates repository errors', async () => {
 		// arrange
-		const dto: Create[ComponentName]Dto = { name: 'a name' };
+		const data: Create[ComponentName] = { name: 'a name' };
 		mockRepository.create.mockRejectedValue(new Error('database error'));
 
 		// act & assert
-		await expect(service.create(dto)).rejects.toThrow('database error');
+		await expect(service.create(data)).rejects.toThrow('database error');
 	});
 });
 ```

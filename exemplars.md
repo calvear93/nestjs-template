@@ -150,7 +150,7 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 	method: {
 		dto: [
 			ApiOperation({
-				summary: 'Receives, validate and returns a DTO',
+				summary: 'Receives, validates and returns the sample payload',
 			}),
 			ApiBody({
 				// inert placeholder — NestJS overwrites it with the schema
@@ -166,7 +166,7 @@ export const SampleControllerDocs: DecoratorsLookUp<SampleController> = {
 				},
 			}),
 			ApiResponse({
-				description: 'DTO',
+				description: 'Sample',
 				standardSchema: SampleSchema,
 				status: HttpStatusCode.CREATED,
 			}),
@@ -212,7 +212,7 @@ export class SampleService {
 - Single responsibility principle
 - Clean, readable method signatures
 
-### Data Transfer Objects & Validation
+### Schemas & Validation
 
 #### Exemplar: Type-Safe Schema with Zod
 
@@ -226,7 +226,7 @@ export const SampleSchema = z
 		id: z.coerce.number(),
 		name: z.string().meta({ description: 'Sample name' }),
 	})
-	.meta({ id: 'Sample', description: 'Sample DTO schema' });
+	.meta({ id: 'Sample', description: 'Sample schema' });
 
 export type Sample = z.infer<typeof SampleSchema>;
 ```

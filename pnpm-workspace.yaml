@@ -3,7 +3,7 @@ allowBuilds:
     '@nestjs/core': true
     '@scarf/scarf': true
 minimumReleaseAgeExclude:
-    - '@calvear/env@3.1.0 || 3.4.0 || 3.4.1'
-    - '@vitest/eslint-plugin@1.6.22 || 1.6.27'
-    - vite@8.1.4 || 8.2.2
+    - '@calvear/env@3.4.1'
+    - '@vitest/eslint-plugin@1.6.27'
+    - vite@8.2.2
     - zod-openapi@6.0.2

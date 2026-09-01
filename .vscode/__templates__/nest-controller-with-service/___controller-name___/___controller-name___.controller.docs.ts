@@ -11,7 +11,7 @@ export const ___ControllerName___ControllerDocs: DecoratorsLookUp<___ControllerN
 			run: [
 				ApiOperation({ summary: 'A Description' }),
 				ApiResponse({
-					description: 'DTO',
+					description: 'Sample string',
 					status: HttpStatus.OK,
 					type: String,
 				}),

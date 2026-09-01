@@ -4,7 +4,7 @@ Create comprehensive API documentation for [MODULE/ENDPOINT] including:
 
 1. OpenAPI/Swagger specifications via the colocated `*.controller.docs.ts`
 2. Clear endpoint descriptions (`ApiOperation`)
-3. Request/response examples sourced from `Dto.jsonSchema`
+3. Request/response examples sourced from the Zod schema (`standardSchema`)
 4. Error response documentation (`ApiResponse` per status)
 5. Authentication requirements (`@ApiKey()` / `@AllowAnonymous()`)
 6. Parameter descriptions and validation rules (driven by the Zod schema)
@@ -28,14 +28,17 @@ canonical docs recipe.
 
 Document each endpoint in a colocated docs file typed with
 `DecoratorsLookUp<Controller>` and wire it via `@ApplyControllerDocs(...)` on the
-controller. Keep `@Api*()` decorators out of the controller body. Reference DTO
-schemas through `Dto.jsonSchema`. Use `HttpStatusCode` from `#libs/http`.
+controller. Keep `@Api*()` decorators out of the controller body. Reference the
+response schema through `ApiResponse({ standardSchema })` — request schemas are
+picked up automatically from the route's `@Body`/`@Query`/`@Param({ schema })`
+and need no manual `ApiBody` schema (see `#libs/zod`'s README, "OpenAPI
+Integration"). Use `HttpStatusCode` from `#libs/http`.
 
 ```typescript
 import { HttpStatusCode } from '#libs/http';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
-import { ItemDto } from '../schemas/item.dto.ts';
+import { ItemSchema } from '../schemas/item.schema.ts';
 import { type ItemController } from './item.controller.ts';
 
 export const ItemControllerDocs: DecoratorsLookUp<ItemController> = {
@@ -45,8 +48,8 @@ export const ItemControllerDocs: DecoratorsLookUp<ItemController> = {
 			ApiOperation({ summary: 'Get item by id' }),
 			ApiResponse({
 				description: 'Item retrieved',
+				standardSchema: ItemSchema,
 				status: HttpStatusCode.OK,
-				schema: ItemDto.jsonSchema,
 			}),
 			ApiResponse({
 				description: 'Item not found',
@@ -72,7 +75,7 @@ export const ItemControllerDocs: DecoratorsLookUp<ItemController> = {
 - [ ] Docs map typed as `DecoratorsLookUp<Controller>` and applied via
       `@ApplyControllerDocs(...)`
 - [ ] All endpoints have clear descriptions
-- [ ] Request/response schemas referenced via `Dto.jsonSchema`
+- [ ] Response schemas referenced via `ApiResponse({ standardSchema })`
 - [ ] Error responses documented
 - [ ] Authentication requirements specified
 - [ ] Parameter validation rules included

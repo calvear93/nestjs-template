@@ -470,9 +470,9 @@ import {
 	SystemException,
 } from '../exceptions/index.ts';
 import {
-	type Create[Resource]Dto,
-	type [Resource]Dto,
-} from '../schemas/[resource].dto.ts';
+	type Create[Resource],
+	type [Resource],
+} from '../schemas/[resource].schema.ts';
 
 @Injectable()
 export class [Resource]Service {
@@ -483,20 +483,20 @@ export class [Resource]Service {
 	/**
 	 * creates a new [resource], mapping unexpected failures to SystemException.
 	 *
-	 * @param dto - creation data
+	 * @param data - creation data
 	 * @param correlationId - request correlation id
 	 * @returns the created [resource]
 	 * @throws BusinessRuleException when business rules are violated
 	 */
 	async create(
-		dto: Create[Resource]Dto,
+		data: Create[Resource],
 		correlationId?: string,
-	): Promise<[Resource]Dto> {
-		this.validateBusinessRules(dto, correlationId);
+	): Promise<[Resource]> {
+		this.validateBusinessRules(data, correlationId);
 
 		try {
-			// TODO: return await this._repository.create(dto);
-			return { id: 1, ...dto } as [Resource]Dto;
+			// TODO: return await this._repository.create(data);
+			return { id: 1, ...data } as [Resource];
 		} catch (error) {
 			this.logger.error(
 				'failed to create [resource]',
@@ -522,9 +522,9 @@ export class [Resource]Service {
 	async findById(
 		id: number,
 		correlationId?: string,
-	): Promise<[Resource]Dto> {
+	): Promise<[Resource]> {
 		// TODO: const result = await this._repository.findById(id);
-		const result: [Resource]Dto | null = null;
+		const result: [Resource] | null = null;
 
 		if (!result) {
 			throw new ResourceNotFoundException('[Resource]', id, correlationId);
@@ -564,15 +564,15 @@ export class [Resource]Service {
 	/**
 	 * validates business rules.
 	 *
-	 * @param dto - data to validate
+	 * @param data - data to validate
 	 * @param correlationId - request correlation id
 	 * @throws BusinessRuleException when a rule is violated
 	 */
 	private validateBusinessRules(
-		dto: Create[Resource]Dto,
+		data: Create[Resource],
 		correlationId?: string,
 	): void {
-		if (dto.name.trim().length === 0) {
+		if (data.name.trim().length === 0) {
 			throw new BusinessRuleException(
 				'resource name cannot be empty',
 				'INVALID_NAME',
@@ -603,9 +603,9 @@ import {
 import { ApiKey } from '../../../decorators/api-key.guard.ts';
 import { ApplyControllerDocs } from '../../../decorators/docs.decorator.ts';
 import {
-	type Create[Resource]Dto,
-	type [Resource]Dto,
-} from '../schemas/[resource].dto.ts';
+	type Create[Resource],
+	Create[Resource]Schema,
+} from '../schemas/[resource].schema.ts';
 import { [Resource]Service } from '../services/[resource].service.ts';
 import { [Resource]ControllerDocs } from './[resource].controller.docs.ts';
 
@@ -616,18 +616,18 @@ export class [Resource]Controller {
 	@Post()
 	@HttpCode(HttpStatus.CREATED)
 	create(
-		@Body() dto: Create[Resource]Dto,
+		@Body({ schema: Create[Resource]Schema }) data: Create[Resource],
 		@Headers('x-correlation-id') correlationId?: string,
-	): Promise<[Resource]Dto> {
+	): Promise<[Resource]> {
 		// the service handles every error scenario
-		return this._service.create(dto, correlationId);
+		return this._service.create(data, correlationId);
 	}
 
 	@Get(':id')
 	findById(
 		@Param('id', ParseIntPipe) id: number,
 		@Headers('x-correlation-id') correlationId?: string,
-	): Promise<[Resource]Dto> {
+	): Promise<[Resource]> {
 		return this._service.findById(id, correlationId);
 	}
 

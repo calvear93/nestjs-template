@@ -222,11 +222,11 @@ export class CacheService {
 import { Injectable, Logger } from '@nestjs/common';
 import { CacheService } from '../cache/cache.service.ts';
 import {
-	type Create[Resource]Dto,
-	type [Resource]Dto,
-	type [Resource]QueryDto,
-	type Update[Resource]Dto,
-} from '../schemas/[resource].dto.ts';
+	type Create[Resource],
+	type [Resource],
+	type [Resource]Query,
+	type Update[Resource],
+} from '../schemas/[resource].schema.ts';
 
 @Injectable()
 export class [Resource]Service {
@@ -243,7 +243,7 @@ export class [Resource]Service {
 	 * @param query - query parameters
 	 * @returns cached or fresh data
 	 */
-	findAll(query: [Resource]QueryDto): Promise<[Resource]Dto[]> {
+	findAll(query: [Resource]Query): Promise<[Resource][]> {
 		const cacheKey = `[resource]:all:${JSON.stringify(query)}`;
 
 		return this._cache.getOrSet(
@@ -264,7 +264,7 @@ export class [Resource]Service {
 	 * @param id - [resource] id
 	 * @returns cached or fresh data
 	 */
-	findById(id: number): Promise<[Resource]Dto | null> {
+	findById(id: number): Promise<[Resource] | null> {
 		return this._cache.getOrSet(
 			`[resource]:${id}`,
 			() => {
@@ -280,12 +280,12 @@ export class [Resource]Service {
 	/**
 	 * creates a [resource] and invalidates related cache entries.
 	 *
-	 * @param dto - creation data
+	 * @param data - creation data
 	 * @returns the created [resource]
 	 */
-	async create(dto: Create[Resource]Dto): Promise<[Resource]Dto> {
-		// TODO: const result = await this._repository.create(dto);
-		const result = { id: 1, ...dto } as [Resource]Dto;
+	async create(data: Create[Resource]): Promise<[Resource]> {
+		// TODO: const result = await this._repository.create(data);
+		const result = { id: 1, ...data } as [Resource];
 
 		this._cache.invalidateByPattern(/^\[resource\]:all:/);
 		this.logger.log('created [resource] and invalidated list cache');
@@ -297,15 +297,15 @@ export class [Resource]Service {
 	 * updates a [resource] and invalidates related cache entries.
 	 *
 	 * @param id - [resource] id
-	 * @param dto - update data
+	 * @param data - update data
 	 * @returns the updated [resource]
 	 */
 	async update(
 		id: number,
-		dto: Update[Resource]Dto,
-	): Promise<[Resource]Dto> {
-		// TODO: const result = await this._repository.update(id, dto);
-		const result = { id, ...dto } as [Resource]Dto;
+		data: Update[Resource],
+	): Promise<[Resource]> {
+		// TODO: const result = await this._repository.update(id, data);
+		const result = { id, ...data } as [Resource];
 
 		this._cache.invalidateByPattern(new RegExp(`^\\[resource\\]:(${id}|all:)`));
 		this.logger.log(`updated [resource] ${id} and invalidated cache`);

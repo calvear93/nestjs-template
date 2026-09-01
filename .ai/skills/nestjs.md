@@ -12,10 +12,9 @@ interceptor / pipe).
 
 ## Layout
 
-Feature modules use a **flat layout**: colocate `*.controller.ts`, `*.controller.docs.ts`,
-`*.service.ts`, `*.dto.ts` and `*.spec.ts` directly under `src/app/modules/<name>/` (no
-`controllers/` · `services/` · `schemas/` subfolders). Shared code lives in `src/libs/*` behind
-`#libs/*` aliases.
+Feature modules group files by kind under `src/app/modules/<name>/`: `controllers/*.controller.ts`
++ `*.controller.docs.ts` + `*.spec.ts`, `services/*.service.ts` + `*.spec.ts`,
+`schemas/*.schema.ts`. Shared code lives in `src/libs/*` behind `#libs/*` aliases.
 
 ## Rules
 

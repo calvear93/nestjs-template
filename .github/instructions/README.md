@@ -9,7 +9,7 @@ scope:
 | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | [`architecture-guide.instructions.md`](architecture-guide.instructions.md) | Module topology, configuration/DI wiring, registration, import conventions               |
 | [`coding-standards.instructions.md`](coding-standards.instructions.md)     | Formatting, naming, file suffixes, TypeScript rules, comments, test style, anti-patterns |
-| [`patterns.instructions.md`](patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, DTOs, guards, docs, tests            |
+| [`patterns.instructions.md`](patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, schemas, guards, docs, tests            |
 
 Each file carries `applyTo` frontmatter so GitHub Copilot can apply it as a path-scoped
 instruction; other tools read them as plain documentation linked from `AGENTS.md`.

@@ -20,10 +20,10 @@
 ## Affected areas
 
 - **Module:** `src/app/modules/<name>/<name>.module.ts` — wired into `src/app/app.module.ts`
-- **Controller:** `src/app/modules/<name>/<name>.controller.ts` (thin; `@ApiKey()` /
+- **Controller:** `src/app/modules/<name>/controllers/<name>.controller.ts` (thin; `@ApiKey()` /
   `@AllowAnonymous()`) + OpenAPI in `<name>.controller.docs.ts`
-- **Service / provider:** `src/app/modules/<name>/<name>.service.ts` — business logic via DI
-- **Schemas:** `src/app/modules/<name>/<name>.schema.ts` — `.meta({ id: 'Model' })`
+- **Service / provider:** `src/app/modules/<name>/services/<name>.service.ts` — business logic via DI
+- **Schemas:** `src/app/modules/<name>/schemas/<name>.schema.ts` — `.meta({ id: 'Model' })`
 - **Outbound data:** `#libs/http` clients injected into services (no ORM/database layer)
 - **Guards / interceptors / pipes:** `src/app/decorators/*` / `src/libs/decorators` (`createSecurityGuard()` from `#libs/decorators`)
 - **Shared libs touched:** `#libs/zod` · `#libs/http` · `#libs/decorators`
