@@ -80,15 +80,8 @@ Remember: Always reproduce and understand the bug before attempting to fix it. A
 
 ## 🔧 Project-Specific Debugging Tools
 
-### Essential Commands
-
-```bash
-pnpm start:dev                    # Start with hot reload and debug logging
-pnpm test:dev --coverage --run    # Run all tests with coverage
-pnpm test:dev                     # Run tests in watch mode
-pnpm lint                         # Check code quality / type issues
-pnpm build                        # Surface compilation/type errors
-```
+Commands are in [`AGENTS.md`](../../AGENTS.md) — the ones most relevant to debugging are
+`pnpm lint`, `pnpm test:dev --coverage --run`, `pnpm build`, and `pnpm start:dev`.
 
 ### Common Issue Patterns
 
@@ -97,16 +90,18 @@ pnpm build                        # Surface compilation/type errors
 - **Symptom**: 400 Bad Request with validation details
 - **Check**: Zod schemas in `schemas/*.schema.ts`
 - **Fix**: Ensure schemas match the data structure
-- **Verify**: Use `.meta({ id: 'SchemaName' })` to register the schema as an OpenAPI component
+- **Verify**: `.meta({ id: 'SchemaName' })` goes on the private `_`-prefixed base, **before**
+  `z.compile()`, to register the schema as an OpenAPI component — see the `zod-schema` skill
 
 ```typescript
 // Correct pattern
-export const UserSchema = z
+const _UserSchema = z
 	.object({
 		name: z.string().min(1),
 		email: z.email(),
 	})
 	.meta({ id: 'User' });
+export const UserSchema = z.compile(_UserSchema);
 export type User = z.infer<typeof UserSchema>;
 ```
 
@@ -114,19 +109,18 @@ export type User = z.infer<typeof UserSchema>;
 
 - **Symptom**: Undefined config values or runtime errors
 - **Check**: Files in `env/appsettings.json` and `env/dev.env.json`
-- **Fix**: Never use `process.env` directly; use config providers
-- **Verify**: Check module providers have proper `useFactory` injection
+- **Fix**: Never use `process.env` directly outside `src/app/config/*.config.ts` — there is
+  **no `ConfigService`** in this template
+- **Verify**: Check module providers use `useFactory` pointing at a config factory (see
+  [architecture-guide → Configuration architecture](../../.github/instructions/architecture-guide.instructions.md#configuration-architecture))
 
 ```typescript
-// Correct pattern
-{
-    provide: 'API_CONFIG',
-    useFactory: (configService: ConfigService) => ({
-        baseUrl: configService.get('API.BASE_URL'),
-        apiKey: configService.get('API_KEY'),
-    }),
-    inject: [ConfigService],
-}
+// Correct pattern — src/app/config/api.config.ts
+export const apiConfig = (): ApiConfig =>
+	ApiConfigSchema.parse({ baseUrl: process.env.API_BASE_URL });
+
+// module:
+{ provide: 'API_CONFIG', useFactory: apiConfig }
 ```
 
 #### Test Failures
@@ -155,7 +149,7 @@ export type User = z.infer<typeof UserSchema>;
 1. **Check Errors First**: Run `pnpm lint` and check compilation errors
 2. **Run Tests**: Execute `pnpm test:dev --coverage --run` to verify scope
 3. **Check Logs**: Start with `pnpm start:dev` for detailed debug logs
-4. **Validate DTOs**: Ensure Zod schemas are correctly defined
+4. **Validate Schemas**: Ensure Zod schemas are correctly defined
 5. **Check Config**: Verify environment files in `env/` directory
 6. **Review Patterns**: Reference `.github/instructions/patterns.instructions.md`
 7. **Fix & Verify**: Apply minimal fix, run tests, check coverage
@@ -169,4 +163,4 @@ export type User = z.infer<typeof UserSchema>;
 - [ ] No hardcoded values (use config providers)
 - [ ] Proper error handling with specific exceptions
 - [ ] All imports use correct path aliases
-- [ ] Schemas use `.meta({ id })` for named OpenAPI components
+- [ ] Schemas are `z.compile()`-wrapped; `.meta({ id })` (if any) is on the base, before compile

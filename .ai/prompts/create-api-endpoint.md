@@ -104,24 +104,31 @@ export class [ResourceName]Controller {
 import { epoch, phone } from '#libs/zod';
 import { z } from 'zod';
 
-export const [ResourceName]Schema = z
+// private `_`-prefixed base; the exported schema is its `z.compile()` clone
+// (Zod 4.5 AOT fast path, runtime-parser fallback — same API and type)
+const _[ResourceName]Schema = z
 	.object({
 		id: z.coerce.number().positive(),
 		name: z.string().min(1).max(100),
 		email: z.email(),
-		phone: phone().optional(),
-		createdAt: epoch(),
+		phone: phone().optional(), // left uncompiled — building block
+		createdAt: epoch(), // left uncompiled — building block
 		updatedAt: epoch(),
 	})
 	.meta({ id: '[ResourceName]' });
 
+export const [ResourceName]Schema = z.compile(_[ResourceName]Schema);
+
 export type [ResourceName] = z.infer<typeof [ResourceName]Schema>;
 
-export const Create[ResourceName]Schema = [ResourceName]Schema.omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-}).meta({ id: 'Create[ResourceName]' });
+// derived schemas are not compiled by inheritance — re-wrap them
+export const Create[ResourceName]Schema = z.compile(
+	_[ResourceName]Schema.omit({
+		id: true,
+		createdAt: true,
+		updatedAt: true,
+	}).meta({ id: 'Create[ResourceName]' }),
+);
 
 export type Create[ResourceName] = z.infer<typeof Create[ResourceName]Schema>;
 ```
@@ -138,7 +145,7 @@ on `examples:` for anything worth documenting there.
 ```typescript
 import { HttpStatusCode } from '#libs/http';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
+import { type DecoratorsLookUp } from '#libs/decorators';
 import { [ResourceName]Schema } from '../schemas/[resource].schema.ts';
 import { type [ResourceName]Controller } from './[resource].controller.ts';
 

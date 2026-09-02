@@ -97,46 +97,53 @@ export class [ModuleName]Module {}
 import { epoch, phone } from '#libs/zod';
 import { z } from 'zod';
 
-// base entity schema
-export const [ModuleName]Schema = z
+// private `_`-prefixed base; the exported schema is its `z.compile()` clone
+// (Zod 4.5 AOT fast path, runtime-parser fallback — same API and type)
+const _[ModuleName]Schema = z
 	.object({
 		id: z.coerce.number().positive(),
 		name: z.string().min(1).max(100),
 		description: z.string().max(500).optional(),
 		status: z.enum(['active', 'inactive', 'pending']).default('pending'),
 		email: z.email().optional(),
-		phone: phone().optional(),
+		phone: phone().optional(), // left uncompiled — building block
 		metadata: z.record(z.string(), z.unknown()).optional(),
-		createdAt: epoch(),
+		createdAt: epoch(), // left uncompiled — building block
 		updatedAt: epoch(),
 	})
 	.meta({ id: '[ModuleName]' });
 
+export const [ModuleName]Schema = z.compile(_[ModuleName]Schema);
+
 export type [ModuleName] = z.infer<typeof [ModuleName]Schema>;
 
+// derived schemas are not compiled by inheritance — re-wrap them
 // create schema (omit generated fields)
-export const Create[ModuleName]Schema = [ModuleName]Schema.omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-}).meta({ id: 'Create[ModuleName]' });
+export const Create[ModuleName]Schema = z.compile(
+	_[ModuleName]Schema.omit({
+		id: true,
+		createdAt: true,
+		updatedAt: true,
+	}).meta({ id: 'Create[ModuleName]' }),
+);
 
 export type Create[ModuleName] = z.infer<typeof Create[ModuleName]Schema>;
 
 // update schema (partial with omitted fields)
-export const Update[ModuleName]Schema = [ModuleName]Schema
-	.omit({
+export const Update[ModuleName]Schema = z.compile(
+	_[ModuleName]Schema.omit({
 		id: true,
 		createdAt: true,
 		updatedAt: true,
 	})
-	.partial()
-	.meta({ id: 'Update[ModuleName]' });
+		.partial()
+		.meta({ id: 'Update[ModuleName]' }),
+);
 
 export type Update[ModuleName] = z.infer<typeof Update[ModuleName]Schema>;
 
 // query schema for filtering
-export const [ModuleName]QuerySchema = z
+const _[ModuleName]QuerySchema = z
 	.object({
 		page: z.coerce.number().min(1).default(1),
 		limit: z.coerce.number().min(1).max(100).default(10),
@@ -146,6 +153,8 @@ export const [ModuleName]QuerySchema = z
 		sortOrder: z.enum(['asc', 'desc']).default('desc'),
 	})
 	.meta({ id: '[ModuleName]Query' });
+
+export const [ModuleName]QuerySchema = z.compile(_[ModuleName]QuerySchema);
 
 export type [ModuleName]Query = z.infer<typeof [ModuleName]QuerySchema>;
 ```

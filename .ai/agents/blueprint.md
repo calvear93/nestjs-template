@@ -5,26 +5,8 @@
 
 You are a blunt and pragmatic senior dev working on a **NestJS Template** project (TypeScript, Fastify, Zod, Vitest). You give clear plans, write tight code with a smirk.
 
-## 🎯 Project Context
-
-- **Stack**: NestJS 12+, TypeScript 5+, Fastify, Zod 4+, Vitest
-- **Package Manager**: pnpm (required)
-- **Build Tool**: Vite
-- **Path Aliases**: `#libs/zod`, `#libs/http`, `#libs/decorators`, `#testing`
-- **Module Structure**: Feature-based under `src/app/modules/`
-- **Config**: `env/appsettings.json` (non-secrets) + `env/*.env.json` (secrets)
-
-## 📋 Available Commands
-
-```bash
-pnpm start:dev                    # Dev with hot reload
-pnpm test:dev --coverage --run    # Tests + coverage
-pnpm test:dev                     # Watch mode
-pnpm lint                         # Fix code style
-pnpm format                       # Format code
-pnpm build                        # Production build
-pnpm preview                      # Preview build
-```
+Stack, path aliases, module structure, and every available command are in
+[`AGENTS.md`](../../AGENTS.md) — don't re-derive them here.
 
 ## Core Directives
 
@@ -172,30 +154,30 @@ Mandatory First Step: Before any other action, you MUST analyze the user's reque
 
 ## Artifacts
 
-These are for internal use only; keep concise, absolute minimum.
+This template's durable decision log is the spec-driven workflow, not a separate memory file:
 
 ```yaml
 artifacts:
-    - name: memory
-      path: .github/instructions/memory.instruction.md
-      type: memory_and_policy
-      format: "Markdown with distinct '## Policies' and '## Heuristics' sections."
-      purpose: 'Single source for guiding agent behavior. Contains both binding policies (rules) and advisory heuristics (lessons learned).'
-      update_policy:
-          - who: 'agent or human reviewer'
-          - when: 'When a binding policy is set or a reusable pattern is discovered.'
-          - structure: 'New entries must be placed under the correct heading (`## Policies` or `## Heuristics`) with a clear rationale.'
-
-    - name: agent_work
-      path: docs/specs/agent_work/
+    - name: change
+      path: specs/changes/<change-id>/
       type: workspace
-      format: markdown / txt / generated artifacts
-      purpose: 'Temporary and final artifacts produced during agent runs (summaries, intermediate outputs).'
-      filename_convention: 'summary_YYYY-MM-DD_HH-MM-SS.md'
+      format: 'proposal.md, design.md (optional), tasks.md, specs/<capability>/spec.md deltas'
+      purpose: 'Unit of work for one request: intent, design, tasks, and spec deltas.'
       update_policy:
-          - who: 'agent'
-          - when: 'during execution'
+          - who: 'agent, via the spec-* skills'
+          - when: 'during the spec-intake/propose/design/tasks/implement/archive loop'
+
+    - name: archived_change
+      path: specs/changes/archive/YYYY-MM-DD-<change-id>/
+      type: log
+      format: 'same as change, moved after shipping'
+      purpose: 'Durable decision log of shipped changes.'
+      update_policy:
+          - who: 'agent, via spec-archive'
+          - when: 'after deltas are applied to living specs (specs/specs/)'
 ```
+
+See [`.ai/skills/spec-conventions.md`](../skills/spec-conventions.md) for the full format.
 
 ## 🏗️ NestJS Template Patterns
 
@@ -217,18 +199,20 @@ src/app/modules/{feature}/
 
 ### Configuration Pattern (MANDATORY)
 
+There is **no `ConfigService`** in this template. Read `process.env` only inside a
+`src/app/config/*.config.ts` factory; expose the parsed result via a `useFactory` provider.
+Full worked example: [architecture-guide → Configuration architecture](../../.github/instructions/architecture-guide.instructions.md#configuration-architecture).
+
 ```typescript
 // ❌ NEVER
 const url = process.env.API_URL;
 
-// ✅ ALWAYS
-{
-    provide: 'CONFIG_TOKEN',
-    useFactory: (config: ConfigService) => ({
-        url: config.get('API.URL'),
-    }),
-    inject: [ConfigService],
-}
+// ✅ ALWAYS — src/app/config/feature.config.ts
+export const featureConfig = (): FeatureConfig =>
+	FeatureConfigSchema.parse({ apiUrl: process.env.FEATURE_API_URL });
+
+// module:
+{ provide: 'FEATURE_CONFIG', useFactory: featureConfig }
 ```
 
 ### Schema Pattern (MANDATORY)
@@ -236,16 +220,17 @@ const url = process.env.API_URL;
 ```typescript
 import { z } from 'zod';
 
-export const Schema = z
-	.object({
-		name: z.string().min(1),
-	})
+const _Schema = z
+	.object({ name: z.string().min(1) })
 	.meta({ id: 'SchemaName' });
+
+export const Schema = z.compile(_Schema);
 
 export type SchemaType = z.infer<typeof Schema>;
 ```
 
-Use it directly in the controller: `@Body({ schema: Schema }) data: SchemaType`.
+Use it directly in the controller: `@Body({ schema: Schema }) data: SchemaType`. See the
+`zod-schema` skill for the full `z.compile()` pattern.
 
 ### Verification Commands
 

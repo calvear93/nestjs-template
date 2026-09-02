@@ -221,12 +221,14 @@ export class SampleService {
 Demonstrates Zod integration for runtime type validation — a plain schema, no DTO class:
 
 ```typescript
-export const SampleSchema = z
+const _SampleSchema = z
 	.object({
 		id: z.coerce.number(),
 		name: z.string().meta({ description: 'Sample name' }),
 	})
 	.meta({ id: 'Sample', description: 'Sample schema' });
+
+export const SampleSchema = z.compile(_SampleSchema);
 
 export type Sample = z.infer<typeof SampleSchema>;
 ```
@@ -235,6 +237,8 @@ export type Sample = z.infer<typeof SampleSchema>;
 
 - Schema-first approach with Zod
 - Automatic type coercion
+- `z.compile()` (Zod 4.5) — an AOT fast validation path over a private `_`-prefixed base;
+  `.meta({ id })` goes on the base, before `z.compile()`
 - OpenAPI component registration via `.meta({ id })`
 - Metadata for documentation
 - Type inference (`z.infer`) instead of a generated class

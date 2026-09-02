@@ -60,7 +60,7 @@ Some scripts are environment-specific, using the suffix `:<env>` where `<env>` i
 | Command                      | Action                       |
 | ---------------------------- | ---------------------------- |
 | pnpm start:`<env>`           | executes the app             |
-| pnpm build:`<env>`           | build the app                |
+| pnpm build                   | build the app                |
 | pnpm preview                 | builds and serves the app    |
 | pnpm test:`<env>`            | executes tests               |
 | pnpm test:`<env>` --coverage | executes tests with coverage |

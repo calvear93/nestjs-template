@@ -12,19 +12,11 @@ You act as a Staff / Principal Engineer expert in NestJS, TypeScript, Zod and in
 6. Produce representative unit and integration tests (happy path + edge/error) and highlight coverage gaps.
 7. Preserve Spanish domain entity names when required by business, but keep all technical terminology in English.
 
-## Project Commands (use exactly)
+## Project Commands
 
-- Development: `pnpm start:dev`
-- Tests (watch): `pnpm test:dev`
-- Tests (run once + coverage): `pnpm test:dev --coverage --run`
-- Mutation testing: `pnpm test:mutation`
-- Lint fix: `pnpm lint`
-- Format: `pnpm format`
-- Build: `pnpm build`
-- Preview build: `pnpm preview`
-- Env schema: `pnpm env:schema`
-
-DO NOT invent commands. If the user asks for something outside this list, first validate its existence in `package.json`.
+Every available command is listed in [`AGENTS.md`](../../AGENTS.md) — use exactly those; do
+not invent commands. If the user asks for something not listed there, validate its existence
+in `package.json` first.
 
 ## Code Patterns and Templates
 
@@ -47,8 +39,8 @@ feature/
 Rules:
 
 - Thin controllers; logic belongs in services.
-- Named Zod schemas (`.meta({ id: 'Name' })`) used directly as request/response shapes — no DTO
-  class wrapper.
+- Named Zod schemas (`.meta({ id: 'Name' })` on the base, `z.compile()`-wrapped export) used
+  directly as request/response shapes — no DTO class wrapper.
 - Always include `.ts` extensions in relative imports.
 - Do not use `any`; prefer explicit or Zod-inferred types.
 - Tests: use vitest, mocks with `vitest-mock-extended`, and the built-in HTTP mock server helper for external HTTP.
@@ -161,11 +153,17 @@ z.iso.duration(); // ISO duration
 
 **Schema Creation Pattern:**
 
+Every exported schema is a `z.compile()` clone (Zod 4.5) of a private `_`-prefixed base — an
+AOT fast validation path, runtime-parser fallback, same API and inferred type. `.meta({ id })`
+goes on the base, **before** `z.compile()` (order matters: `.meta()` after `z.compile()`
+re-clones and drops the compiled fast path). Derived schemas (`.omit()`/`.partial()`) don't
+inherit compilation or `id` — re-wrap and re-tag each one. See the `zod-schema` skill.
+
 ```typescript
 import { z } from 'zod';
 
 // Base schema
-export const UserSchema = z
+const _UserSchema = z
 	.object({
 		id: z.coerce.number().optional(),
 		name: z.string().min(1).max(100),
@@ -174,21 +172,22 @@ export const UserSchema = z
 	})
 	.meta({ id: 'User' });
 
+export const UserSchema = z.compile(_UserSchema);
+
 export type User = z.infer<typeof UserSchema>;
 
 // Create variant (omit auto-generated fields) — needs its own `id` to
 // register as a separate OpenAPI component
-export const CreateUserSchema = UserSchema.omit({
-	id: true,
-	createdAt: true,
-}).meta({ id: 'CreateUser' });
+export const CreateUserSchema = z.compile(
+	_UserSchema.omit({ id: true, createdAt: true }).meta({ id: 'CreateUser' }),
+);
 
 export type CreateUser = z.infer<typeof CreateUserSchema>;
 
 // Update variant (all fields optional)
-export const UpdateUserSchema = UserSchema.partial().meta({
-	id: 'UpdateUser',
-});
+export const UpdateUserSchema = z.compile(
+	_UserSchema.partial().meta({ id: 'UpdateUser' }),
+);
 
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 ```
@@ -255,7 +254,7 @@ export class ApiService {
 		return response.json();
 	}
 
-	async createUser(data: CreateUserDto) {
+	async createUser(data: CreateUser) {
 		const response = await this.httpClient.post<User>('/users', {
 			data,
 			headers: { 'X-Custom': 'value' },
@@ -267,25 +266,28 @@ export class ApiService {
 
 **Advanced Configuration with Provider:**
 
+There is no `ConfigService` — read `process.env` inside a `src/app/config/*.config.ts`
+factory (see "Validation and Configuration" below), then pass the parsed config into
+`HttpProvider.register()`:
+
 ```typescript
 import { HttpProvider } from '#libs/http';
+import { externalApiConfig } from '../config/external-api.config.ts';
 
 @Module({
-    providers: [
-        {
-            provide: 'EXTERNAL_API_CLIENT',
-            useFactory: (config: ConfigService) => {
-                return HttpProvider.createClient({
-                    url: config.get('API.BASE_URL'),
-                    timeout: config.get('API.TIMEOUT'),
-                    headers: {
-                        Authorization: `Bearer ${config.get('API_KEY')}`,
-                    },
-                });
-            },
-            inject: [ConfigService],
-        },
-    ],
+	providers: [
+		{
+			provide: 'EXTERNAL_API_CLIENT',
+			useFactory: () => {
+				const config = externalApiConfig();
+				return HttpProvider.register({
+					url: config.baseUrl,
+					timeout: config.timeout,
+					headers: { Authorization: `Bearer ${config.apiKey}` },
+				});
+			},
+		},
+	],
 })
 ```
 
@@ -309,59 +311,93 @@ try {
 
 **Security Guard Factory:**
 
-```typescript
-import { createSecurityGuard } from '#libs/decorators';
+`createSecurityGuard` takes the guard class **positionally**, not a `{name, validate}`
+object, and returns a **tuple** `[SecureDecorator, AllowDecorator]`:
 
-// Create custom guard
-const { Guard: MyGuard, Decorator: MyDecorator } = createSecurityGuard({
-	name: 'MyGuard',
-	validate: async (request, context) => {
+```typescript
+import { createSecurityGuard, type SecurityGuard } from '#libs/decorators';
+import { type ExecutionContext, Injectable } from '@nestjs/common';
+
+@Injectable()
+export class MyGuard implements SecurityGuard {
+	canActivate(context: ExecutionContext): boolean {
 		// Custom validation logic
-		return { isValid: true, metadata: {} };
-	},
-});
+		return true;
+	}
+}
+
+// Guard class, then `enabled`, then any args canActivate needs beyond context
+export const [Secure, AllowAnonymous] = createSecurityGuard(MyGuard, true);
 
 // Use in controller
-@MyGuard()
+@Secure()
 @Controller('protected')
 export class ProtectedController {}
 ```
 
-**Apply Decorator:**
+**Applying multiple decorators (`DecoratorsLookUp`):**
+
+There is no `Apply(...)` spread-decorator helper. Group decorators in a `DecoratorsLookUp`
+object (this template's real convention — see `*.controller.docs.ts`), then apply it with
+`ApplyToClass`/`ApplyToProperty` from `#libs/decorators` (or the app-level
+`ApplyControllerDocs` wrapper that gates on `SWAGGER_UI`):
 
 ```typescript
-import { Apply } from '#libs/decorators';
+import { type DecoratorsLookUp } from '#libs/decorators';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { type UserController } from './user.controller.ts';
 
-// Apply multiple decorators at once
-@Apply(
-    ApiTags('Users'),
-    ApiOperation({ summary: 'Get users' }),
-    ApiResponse({ status: 200, type: [UserDto] })
-)
-@Get()
-getUsers() {}
+export const UserControllerDocs: DecoratorsLookUp<UserController> = {
+	class: [ApiTags('Users')],
+	method: {
+		getUsers: [
+			ApiOperation({ summary: 'Get users' }),
+			ApiResponse({
+				status: 200,
+				standardSchema: UserSchema,
+				isArray: true,
+			}),
+		],
+	},
+};
 ```
 
 ## 🏗️ Complete Module Example
+
+```typescript
+// config/user.config.ts — the only place reading process.env for this module
+import { z } from 'zod';
+
+const _UserConfigSchema = z.object({
+	maxUsers: z.coerce.number().default(1000),
+	defaultRole: z.enum(['admin', 'user', 'guest']).default('user'),
+});
+
+const UserConfigSchema = z.compile(_UserConfigSchema);
+
+export type UserConfig = z.infer<typeof UserConfigSchema>;
+
+export const userConfig = (): UserConfig =>
+	UserConfigSchema.parse({
+		maxUsers: process.env.USER_MAX_USERS,
+		defaultRole: process.env.USER_DEFAULT_ROLE,
+	});
+```
 
 ```typescript
 // user.module.ts
 import { Module } from '@nestjs/common';
 import { HttpModule } from '#libs/http';
 import { UserController } from './controllers/user.controller.ts';
+import { userConfig } from './config/user.config.ts';
 import { UserService } from './services/user.service.ts';
 
 @Module({
 	imports: [HttpModule],
 	providers: [
-		{
-			provide: 'USER_CONFIG',
-			useFactory: (config: ConfigService) => ({
-				maxUsers: config.get('USER.MAX_USERS'),
-				defaultRole: config.get('USER.DEFAULT_ROLE'),
-			}),
-			inject: [ConfigService],
-		},
+		// no `ConfigService` in this template — `userConfig()` reads `process.env`
+		// once, inside the factory (see "Validation and Configuration" below)
+		{ provide: 'USER_CONFIG', useFactory: userConfig },
 		UserService,
 	],
 	controllers: [UserController],
@@ -412,7 +448,7 @@ export class UserController {
 // services/user.service.ts
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { HttpClient } from '#libs/http';
-import type { UserConfig } from '../interfaces/user-config.interface.ts';
+import type { UserConfig } from '../config/user.config.ts';
 import type { CreateUser, User } from '../schemas/user.schema.ts';
 
 @Injectable()
@@ -451,23 +487,24 @@ export class UserService {
 import { z } from 'zod';
 import { phone } from '#libs/zod';
 
-export const UserSchema = z
+const _UserSchema = z
 	.object({
 		id: z.coerce.number().positive(),
 		name: z.string().min(1).max(100),
 		email: z.email(),
-		phone: phone().optional(),
+		phone: phone().optional(), // left uncompiled — building block
 		role: z.enum(['admin', 'user', 'guest']).default('user'),
 		createdAt: z.date().optional(),
 	})
 	.meta({ id: 'User' });
 
+export const UserSchema = z.compile(_UserSchema);
+
 export type User = z.infer<typeof UserSchema>;
 
-export const CreateUserSchema = UserSchema.omit({
-	id: true,
-	createdAt: true,
-}).meta({ id: 'CreateUser' });
+export const CreateUserSchema = z.compile(
+	_UserSchema.omit({ id: true, createdAt: true }).meta({ id: 'CreateUser' }),
+);
 
 export type CreateUser = z.infer<typeof CreateUserSchema>;
 ```

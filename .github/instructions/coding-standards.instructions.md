@@ -82,7 +82,7 @@ const hasAccess = true;
 | `.controller.ts`      | Controller (endpoints)  | `user.controller.ts`        |
 | `.controller.docs.ts` | OpenAPI documentation   | `user.controller.docs.ts`   |
 | `.service.ts`         | Business logic service  | `user.service.ts`           |
-| `.schema.ts`          | Zod schemas              | `user.schema.ts`            |
+| `.schema.ts`          | Zod schemas             | `user.schema.ts`            |
 | `.guard.ts`           | Guards                  | `api-key.guard.ts`          |
 | `.decorator.ts`       | Custom decorators       | `docs.decorator.ts`         |
 | `.interface.ts`       | Interfaces              | `user.interface.ts`         |
@@ -143,16 +143,21 @@ config.timeout ??= 10_000;
 ### Schemas with Zod
 
 ```typescript
-// .meta({ id }) registers the schema as a named OpenAPI component
-export const UserSchema = z
+// the shape is a private `_UserSchema`; the exported `UserSchema` is its
+// `z.compile()` clone (Zod 4.5 AOT fast path, runtime-parser fallback —
+// same API and type). `.meta({ id })` on the base, BEFORE `z.compile()`,
+// registers the schema as a named OpenAPI component.
+const _UserSchema = z
 	.object({
 		id: z.coerce.number(),
 		name: z.string().min(1),
 		email: z.email(),
-		phone: phone(), // custom validator from #libs/zod
-		createdAt: epoch(), // custom validator from #libs/zod
+		phone: phone(), // custom validator from #libs/zod — left uncompiled
+		createdAt: epoch(), // custom validator from #libs/zod — left uncompiled
 	})
 	.meta({ id: 'User' });
+
+export const UserSchema = z.compile(_UserSchema);
 
 export type User = z.infer<typeof UserSchema>;
 ```

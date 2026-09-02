@@ -68,10 +68,14 @@ Parse and validate with Zod, then expose the result through a NestJS provider:
 // src/app/config/feature.config.ts
 import { z } from 'zod';
 
-const FeatureConfigSchema = z.object({
-	apiUrl: z.string().url(),
+const _FeatureConfigSchema = z.object({
+	apiUrl: z.url(),
 	timeout: z.coerce.number().default(10000),
 });
+
+// `z.compile()` (Zod 4.5): AOT fast path, runtime-parser fallback — same
+// API and inferred type. See the `zod-schema` skill.
+const FeatureConfigSchema = z.compile(_FeatureConfigSchema);
 
 export type FeatureConfig = z.infer<typeof FeatureConfigSchema>;
 

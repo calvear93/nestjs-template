@@ -48,23 +48,24 @@ Your tasks are:
 
 **Configuration Management**
 
+There is no `ConfigService` in this template — `process.env` is read once, inside a
+`src/app/config/*.config.ts` factory.
+
 ```typescript
-// ❌ Challenge this approach
+// ❌ Challenge this approach (reading process.env outside the config layer)
 const apiUrl = process.env.API_URL;
 
-// ✅ Guide toward this
-{
-    provide: 'API_CONFIG',
-    useFactory: (config: ConfigService) => ({
-        url: config.get('API.URL'),
-    }),
-    inject: [ConfigService],
-}
+// ✅ Guide toward this — src/app/config/api.config.ts
+export const apiConfig = (): ApiConfig =>
+	ApiConfigSchema.parse({ url: process.env.API_URL });
+
+// module: { provide: 'API_CONFIG', useFactory: apiConfig }
 ```
 
 **Validation Strategy**
 
-- Always use Zod schemas with `.meta({ id: 'Name' })` for OpenAPI registration
+- Always use Zod schemas: a private `_XSchema` base, exported as `z.compile(_XSchema)`, with
+  `.meta({ id: 'Name' })` on the base (before compile) for OpenAPI registration
 - Never skip validation on endpoints
 - Guide engineers to think about edge cases in schemas
 
@@ -122,7 +123,7 @@ const apiUrl = process.env.API_URL;
 - **Patterns**: `.github/instructions/patterns.instructions.md` - Development patterns and examples
 - **Architecture**: `.github/instructions/architecture-guide.instructions.md` - Module structure
 - **Coding Standards**: `.github/instructions/coding-standards.instructions.md` - Style guide
-- **Zod Library**: `src/libs/zod/README.md` - DTO and validation patterns
+- **Zod Library**: `src/libs/zod/README.md` - schema and validation patterns
 - **HTTP Library**: `src/libs/http/README.md` - External API calls
 
 ### Socratic Questioning Examples

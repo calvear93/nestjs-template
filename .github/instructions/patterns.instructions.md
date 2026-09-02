@@ -17,7 +17,9 @@ This document is the place for long worked examples.
 // schemas/user.schema.ts
 import { z } from 'zod';
 
-export const UserSchema = z
+// private `_`-prefixed base; the exported schema is its `z.compile()` clone
+// (Zod 4.5 AOT fast path, runtime-parser fallback — same API and type)
+const _UserSchema = z
 	.object({
 		id: z.coerce.number().optional(),
 		name: z.string().min(1).max(100),
@@ -26,20 +28,23 @@ export const UserSchema = z
 	})
 	.meta({ id: 'User' });
 
+export const UserSchema = z.compile(_UserSchema);
+
 export type User = z.infer<typeof UserSchema>;
 
 // create: drop server-generated fields — needs its own `id` to register as
-// its own OpenAPI component (derived schemas don't inherit the base `id`)
-export const CreateUserSchema = UserSchema.omit({ id: true }).meta({
-	id: 'CreateUser',
-});
+// its own OpenAPI component (derived schemas don't inherit the base `id` or
+// its compilation — re-wrap in z.compile())
+export const CreateUserSchema = z.compile(
+	_UserSchema.omit({ id: true }).meta({ id: 'CreateUser' }),
+);
 
 export type CreateUser = z.infer<typeof CreateUserSchema>;
 
 // update: everything optional
-export const UpdateUserSchema = UserSchema.partial().meta({
-	id: 'UpdateUser',
-});
+export const UpdateUserSchema = z.compile(
+	_UserSchema.partial().meta({ id: 'UpdateUser' }),
+);
 
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 ```

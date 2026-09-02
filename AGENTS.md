@@ -29,21 +29,21 @@ When guidance conflicts, resolve in this order:
 
 ## Tech stack
 
-| Area              | Choice                                                                                                                                                                             |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework         | NestJS 12+ with TypeScript 5+                                                                                                                                                      |
-| HTTP server       | Fastify (`@nestjs/platform-fastify`)                                                                                                                                               |
-| Validation        | Zod 4+ via NestJS's native Standard Schema support (`@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe`); `#libs/zod` adds OpenAPI wiring and custom validators |
-| API docs          | OpenAPI / Swagger (`@nestjs/swagger`)                                                                                                                                              |
-| Dependency inject | NestJS built-in IoC container                                                                                                                                                      |
-| HTTP client       | Built-in client via `#libs/http`                                                                                                                                                   |
-| Dates             | Luxon                                                                                                                                                                              |
-| Testing           | Vitest + `vitest-mock-extended`                                                                                                                                                    |
-| Coverage          | Vitest Coverage V8 (target ≥ 80%)                                                                                                                                                  |
-| Mutation testing  | Stryker Mutator                                                                                                                                                                    |
-| Build/runtime     | Vite + vite-node; Node `>=24`, pnpm `>=11`                                                                                                                                         |
-| Env loading       | `@calvear/env` (`env/` folder)                                                                                                                                                     |
-| Tooling           | ESLint + Prettier, pnpm                                                                                                                                                            |
+| Area              | Choice                                                                                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework         | NestJS 12+ with TypeScript 5+                                                                                                                                                                                       |
+| HTTP server       | Fastify (`@nestjs/platform-fastify`)                                                                                                                                                                                |
+| Validation        | Zod 4.5+ via NestJS's native Standard Schema support (`@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe`); schemas `z.compile()`-wrapped; `#libs/zod` adds OpenAPI wiring and custom validators |
+| API docs          | OpenAPI / Swagger (`@nestjs/swagger`)                                                                                                                                                                               |
+| Dependency inject | NestJS built-in IoC container                                                                                                                                                                                       |
+| HTTP client       | Built-in client via `#libs/http`                                                                                                                                                                                    |
+| Dates             | Luxon                                                                                                                                                                                                               |
+| Testing           | Vitest + `vitest-mock-extended`                                                                                                                                                                                     |
+| Coverage          | Vitest Coverage V8 (target ≥ 80%)                                                                                                                                                                                   |
+| Mutation testing  | Stryker Mutator                                                                                                                                                                                                     |
+| Build/runtime     | Vite + vite-node; Node `>=24`, pnpm `>=11`                                                                                                                                                                          |
+| Env loading       | `@calvear/env` (`env/` folder)                                                                                                                                                                                      |
+| Tooling           | ESLint + Prettier, pnpm                                                                                                                                                                                             |
 
 ## Commands
 
@@ -80,7 +80,7 @@ src/
     decorators/          #libs/decorators — createSecurityGuard, ApplyToClass, DecoratorsLookUp
 env/                     appsettings.json (non-secret) + <env>.env.json (secrets)
 .vscode/__templates__/   canonical code scaffolds for every component type (controller,
-                         service, module, provider, guard, interceptor, DTO/schema,
+                         service, module, provider, guard, interceptor, schema,
                          exception filter, test, …)
 ```
 
@@ -89,7 +89,7 @@ Path aliases (`package.json#imports`): `#libs/zod`, `#libs/http`, `#libs/decorat
 
 When generating any component, start from the matching scaffold in
 [`.vscode/__templates__/`](.vscode/__templates__/) — it is the source of truth for file
-suffixes, folder layout, and controller/service/module/DTO/test signatures.
+suffixes, folder layout, and controller/service/module/schema/test signatures.
 
 ## Core principles
 
@@ -126,8 +126,10 @@ These are non-negotiable. Violations should be fixed before code is considered d
 ### TypeScript & validation
 
 - Explicit types everywhere; no `any` (prefer `unknown` + narrowing).
-- All request/response shapes are plain Zod schemas; add `.meta({ id: 'Model' })` to register
-  them as named OpenAPI components.
+- All request/response shapes are Zod schemas: a private `_XSchema` base, exported as
+  `XSchema = z.compile(_XSchema)` (Zod 4.5 AOT fast path) with its inferred type. Add
+  `.meta({ id: 'Model' })` on the base, **before** `z.compile()`, to register it as a named
+  OpenAPI component. See the `zod-schema` skill.
 - Prefer `async`/`await` over raw Promises; always handle the error path with proper
   NestJS HTTP exceptions.
 
@@ -219,7 +221,7 @@ directly. The best-practice skills (`typescript`, `nestjs`, `zod-schema`, `ioc-b
 | [Operating manual](.ai/skills/ways-of-working.md)                             | Autonomy, default technical decisions, Definition of Done, non-technical-user comms |
 | [Architecture guide](.github/instructions/architecture-guide.instructions.md) | Module topology, configuration/DI wiring, registration, import conventions          |
 | [Coding standards](.github/instructions/coding-standards.instructions.md)     | Formatting, naming, file suffixes, TypeScript rules, comments, anti-patterns        |
-| [Patterns](.github/instructions/patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, schemas, guards, docs, tests       |
+| [Patterns](.github/instructions/patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, schemas, guards, docs, tests    |
 | [Code exemplars](exemplars.md)                                                | Pointers to high-quality real examples in this repo                                 |
 | [`.vscode/__templates__/`](.vscode/__templates__/)                            | Canonical code scaffolds for every component type — the starting point for new code |
 | [README](README.md)                                                           | Human-facing project documentation and setup                                        |

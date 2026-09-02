@@ -20,19 +20,32 @@ This library wires Zod into NestJS's **native Standard Schema support** (v12+): 
 // user.schema.ts
 import { z } from 'zod';
 
-export const UserSchema = z
+const _UserSchema = z
 	.object({
 		id: z.number().positive(),
 		name: z.string().min(1).max(100),
 		email: z.email(),
 	})
-	// registers this as a named, reusable OpenAPI component; without an
-	// `id`, the schema always renders inline and never appears under the
-	// document's `components.schemas` — see "OpenAPI Integration" below
+	// `.meta({ id })` on the `_`-prefixed base, BEFORE `z.compile()`: registers
+	// this as a named, reusable OpenAPI component. Order matters — `.meta()`
+	// after `z.compile()` re-clones and drops the fast path. Without an `id`
+	// the schema always renders inline and never appears under the document's
+	// `components.schemas` — see "OpenAPI Integration" below
 	.meta({ id: 'User' });
+
+// `z.compile()` (Zod 4.5): an AOT fast validation path with automatic fallback
+// to the runtime parser — same API, same inferred type
+export const UserSchema = z.compile(_UserSchema);
 
 export type User = z.infer<typeof UserSchema>;
 ```
+
+> **Compile every exported schema.** Define the shape as a private `_XSchema`
+> (`z.object({...}).meta({ id })` for a named component), export
+> `XSchema = z.compile(_XSchema)`. Derived variants (`.omit()`/`.partial()`) are not compiled by
+> inheritance — wrap them too: `export const CreateUserSchema = z.compile(_UserSchema.omit({ id: true }))`.
+> The domain validators (`phone()`/`epoch()`) stay **uncompiled** — they are building blocks
+> whose transforms the parent's `z.compile()` covers.
 
 ### Use in a controller
 
@@ -101,7 +114,7 @@ const document = SwaggerModule.createDocument(app, config, {
 SwaggerModule.setup('api/docs', app, document);
 ```
 
-Once wired, every `@Body`/`@Query`/`@Param({ schema })` on a route is picked up automatically and turned into the **request** body/parameter schema in the generated document — registered as a named `components.schemas` entry whenever the schema has `.meta({ id })` — no per-route registration needed, and no manual schema in `ApiBody` does anything (see below).
+Once wired, every `@Body`/`@Query`/`@Param({ schema })` on a route is picked up automatically and turned into the **request** body/parameter schema in the generated document — registered as a named `components.schemas` entry whenever the schema carries an `id` (from `.meta({ id })` on the `_`-prefixed base, before `z.compile()`) — no per-route registration needed, and no manual schema in `ApiBody` does anything (see below).
 
 ### Documenting responses in `*.controller.docs.ts`
 
@@ -136,7 +149,7 @@ ApiBody({
 
 ### Same schema, both request and response
 
-Referencing the same `.meta({ id })` schema for both a request and a response works, but note how the registration actually happens: NestJS calls `standardSchemaConverter` **once per context** (`input` for the `@Body`-derived request schema, `output` for the `ApiResponse({ standardSchema })`-derived response schema), and each call is an independent `createSchema()` invocation with its own private component registry — there's no batching across calls. Both calls still register under the **same** component name, so whichever call runs later wins (last write into the shared `components.schemas` NestJS builds up across the whole document). `zod-openapi`'s own `outputId`/`outputIdSuffix` auto-renaming does **not** help here — that mechanism only fires when `zod-openapi` itself batches an input+output pair through one `createDocument()`/`createSchemas()` call, which this app doesn't do (verified in `openapi.spec.ts`). If a schema's request and response shapes genuinely need separate documented components, give them different `id`s outright.
+Referencing the same `.meta({ id })` schema for both a request and a response works, but note how the registration actually happens: NestJS calls `standardSchemaConverter` **once per context** (`input` for the `@Body`-derived request schema, `output` for the `ApiResponse({ standardSchema })`-derived response schema), and each call is an independent `createSchema()` invocation with its own private component registry — there's no batching across calls. Both calls still register under the **same** component name, so whichever call runs later wins (last write into the shared `components.schemas` NestJS builds up across the whole document). `zod-openapi`'s own `outputId`/`outputIdSuffix` auto-renaming does **not** help here — that mechanism only fires when `zod-openapi` itself batches an input+output pair through one `createDocument()`/`createSchemas()` call, which this app doesn't do (verified in `openapi.spec.ts`). If a schema's request and response shapes genuinely need separate documented components, give them different `id`s outright — two `_`-prefixed bases (e.g. `.meta({ id: 'User' })` for the request, `.meta({ id: 'UserResponse' })` on a derived/omitted variant for the response), each wrapped in its own `z.compile()`.
 
 ## 📖 API Reference
 
@@ -178,6 +191,24 @@ Zod 4's native `toJSONSchema()` (which `zod-openapi` wraps) treats several Zod t
 `z.custom()`/`z.function()` (and some dynamic `z.catch()` fallback values) have no generic JSON shape and would otherwise throw the same way — `standardSchemaConverter` allowlists them via `zod-openapi`'s `allowEmptySchema` option, so they render as an open `{}` schema instead of crashing the whole document. Give one of these its own `.meta()` if you need a precise shape documented.
 
 Everything else the old system customized (`bigint`, `.regex()` string formats, `tuple`, `.nullable()`/`.optional()`, `never`) either matches the old behavior exactly or Zod 4/`zod-openapi` already handle it natively — no override needed.
+
+## `z.compile()` and the OpenAPI document
+
+Exported schemas are `z.compile()` clones of a `_`-prefixed base (see "Quick start"). For a
+named component the base carries `.meta({ id })` **before** `z.compile()`:
+
+- **`_X = z.object({...}).meta({ id })`, then `z.compile(_X)`** — the canonical form. Keeps the
+  compiled fast path, registers the component, and the child schemas (validator `.meta({...})`
+  annotations, the override table, `allowEmptySchema`) all work unchanged since children are
+  shared by reference. `zod-openapi` emits the reference site as `{ allOf: [{ $ref }] }` rather
+  than a bare `{ $ref }` — a single-element `allOf` is valid OpenAPI 3.0, semantically identical,
+  renders the same in Swagger UI / Redoc, and is collapsed by common client generators.
+- **`z.compile(_X).meta({ id })`** (id _after_ compile) — **does not work**: `.meta()` returns a
+  fresh clone that drops the compiled fast path, so the schema is back to runtime speed (Swagger
+  is fine, but the `z.compile()` is a no-op).
+- **`z.compile(_X).register(z.globalRegistry, { id })`** — alternative if a _bare_ `$ref` is
+  required (some strict codegen). Keeps the fast path and registers in place, at the cost of a
+  low-level call in every schema file. Not the default here.
 
 ---
 

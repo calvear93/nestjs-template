@@ -22,6 +22,30 @@ describe('standardSchemaConverter', () => {
 		});
 	});
 
+	test('a z.compile() clone of a .meta({ id }) base registers the component and refs it via allOf', () => {
+		// this template's canonical form: `.meta({ id })` on the `_`-prefixed
+		// base, then `z.compile()` — keeps the compiled fast path AND the named
+		// component. `zod-openapi` emits the reference wrapped in a single-element
+		// `allOf` (valid OpenAPI 3.0, identical in Swagger UI) rather than a bare
+		// `$ref`; the component body itself is unchanged.
+		const schema = z.compile(
+			z
+				.object({ id: z.coerce.number(), name: z.string() })
+				.meta({ id: 'CompiledSample' }),
+		);
+
+		const result = standardSchemaConverter!(schema, {
+			schemaType: 'output',
+		});
+
+		expect(result?.schema).toStrictEqual({
+			allOf: [{ $ref: '#/components/schemas/CompiledSample' }],
+		});
+		expect(result?.components?.CompiledSample).toMatchObject({
+			type: 'object',
+		});
+	});
+
 	test('renders a schema without .meta({ id }) inline, with no components', () => {
 		const schema = z.object({ id: z.coerce.number() });
 
