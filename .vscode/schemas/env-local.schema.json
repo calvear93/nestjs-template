@@ -1,0 +1,4 @@
+{
+	"$comment": "Wrapper so json.schemas can target a JSON-pointer fragment (url does not support #/...). Points at the 'local' group of the generated env schema.",
+	"$ref": "../../env/settings/schema.json#/local"
+}

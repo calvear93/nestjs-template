@@ -1,0 +1,60 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "code-template-tool template.config.json",
+	"description": "Configuration for a code-template-tool (yuanhjty.code-template-tool) template folder.",
+	"type": "object",
+	"required": ["name"],
+	"additionalProperties": false,
+	"properties": {
+		"name": {
+			"type": "string",
+			"description": "Display name shown in the template picker."
+		},
+		"allowExistingFolder": {
+			"type": "boolean",
+			"description": "Allow generating into an already existing target folder."
+		},
+		"variables": {
+			"type": "array",
+			"description": "Template variables prompted to the user, in order.",
+			"items": {
+				"oneOf": [
+					{
+						"type": "string",
+						"description": "Variable name (default transformation applies)."
+					},
+					{
+						"type": "object",
+						"required": ["name"],
+						"additionalProperties": false,
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "Variable name."
+							},
+							"defaultValue": {
+								"type": "string",
+								"description": "Value used when the user leaves the prompt empty."
+							},
+							"style": {
+								"type": "object",
+								"additionalProperties": false,
+								"description": "Per-variable transformation overrides.",
+								"properties": {
+									"noTransformation": {
+										"type": "boolean",
+										"description": "Use the raw user input without case transformation."
+									},
+									"keepUpperCase": {
+										"type": "boolean",
+										"description": "Keep uppercase words in the input as-is."
+									}
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	}
+}

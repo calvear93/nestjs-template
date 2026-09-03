@@ -19,16 +19,16 @@
 	"explorer.fileNesting.expand": false,
 	"explorer.fileNesting.patterns": {
 		".gitignore": ".gitattributes",
-		"agents.md": "claude.md, gemini.md, llms.txt, .copilotignore",
-		"INIT.ps1": "INIT.lib.ps1",
 		"*.cts": "${capture}.cts.*",
 		"*.env.json": "${capture}.*.env.json",
 		"*.json": "${capture}.json, ${capture}.*.json",
 		"*.mts": "${capture}.mts.*",
 		"*.ts": "${capture}.*",
 		"*.tsx": "${capture}.*",
+		"agents.md": "claude.md, gemini.md, llms.txt, .copilotignore",
 		"dockerfile": ".dockerignore, docker-compose.*, dockerfile*",
 		"eslint.config.js": ".prettierrc*, .prettierignore",
+		"INIT.ps1": "INIT.lib.ps1",
 		"main.ts": "*.config.ts, *.d.ts",
 		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, pnpm-workspace.yaml, package.*.json, .npmrc, .pnp.cjs",
 		"readme*": "changelog.md, license.md, code_of_conduct.md, contributing.md, architecture.md, exemplars.md",
@@ -86,6 +86,28 @@
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib",
 	"js/ts.tsserver.web.typeAcquisition.enabled": false,
 	"js/ts.validate.enabled": true,
+	"json.schemas": [
+		{
+			"fileMatch": ["/env/appsettings.json"],
+			"url": "./node_modules/@calvear/env/schemas/env.schema.json"
+		},
+		{
+			"fileMatch": ["/env/settings/settings.json"],
+			"url": "./node_modules/@calvear/env/schemas/settings.schema.json"
+		},
+		{
+			"fileMatch": ["/env/*.env.json", "!/env/*.local.env.json"],
+			"url": "./.vscode/schemas/env-secrets.schema.json"
+		},
+		{
+			"fileMatch": ["/env/*.local.env.json"],
+			"url": "./.vscode/schemas/env-local.schema.json"
+		},
+		{
+			"fileMatch": ["/.vscode/__templates__/**/template.config.json"],
+			"url": "./.vscode/schemas/template-config.schema.json"
+		}
+	],
 	"npm.packageManager": "pnpm",
 	"npm.scriptRunner": "pnpm",
 	"prettier.useTabs": true,
