@@ -4,7 +4,7 @@
 
 # global variables
 # https://hub.docker.com/_/node
-ARG NODE=node:24.16.0-alpine
+ARG NODE=node:24.20.0-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
 ARG PNPM_VER=11.8.0

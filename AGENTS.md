@@ -41,7 +41,7 @@ When guidance conflicts, resolve in this order:
 | Testing           | Vitest + `vitest-mock-extended`                                                                                                                                                                                     |
 | Coverage          | Vitest Coverage V8 (target ≥ 80%)                                                                                                                                                                                   |
 | Mutation testing  | Stryker Mutator                                                                                                                                                                                                     |
-| Build/runtime     | Vite + vite-node; Node `>=24`, pnpm `>=11`                                                                                                                                                                          |
+| Build/runtime     | Vite + vite-node; Node `>=24`, pnpm `>=12`                                                                                                                                                                          |
 | Env loading       | `@calvear/env` (`env/` folder)                                                                                                                                                                                      |
 | Tooling           | ESLint + Prettier, pnpm                                                                                                                                                                                             |
 

@@ -1,8 +1,8 @@
 import { type CanActivate, type ExecutionContext } from '@nestjs/common';
 import { GUARDS_METADATA } from '@nestjs/common/constants';
-import { afterEach } from 'node:test';
 import {
 	afterAll,
+	afterEach,
 	beforeAll,
 	describe,
 	expect,
@@ -38,7 +38,6 @@ describe('Security Guard Factory', () => {
 	});
 
 	afterEach(() => {
-		vi.resetAllMocks();
 		vi.clearAllMocks();
 	});
 
@@ -116,7 +115,7 @@ describe('Security Guard Factory', () => {
 		instance.canActivate();
 
 		expect(_mockCanActivate).toHaveBeenCalled();
-		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(6);
+		expect(_spyReflectDefineMetadata).toHaveBeenCalledTimes(2);
 	});
 
 	test('wraps canActivate to inject stored args from execution context', () => {

@@ -14,7 +14,7 @@
 - **API docs:** OpenAPI / Swagger (colocated `*.controller.docs.ts`)
 - **HTTP client:** `#libs/http` for outbound calls; no ORM/database layer in this template
 - **Testing:** Vitest + `vitest-mock-extended` (coverage ≥ 80%)
-- **Build / runtime:** Vite + vite-node; Node `>=24`, pnpm `>=11`
+- **Build / runtime:** Vite + vite-node; Node `>=24`, pnpm `>=12`
 
 ## Conventions
 

@@ -13,8 +13,9 @@ interceptor / pipe).
 ## Layout
 
 Feature modules group files by kind under `src/app/modules/<name>/`: `controllers/*.controller.ts`
-+ `*.controller.docs.ts` + `*.spec.ts`, `services/*.service.ts` + `*.spec.ts`,
-`schemas/*.schema.ts`. Shared code lives in `src/libs/*` behind `#libs/*` aliases.
+
+- `*.controller.docs.ts` + `*.spec.ts`, `services/*.service.ts` + `*.spec.ts`,
+  `schemas/*.schema.ts`. Shared code lives in `src/libs/*` behind `#libs/*` aliases.
 
 ## Rules
 
