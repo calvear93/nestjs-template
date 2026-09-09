@@ -1,9 +1,10 @@
 import { type ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import type { HttpArgumentsHost } from '@nestjs/common/interfaces/index.ts';
 import { randomUUID } from 'node:crypto';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { ApiKeyGuard } from './api-key.guard.ts';
+
+type HttpArgumentsHost = ReturnType<ExecutionContext['switchToHttp']>;
 
 describe(ApiKeyGuard, () => {
 	const _headerName = 'ms-api-key';

@@ -1,8 +1,8 @@
 import { writeFile } from 'node:fs/promises';
 import type { PluginOption, UserConfigExport } from 'vite';
-import { dependencies } from './package.json';
-import { compilerOptions as tsconfig } from './tsconfig.json';
-import { compilerOptions as tsconfigRelease } from './tsconfig.release.json';
+import { dependencies } from './package.json' with { type: 'json' };
+import { compilerOptions as tsconfig } from './tsconfig.json' with { type: 'json' };
+import { compilerOptions as tsconfigRelease } from './tsconfig.release.json' with { type: 'json' };
 
 const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
 

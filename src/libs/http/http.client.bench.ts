@@ -1,9 +1,9 @@
-import { bench, describe, expect } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { createHttpMockServer } from './__mocks__/create-http-mock-server.mock.ts';
 import { HttpClient } from './http.client.ts';
 
 const PORT = 5678;
-const BENCH_CONFIG: Parameters<typeof bench>[2] = {
+const BENCH_CONFIG = {
 	time: 5000,
 	warmupIterations: 100,
 };
@@ -22,9 +22,8 @@ describe(HttpClient, async () => {
 		response.end(JSON.stringify(_responseBody));
 	});
 
-	bench(
-		'HTTP client',
-		async () => {
+	test('HTTP client', async ({ bench }) => {
+		await bench('HTTP client', async () => {
 			const response = await _provider.post(_url, {
 				data: { id: 1, name: 'a name' },
 				query: { id: 1, name: 'test', page: 100, size: 999 },
@@ -35,13 +34,11 @@ describe(HttpClient, async () => {
 
 			expect(response.ok).toBe(true);
 			expect(body).toStrictEqual(_responseBody);
-		},
-		BENCH_CONFIG,
-	);
+		}).run(BENCH_CONFIG);
+	});
 
-	bench(
-		'native fetch',
-		async () => {
+	test('native fetch', async ({ bench }) => {
+		await bench('native fetch', async () => {
 			const query = new URLSearchParams({
 				id: '1',
 				name: 'test',
@@ -58,7 +55,6 @@ describe(HttpClient, async () => {
 
 			expect(response.ok).toBe(true);
 			expect(body).toStrictEqual(_responseBody);
-		},
-		BENCH_CONFIG,
-	);
+		}).run(BENCH_CONFIG);
+	});
 });
