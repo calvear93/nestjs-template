@@ -1,9 +1,13 @@
 import { writeFile } from 'node:fs/promises';
 import type { PluginOption, UserConfigExport } from 'vite';
-import { dependencies } from './package.json' with { type: 'json' };
-import { compilerOptions as tsconfig } from './tsconfig.json' with { type: 'json' };
-import { compilerOptions as tsconfigRelease } from './tsconfig.release.json' with { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
+import tsconfigJson from './tsconfig.json' with { type: 'json' };
+import tsconfigReleaseJson from './tsconfig.release.json' with { type: 'json' };
 
+// a JSON module only has a default export
+const { dependencies } = pkg;
+const { compilerOptions: tsconfig } = tsconfigJson;
+const { compilerOptions: tsconfigRelease } = tsconfigReleaseJson;
 const CODE_OPTIMIZE = process.env.NODE_ENV === 'production';
 
 export default {

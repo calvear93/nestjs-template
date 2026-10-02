@@ -99,7 +99,7 @@ For each identified exemplar, document:
 - Brief description of what makes it exemplary
 - Pattern or component type it represents
   ${INCLUDE_COMMENTS ? "- Key implementation details and coding principles demonstrated" : ""}
-${INCLUDE_CODE_SNIPPETS ? "- Small, representative code snippet (if applicable)" : ""}
+  ${INCLUDE_CODE_SNIPPETS ? "- Small, representative code snippet (if applicable)" : ""}
 
 ${SCAN_DEPTH == "Comprehensive" ? `### 6. Additional Documentation
 

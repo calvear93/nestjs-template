@@ -1,197 +1,130 @@
-# Environment Variables Configuration Guide
+# Environment variables (`env/`)
 
-## Table of Contents
-
-1. [Requirements](#requirements)
-2. [File Structure](#file-structure)
-3. [Schema](#schema)
-4. [Load Priority](#load-priority)
-5. [Usage Example](#usage-example)
-6. [CLI Options](#cli-options)
-
----
-
-## 1. Requirements
-
-### 1.1. Dependencies
-
-This template uses the **env** CLI from `@calvear/env`.
-
-If you're starting from this template, it's already included in `devDependencies`.
-If you need to add it to a different project, install it with pnpm:
+This folder defines the API's environment variables for each environment (`dev`, `release`).
+[`@calvear/env`](https://github.com/calvear93/env) (the `env` command) gathers them from several
+sources, validates them against a schema and injects them into `process.env` before running the
+command after `:`.
 
 ```bash
-pnpm add -D @calvear/env
+pnpm start:dev       # the API with the dev configuration (and its secrets)
+pnpm test:dev        # the tests with the dev configuration
+pnpm build           # the production build (environment-independent)
 ```
 
-### 1.2. Scripts
+## 1. Files
 
-To load the desired environment, use the following format in your scripts:
+| File                     | Committed | Written by   | Purpose                                              |
+| ------------------------ | --------- | ------------ | ---------------------------------------------------- |
+| `appsettings.json`       | Yes       | The team     | Non-secret variables, per environment and per mode   |
+| `settings/settings.json` | Yes       | The team     | `env` configuration: nesting delimiter, log masks, … |
+| `settings/schema.json`   | Yes       | `env schema` | Validation schema of the variables                   |
+| `<env>.env.json`         | No        | You          | Secrets of the environment                           |
+| `<env>.local.env.json`   | No        | You          | Your personal values; they win over everything else  |
 
-```bash
-env -e <env> -m <mode>[ <mode2>] : <your-command>
-```
+`env/.gitignore` only lets `appsettings.json`, `settings/` and this README through: secrets and
+personal files are never committed. In VS Code, `<env>.env.json` and `<env>.local.env.json` get
+autocompletion from `settings/schema.json` (`.vscode/schemas/`).
 
-- **env**: project-defined environment name (this template ships with `dev` and `release`)
-- **mode**: `build` | `debug` | `test` (you can use multiple)
+## 2. Environments and modes
 
-Example:
+`env -e <environment> -m <mode> [<mode>…] : <command>`
 
-```bash
-env -e dev -m debug : vite
-```
+| Environment | Use                              |
+| ----------- | -------------------------------- |
+| `dev`       | Development                      |
+| `release`   | The configuration of the release |
 
----
+| Mode    | Use                                     |
+| ------- | --------------------------------------- |
+| `build` | Production build and its execution      |
+| `debug` | Local execution with reload (`start:*`) |
+| `test`  | Tests (`test:*`)                        |
 
-## 2. File Structure
+**The environment is inferred from the script name:** `pnpm start:dev` loads `dev` without `-e`,
+because `env` takes the last segment after `:`. A suffix that is not a defined environment (a typo
+like `start:dve`) aborts the command. Scripts whose suffix is not an environment pass `-e`
+(`preview`, `test:mutation`, `env:schema`), and so does any call outside a pnpm script.
 
-### 2.1. Non-secret Variables (`appsettings.json`)
+`build` declares no environment on purpose: it loads only `|DEFAULT|` and `|MODE|.build`, and the
+environment's values are injected when it is deployed.
 
-Recommended structure:
+## 3. Where each variable comes from
+
+The sources are merged in this order; each one wins over the previous ones:
+
+1. `package-json`: `NAME`, `VERSION`, `ENV`… from `package.json`.
+2. `app-settings`, from `appsettings.json`:
+    1. `|DEFAULT|`: shared values;
+    2. `|ENV|.<environment>`;
+    3. `|MODE|.<mode>`, in `-m` order;
+    4. `appsettings.<environment>.json` and `appsettings.<mode>.json`, if they exist;
+    5. `|LOCAL|.<environment>` and `appsettings.<environment>.local.json`, skipped in CI.
+3. `secrets`: `<environment>.env.json`.
+4. `local`: `<environment>.local.env.json`, skipped in CI.
+
+The resulting variables are written into the child process environment, so they also win over the
+ones already in your shell.
 
 ```json
 {
-	// base default variables
+	"$schema": "../node_modules/@calvear/env/schemas/env.schema.json",
 	"|DEFAULT|": {
-		...
+		"APP_NAME": "[[NAME]]",
+		"SWAGGER_UI": true,
+		"SECURITY": { "ENABLED": false, "HEADER_NAME": "x-api-key" }
 	},
-	// execution modes
 	"|MODE|": {
-		// on build
-		"build": {
-			...
-		},
-		// on local debugging
 		"debug": {
-			...
-		},
-		// on testing
-		"test": {
-			...
-		},
-		// any custom mode
-		...
-	},
-	// execution variables per environment
-	"|ENV|": {
-		"<env-name>": {
-			...
-		},
-		...
-	},
-	// (optional) local execution variables per environment
-	"|LOCAL|": {
-		"<env-name>": {
-			...
-		},
-		...
+			"NODE_ENV": "development",
+			"PORT": 4004,
+			"SECURITY": { "API_KEY": "debug" }
+		}
 	}
 }
 ```
 
-### 2.2. Secret and Local Variables
+- **Nested keys:** flattened with `_` (`nestingDelimiter`), so `SECURITY.API_KEY` arrives as
+  `process.env.SECURITY_API_KEY`.
+- **Interpolation:** `[[KEY]]` reads another variable (`expand`); `[[NAME]]` comes from
+  `package.json`.
+- **Arrays add up:** a higher layer does not replace an array, it is appended to the one below.
+- **Skipped keys:** a key starting with `#` is not loaded, so it serves as a note.
+- **No comments:** these are strict JSON files; a `//` breaks them.
+- **Everything is text:** `true` arrives as `'true'` and `4004` as `'4004'`.
 
-- `<env>.env.json`: secret variables per environment (recommended to keep out of version control).
-- `<env>.local.env.json`: local overrides (highest priority).
+## 4. Secrets
 
-This repository includes `dev.local.env.json` as an example. Create `release.env.json`, `release.local.env.json`, etc. as needed.
+Secrets go in `<environment>.env.json` (for example a real `SECURITY.API_KEY`), never in
+`appsettings.json`. There is no remote store: the file lives only on each machine (and in the
+deployment's secret settings), so it is shared through a secure channel. A missing file simply loads
+nothing.
 
----
+## 5. Validation
 
-## 3. Schema
+`settings/schema.json` has one section per provider. With `schemaValidate` on, the variables are
+validated against it before the command runs. `pnpm env:schema` rebuilds it from what `dev` loads in
+`build` mode and merges the changes with the existing schema.
 
-The `env/settings/schema.json` file defines the structure and validation rules for environment variables.
+## 6. Using them in the code
 
-- Generate/update it with `pnpm env:schema`.
-- Keep it committed so everyone validates the same contract in CI and local development.
-- If you intentionally stop using a variable, remove it from the schema.
+- **`process.env` only at the edges:** it is read in the bootstrap and configuration code
+  (`src/main.ts`, `src/app/app.ts`, the API key guard); services receive values through dependency
+  injection.
+- **Types:** `src/env.d.ts` declares the variables. They are all `string`; numbers and booleans are
+  converted when read (`+process.env.PORT`, `process.env.SWAGGER_UI === 'true'`).
+- **Logs:** with `--log debug` (`start:dev`) every resolved variable is printed; those matching
+  `logMaskValuesOfKeys` in `settings.json` (keys, passwords, connection strings) show as `*****`.
 
----
+## 7. Reference
 
-## 4. Load Priority
+| Script                        | Command                                        |
+| ----------------------------- | ---------------------------------------------- |
+| `start:dev` / `start:release` | `env -m debug : vite-node --watch src/main.ts` |
+| `build`                       | `env -m build : vite build`                    |
+| `preview`                     | `env -e dev -m build : node dist/main`         |
+| `test:dev` / `test:release`   | `env -m test : vitest`                         |
+| `test:mutation`               | `env -e dev -m test : stryker run`             |
+| `env:schema`                  | `env schema -e dev -m build`                   |
 
-From lowest to highest:
-
-1. `appsettings.json` (default)
-2. `appsettings.json` (<env>)
-3. `appsettings.json` (debug|build|test)
-4. `<env>.env.json`
-5. `<env>.local.env.json` (highest priority)
-
----
-
-## 5. Usage Example & Best Practices
-
-### 5.1. Nested Variables
-
-You can organize variables in nested objects. The default delimiter in this template is `_` (see `env/settings/settings.json`).
-
-Example file:
-
-```json
-{
-	"DATABASE": {
-		"HOST": "localhost",
-		"PORT": 5432
-	},
-	"API": {
-		"KEY": "my-api-key"
-	}
-}
-```
-
-Access in code:
-
-```js
-// Prefer reading env vars at the application boundary (bootstrap/config providers)
-// and inject them into services/controllers.
-const dbHost = process.env.DATABASE_HOST;
-const apiKey = process.env.API_KEY;
-```
-
-### 5.2. Tips
-
-- Keep sensitive variables only in `.env.json` files and never in version control.
-- Use local files for machine-specific variables.
-- Avoid using `process.env` directly inside services/controllers; read once and inject via providers.
-- Update the schema to keep validation and documentation up to date.
-
----
-
-## 6. CLI Options
-
-The `env` command supports a wide range of options to customize environment loading and management:
-
-| Option                  | Alias            | Type    | Default                      | Description                                                       |
-| ----------------------- | ---------------- | ------- | ---------------------------- | ----------------------------------------------------------------- |
-| `--env`                 | `-e`             | string  |                              | Selects the environment to load (`dev`, `qa`, `prod`, etc.)       |
-| `--mode`                | `-m`             | array   |                              | Sets the execution mode(s) (`build`, `debug`, `test`, etc.)       |
-| `--configFile`          | `-c`             | string  | `env/settings/settings.json` | Path to a custom config file                                      |
-| `--schemaFile`          | `-s`, `--schema` | string  | `env/settings/schema.json`   | Path to the environment schema file                               |
-| `--packageJson`         | `--pkg`          | string  |                              | Path to a custom `package.json`                                   |
-| `--root`                |                  | string  | `env`                        | Default environment folder path                                   |
-| `--local`               | `-l`             | boolean |                              | Forces loading of local variables for the selected environment    |
-| `--ci`                  | `--ci`           | boolean | auto-detect                  | Enables CI mode (continuous integration)                          |
-| `--nestingDelimiter`    | `-nd`            | string  | `_`                          | Delimiter for nested keys (e.g. `l1_l2`)                          |
-| `--arrayDescomposition` | `--arrDesc`      | boolean | `false`                      | Whether to serialize or break down arrays                         |
-| `--expand`              | `-x`             | boolean | `false`                      | Interpolates environment variables using themselves               |
-| `--resolve`             | `-r`             | string  | `merge`                      | Schema update mode: `merge` or `override`                         |
-| `--nullable`            | `--null`         | boolean | `true`                       | Whether variables are nullable in schema                          |
-| `--detectFormat`        | `-df`            | boolean | `true`                       | Whether to include string format in schema                        |
-| `--logLevel`            | `--log`          | string  | `info`                       | Logging level: `silly`, `trace`, `debug`, `info`, `warn`, `error` |
-| `--logMaskAnyRegEx`     | `--mrx`          | array   | `[]`                         | (Advanced) Mask values matching regex in logs                     |
-| `--logMaskValuesOfKeys` | `--mvk`          | array   | `[]`                         | (Advanced) Mask values of specific keys in logs                   |
-| `--exportIgnoreKeys`    | `--iek`          | array   | `[]`                         | (Advanced) Ignore specific keys when exporting                    |
-| `--help`                | `-h`             |         |                              | Shows help information for the CLI                                |
-| `--version`             | `-v`             |         |                              | Displays the current version of the CLI                           |
-
-### Usage Notes
-
-- You can combine options as needed. The command after the colon (`:`) will run with the loaded environment variables.
-- In this template, `nestingDelimiter` defaults to `_`.
-- For advanced usage, refer to the official documentation or run `env -h` for all available options.
-- Most options have sensible defaults; override them only for custom workflows or advanced scenarios.
-- Logging and masking options are useful for CI/CD and security-sensitive environments.
-- Schema options (`resolve`, `nullable`, `detectFormat`, etc.) help maintain strict validation and documentation.
-
----
+`start:dev` adds `--log debug`. Every `env` option is described in the
+[`@calvear/env` README](https://github.com/calvear93/env#readme).

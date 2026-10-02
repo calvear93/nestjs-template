@@ -3,5 +3,10 @@
 	"expand": true,
 	"nullable": false,
 	"schemaValidate": true,
-	"nestingDelimiter": "_"
+	"nestingDelimiter": "_",
+	"logMaskValuesOfKeys": [
+		"/.*_(CONNECTION_STRING|STRING_CONNECTION)$/i",
+		"/.*_PASS(WORD)?$/i",
+		"/.*_KEY$/i"
+	]
 }
