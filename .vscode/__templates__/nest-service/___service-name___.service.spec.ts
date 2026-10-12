@@ -1,5 +1,5 @@
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { ___ServiceName___Service } from './___service-name___.service.ts';
 
 describe(___ServiceName___Service.name, () => {

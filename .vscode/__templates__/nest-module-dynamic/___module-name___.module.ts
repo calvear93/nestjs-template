@@ -26,10 +26,10 @@ export class ___ModuleName___Module implements OnModuleInit {
 	 */
 	static register(): DynamicModule {
 		return {
-			module: ___ModuleName___Module,
 			controllers: [],
-			imports: [],
 			exports: [],
+			imports: [],
+			module: ___ModuleName___Module,
 			providers: [],
 		};
 	}

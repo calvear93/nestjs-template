@@ -1,5 +1,5 @@
+import { Test, type TestingModule } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
 import { ___UseCaseName___UseCase } from './___use-case-name___.use-case.js';
 
 describe(___UseCaseName___UseCase.name, () => {

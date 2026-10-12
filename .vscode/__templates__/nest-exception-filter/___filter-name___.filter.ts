@@ -1,4 +1,3 @@
-import { HttpAdapterHost } from '@nestjs/core';
 import {
 	type ArgumentsHost,
 	Catch,
@@ -7,6 +6,7 @@ import {
 	HttpStatus,
 	Logger,
 } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
 
 /**
  * ___FilterName___ exception filter.

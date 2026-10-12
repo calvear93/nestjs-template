@@ -1,232 +1,80 @@
 # AGENTS.md
 
-> Single source of truth for **all** AI coding assistants working in this repository
-> (GitHub Copilot, Claude, Gemini, Codex, Cursor, and any agent that reads `AGENTS.md`).
+Canonical, tool-agnostic instructions for every AI assistant in this repo. `CLAUDE.md` and
+`GEMINI.md` only import this file; skills live in [`.ai/`](.ai/README.md). User instructions
+win over this file, this file wins over existing code patterns.
 
-This is a modern, production-ready **NestJS + TypeScript API template** running on Fastify.
-It emphasizes type safety end-to-end with Zod, a modular feature architecture, NestJS
-dependency injection, OpenAPI/Swagger documentation, and comprehensive testing.
+**NestJS 12 API template on Fastify**: Zod-validated edges, OpenAPI docs, DI everywhere.
 
-## How to use this document
+## Stack
 
-- This file is the canonical, tool-agnostic instruction set. `CLAUDE.md` and `GEMINI.md`
-  are thin pointers to it, and GitHub Copilot reads this file natively — **do not**
-  duplicate guidance into those pointers.
-- Keep this file as the high-level contract (stack, rules, conventions). Long-form
-  detail lives in the deep references at the bottom; link to them instead of repeating.
-- **Operating manual:** read [`.ai/skills/ways-of-working.md`](.ai/skills/ways-of-working.md) first — the autonomy policy, the Definition of Done, and how to talk to a (possibly non-technical) user.
-- User instructions always take precedence — see Priority order below.
-
-## Priority order
-
-When guidance conflicts, resolve in this order:
-
-1. **User instructions** — a direct request in chat.
-2. **This file (`AGENTS.md`)** — the canonical, tool-agnostic contract.
-3. **Deep references** in [`.github/instructions/`](.github/instructions/) and the canonical
-   scaffolds in [`.vscode/__templates__/`](.vscode/__templates__/).
-4. **Existing patterns** in the codebase (`src/`, and `docs/` where present).
-
-## Tech stack
-
-| Area              | Choice                                                                                                                                                                                                              |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework         | NestJS 12+ with TypeScript 5+                                                                                                                                                                                       |
-| HTTP server       | Fastify (`@nestjs/platform-fastify`)                                                                                                                                                                                |
-| Validation        | Zod 4.5+ via NestJS's native Standard Schema support (`@Body`/`@Query`/`@Param({ schema })` + `StandardSchemaValidationPipe`); schemas `z.compile()`-wrapped; `#libs/zod` adds OpenAPI wiring and custom validators |
-| API docs          | OpenAPI / Swagger (`@nestjs/swagger`)                                                                                                                                                                               |
-| Dependency inject | NestJS built-in IoC container                                                                                                                                                                                       |
-| HTTP client       | Built-in client via `#libs/http`                                                                                                                                                                                    |
-| Dates             | Luxon                                                                                                                                                                                                               |
-| Testing           | Vitest + `vitest-mock-extended`                                                                                                                                                                                     |
-| Coverage          | Vitest Coverage V8 (target ≥ 80%)                                                                                                                                                                                   |
-| Mutation testing  | Stryker Mutator                                                                                                                                                                                                     |
-| Build/runtime     | Vite + vite-node; Node `>=24`, pnpm `>=12`                                                                                                                                                                          |
-| Env loading       | `@calvear/env` (`env/` folder)                                                                                                                                                                                      |
-| Tooling           | ESLint + Prettier, pnpm                                                                                                                                                                                             |
+NestJS 12 + `@nestjs/platform-fastify` (never Express) · TypeScript 6 (strict, ESM) · Zod 4
+via Nest's Standard Schema support · `@nestjs/swagger` · Vitest 5 + `vitest-mock-extended` ·
+Stryker · Vite 8 + vite-node · `@calvear/env` · Luxon · Node ≥ 24, pnpm ≥ 12. No ORM.
 
 ## Commands
 
 ```bash
-pnpm start:dev                   # dev server with hot reload (vite-node --watch)
-pnpm start:release               # dev server (release environment)
-pnpm test:dev                    # tests in watch mode
-pnpm test:dev --run              # tests once (no watch)
-pnpm test:dev --coverage --run   # tests once with coverage (CI/validation)
-pnpm test:bench                  # benchmarks
-pnpm test:mutation               # Stryker mutation tests (validate test quality)
-pnpm lint                        # ESLint (cached)
-pnpm format                      # Prettier (write)
-pnpm env:schema                  # regenerate env JSON schema after config changes
-pnpm build                       # production build
-pnpm preview                     # build + run dist/main
+pnpm start:dev                  # dev server, watch mode (http://localhost:4004/api)
+pnpm test:dev --run [path]      # tests once (drop --run for watch)
+pnpm test:mutation              # Stryker, for critical logic
+pnpm lint --fix                 # ESLint + Prettier (style is enforced here)
+pnpm env:schema                 # after adding or renaming an env var
+pnpm build                      # production build (dist/)
 ```
 
-Run `pnpm lint && pnpm format && pnpm test:dev --coverage --run` before finalizing
-non-trivial changes.
+**Gate** (must be green before a change is done):
+`pnpm lint && pnpm build && pnpm test:dev --coverage --run`
 
-## Project structure
-
-```
-src/
-  app/
-    app.module.ts        root module
-    config/              configuration layer (the only place reading process.env)
-    decorators/          app-level decorators (ApiKey, AllowAnonymous, ApplyControllerDocs)
-    modules/             feature modules (controllers, services, schemas)
-  libs/
-    zod/                 #libs/zod  — standardSchemaConverter (OpenAPI), custom validators
-    http/                #libs/http — HttpClient, HttpModule, errors, enums
-    decorators/          #libs/decorators — createSecurityGuard, ApplyToClass, DecoratorsLookUp
-env/                     appsettings.json (non-secret) + <env>.env.json (secrets)
-.vscode/__templates__/   canonical code scaffolds for every component type (controller,
-                         service, module, provider, guard, interceptor, schema,
-                         exception filter, test, …)
-```
-
-Path aliases (`package.json#imports`): `#libs/zod`, `#libs/http`, `#libs/decorators`,
-`#testing`. See **architecture-guide** for full module topology and wiring.
-
-When generating any component, start from the matching scaffold in
-[`.vscode/__templates__/`](.vscode/__templates__/) — it is the source of truth for file
-suffixes, folder layout, and controller/service/module/schema/test signatures.
-
-## Core principles
-
-- **Type safety first** — leverage TypeScript and Zod from API to data layer; never `any`.
-- **Inject, never hardcode** — all config and dependencies flow through NestJS DI.
-- **Thin controllers, rich services** — controllers handle HTTP; business logic lives in services.
-- **Validate at the edge** — every input passes through `@Body`/`@Query`/`@Param({ schema })` and
-  the global `StandardSchemaValidationPipe`.
-- **Document every endpoint** — OpenAPI via a colocated `*.controller.docs.ts` file.
-- **Test what you ship** — unit + integration tests with meaningful assertions (mutation-aware).
-- **YAGNI** — minimal, atomic changes; no speculative abstractions.
-
-## Critical rules
-
-These are non-negotiable. Violations should be fixed before code is considered done.
-
-### Configuration & dependency injection
-
-- **NEVER** hardcode URLs, API keys, or configuration in services, controllers, or business logic.
-- **NEVER** read `process.env` outside the dedicated config layer (`src/app/config/`).
-- Define non-secret config in `env/appsettings.json`; secrets in `env/<env>.env.json`
-  (this template ships `dev` and `release` as examples).
-- Validate environment values with a Zod schema in the config layer.
-- Provide config via NestJS dynamic providers (`useFactory`) and consume it through
-  constructor injection. See **architecture-guide** → Configuration architecture.
-
-### Language policy
-
-- Code and documentation are in **English** — identifiers, comments, API names, errors, docs.
-- **Domain exception:** preserve business-domain terms in their original language when the user
-  explicitly defines them as domain entities (e.g. `Siniestro`, `Episodio`). Implementation
-  around them stays in English.
-
-### TypeScript & validation
-
-- Explicit types everywhere; no `any` (prefer `unknown` + narrowing).
-- All request/response shapes are Zod schemas: a private `_XSchema` base, exported as
-  `XSchema = z.compile(_XSchema)` (Zod 4.5 AOT fast path) with its inferred type. Add
-  `.meta({ id: 'Model' })` on the base, **before** `z.compile()`, to register it as a named
-  OpenAPI component. See the `zod-schema` skill.
-- Prefer `async`/`await` over raw Promises; always handle the error path with proper
-  NestJS HTTP exceptions.
-
-### Security
-
-- Apply `@ApiKey()` at the controller level; mark public endpoints with `@AllowAnonymous()`.
-- Build custom guards with `createSecurityGuard()` from `#libs/decorators`.
-
-## Code style (essentials)
-
-- Tabs for indentation (width 4); single quotes; semicolons; trailing commas (all); ~80 col width.
-- Arrow functions with parens around params; named exports preferred over default exports.
-- Include `.ts` extension in relative imports; use `#libs/*` aliases for libraries.
-- Import order: external packages → `#libs/*` → relative imports.
-- Files `kebab-case`, classes/types `PascalCase`, methods/vars `camelCase`,
-  module constants `SCREAMING_SNAKE_CASE`, private members prefixed `_`.
-
-Full ruleset, file-suffix table, and anti-patterns: **coding-standards**.
-
-## Testing
-
-- Vitest + `vitest-mock-extended` (`mock<T>()`) for typed dependency mocks.
-- Test services and controllers in isolation; mock injected dependencies.
-- Use the arrange/act/assert structure and `// shared variables` / `// mocks` / `// hooks` /
-  `// tests` section comments (see coding-standards). Target ≥ 80% coverage.
-- Place `*.spec.ts` alongside source files.
-
-Worked test recipes: **patterns** → Testing patterns.
-
-## Commit conventions
-
-Use **Conventional Commits with Gitmoji**:
+## Layout
 
 ```
-<type>(<optional scope>) <gitmoji>: <description>
+src/main.ts, src/app/app.ts     bootstrap: global pipe, versioning, prefix, Swagger
+src/app/modules/<name>/         <name>.module.ts + controllers/ services/ schemas/
+src/app/modules/index.ts        module registry (also add to AppModule.imports)
+src/app/decorators/             ApiKey / AllowAnonymous, ApplyControllerDocs
+src/libs/{zod,http,decorators}  #libs/* (each has a README: the API reference)
+src/__tests__/                  #testing helpers + app-level integration tests
+env/                            appsettings.json + <env>.env.json (see env/README.md)
+.vscode/__templates__/          scaffolds: start every new file from one
 ```
 
-Examples:
+The reference implementation is `src/app/modules/sample/`.
 
-```
-feat(auth) ✨: add API key guard
-fix(users) 🐛: resolve validation error on create
-refactor(http) ♻️: extract retry logic
-test(users) ✅: cover not-found path
-chore(deps) 🔧: bump nestjs
-```
+## Rules (the ones lint can't check)
 
-Common types: `feat` ✨, `fix` 🐛, `docs` 📚, `style` 🎨, `refactor` ♻️, `perf` ⚡,
-`test` ✅, `chore` 🔧, `ci`, `build`. Security 🔒, remove 🗑️, move 🚚.
+- **Config:** never hardcode URLs, keys or settings. Read `process.env` only at module level
+  (`const X = process.env.X` at the top of the file, lint-enforced) or inject it via DI. See the
+  [`config-di`](.ai/skills/config-di.md) skill.
+- **Edges:** every input is a Zod schema bound with `@Body`/`@Query`/`@Param({ schema })`, with
+  no DTO classes and no manual `.parse()`. See [`zod-openapi`](.ai/skills/zod-openapi.md).
+- **Thin controllers, rich services.** Errors are NestJS HTTP exceptions; let them propagate.
+  Log with `new Logger(X.name)`, never `console`.
+- **Docs:** every endpoint is documented in a colocated `*.controller.docs.ts`.
+- **Security:** put `@ApiKey()` on the controller class and `@AllowAnonymous()` on public routes.
+- **External APIs:** use the injected `HttpClient` from `#libs/http`, never raw `fetch`.
+- **Tests:** ship tests with the code, ≥ 80% coverage. See [`testing`](.ai/skills/testing.md).
+- **Types:** prefer `unknown` or generics. `any` (a lint warning) is fine when an exact type
+  adds complexity without safety. No `@ts-expect-error`/`eslint-disable` to dodge an error.
+- **YAGNI:** make minimal, atomic changes, with no speculative abstractions or new deps
+  without a reason.
+- **Style is tooling-owned:** formatting, import order, member order and naming of files are
+  enforced by ESLint/Prettier. Run `pnpm lint --fix` instead of hand-formatting.
 
-## Spec-driven development (SDD)
+## Language
 
-Build features through a spec-first loop that follows the **OpenSpec** convention
-([openspec.dev](https://openspec.dev)): living specs are the current truth, and each request
-is a **change** (like a DB migration) carrying spec **deltas** that get applied on ship.
-`AGENTS.md` is the constitution; the procedures live in [`.ai/skills/`](.ai/skills/):
+Code, comments, docs and commits are in **English**. Exception: business-domain terms the user
+defines as entities (e.g. `Siniestro`) keep their original name. Talk to the user in their
+language.
 
-```
-/spec-intake    rough idea → an idea brief (optional on-ramp: shape a detailed input)
-/spec-propose   idea    → specs/changes/<id>/proposal.md + specs/<cap>/spec.md deltas (what + why)
-/spec-design    change  → specs/changes/<id>/design.md   (technical design; skip if trivial)
-/spec-tasks     change  → specs/changes/<id>/tasks.md    (atomic, test-first tasks)
-/spec-implement change  → code + tests (test → build → fix, Vitest)
-/spec-archive   change  → verify + apply deltas to specs/specs/ + move to specs/changes/archive/
-```
+## Commits
 
-`/spec-intake` is optional: a guided interview that helps anyone (technical or not) turn a
-rough idea into a detailed brief, which `/spec-propose` then formalizes. Skip it when the
-request is already clear and complete.
+Conventional Commits + Gitmoji: `<type>(<scope>) <gitmoji>: <description>`, e.g.
+`feat(auth) ✨: add API key guard`, `fix(users) 🐛: …`, `refactor(http) ♻️: …`, `test ✅`,
+`docs 📚`, `chore(deps) 🔧`. For non-trivial changes, add `Refs: docs/changes/<file>.md` to the
+commit body.
 
-Folder model (root `specs/`): `specs/specs/` = **living truth** (one folder per capability);
-`specs/changes/<id>/` = **proposals** with `## ADDED|MODIFIED|REMOVED Requirements` deltas;
-`specs/changes/archive/YYYY-MM-DD-<id>/` = shipped changes (the durable decision log). See
-[`.ai/skills/spec-conventions.md`](.ai/skills/spec-conventions.md) for the exact format and
-[`specs/project.md`](specs/project.md) for project context. The official `openspec` CLI is not
-used (it hardcodes an `openspec/` root and can't target `specs/`); the skills are the engine.
+## How to work
 
-`/spec-implement` reuses the canonical task prompts in [`.ai/prompts/`](.ai/prompts/)
-(`create-module`, `create-api-endpoint`, `api-documentation`, `error-handling`,
-`testing-strategy`) instead of redefining them. GitHub Copilot exposes the loop as `/spec-*`
-prompts under `.github/prompts/`; Claude, Gemini, and Codex follow the procedure files
-directly. The best-practice skills (`typescript`, `nestjs`, `zod-schema`, `ioc-binding`, `vitest-tdd`,
-`vite-config`) live alongside them in [`.ai/skills/`](.ai/skills/).
-
-## Deep references
-
-| Document                                                                      | Scope                                                                               |
-| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [Operating manual](.ai/skills/ways-of-working.md)                             | Autonomy, default technical decisions, Definition of Done, non-technical-user comms |
-| [Architecture guide](.github/instructions/architecture-guide.instructions.md) | Module topology, configuration/DI wiring, registration, import conventions          |
-| [Coding standards](.github/instructions/coding-standards.instructions.md)     | Formatting, naming, file suffixes, TypeScript rules, comments, anti-patterns        |
-| [Patterns](.github/instructions/patterns.instructions.md)                     | Copy-paste recipes: modules, controllers, services, schemas, guards, docs, tests    |
-| [Code exemplars](exemplars.md)                                                | Pointers to high-quality real examples in this repo                                 |
-| [`.vscode/__templates__/`](.vscode/__templates__/)                            | Canonical code scaffolds for every component type — the starting point for new code |
-| [README](README.md)                                                           | Human-facing project documentation and setup                                        |
-
-Task prompts and agents are canonical in [`.ai/prompts/`](.ai/prompts/) and
-[`.ai/agents/`](.ai/agents/). GitHub Copilot surfaces them natively via thin pointers in
-`.github/prompts/` and `.github/agents/`; Claude, Gemini, and Codex read the `.ai/` files
-directly (see `CLAUDE.md`, `GEMINI.md`, and this file).
+Follow [`ways-of-working`](.ai/skills/ways-of-working.md): autonomy, right-sizing a change,
+change records ([`docs/changes/`](docs/changes/README.md)), and the Definition of Done.

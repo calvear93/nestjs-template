@@ -7,8 +7,8 @@ import { Logger, Module, type OnModuleInit } from '@nestjs/common';
  * @see https://docs.nestjs.com/modules
  */
 @Module({
-	imports: [],
 	controllers: [],
+	imports: [],
 	providers: [],
 })
 export class ___ModuleName___Module implements OnModuleInit {

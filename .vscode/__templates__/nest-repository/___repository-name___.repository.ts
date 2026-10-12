@@ -17,8 +17,6 @@ export class ___RepositoryName___Repository {
 		return 'Hello World';
 	}
 
-	constructor() {}
-
 	/**
 	 * Repository initializer for module.
 	 *
@@ -26,8 +24,8 @@ export class ___RepositoryName___Repository {
 	 */
 	static register(): Provider<___RepositoryName___Repository> {
 		return {
-			provide: ___RepositoryName___Repository,
 			inject: [], // your injected dependencies tokens here
+			provide: ___RepositoryName___Repository,
 			useFactory: (/* your dependencies from inject */) =>
 				new ___RepositoryName___Repository(),
 		};

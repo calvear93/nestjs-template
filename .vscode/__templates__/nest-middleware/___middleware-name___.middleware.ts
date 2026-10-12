@@ -1,5 +1,5 @@
-import { type FastifyRequest, type FastifyReply } from 'fastify';
-import { Injectable, type NestMiddleware, Logger } from '@nestjs/common';
+import { Injectable, Logger, type NestMiddleware } from '@nestjs/common';
+import { type FastifyReply, type FastifyRequest } from 'fastify';
 
 /**
  * ___MiddlewareName___ middleware.

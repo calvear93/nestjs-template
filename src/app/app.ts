@@ -1,3 +1,4 @@
+import type { Server } from 'node:http';
 import { standardSchemaConverter } from '#libs/zod';
 import {
 	type INestApplication,
@@ -10,12 +11,15 @@ import {
 	type SwaggerCustomOptions,
 	SwaggerModule,
 } from '@nestjs/swagger';
-import type { Server } from 'node:http';
 import { AppModule } from './app.module.ts';
 import {
 	ApiKeyGuard,
 	SECURITY_API_SCHEMA,
 } from './decorators/api-key.guard.ts';
+
+const APP_NAME = process.env.APP_NAME;
+const APP_VERSION = process.env.APP_VERSION;
+const TITLE = process.env.TITLE;
 
 /**
  * Swagger base configuration.
@@ -25,8 +29,8 @@ import {
  */
 export const addSwagger = (app: INestApplication, prefix: string) => {
 	const config = new DocumentBuilder()
-		.setTitle(process.env.APP_NAME)
-		.setVersion(process.env.APP_VERSION)
+		.setTitle(APP_NAME)
+		.setVersion(APP_VERSION)
 		.addApiKey(SECURITY_API_SCHEMA, ApiKeyGuard.name)
 		.build();
 
@@ -35,7 +39,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 	});
 
 	SwaggerModule.setup(prefix, app, document, {
-		customSiteTitle: process.env.TITLE,
+		customSiteTitle: TITLE,
 		jsonDocumentUrl: `${prefix}/openapi.json`,
 		swaggerOptions: {
 			displayRequestDuration: true,

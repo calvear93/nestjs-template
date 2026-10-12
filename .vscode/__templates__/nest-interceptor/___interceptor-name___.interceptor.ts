@@ -1,13 +1,13 @@
-import { tap } from 'rxjs/operators';
-import { type Observable } from 'rxjs';
 import {
-	Injectable,
-	type NestInterceptor,
-	type ExecutionContext,
 	type CallHandler,
-	UseInterceptors,
+	type ExecutionContext,
+	Injectable,
 	Logger,
+	type NestInterceptor,
+	UseInterceptors,
 } from '@nestjs/common';
+import { type Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 /**
  * ___InterceptorName___ interceptor.
@@ -24,7 +24,10 @@ class ___InterceptorName___Interceptor implements NestInterceptor {
 	 *
 	 * @returns
 	 */
-	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+	intercept(
+		context: ExecutionContext,
+		next: CallHandler,
+	): Observable<unknown> {
 		this._logger.debug('Before...');
 
 		return next.handle().pipe(tap(() => this._logger.debug('After...')));

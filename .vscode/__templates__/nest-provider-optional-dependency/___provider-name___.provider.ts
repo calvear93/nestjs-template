@@ -36,8 +36,8 @@ export class ___ProviderName___Provider {
 			provide: ___ProviderName___Provider,
 			inject: [
 				{
-					token: AbortController,
 					optional: true,
+					token: AbortController,
 				},
 			],
 			useFactory: (signal?: AbortController) => {

@@ -182,7 +182,6 @@ export default [
 			'@typescript-eslint/interface-name-prefix': OFF,
 			'@typescript-eslint/no-empty-function': WARN,
 			'@typescript-eslint/no-empty-object-type': OFF,
-			'@typescript-eslint/no-explicit-any': OFF,
 			'@typescript-eslint/no-extraneous-class': OFF,
 			'@typescript-eslint/no-non-null-assertion': OFF,
 			'@typescript-eslint/no-redundant-type-constituents': ERROR,
@@ -199,6 +198,10 @@ export default [
 			'@typescript-eslint/no-empty-interface': [
 				ERROR,
 				{ allowSingleExtends: true },
+			],
+			'@typescript-eslint/no-explicit-any': [
+				WARN,
+				{ ignoreRestArgs: true },
 			],
 			'@typescript-eslint/no-floating-promises': [
 				WARN,
@@ -467,7 +470,7 @@ export default [
 			'perfectionist/sort-imports': [
 				WARN,
 				{
-					internalPattern: ['#*/*'],
+					internalPattern: ['^#'],
 					newlinesBetween: 'ignore',
 					type: 'alphabetical',
 					groups: [
@@ -655,6 +658,68 @@ export default [
 	},
 	// #endregion
 
+	// #region boundaries
+	{
+		files: ['src/**/*.ts'],
+		rules: {
+			'no-restricted-exports': [
+				ERROR,
+				{
+					restrictDefaultExports: {
+						defaultFrom: true,
+						direct: true,
+						named: true,
+						namedFrom: true,
+						namespaceFrom: true,
+					},
+				},
+			],
+			'no-restricted-imports': [
+				ERROR,
+				{
+					paths: [
+						{ message: 'Fastify only.', name: 'express' },
+						{
+							message: 'Fastify only.',
+							name: '@nestjs/platform-express',
+						},
+						{
+							message: 'Use env/ + DI providers.',
+							name: '@nestjs/config',
+						},
+					],
+					patterns: [
+						{
+							message: 'Import libraries through #libs/*.',
+							regex: String.raw`^(?:\.\./)+libs/`,
+						},
+					],
+				},
+			],
+			'no-restricted-syntax': [
+				ERROR,
+				{
+					message:
+						'Read env at module level (const X = process.env.X) or inject it via DI.',
+					selector:
+						":function MemberExpression[object.name='process'][property.name='env']",
+				},
+				{
+					message:
+						'Read env at module level (const X = process.env.X) or inject it via DI.',
+					selector:
+						"PropertyDefinition MemberExpression[object.name='process'][property.name='env']",
+				},
+			],
+		},
+	},
+	{
+		// test helpers (mockEnv) write env inside functions
+		files: ['src/__tests__/**/*.ts', TEST_GLOB],
+		rules: { 'no-restricted-syntax': OFF },
+	},
+	// #endregion
+
 	// #region prettier
 	{
 		files: [CODE_STYLE_GLOB],
@@ -668,6 +733,7 @@ export default [
 		files: [TEST_GLOB],
 		plugins: { vitest },
 		rules: {
+			'@typescript-eslint/no-explicit-any': OFF,
 			'max-classes-per-file': OFF,
 			'unicorn/consistent-function-scoping': OFF,
 			'unicorn/no-unsafe-regex': OFF,
@@ -707,6 +773,10 @@ export default [
 			'vitest/prefer-to-have-length': WARN,
 			'vitest/prefer-todo': WARN,
 			'vitest/valid-title': OFF,
+			'vitest/consistent-test-it': [
+				ERROR,
+				{ fn: 'test', withinDescribe: 'test' },
+			],
 		},
 	},
 	// #endregion

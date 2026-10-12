@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 
 export type FakeTimerInstallOpts = typeof vi.useFakeTimers extends (
 	opts: infer T,
-) => any
+) => unknown
 	? T
 	: never;
 

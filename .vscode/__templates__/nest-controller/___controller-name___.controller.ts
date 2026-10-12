@@ -21,7 +21,5 @@ export class ___ControllerName___Controller {
 		return 'Hello World';
 	}
 
-	constructor() {}
-
 	private readonly _logger = new Logger(___ControllerName___Controller.name);
 }

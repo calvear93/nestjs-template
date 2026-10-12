@@ -3,7 +3,7 @@ import type { ExecutionContext } from '@nestjs/common';
 export type CanActivateArgs<T> = T extends (
 	ctx: ExecutionContext,
 	...args: infer A
-) => any
+) => unknown
 	? A
 	: never;
 
@@ -11,7 +11,7 @@ export type Optional<T> = {
 	[K in keyof T]?: T[K];
 };
 
-export type SubtractLeft<T extends any[], U extends any[]> = T extends [
+export type SubtractLeft<T extends unknown[], U extends unknown[]> = T extends [
 	infer F,
 	...infer R,
 ]

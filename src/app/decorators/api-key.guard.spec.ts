@@ -1,5 +1,5 @@
-import { type ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
+import { type ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { afterEach, beforeAll, describe, expect, test, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 import { ApiKeyGuard } from './api-key.guard.ts';

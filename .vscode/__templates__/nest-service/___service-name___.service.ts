@@ -19,6 +19,4 @@ export class ___ServiceName___Service {
 	sum(a: number, b: number): number {
 		return a + b;
 	}
-
-	constructor() {}
 }

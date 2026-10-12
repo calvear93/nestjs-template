@@ -1,7 +1,7 @@
 #Requires -Version 7.0
 <#
 .SYNOPSIS
-	Shared library for the template tooling (INIT.ps1 / REMOVE-PRISMA.ps1).
+	Shared library for the template tooling (INIT.ps1).
 
 .DESCRIPTION
 	Provides the reliability core used by both scripts:

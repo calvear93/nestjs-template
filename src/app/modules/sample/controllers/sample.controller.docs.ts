@@ -1,3 +1,4 @@
+import { type DecoratorsLookUp } from '#libs/decorators';
 import { HttpStatusCode } from '#libs/http';
 import {
 	ApiBody,
@@ -7,7 +8,6 @@ import {
 	ApiResponse,
 	ApiTags,
 } from '@nestjs/swagger';
-import { type DecoratorsLookUp } from '../../../../libs/decorators/apply.decorator.ts';
 import { SampleSchema } from '../schemas/sample.schema.ts';
 import { type SampleController } from './sample.controller.ts';
 

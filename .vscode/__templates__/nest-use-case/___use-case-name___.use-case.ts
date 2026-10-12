@@ -19,6 +19,4 @@ export class ___UseCaseName___UseCase {
 	sum(a: number, b: number): number {
 		return a + b;
 	}
-
-	constructor() {}
 }

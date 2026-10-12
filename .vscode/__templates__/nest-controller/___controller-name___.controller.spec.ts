@@ -1,5 +1,5 @@
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { Test, type TestingModule } from '@nestjs/testing';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { ___ControllerName___Controller } from './___controller-name___.controller.ts';
 
 describe(___ControllerName___Controller, () => {

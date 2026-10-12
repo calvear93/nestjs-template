@@ -1,3 +1,5 @@
+type DecoratorsByKey = Partial<Record<PropertyKey, MethodDecorator[]>>;
+
 type ExtractMembersMatching<T, V, R> = {
 	[K in keyof T as T[K] extends V | undefined ? K : never]?: R;
 };
@@ -6,7 +8,7 @@ type ExtractMembersMatching<T, V, R> = {
  * Allows to define decorators for class, methods
  * or properties for apply to class.
  */
-export interface DecoratorsLookUp<T extends object = any> {
+export interface DecoratorsLookUp<T extends object = object> {
 	common?: {
 		method?: MethodDecorator[];
 		property?: MethodDecorator[];
@@ -16,7 +18,7 @@ export interface DecoratorsLookUp<T extends object = any> {
 	property?: ExtractMembersMatching<T, PropertyKey, MethodDecorator[]>;
 }
 
-export type DecoratorsLookUpFn<T extends object = any> =
+export type DecoratorsLookUpFn<T extends object = object> =
 	() => DecoratorsLookUp<T>;
 
 /**
@@ -78,7 +80,9 @@ export function ApplyToClass({
 
 		// apply method decorators
 		for (const key of Object.keys(method)) {
-			const decorators = method[key]?.concat(common?.method ?? []);
+			const decorators = (method as DecoratorsByKey)[key]?.concat(
+				common?.method ?? [],
+			);
 
 			const property = Object.getOwnPropertyDescriptor(
 				target.prototype,
@@ -132,13 +136,19 @@ export function ApplyToProperty({
 		key: PropertyKey,
 		descriptor?: TypedPropertyDescriptor<Y>,
 	) => {
-		const decorators = property[key as any]?.concat(common?.property ?? []);
+		const decorators = (property as DecoratorsByKey)[key]?.concat(
+			common?.property ?? [],
+		);
 
 		if (!decorators) return;
 
 		// apply property decorators
 		for (const decorator of decorators) {
-			decorator(target, key as any, descriptor as any);
+			decorator(
+				target,
+				key as string | symbol,
+				descriptor as TypedPropertyDescriptor<Y>,
+			);
 		}
 	};
 }

@@ -1,6 +1,6 @@
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { HttpStatus } from '@nestjs/common';
 import type { DecoratorsLookUp } from '#libs/decorators';
+import { HttpStatus } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { type ___ControllerName___Controller } from './___controller-name___.controller.ts';
 
 export const ___ControllerName___ControllerDocs: DecoratorsLookUp<___ControllerName___Controller> =

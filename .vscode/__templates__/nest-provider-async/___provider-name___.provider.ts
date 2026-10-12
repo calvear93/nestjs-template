@@ -39,8 +39,8 @@ export class ___ProviderName___Provider {
 		baseNumber: number,
 	): Provider<Promise<___ProviderName___Provider>> {
 		return {
-			provide: ___ProviderName___Provider,
 			inject: [/* your injected dependencies tokens here */],
+			provide: ___ProviderName___Provider,
 			useFactory: async (/* your dependencies from inject */) => {
 				const provider = new ___ProviderName___Provider(baseNumber);
 

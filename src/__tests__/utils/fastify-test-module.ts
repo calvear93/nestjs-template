@@ -15,7 +15,7 @@ export const createFastifyApplication = async (
 	if (debug) {
 		console.debug('\n\u001B[4m\u001B[33mFastify routes:\u001B[0m');
 
-		adapter.getInstance().addHook('onRoute', ({ method, url }: any) => {
+		adapter.getInstance().addHook('onRoute', ({ method, url }) => {
 			if (method !== 'HEAD')
 				console.debug(` ${method}: \u001B[34m${url}\u001B[0m`);
 		});

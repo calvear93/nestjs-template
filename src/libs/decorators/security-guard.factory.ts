@@ -39,7 +39,7 @@ const getSignal = (signal: symbol, target: object, key: string): boolean => {
  */
 const setArgs = (
 	accessKey: symbol,
-	args: any[],
+	args: unknown[],
 	descriptor?: PropertyDescriptor,
 ) => {
 	if (descriptor) Reflect.defineMetadata(accessKey, args, descriptor.value);
@@ -104,11 +104,11 @@ const wrapWithArgsInjector = (Guard: Class<SecurityGuard>) => {
  * with a security guard, and applies
  * Swagger security schema.
  */
-const createSecureDecorator = <G extends SecurityGuard, A extends any[]>(
+const createSecureDecorator = <G extends SecurityGuard, A extends unknown[]>(
 	Guard: Class<G>,
 	guardName: string,
 	allowSignal: symbol,
-	sharedArgs: any[],
+	sharedArgs: unknown[],
 ) => {
 	const guard = UseGuards(Guard);
 	const schema = ApiSecurity(guardName);
@@ -127,7 +127,7 @@ const createSecureDecorator = <G extends SecurityGuard, A extends any[]>(
 	};
 
 	return (...args: A): ClassDecorator & MethodDecorator => {
-		args = [...sharedArgs, ...args] as any;
+		args = [...sharedArgs, ...args] as A;
 		return <T extends Function>(
 			target: T | object,
 			propertyKey?: PropertyKey,
