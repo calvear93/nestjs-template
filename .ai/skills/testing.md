@@ -38,4 +38,4 @@ describe(UsersService, () => {
   import (the API key guard) need the env set before a dynamic `import()`.
 - **External HTTP:** `src/libs/http/__mocks__/create-http-mock-server.mock.ts`.
 - Cover the happy path, edge cases and the error path. Coverage target is ≥ 80% (bootstrap,
-  index, mocks and `__tests__` are excluded). Use `pnpm test:mutation` for critical logic.
+  index, mocks and `__tests__` are excluded).

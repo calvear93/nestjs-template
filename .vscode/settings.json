@@ -33,7 +33,7 @@
 		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, pnpm-workspace.yaml, package.*.json, .npmrc, .pnp.cjs",
 		"readme*": "changelog.md, license.md, code_of_conduct.md, contributing.md, architecture.md",
 		"tsconfig.json": "tsconfig.*.json",
-		"vite.config.ts": "vitest.config.ts, stryker.conf.*"
+		"vite.config.ts": "vitest.config.ts"
 	},
 	"explorer.incrementalNaming": "smart",
 	"explorer.sortOrder": "type",
@@ -48,7 +48,6 @@
 		"**/.git": true,
 		"**/.history": true,
 		"**/.rollup.cache": true,
-		"**/.stryker-tmp": true,
 		"**/.svn": true,
 		"**/.swc": true,
 		"**/.wireit": true,
@@ -65,7 +64,6 @@
 		"**/.DS_Store": true,
 		"**/.git/objects/**": true,
 		"**/.rollup.cache": true,
-		"**/.stryker-tmp": true,
 		"**/.swc": true,
 		"**/.vscode": true,
 		"**/*.log": true,
@@ -113,7 +111,6 @@
 	"prettier.useTabs": true,
 	"search.exclude": {
 		"**/.rollup.cache": true,
-		"**/.stryker-tmp": true,
 		"**/.swc": true,
 		"**/.vscode": true,
 		"**/.wireit": true,

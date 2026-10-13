@@ -13,7 +13,6 @@
 		"test:dev": "env -m test : vitest",
 		"test:release": "env -m test : vitest",
 		"test:bench": "vitest bench",
-		"test:mutation": "env -e dev -m test : stryker run",
 		"env:schema": "env schema -e dev -m build",
 		"lint": "eslint --cache --cache-location node_modules/.cache/eslint/",
 		"format": "prettier --cache --write **/*.{ts,cts,mts,json,md,yml,yaml}",
@@ -42,9 +41,6 @@
 	"devDependencies": {
 		"@calvear/env": "3.4.2",
 		"@nestjs/testing": "12.1.2",
-		"@stryker-mutator/core": "10.0.0",
-		"@stryker-mutator/typescript-checker": "10.0.0",
-		"@stryker-mutator/vitest-runner": "10.0.0",
 		"@types/eslint": "9.6.1",
 		"@types/luxon": "3.7.6",
 		"@types/node": "26.6.5",

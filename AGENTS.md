@@ -10,21 +10,20 @@ win over this file, this file wins over existing code patterns.
 
 NestJS 12 + `@nestjs/platform-fastify` (never Express) · TypeScript 6 (strict, ESM) · Zod 4
 via Nest's Standard Schema support · `@nestjs/swagger` · Vitest 5 + `vitest-mock-extended` ·
-Stryker · Vite 8 + vite-node · `@calvear/env` · Luxon · Node ≥ 24, pnpm ≥ 12. No ORM.
+Vite 8 + vite-node · `@calvear/env` · Luxon · Node ≥ 24, pnpm ≥ 12. No ORM.
 
 ## Commands
 
 ```bash
 pnpm start:dev                  # dev server, watch mode (http://localhost:4004/api)
 pnpm test:dev --run [path]      # tests once (drop --run for watch)
-pnpm test:mutation              # Stryker, for critical logic
 pnpm lint --fix                 # ESLint + Prettier (style is enforced here)
 pnpm env:schema                 # after adding or renaming an env var
 pnpm build                      # production build (dist/)
 ```
 
 **Gate** (must be green before a change is done):
-`pnpm lint && pnpm build && pnpm test:dev --coverage --run`
+`pnpm lint && pnpm exec tsc --noEmit && pnpm build && pnpm test:dev --coverage --run`
 
 ## Layout
 

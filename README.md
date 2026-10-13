@@ -54,19 +54,9 @@ These are environment profiles loaded by the `env` CLI (not necessarily Git bran
 
 ## 🧪 **Executing**
 
-Project uses **pnpm scripts** to run, test and build.
-Some scripts are environment-specific, using the suffix `:<env>` where `<env>` is `dev` or `release`.
-
-| Command                      | Action                       |
-| ---------------------------- | ---------------------------- |
-| pnpm start:`<env>`           | executes the app             |
-| pnpm build                   | build the app                |
-| pnpm preview                 | builds and serves the app    |
-| pnpm test:`<env>`            | executes tests               |
-| pnpm test:`<env>` --coverage | executes tests with coverage |
-| pnpm env:schema              | updates env JSON schema      |
-| pnpm format                  | code format                  |
-| pnpm lint                    | code style review            |
+Scripts are environment-scoped via `:<env>` (`dev` or `release`), e.g. `pnpm start:dev`. The
+day-to-day commands and the quality gate live in [AGENTS.md → Commands](AGENTS.md#commands);
+`package.json` has the full list.
 
 ## 🔥 **Helping Commands**
 

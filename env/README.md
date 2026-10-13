@@ -43,7 +43,7 @@ autocompletion from `settings/schema.json` (`.vscode/schemas/`).
 **The environment is inferred from the script name:** `pnpm start:dev` loads `dev` without `-e`,
 because `env` takes the last segment after `:`. A suffix that is not a defined environment (a typo
 like `start:dve`) aborts the command. Scripts whose suffix is not an environment pass `-e`
-(`preview`, `test:mutation`, `env:schema`), and so does any call outside a pnpm script.
+(`preview`, `env:schema`), and so does any call outside a pnpm script.
 
 `build` declares no environment on purpose: it loads only `|DEFAULT|` and `|MODE|.build`, and the
 environment's values are injected when it is deployed.
@@ -123,7 +123,6 @@ validated against it before the command runs. `pnpm env:schema` rebuilds it from
 | `build`                       | `env -m build : vite build`                    |
 | `preview`                     | `env -e dev -m build : node dist/main`         |
 | `test:dev` / `test:release`   | `env -m test : vitest`                         |
-| `test:mutation`               | `env -e dev -m test : stryker run`             |
 | `env:schema`                  | `env schema -e dev -m build`                   |
 
 `start:dev` adds `--log debug`. Every `env` option is described in the
