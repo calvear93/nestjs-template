@@ -69,6 +69,7 @@
 		"node": ">=24",
 		"pnpm": ">=12"
 	},
+	"packageManager": "pnpm@12.11.2",
 	"license": "MIT",
 	"repository": "https://github.com/calvear93/nestjs-template",
 	"keywords": [
