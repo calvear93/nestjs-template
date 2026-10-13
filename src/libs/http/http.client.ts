@@ -317,9 +317,10 @@ export class HttpClient {
 	readonly #baseUrl?: RequestURL;
 
 	/**
-	 * When true, throws HttpError if a client error occurs (4XX).
+	 * When true (the default, also without a config), throws HttpError on
+	 * any non-2xx response.
 	 */
-	readonly #throwOnClientError?: boolean;
+	readonly #throwOnClientError: boolean = true;
 
 	/**
 	 * Returns base config.

@@ -95,6 +95,19 @@ describe(HttpClient, () => {
 		await expect(rejected).rejects.toThrow(HttpError);
 	});
 
+	test('throws HttpError on non-2xx when created without a config', async () => {
+		// mocking phase
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.NOT_FOUND }),
+		);
+		const client = new HttpClient();
+
+		// request phase
+		const rejected = client.request(_URL);
+
+		await expect(rejected).rejects.toThrow(HttpError);
+	});
+
 	test('request failed with TypeError throws Bad Gateway HttpError', async () => {
 		// mocking phase
 		_fetchMock.mockRejectedValueOnce(new TypeError('message'));
