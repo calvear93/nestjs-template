@@ -182,7 +182,7 @@ export class HttpClient {
 				throw error;
 			});
 
-			if (this.#throwOnClientError && !response.ok)
+			if (this.#throwOnError && !response.ok)
 				throw new HttpError(response as HttpResponse);
 
 			return response as HttpResponse;
@@ -300,8 +300,7 @@ export class HttpClient {
 
 			if (url) this.#baseUrl = url?.endsWith('/') ? url : `${url}/`;
 			// `throwOnError` is the preferred name; `throwOnClientError` kept as an alias
-			this.#throwOnClientError =
-				throwOnError ?? throwOnClientError ?? true;
+			this.#throwOnError = throwOnError ?? throwOnClientError ?? true;
 			this.#baseConfig = cfg;
 		}
 	}
@@ -320,7 +319,7 @@ export class HttpClient {
 	 * When true (the default, also without a config), throws HttpError on
 	 * any non-2xx response.
 	 */
-	readonly #throwOnClientError: boolean = true;
+	readonly #throwOnError: boolean = true;
 
 	/**
 	 * Returns base config.
