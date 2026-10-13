@@ -6,10 +6,10 @@
 # https://github.com/GoogleContainerTools/distroless
 ARG RUNNER=gcr.io/distroless/nodejs24-debian13
 # https://hub.docker.com/_/node
-ARG NODE=node:24.20.0-alpine
+ARG NODE=node:24.21.0-alpine
 ARG TIME_ZONE='America/Santiago'
 ARG LANG='es-CL.UTF-8'
-ARG PNPM_VER=11.8.0
+ARG PNPM_VER=12.11.2
 ARG APP_DIR='/app/'
 ARG OUT_DIR='dist'
 
@@ -38,7 +38,7 @@ WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
 RUN pnpm install --frozen-lockfile
 # builds the app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN pnpm build
 COPY 'package.json' 'pnpm-lock.yaml' ${OUT_DIR}/
 
@@ -81,13 +81,13 @@ WORKDIR ${APP_DIR}
 # build artifacts
 COPY --from=bundler ${APP_DIR} ${APP_DIR}
 # localization
-ENV TZ ${TIME_ZONE}
-ENV LANG ${LANG}
+ENV TZ=${TIME_ZONE}
+ENV LANG=${LANG}
 # non root user mode
-RUN nonroot
+USER nonroot
 
 # exec command
-ENV NODE_ENV production
+ENV NODE_ENV=production
 CMD ["main.js"]
 
 EXPOSE 8080/tcp
