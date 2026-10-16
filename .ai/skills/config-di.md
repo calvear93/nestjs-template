@@ -10,7 +10,10 @@ Env details: [`env/README.md`](../../env/README.md). HTTP client:
    sections). Secrets go in `env/<env>.env.json` and personal overrides in
    `<env>.local.env.json` (both gitignored). Nested keys flatten with `_`
    (`SECURITY.API_KEY` → `SECURITY_API_KEY`). Every value arrives as a **string**.
-2. Declare the variable in `src/env.d.ts` (`ProcessEnv`), then run `pnpm env:schema`.
+2. Don't type it by hand: `src/env.d.ts` registers `appsettings.json` and the schema in
+   `@calvear/env`, which types `process.env` by itself (booleans `'false' | 'true'`, the rest
+   `string`). Only a variable set outside `@calvear/env` goes in its `overrides`. Then run
+   `pnpm env:schema`.
 3. Read `process.env` **only at module level**, never inside functions, methods or class
    properties (ESLint `no-restricted-syntax`). Two options:
     - **A constant at the top of the file:** `const API_URL = process.env.API_URL;`. Use it for

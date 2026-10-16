@@ -1,32 +1,28 @@
-export declare global {
-	type MODE = 'development' | 'production' | 'test';
-	type ENV = 'dev' | 'release';
+import type { EnvName } from '@calvear/env';
+import type appsettings from '../env/appsettings.json';
+import type schema from '../env/settings/schema.json';
 
-	namespace NodeJS {
-		// NOTE: only string/literal type is supported,
-		// numbers or booleans are loaded as string
-		interface ProcessEnv {
-			readonly APP_ENV: ENV;
-			readonly NODE_ENV: MODE;
-			readonly DEBUG?: string;
-
-			// SECTION: project info from package.json
-			readonly APP_NAME: string;
-			readonly APP_VERSION: string;
-
-			// SECTION: base
-			readonly BASE_URL: string;
-			readonly PORT: string;
-			readonly SWAGGER_UI: 'false' | 'true';
-
-			// SECTION: localization
-			readonly LANG: string;
-			readonly TZ: string;
-
-			// SECTION: api security
-			readonly SECURITY_API_KEY: string; // value of the api key header
-			readonly SECURITY_HEADER_NAME: string; // name of the api key header
-			readonly SECURITY_ENABLED?: 'false' | 'true';
-		}
+/**
+ * process.env typed by @calvear/env from env/appsettings.json (every section,
+ * environment and mode) and env/settings/schema.json (secrets and optional
+ * files): a new variable goes there, not here. Booleans are 'false' | 'true'
+ * and the rest string, numbers too (convert on read: +process.env.PORT).
+ *
+ * @see https://github.com/calvear93/env#-type-safe-env-variables-typescript
+ */
+declare module '@calvear/env' {
+	interface EnvRegister {
+		appsettings: typeof appsettings;
+		// nestingDelimiter of env/settings/settings.json
+		delimiter: '_';
+		// Vite's default envPrefix: import.meta.env only gets VITE_* (and DEV…)
+		envPrefix: 'VITE_';
+		schema: typeof schema;
+		// set outside @calvear/env, or narrower than the derived type
+		overrides: {
+			APP_ENV: EnvName<typeof appsettings>; // [[ENV]]: the environment
+			NODE_ENV: 'development' | 'production' | 'test';
+			DEBUG?: string;
+		};
 	}
 }

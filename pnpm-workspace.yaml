@@ -1,3 +1,5 @@
 savePrefix: ''
 allowBuilds:
     '@scarf/scarf': false
+minimumReleaseAgeExclude:
+    - '@calvear/env@3.5.0'

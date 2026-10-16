@@ -39,7 +39,7 @@
 		"zod-openapi": "6.0.2"
 	},
 	"devDependencies": {
-		"@calvear/env": "3.4.2",
+		"@calvear/env": "3.5.0",
 		"@nestjs/testing": "12.1.2",
 		"@types/eslint": "9.6.1",
 		"@types/luxon": "3.7.6",

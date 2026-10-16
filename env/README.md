@@ -110,8 +110,11 @@ validated against it before the command runs. `pnpm env:schema` rebuilds it from
 - **`process.env` only at the edges:** it is read in the bootstrap and configuration code
   (`src/main.ts`, `src/app/app.ts`, the API key guard); services receive values through dependency
   injection.
-- **Types:** `src/env.d.ts` declares the variables. They are all `string`; numbers and booleans are
-  converted when read (`+process.env.PORT`, `process.env.SWAGGER_UI === 'true'`).
+- **Types:** `src/env.d.ts` registers `appsettings.json` and `settings/schema.json` in
+  `@calvear/env`, which types `process.env` by itself: a new variable in `appsettings.json` is typed
+  without touching that file. Booleans are `'false' | 'true'` and the rest `string`, so numbers are
+  converted when read (`+process.env.PORT`, `process.env.SWAGGER_UI === 'true'`). Only what
+  `@calvear/env` does not load (i.e. `DEBUG`) goes by hand, in `overrides`.
 - **Logs:** with `--log debug` (`start:dev`) every resolved variable is printed; those matching
   `logMaskValuesOfKeys` in `settings.json` (keys, passwords, connection strings) show as `*****`.
 
