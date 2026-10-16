@@ -73,7 +73,7 @@ describe('standardSchemaConverter', () => {
 		expect(result?.components).toStrictEqual({});
 	});
 
-	// zod 4's native toJSONSchema() treats these as "unrepresentable": without
+	// Zod 4's native toJSONSchema() treats these as "unrepresentable": without
 	// an override, generating the OpenAPI document throws instead of just
 	// producing an imprecise schema — so this is a regression test, not just
 	// a shape check.

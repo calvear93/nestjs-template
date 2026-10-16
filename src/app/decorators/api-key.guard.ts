@@ -91,7 +91,7 @@ export class ApiKeyGuard implements SecurityGuard {
 	}
 }
 
-// fastify lowercases every incoming header name, so the configured one must
+// Fastify lowercases every incoming header name, so the configured one must
 // be normalized or the lookup silently misses
 const HEADER_NAME = process.env.SECURITY_HEADER_NAME?.trim().toLowerCase();
 const API_KEY = process.env.SECURITY_API_KEY;
