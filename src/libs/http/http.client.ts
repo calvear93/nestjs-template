@@ -296,11 +296,10 @@ export class HttpClient {
 	 */
 	constructor(config?: HttpClientConfig) {
 		if (config) {
-			const { throwOnClientError, throwOnError, url, ...cfg } = config;
+			const { throwOnError = true, url, ...cfg } = config;
 
 			if (url) this.#baseUrl = url?.endsWith('/') ? url : `${url}/`;
-			// `throwOnError` is the preferred name; `throwOnClientError` kept as an alias
-			this.#throwOnError = throwOnError ?? throwOnClientError ?? true;
+			this.#throwOnError = throwOnError;
 			this.#baseConfig = cfg;
 		}
 	}
@@ -370,8 +369,6 @@ export interface HttpRequestBodyOptions extends HttpRequestOptions {
 }
 
 export interface HttpClientConfig extends HttpRequestOptions {
-	// @deprecated alias of `throwOnError` (kept for backward compatibility).
-	throwOnClientError?: boolean;
 	// when true (default), throws HttpError on any non-2xx response.
 	throwOnError?: boolean;
 	// base url

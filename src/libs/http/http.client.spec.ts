@@ -52,7 +52,7 @@ describe(HttpClient, () => {
 
 		_httpClient = new HttpClient({ url: _URL });
 		_altHttpClient = new HttpClient({
-			throwOnClientError: false,
+			throwOnError: false,
 			url: _URL,
 		});
 	});
@@ -267,22 +267,6 @@ describe(HttpClient, () => {
 		await _httpClient.post('/', config);
 
 		expect(config).toStrictEqual({});
-	});
-
-	test('throwOnError:false is an alias that disables error throwing', async () => {
-		// mocking phase
-		_fetchMock.mockResolvedValueOnce(
-			new Response(null, {
-				status: HttpStatusCode.INTERNAL_SERVER_ERROR,
-			}),
-		);
-		const _client = new HttpClient({ throwOnError: false, url: _URL });
-
-		// request phase
-		const response = await _client.get('/');
-
-		expect(response.ok).toBe(false);
-		expect(response.status).toBe(HttpStatusCode.INTERNAL_SERVER_ERROR);
 	});
 
 	test('post request with json body is success', async () => {
