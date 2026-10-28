@@ -83,6 +83,8 @@ COPY --from=bundler ${APP_DIR} ${APP_DIR}
 # localization
 ENV TZ=${TIME_ZONE}
 ENV LANG=${LANG}
+# non root user mode: the image's bun user (uid 1000)
+USER bun
 
 # exec command
 ENV NODE_ENV=production

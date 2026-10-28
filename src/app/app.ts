@@ -16,8 +16,10 @@ import {
 	ApiKeyGuard,
 	SECURITY_API_SCHEMA,
 } from './decorators/api-key.guard.ts';
+import { corsFrom } from './decorators/cors.util.ts';
 
 const APP_NAME = process.env.APP_NAME;
+const CORS = corsFrom(process.env.CORS_ORIGINS);
 const APP_VERSION = process.env.APP_VERSION;
 const TITLE = process.env.TITLE;
 
@@ -59,7 +61,7 @@ export const addSwagger = (app: INestApplication, prefix: string) => {
 export const start = async ({ port = 0, prefix, swagger }: AppStartConfig) => {
 	const adapter = new FastifyAdapter();
 	const app = await NestFactory.create(AppModule, adapter, {
-		cors: true,
+		cors: CORS,
 	});
 
 	app.enableVersioning();
