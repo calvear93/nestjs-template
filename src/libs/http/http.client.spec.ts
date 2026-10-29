@@ -434,14 +434,12 @@ describe(HttpClient, () => {
 	});
 
 	test('basic auth', () => {
-		const user = 'user';
-		const password = 'password';
-		const expected = `${user}:${password}`;
-
-		const encoded = HttpClient.basicAuth(user, password);
-		const decode = Buffer.from(encoded, 'base64url').toString('utf8');
-
-		expect(decode).toBe(expected);
+		// RFC 7617 examples (padding §2, UTF-8 §2.1) plus a "/" that base64url would rewrite
+		expect(HttpClient.basicAuth('Aladdin', 'open sesame')).toBe(
+			'QWxhZGRpbjpvcGVuIHNlc2FtZQ==',
+		);
+		expect(HttpClient.basicAuth('test', '123£')).toBe('dGVzdDoxMjPCow==');
+		expect(HttpClient.basicAuth('a', '??>')).toBe('YTo/Pz4=');
 	});
 
 	describe('url parsing', () => {

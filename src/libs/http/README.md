@@ -26,14 +26,14 @@ Built on the native Fetch API (no `axios`). You get a small `HttpClient` class p
 
 **`HttpClient` methods** — all return `Promise<HttpResponse<R>>`:
 
-| Method                            | Body? | Notes                                  |
-| --------------------------------- | ----- | -------------------------------------- |
-| `get<R>(url, config?)`            | no    |                                        |
-| `delete<R>(url, config?)`         | no    |                                        |
-| `post/put/patch<R>(url, config?)` | yes   | `config.data` → serialized body        |
-| `request<R>(url, options?)`       | —     | low-level escape hatch                 |
-| `setHeader(k, v)` · `config`      | —     | mutate base headers/config             |
-| `HttpClient.basicAuth(u, p)`      | —     | static · base64url for `Authorization` |
+| Method                            | Body? | Notes                                        |
+| --------------------------------- | ----- | -------------------------------------------- |
+| `get<R>(url, config?)`            | no    |                                              |
+| `delete<R>(url, config?)`         | no    |                                              |
+| `post/put/patch<R>(url, config?)` | yes   | `config.data` → serialized body              |
+| `request<R>(url, options?)`       | —     | low-level escape hatch                       |
+| `setHeader(k, v)` · `config`      | —     | mutate base headers/config                   |
+| `HttpClient.basicAuth(u, p)`      | —     | static · RFC 7617 base64, no `Basic ` prefix |
 
 **Request `config`** — extends `RequestInit` (minus `signal`) with: `query`, `data` (body methods), `timeout` (ms), `cancel` (`AbortController`), `onRequest` (interceptor), `headers`.
 

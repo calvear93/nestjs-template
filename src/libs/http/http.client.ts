@@ -342,14 +342,17 @@ export class HttpClient {
 	}
 
 	/**
-	 * Encodes user and password for basic auth.
+	 * Encodes user and password as an RFC 7617 Basic credential: standard base64
+	 * (not base64url) of the UTF-8 bytes, so it works in Node and in the browser.
 	 *
 	 * @param user - user name
 	 * @param password - user password
-	 * @returns base64 encoded basic auth
+	 * @returns the credential, without the "Basic " prefix
 	 */
 	static basicAuth(user: string, password: string) {
-		return Buffer.from(`${user}:${password}`, 'utf8').toString('base64url');
+		const bytes = new TextEncoder().encode(`${user}:${password}`);
+
+		return btoa(String.fromCodePoint(...bytes));
 	}
 }
 
