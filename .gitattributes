@@ -1,0 +1,20 @@
+# Line endings are decided here, not by each machine's core.autocrlf: text is LF in the repo and
+# in the working tree, so git, Prettier ("endOfLine": "lf") and .editorconfig agree everywhere.
+* text=auto eol=lf
+
+# Windows batch files need CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binaries: never converted (text=auto guesses well, but a mangled font or image fails silently)
+*.png   -text
+*.jpg   -text
+*.jpeg  -text
+*.gif   -text
+*.webp  -text
+*.ico   -text
+*.pdf   -text
+*.woff  -text
+*.woff2 -text
+*.ttf   -text
+*.otf   -text
