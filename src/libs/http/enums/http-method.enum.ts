@@ -43,6 +43,15 @@ export enum HttpMethod {
 	PUT = 'PUT',
 
 	/**
+	 * The `QUERY` method requests that the origin server transmit an entity
+	 * corresponding to a query, sent as the request body. Unlike POST it is
+	 * intended to be safe and idempotent, like GET.
+	 *
+	 * @see https://www.ietf.org/archive/id/draft-ietf-httpbis-safe-method-w-body-latest.html
+	 */
+	QUERY = 'QUERY',
+
+	/**
 	 * The `TRACE` method performs a message loop-back test along the path to the
 	 * target resource.
 	 */

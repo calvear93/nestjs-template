@@ -95,19 +95,6 @@ describe(HttpClient, () => {
 		await expect(rejected).rejects.toThrow(HttpError);
 	});
 
-	test('throws HttpError on non-2xx when created without a config', async () => {
-		// mocking phase
-		_fetchMock.mockResolvedValueOnce(
-			new Response(null, { status: HttpStatusCode.NOT_FOUND }),
-		);
-		const client = new HttpClient();
-
-		// request phase
-		const rejected = client.request(_URL);
-
-		await expect(rejected).rejects.toThrow(HttpError);
-	});
-
 	test('request failed with TypeError throws Bad Gateway HttpError', async () => {
 		// mocking phase
 		_fetchMock.mockRejectedValueOnce(new TypeError('message'));
@@ -313,6 +300,27 @@ describe(HttpClient, () => {
 		expect(headers['content-type']).toBe(expectedContentType);
 	});
 
+	test('query request with json body is success', async () => {
+		// mocking phase
+		const body = { search: 'term' };
+		const expectedSerializedBody = JSON.stringify(body);
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.OK }),
+		);
+
+		// request phase
+		const { status } = await _httpClient.query('/', {
+			data: body,
+		});
+
+		// assertion data
+		const request = _fetchMock.mock.calls[0][1]!;
+
+		expect(status).toBe(HttpStatusCode.OK);
+		expect(request.method).toBe('QUERY');
+		expect(request.body).toBe(expectedSerializedBody);
+	});
+
 	test('put request is success', async () => {
 		// mocking phase
 		_fetchMock.mockResolvedValueOnce(
@@ -516,6 +524,35 @@ describe(HttpClient, () => {
 
 			expect(receivedUrl).toBe(expectedUrl);
 		});
+	});
+
+	test('throws HttpError on non-2xx when created without a config', async () => {
+		// mocking phase
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.NOT_FOUND }),
+		);
+		const client = new HttpClient();
+
+		// request phase
+		const rejected = client.request(_URL);
+
+		await expect(rejected).rejects.toThrow(HttpError);
+	});
+
+	test('resolves a relative base URL against the page origin', async () => {
+		// mocking phase
+		_fetchMock.mockResolvedValueOnce(new Response());
+		vi.stubGlobal('location', { origin: 'http://localhost:3003' });
+
+		// request phase
+		const client = new HttpClient({ url: '/api' });
+		await client.request('/feriados');
+
+		// assertion data
+		const receivedUrl = _fetchMock.mock.calls[0][0].toString();
+		vi.unstubAllGlobals();
+
+		expect(receivedUrl).toBe('http://localhost:3003/api/feriados');
 	});
 
 	test('base URL is not required in initial config', async () => {

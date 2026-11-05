@@ -130,6 +130,28 @@ export class HttpClient {
 	}
 
 	/**
+	 * Makes a QUERY request.
+	 *
+	 * @typeParam R - response data
+	 * @param url - request url
+	 * @param config - fetch config
+	 * @throws HttpError on http status code greater than 2.x.x
+	 * @returns async response
+	 */
+	query<R>(
+		url: RequestURL,
+		config: HttpRequestBodyOptions = {},
+	): Promise<HttpResponse<R>> {
+		const cfg: HttpRequestBodyOptions = {
+			...config,
+			method: HttpMethod.QUERY,
+		};
+		this.#serializeBody(cfg);
+
+		return this.request(url, cfg);
+	}
+
+	/**
 	 * Makes a request.
 	 *
 	 * @typeParam R - response data
@@ -263,7 +285,32 @@ export class HttpClient {
 
 		path = `${path}${this.#buildQuery(query)}`;
 
-		return new URL(path, this.#baseUrl);
+		return new URL(path, this.#resolveBaseUrl());
+	}
+
+	/**
+	 * Base URL ready for `new URL()`: a relative base (the local default `/api/`, served by the
+	 * dev server on the page's own origin) resolves against the page origin. Absolute bases, a
+	 * missing base and non-browser runtimes keep the previous behavior.
+	 *
+	 * @returns the base URL to resolve request paths against
+	 */
+	#resolveBaseUrl() {
+		const base = this.#baseUrl;
+		const { location } = globalThis as { location?: { origin?: string } };
+		const origin = location?.origin;
+
+		if (
+			base === undefined ||
+			base instanceof URL ||
+			URL.canParse(base) ||
+			!origin ||
+			origin === 'null'
+		) {
+			return base;
+		}
+
+		return new URL(base, origin);
 	}
 
 	/**
@@ -315,7 +362,7 @@ export class HttpClient {
 	readonly #baseUrl?: RequestURL;
 
 	/**
-	 * When true (the default, also without a config), throws HttpError on
+	 * When true (the default, with or without a config), throws HttpError on
 	 * any non-2xx response.
 	 */
 	readonly #throwOnError: boolean = true;

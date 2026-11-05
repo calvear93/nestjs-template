@@ -26,16 +26,19 @@ Built on the native Fetch API (no `axios`). You get a small `HttpClient` class p
 
 **`HttpClient` methods** — all return `Promise<HttpResponse<R>>`:
 
-| Method                            | Body? | Notes                                        |
-| --------------------------------- | ----- | -------------------------------------------- |
-| `get<R>(url, config?)`            | no    |                                              |
-| `delete<R>(url, config?)`         | no    |                                              |
-| `post/put/patch<R>(url, config?)` | yes   | `config.data` → serialized body              |
-| `request<R>(url, options?)`       | —     | low-level escape hatch                       |
-| `setHeader(k, v)` · `config`      | —     | mutate base headers/config                   |
-| `HttpClient.basicAuth(u, p)`      | —     | static · RFC 7617 base64, no `Basic ` prefix |
+| Method                            | Body? | Notes                                         |
+| --------------------------------- | ----- | --------------------------------------------- |
+| `get<R>(url, config?)`            | no    |                                               |
+| `delete<R>(url, config?)`         | no    |                                               |
+| `post/put/patch<R>(url, config?)` | yes   | `config.data` → serialized body               |
+| `query<R>(url, config?)`          | yes   | HTTP `QUERY`: a safe, idempotent read w/ body |
+| `request<R>(url, options?)`       | —     | low-level escape hatch                        |
+| `setHeader(k, v)` · `config`      | —     | mutate base headers/config                    |
+| `HttpClient.basicAuth(u, p)`      | —     | static · RFC 7617 base64, no `Basic ` prefix  |
 
 **Request `config`** — extends `RequestInit` (minus `signal`) with: `query`, `data` (body methods), `timeout` (ms), `cancel` (`AbortController`), `onRequest` (interceptor), `headers`.
+
+**Base `url`** — request paths resolve against it; a relative base (e.g. `/api/`) resolves against the page origin in a browser.
 
 ## 🚀 Quick start (standalone)
 
