@@ -8,7 +8,7 @@ Built on the native Fetch API (no `axios`). You get a small `HttpClient` class p
 
 - **Typed responses** — `client.get<User>(url)` → `HttpResponse<User>` with a typed `.json()`.
 - **Smart query strings** — nested objects (dot-notation), arrays (comma-joined), `Date`/`bigint`, nullish values dropped.
-- **JSON & form bodies** — pass `data`; content-type is set for you (`URLSearchParams` → form-urlencoded).
+- **JSON, form & raw bodies** — pass `data`: an object goes as JSON and `URLSearchParams` as a form, with the content-type set for you; a `FormData`, `Blob`, `ArrayBuffer` or typed array goes as is and fetch sets its content-type.
 - **Timeouts & cancellation** — `timeout` aborts with `TimeoutError`; bring your own `AbortController` via `cancel`.
 - **Throws on errors** — non-2xx raises `HttpError` (toggle with `throwOnError`); network failures become `BAD_GATEWAY`.
 - **DI-ready** — `HttpModule.register()` (a shared client) or `HttpProvider.register()` (named, per-service clients).
@@ -36,7 +36,7 @@ Built on the native Fetch API (no `axios`). You get a small `HttpClient` class p
 | `setHeader(k, v)` · `config`      | —     | mutate base headers/config                    |
 | `HttpClient.basicAuth(u, p)`      | —     | static · RFC 7617 base64, no `Basic ` prefix  |
 
-**Request `config`** — extends `RequestInit` (minus `signal`) with: `query`, `data` (body methods), `timeout` (ms), `cancel` (`AbortController`), `onRequest` (interceptor), `headers`.
+**Request `config`** — extends `RequestInit` (minus `signal` and `window`) with: `query`, `data` (body methods), `timeout` (ms), `cancel` (`AbortController`), `onRequest` (interceptor), `headers`.
 
 **Base `url`** — request paths resolve against it; a relative base (e.g. `/api/`) resolves against the page origin in a browser.
 
@@ -207,4 +207,4 @@ const api = new HttpClient({ url: `http://localhost:${port}` });
 
 ## 🧠 How it works
 
-Each call merges the base config with per-request options (headers deep-merged), runs the optional `onRequest` interceptor, serializes `query` into the URL and `data` into the body, and arms an `AbortController` when `timeout` is set. It then `fetch`es and — unless `throwOnError` is `false` — throws `HttpError` for any non-`ok` response; a network `TypeError` is normalized into an `HttpError` with status `BAD_GATEWAY`. The resolved value is the native `Response`, narrowed to `HttpResponse<R>` so `.json()` is typed. `HttpModule` binds a single `HttpClient` instance under a token (default `HttpClient`); `HttpProvider` is an `HttpClient` subclass exposing a `FactoryProvider` for `providers: []`.
+Each call serializes `data` into the body, merges the base config with per-request options (headers deep-merged), runs the optional `onRequest` interceptor (it sees the body and headers), serializes `query` into the URL, and arms an `AbortController` when `timeout` is set. It then `fetch`es and — unless `throwOnError` is `false` — throws `HttpError` for any non-`ok` response; a network `TypeError` is normalized into an `HttpError` with status `BAD_GATEWAY`. The resolved value is the native `Response`, narrowed to `HttpResponse<R>` so `.json()` is typed. `HttpModule` binds a single `HttpClient` instance under a token (default `HttpClient`); `HttpProvider` is an `HttpClient` subclass exposing a `FactoryProvider` for `providers: []`.

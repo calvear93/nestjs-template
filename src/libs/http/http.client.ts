@@ -24,6 +24,19 @@ const isNotNullish = (value: unknown): boolean => {
 	return !isNullish(value);
 };
 
+// A body fetch sends as it is, setting its own content type (the multipart boundary of a FormData,
+// the type of a Blob): JSON.stringify would turn it into "{}"
+const isRawBody = (
+	value: unknown,
+): value is NonNullable<RequestInit['body']> => {
+	return (
+		value instanceof FormData ||
+		value instanceof Blob ||
+		value instanceof ArrayBuffer ||
+		ArrayBuffer.isView(value)
+	);
+};
+
 /**
  * Http client using fetch.
  *
@@ -314,8 +327,9 @@ export class HttpClient {
 	}
 
 	/**
-	 * Serializes "data" property from
-	 * config into "body" and adds json content type.
+	 * Serializes the "data" of a config into its "body": a FormData, Blob,
+	 * ArrayBuffer or typed array goes as it is and fetch sets its content type,
+	 * URLSearchParams is a form, any other object is JSON.
 	 *
 	 * @param config - fetch config
 	 */
@@ -327,6 +341,8 @@ export class HttpClient {
 					'application/x-www-form-urlencoded;charset=utf-8',
 				...config.headers,
 			};
+		} else if (isRawBody(config.data)) {
+			config.body = config.data;
 		} else if (typeof config.data === 'object') {
 			config.body = JSON.stringify(config.data);
 			config.headers = {
@@ -415,6 +431,7 @@ export interface HttpRequestOptions extends Omit<
 }
 
 export interface HttpRequestBodyOptions extends HttpRequestOptions {
+	// JSON, a form (URLSearchParams) or a raw body (FormData, Blob, ArrayBuffer, typed array)
 	data?: object;
 }
 

@@ -300,6 +300,57 @@ describe(HttpClient, () => {
 		expect(headers['content-type']).toBe(expectedContentType);
 	});
 
+	test('post request with json body has the json content-type', async () => {
+		// mocking phase
+		_fetchMock.mockResolvedValueOnce(
+			new Response(null, { status: HttpStatusCode.CREATED }),
+		);
+
+		// request phase
+		await _httpClient.post('/', { data: { id: 1 } });
+
+		// assertion data
+		const headers = _fetchMock.mock.calls[0][1]!.headers as Record<
+			string,
+			string
+		>;
+
+		expect(headers['content-type']).toBe('application/json;charset=utf-8');
+	});
+
+	test.each([
+		[
+			'FormData',
+			() => {
+				const form = new FormData();
+				form.append('file', new Blob(['content']), 'file.txt');
+
+				return form;
+			},
+		],
+		['Blob', () => new Blob(['content'], { type: 'text/plain' })],
+		['ArrayBuffer', () => new ArrayBuffer(8)],
+		['Uint8Array', () => new Uint8Array([1, 2, 3])],
+	])(
+		'post request sends the %s body as is, leaving its content-type to fetch',
+		async (_type, createBody) => {
+			// mocking phase
+			const body = createBody();
+			_fetchMock.mockResolvedValueOnce(
+				new Response(null, { status: HttpStatusCode.CREATED }),
+			);
+
+			// request phase
+			await _httpClient.post('/', { data: body });
+
+			// assertion data
+			const request = _fetchMock.mock.calls[0][1]!;
+
+			expect(request.body).toBe(body);
+			expect(request.headers).not.toHaveProperty('content-type');
+		},
+	);
+
 	test('query request with json body is success', async () => {
 		// mocking phase
 		const body = { search: 'term' };

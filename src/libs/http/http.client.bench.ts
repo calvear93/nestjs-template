@@ -46,7 +46,7 @@ describe(HttpClient, async () => {
 				size: '999',
 			});
 
-			const response = await fetch(`${_url}?${query})}`, {
+			const response = await fetch(`${_url}?${query}`, {
 				body: JSON.stringify({ id: 1, name: 'a name' }),
 				method: 'POST',
 			});
