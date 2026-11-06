@@ -68,3 +68,7 @@ pids
 *.pid
 *.seed
 *.pid.lock
+
+# plans at the root and Claude Code worktrees (whole checkouts) never belong in the build context
+/PLAN-*
+/.claude/worktrees/

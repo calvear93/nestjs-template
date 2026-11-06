@@ -38,6 +38,12 @@ coverage
 # Mac OS
 .DS_Store
 
+# Windows: Explorer metadata, and the `nul` file a `2>nul` redirect leaves behind when a POSIX
+# shell runs it (git can't index it, so `git add -A` fails)
+Thumbs.db
+desktop.ini
+nul
+
 # IDEs and editors
 /.idea
 .project
@@ -56,6 +62,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+
+# merge / patch leftovers (mergetool backups, `git apply --reject`)
+*.orig
+*.rej
 
 # diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -77,6 +87,9 @@ pids
 CLAUDE.local.md
 .claude/scheduled_tasks.lock
 
+# Claude Code worktrees (`claude --worktree`, isolated subagents): whole checkouts of the repo
+/.claude/worktrees/
+
 # Gemini CLI (local state; shared context lives in the tracked GEMINI.md)
 .gemini/
 GEMINI.local.md
@@ -97,3 +110,6 @@ GEMINI.local.md
 
 # Aider (chat history, input history, tags cache)
 .aider*
+
+# plans handed between AI sessions, written at the repo root (PLAN-<date>-<slug>.md)
+/PLAN-*
