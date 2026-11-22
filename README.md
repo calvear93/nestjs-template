@@ -72,7 +72,7 @@ A modular NestJS API on Fastify, built around a few in-house libraries; each shi
 - **🌐 HTTP Client** — Fetch-based client with NestJS module integration and typed errors · [`src/libs/http`](src/libs/http/README.md)
 - **🔐 Security Decorators** — `createSecurityGuard()`, `@ApiKey()`, `@AllowAnonymous()` · [`src/libs/decorators`](src/libs/decorators/README.md)
 
-Feature modules live under `src/app/modules/<name>/`, grouped into `controllers/`, `services/`, `schemas/` subfolders; `process.env` is read only in bootstrap code and handed to features through DI.
+Feature modules live under `src/app/modules/<name>/`, grouped into `controllers/`, `services/`, `schemas/` subfolders; `process.env` is read at module level or handed to features through DI ([`config-di`](.ai/skills/config-di.md)).
 
 ## 🧱 **Creating Modules**
 
@@ -82,14 +82,14 @@ Start from the canonical scaffolds in [`.vscode/__templates__/`](.vscode/__templ
 
 Conventions, patterns, and worked examples live in the docs — start with whichever fits:
 
-| Topic                                        | Where                                              |
-| -------------------------------------------- | -------------------------------------------------- |
-| Project contract (stack, rules, conventions) | [`AGENTS.md`](AGENTS.md)                           |
-| AI skills (schemas, config/DI, testing)      | [`.ai/`](.ai/README.md)                            |
-| Change records (plans + decisions)           | [`docs/changes/`](docs/changes/README.md)          |
-| Canonical code scaffolds for new files       | [`.vscode/__templates__/`](.vscode/__templates__/) |
-| Environment configuration                    | [`env/README.md`](env/README.md)                   |
-| Library usage (Zod · HTTP · Decorators)      | [`src/libs/`](src/libs/)                           |
+| Topic                                                    | Where                                              |
+| -------------------------------------------------------- | -------------------------------------------------- |
+| Project contract (stack, rules, conventions)             | [`AGENTS.md`](AGENTS.md)                           |
+| AI skills (ways of working, schemas, config/DI, testing) | [`.ai/`](.ai/README.md)                            |
+| Change records (plans + decisions)                       | [`docs/changes/`](docs/changes/README.md)          |
+| Canonical code scaffolds for new files                   | [`.vscode/__templates__/`](.vscode/__templates__/) |
+| Environment configuration                                | [`env/README.md`](env/README.md)                   |
+| Library usage (Zod · HTTP · Decorators)                  | [`src/libs/`](src/libs/)                           |
 
 ## 🧰 Configuring fnm (Fast Node Manager)
 

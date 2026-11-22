@@ -26,8 +26,7 @@ describe(UsersService, () => {
 });
 ```
 
-- `test()`, never `it()` (lint-enforced). Use the `// hooks` / `// tests` section comments and
-  arrange → act → assert.
+- Use the `// hooks` / `// tests` section comments and arrange → act → assert.
 - **Services:** construct them directly with `mock<T>()` dependencies.
 - **Controllers:** `Test.createTestingModule({ controllers, providers })`, overriding with
   `{ provide, useValue }`.
@@ -37,5 +36,6 @@ describe(UsersService, () => {
 - **Env:** `mockEnv` / `restoreEnv` / `restoreAllEnv` from `#testing`. Modules that read env at
   import (the API key guard) need the env set before a dynamic `import()`.
 - **External HTTP:** `src/libs/http/__mocks__/create-http-mock-server.mock.ts`.
-- Cover the happy path, edge cases and the error path. Coverage target is ≥ 80% (bootstrap,
-  index, mocks and `__tests__` are excluded).
+- Cover the happy path, edge cases and the error path. The coverage target is ≥ 80%:
+  `--coverage` reports it and no threshold fails the run; what it leaves out is
+  `vitest.config.ts` → `coverage.exclude` (bootstrap, barrels, mocks, fixtures, `__tests__`).

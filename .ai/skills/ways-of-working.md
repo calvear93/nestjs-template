@@ -6,7 +6,7 @@ possible, even for a non-technical requester.
 ## 1. Act, don't ask
 
 - Make every technical decision yourself, following `AGENTS.md`, the skills and the existing
-  code (`src/app/modules/sample/`).
+  code (its reference implementation: `AGENTS.md` → Layout).
 - Ask only when the answer changes **what gets built** (a product or intent choice) and you can't
   infer it. Use 1–3 short questions, batched, each with a recommended option.
 - Otherwise pick the sensible default, state it as an assumption in the close-out, and go on.
@@ -38,12 +38,14 @@ When unsure between small and non-trivial, write the record (~20 lines).
   diff alone.
 - Non-trivial: the record is `status: done`, with Decisions and Verification filled from real
   output.
+- A failure is fixed at its cause: never weaken a test, add a sleep, `eslint-disable` a rule,
+  `@ts-expect-error` an error, or reach for `any` to hide a real type error.
 
 ## 4. Own your failures
 
-If tests, lint or types fail, find the root cause, fix it, re-run, and loop until green. Never
-weaken a test, add `eslint-disable`, or use `any` to hide a real type error. If you're truly
-stuck, explain what blocks you and the options, in plain language.
+If tests, lint or types fail, find the root cause, fix it, re-run, and loop until green. Never get
+past a failure by gaming the gate (what that means: §3). If you're truly stuck, explain what
+blocks you and the options, in plain language.
 
 ## 5. Close out
 

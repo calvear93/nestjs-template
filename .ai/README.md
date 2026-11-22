@@ -20,5 +20,6 @@ How each tool gets here:
 
 Editing rule: each fact lives in one place. Library APIs live in `src/libs/*/README.md`, env
 details in `env/README.md`, and code shapes in `.vscode/__templates__/`. Link to them instead of
-copying. Don't restate anything ESLint/Prettier enforce. When adding a skill, add a row here and a
-`.github/instructions/<skill>.instructions.md` pointer.
+copying. Don't restate anything ESLint/Prettier enforce: their one list is
+[`AGENTS.md`](../AGENTS.md) → Rules → Style is tooling-owned. When adding a skill, add a row here
+and a `.github/instructions/<skill>.instructions.md` pointer.

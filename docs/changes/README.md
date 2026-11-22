@@ -3,7 +3,8 @@
 Each **non-trivial** change gets one short Markdown file: the durable record of what changed and
 why. Which changes qualify is defined in [ways-of-working §2](../../.ai/skills/ways-of-working.md).
 Small and trivial changes need only the commit. Code, tests and `AGENTS.md` describe the current
-behavior; these files keep the _why_.
+behavior; these files keep the _why_. A project created from the template starts its own history:
+the template's records are not copied into it.
 
 ## Rules
 
@@ -43,7 +44,7 @@ status: planned # planned | in-progress | done | dropped
 
 ## Verification
 
-- Gate: <gate from AGENTS.md> → <tests / coverage / lint / build>
+- Gate: <the gate from AGENTS.md → Commands> → <the result of each of its steps>
 - Manual: <what you ran or opened, and what you saw>
 
 ## Not included / assumptions

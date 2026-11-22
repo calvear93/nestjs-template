@@ -29,7 +29,8 @@ export type User = z.infer<typeof UserSchema>;
 - Bind with `@Body({ schema: XSchema })`, `@Query('k', { schema })` and
   `@Param('k', { schema })`. The global `StandardSchemaValidationPipe` (in `app.ts`) validates
   and returns 400 on failure. Never call `.parse()` by hand.
-- Controllers only map HTTP to service calls. Throw `NotFoundException` & co. for error paths.
+- Controllers stay thin and throw HTTP exceptions ([`AGENTS.md`](../../AGENTS.md) → Rules):
+  `NotFoundException` & co. for error paths.
 
 ## Docs (`controllers/<name>.controller.docs.ts`)
 

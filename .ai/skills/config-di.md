@@ -14,8 +14,7 @@ Env details: [`env/README.md`](../../env/README.md). HTTP client:
    `@calvear/env`, which types `process.env` by itself (booleans `'false' | 'true'`, the rest
    `string`). Only a variable set outside `@calvear/env` goes in its `overrides`. Then run
    `pnpm env:schema`.
-3. Read `process.env` **only at module level**, never inside functions, methods or class
-   properties (ESLint `no-restricted-syntax`). Two options:
+3. `process.env` is read at module level only (lint refuses it anywhere else). Two options:
     - **A constant at the top of the file:** `const API_URL = process.env.API_URL;`. Use it for
       simple, static values (see `main.ts`, `api-key.guard.ts`). It is read when the file is
       imported, so tests must set the env before a dynamic `import()` (see
@@ -37,7 +36,6 @@ constructor(@Inject('USERS_CONFIG') private readonly _config: UsersConfig) {}
 
 - Use `@Injectable()`, add it to the module's `providers`, inject it via the constructor
   (`private readonly _x`). Register new modules in `src/app/modules/index.ts`.
-- No `@nestjs/config` and no Express (lint-enforced).
 
 ## HTTP client (`#libs/http`)
 

@@ -42,23 +42,27 @@ The reference implementation is `src/app/modules/sample/`.
 
 ## Rules (the ones lint can't check)
 
-- **Config:** never hardcode URLs, keys or settings. Read `process.env` only at module level
-  (`const X = process.env.X` at the top of the file, lint-enforced) or inject it via DI. See the
-  [`config-di`](.ai/skills/config-di.md) skill.
-- **Edges:** every input is a Zod schema bound with `@Body`/`@Query`/`@Param({ schema })`, with
-  no DTO classes and no manual `.parse()`. See [`zod-openapi`](.ai/skills/zod-openapi.md).
+- **Config:** never hardcode URLs, keys or settings: they come from env, read as
+  [`config-di`](.ai/skills/config-di.md) says.
+- **Edges:** every input is a Zod schema bound in its decorator; how, in
+  [`zod-openapi`](.ai/skills/zod-openapi.md).
 - **Thin controllers, rich services.** Errors are NestJS HTTP exceptions; let them propagate.
   Log with `new Logger(X.name)`, never `console`.
-- **Docs:** every endpoint is documented in a colocated `*.controller.docs.ts`.
+- **Docs:** every endpoint is documented in a colocated `*.controller.docs.ts`
+  ([`zod-openapi`](.ai/skills/zod-openapi.md) → Docs).
 - **Security:** put `@ApiKey()` on the controller class and `@AllowAnonymous()` on public routes.
 - **External APIs:** use the injected `HttpClient` from `#libs/http`, never raw `fetch`.
-- **Tests:** ship tests with the code, ≥ 80% coverage. See [`testing`](.ai/skills/testing.md).
-- **Types:** prefer `unknown` or generics. `any` (a lint warning) is fine when an exact type
-  adds complexity without safety. No `@ts-expect-error`/`eslint-disable` to dodge an error.
+- **Tests:** ship them with the code; how to write them and the coverage target are in
+  [`testing`](.ai/skills/testing.md).
+- **Types:** prefer `unknown` or generics. `any` is fine when an exact type adds complexity
+  without safety, never to get past an error
+  ([ways-of-working §3](.ai/skills/ways-of-working.md#3-definition-of-done)).
 - **YAGNI:** make minimal, atomic changes, with no speculative abstractions or new deps
   without a reason.
-- **Style is tooling-owned:** formatting, import order, member order and naming of files are
-  enforced by ESLint/Prettier. Run `pnpm lint --fix` instead of hand-formatting.
+- **Style is tooling-owned:** ESLint and Prettier enforce formatting, import and member order,
+  file naming, `test()` over `it()`, `process.env` read only at module level, no Express and no
+  `@nestjs/config`, and libs imported through `#libs/*`. Run `pnpm lint --fix` instead of
+  hand-formatting; nothing else in this layer restates them.
 
 ## Language
 
